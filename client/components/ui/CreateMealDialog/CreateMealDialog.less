@@ -1,0 +1,62 @@
+@import '../../root/variables.less';
+
+.date-picker.input-mode {
+    position: absolute;
+    background: @colorg5;
+    border: solid 1px @colorg3;
+    border-radius: 2px;
+}
+
+.date-picker-wrapper {
+    flex-grow: 1;
+    margin-right: 10px;
+
+    .today {
+        font-weight: 600;
+        color: @colorr1;
+    }
+
+    .selected {
+        color: @colorg5;
+        background: @colorg3;
+        font-weight: 600;
+    }
+
+    .day {
+        cursor: pointer;
+    }
+}
+
+.month-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 5px;
+}
+
+.days {
+    padding: 5px;
+
+    td {
+        text-align: center;
+    }
+}
+
+.timePicker {
+    font-family: Raleway;
+    font-size: 1.1em;
+    padding: 2px
+}
+
+.createMeal {
+    .row {
+        display: flex;
+    }
+    .col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        flex-grow: 1;
+    }
+}

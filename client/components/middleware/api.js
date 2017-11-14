@@ -2,6 +2,7 @@ export const apiMiddleware = store => next => action => {
     if (action.api) {
         const originalAction = Object.assign({}, action),
             o = action.api;
+
         next(originalAction);
 
         let opt = {
@@ -26,6 +27,9 @@ export const apiMiddleware = store => next => action => {
             action.status = 'complete';
             action.data = data;
             store.dispatch(action);
+            if (action.enqueue) {
+                store.dispatch(action.enqueue);
+            }
         })
         .catch(err => {
             action.api = undefined;

@@ -1,6 +1,16 @@
 import {createHash} from './scripts/crypto.js';
 
-export const initial_signups = (data) => ({
+export const initial_meals = () => ({
+  type: 'INITIAL_MEALS',
+  status: 'initialized',
+  api: {
+    url: '/api/meals',
+    method: 'get'
+  },
+  enqueue: initial_signups()
+});
+
+export const initial_signups = () => ({
   type: 'INITIAL_SIGNUPS',
   status: 'initialized',
   api: {
@@ -64,7 +74,7 @@ export const meal_edit = (data) => ({
   }
 });
 
-export const logout = () => ({
+export const create_settings_dialog = () => ({
   type: 'LOGOUT',
   status: 'initialized',
   api: {
@@ -73,28 +83,43 @@ export const logout = () => ({
   }
 });
 
-export const login = data => ({
-  type: 'LOGIN',
+export const create_meal_dialog = () => ({
+  type: 'DIALOG',
+  content: 'CREATE_MEAL'
+});
+
+export const start_edit_meal = (id) => ({
+  type: 'DIALOG',
+  content: 'EDIT_MEAL',
+  option: {meal: id}
+});
+
+export const create_meal = (data) => ({
+  type: 'CREATE_MEAL',
   status: 'initialized',
   api: {
-    url: '/api/login',
+    url: '/api/meals',
     method: 'post',
-    body: {login: data.name, password: data.pass}
+    body: data
   }
 });
 
-export const start_login = data => {
-  return dispatch => {
-    createHash(data.pass)
-      .then((hash) => {
-        dispatch(login({
-          name: data.name,
-          pass: hash
-        }))
-      }).catch(console.log);
+export const edit_meal = (data) => ({
+  type: 'EDIT_MEAL',
+  status: 'initialized',
+  api: {
+    url: '/api/meals/' + data.id,
+    method: 'put',
+    body: data
   }
-};
+});
 
-
-
-
+export const cancel_meal = (id) => ({
+  type: 'CANCEL_MEAL',
+  status: 'initialized',
+  id: id,
+  api: {
+    url: '/api/meals/' + id,
+    method: 'delete'
+  }
+});

@@ -1,12 +1,12 @@
 import React from 'react';
 import Dialog from '../Dialog/Dialog.jsx';
 
-export default class SignUpDialog extends React.Component {
+export default class CreateMealDialog extends React.Component {
   constructor(props) {
     super();
 
     this.state = {
-      name: props.user.name,
+      name: props.edit ? props.signup.name : props.user.name,
       comment: props.edit ? props.signup.comment : ''
     }
 
@@ -28,7 +28,6 @@ export default class SignUpDialog extends React.Component {
     this.props[edit ? 'meal_edit' : 'meal_signup']({
       name: this.state.name,
       comment: this.state.comment,
-      user: this.props.user.id,
       meal: this.props.meal.id,
       signup: edit ? this.props.signup.id : null
     });
@@ -54,7 +53,7 @@ export default class SignUpDialog extends React.Component {
           </div>
           <div className="row">
             <label htmlFor="SignUpDialog_comment">Kommentar</label>
-            <input type="text" id="SignUpDialog_comment" defaultValue={p.edit ? p.signup.comment : null} onChange={this.commentInput}/>
+            <textarea type="text" id="SignUpDialog_comment" defaultValue={p.edit ? p.signup.comment : null} onChange={this.commentInput}></textarea>
           </div>
         </div>
         <div className="foot">

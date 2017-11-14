@@ -23,7 +23,7 @@ signups.put('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), error.router.validate('body', {
     comment: /^[^"%;]{0,150}$/,
-    name: /^[ÄÜÖäöüA-Za-z0-9.\-,]{2,50}$/,
+    name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
 }), (req, res) => {
     signupsDB.setSignupByProperty('id', req.params.id, req.body).then((signup) => {
         res.status(200).send(signup);
@@ -42,8 +42,7 @@ signups.delete('/:id', error.router.validate('params', {
 
 signups.post('/', error.router.validate('body', {
     comment: /^[^"%;]{0,150}$/,
-    name: /^[ÄÜÖäöüA-Za-z0-9.\-,]{2,50}$/,
-    user: /^[0-9]{1,50}$/,
+    name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
     meal: /^[0-9]{1,50}$/,
 }), (req, res) => {
     signupsDB.createSignUp(req.body).then((signup) => {

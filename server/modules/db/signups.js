@@ -11,7 +11,7 @@ module.exports = {
             return new Promise((resolve, reject) => myDb.query(`select * from signups where ${prop} = ${mysql.escape(val)}`, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/user:getUserObjectByProperty', err);
+                    log(2, 'modules/db/signup:getSignupByProperty', err);
                     reject({status: 500, message: 'Unable to find signup.'});
                 } else {
                     resolve(result[0]);
@@ -31,7 +31,7 @@ module.exports = {
             return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/user:getUserObjectByProperty', err);
+                    log(2, 'modules/db/signup:setSignupByProperty', err);
                     reject({status: 500, message: 'Unable to insert data.'});
                 } else {
                     resolve({
@@ -50,7 +50,7 @@ module.exports = {
             return new Promise((resolve, reject) => myDb.query(`delete from signups where ${prop} = ${mysql.escape(val)}`, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/user:getUserObjectByProperty', err);
+                    log(2, 'modules/db/signup:deleteSignupByProperty', err);
                     reject({status: 500, message: 'Unable to delete signup.'});
                 } else {
                     resolve(result[0]);
@@ -73,20 +73,19 @@ module.exports = {
 
         return getConnection()
         .then (myDb => {
-            log(6, 'modules/db/user:createSignUp - got db connection');
+            log(6, 'modules/db/signup:createSignUp - got db connection');
             return new Promise((resolve, reject) => {
                 myDb.query(query, (err, result) => {
                     myDb.release();
                     if (err) {
-                        log(2, 'modules/db/user:createUser.2', err, query);
+                        log(2, 'modules/db/signup:createSignUp.2', err, query);
                         reject({status: 500, message: 'Error creating signup'});
                     } else {
-                        log(6, 'modules/db/user:createUser - signup created');
+                        log(6, 'modules/db/signup:createSignUp - signup created');
                         resolve({
                             name: options.name,
                             meal: options.meal,
                             comment: options.comment,
-                            user: 0,
                             id: result.insertId
                         });
                     }
@@ -99,7 +98,7 @@ module.exports = {
                 return err;
             }
 
-            return error.db.codeError('modules/db/user.js:createUser.4', arguments);
+            return error.db.codeError('modules/db/signup.js:createSignUp.4', arguments);
         });
     },
 
@@ -111,10 +110,10 @@ module.exports = {
             return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/user:getAllUserSettings', err);
-                    reject({status: 500, message: 'Unable to get userlist.'});
+                    log(2, 'modules/db/signup:getAllSignups', err);
+                    reject({status: 500, message: 'Unable to get signuplist.'});
                 } else {
-                    resolve(result.map(signup => {signup.user = 0; return signup}));
+                    resolve(result);
                 }
             }));
         });

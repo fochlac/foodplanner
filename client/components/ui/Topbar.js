@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Topbar from './Topbar/Topbar.jsx';
-import {start_login, logout} from '../actions.js';
+import {create_settings_dialog, create_meal_dialog} from '../actions.js';
 
 const mapStateToProps = (state, ownProps) => ({
-  user: state.users[state.user.id],
-  logging: state.user.changing
+	state: state
 });
 
-export default connect(mapStateToProps, {start_login, logout})(Topbar);
+export default connect(mapStateToProps, {create_settings_dialog, create_meal_dialog})(Topbar);

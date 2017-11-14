@@ -11,15 +11,14 @@ const mapStateToProps = (state, ownProps) => {
         return {
             edit: true,
             signup,
-            user: state.users[signup.user],
-            meal: state.meals[signup.meal]
+            meal: state.meals.filter(meal => meal.id === ownProps.id)[0]
         };
     } else {
-        const meal = state.meals[ownProps.id];
+        const meal = state.meals.filter(meal => meal.id === ownProps.id)[0];
         return {
             edit: false,
             meal,
-            user: state.users[state.user.id]
+            user: state.user
         };
     }
 

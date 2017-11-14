@@ -16,6 +16,28 @@ const meals = (state = [], action) => {
                 newArr[correctIndex] = newObj;
                 return newArr;
             }
+        case 'CREATE_MEAL':
+            if (action.status === 'complete') {
+                action.data.signups = [];
+                return [...state, action.data];
+            }
+        case 'CANCEL_MEAL':
+            if (action.status === 'complete') {
+                let newState = state.concat([]);
+                return newState.filter(meal => meal.id !== action.id);
+            }
+        case 'EDIT_MEAL':
+            if (action.status === 'complete') {
+                let newState = state.concat([]);
+                return newState.filter(meal => meal.id !== action.data.id).push(action.data);
+            }
+        case 'INITIAL_MEALS':
+            if (action.status === 'complete') {
+                return action.data.map(meal => {
+                    meal.signups = [];
+                    return meal;
+                });
+            }
         case 'INITIAL_SIGNUPS':
             if (action.status === 'complete') {
                 let helper = action.data.reduce((acc, signup) => {

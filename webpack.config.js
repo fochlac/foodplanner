@@ -33,7 +33,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                exclude: /node_modules/,
+                include: [path.resolve(__dirname, "node_modules/react-datepicker/dist/")],
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: "css-loader"

@@ -48,6 +48,19 @@ let setup = [
 
         PRIMARY KEY (id)
     );`
+
+    `CREATE TABLE IF NOT EXISTS \`meals\` (
+        \`id\`              int             NOT NULL    AUTO_INCREMENT,
+        \`name\`            varchar(150)    NOT NULL,
+        \`description\`     text,
+        \`creator\`         varchar(150)    NOT NULL,
+        \`time\`            int             NOT NULL,
+        \`deadline\`        int             NOT NULL,
+        \`signupLimit\`     int,
+        \`image\`           varchar(150),
+
+        PRIMARY KEY (id)
+    );`
 ];
 
 function setupDB() {

@@ -5,6 +5,7 @@ const app = (state = {}, action) => {
 
         case 'MEAL_SIGNUP':
         case 'MEAL_EDIT':
+        case 'CREATE_MEAL':
             if (action.status === 'complete') {
                 return {...state, dialog: false};
             }

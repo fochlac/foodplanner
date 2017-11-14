@@ -6,12 +6,22 @@
     border: solid 1px @colorg3;
 
     .titlebar {
-        padding: 5px 0;
+        padding: 5px 10px;
         margin-bottom: 10px;
         background: @colorg3;
+        position: relative;
+        display: flex;
+        height: 22px;
+        align-items: center;
+
+        .menuIcon {
+            color: @colorg5;
+            padding: 10px;
+        }
 
         .title {
-            margin-left: 10px;
+            margin-right: auto;
+            margin-left: 5px;
             color: @colorg5;
         }
     }
@@ -38,6 +48,10 @@
             li {
                 margin-bottom: 5px;
                 cursor: default;
+
+                &:hover .icons span{
+                    display: inline-block;
+                }
             }
         }
 
@@ -70,10 +84,6 @@
 
     .user {
         font-weight: 700;
-
-        &:hover .icons span{
-            display: inline-block;
-        }
 
         .icons span {
             cursor: pointer;
