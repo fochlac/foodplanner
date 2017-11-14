@@ -1,0 +1,170 @@
+.event {
+    margin-top: 56px;
+    background: #709c3b;
+    min-height: calc(100vh ~"-" 56px);
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: space-around;
+        margin-bottom: 10px;
+        padding: 0 10px;
+        text-shadow: 1px 1px 1px hsla(0, 0%, 0%, 0.4), -1px 1px 1px hsla(0, 0%, 0%, 0.4), 1px -1px 1px rgba(0, 0, 0, 0.4), -1px -1px 1px rgba(0, 0, 0, 0.4);
+        color: white;
+    }
+
+
+    .col {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        &:nth-child(2) {
+            text-align: end;
+            padding-top: 10px;
+        }
+    }
+
+    .flexrow {
+        display: flex;
+    }
+
+    .eventHeader {
+        height: 150px;
+        background-position: center center;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        border-bottom: solid 2px #17380b;
+    }
+
+    .subtabs {
+        display: flex;
+        list-style: none;
+        margin: 1px 0 5px;
+        background: #17380b;
+        padding: 0;
+        overflow-x: auto;
+        white-space: nowrap;
+
+        :first-child {
+            margin-left: auto;
+        }
+
+        :last-child {
+            margin-right: auto;
+        }
+    }
+
+    .expander {
+        text-align: center;
+        display: block;
+        cursor: pointer;
+        background: #17380b;
+        color: #709c3b;
+        font-weight: 700;
+    }
+
+    .submenuTab {
+        padding: 5px 5px;
+        margin: 0 5px;
+        color: #709c3b;
+        font-weight: 700;
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+
+        span {
+            background: #c40002;
+            width: auto;
+            display: inline-block;
+            height: 13px;
+            font-size: 11px;
+            text-align: center;
+            position: relative;
+            right: 1px;
+            border-radius: 2px;
+            border: 1px solid #17380b;
+            color: #17380b;
+            font-weight: 900;
+            top: -7px;
+            padding: 0px 3px 1px 2px;
+        }
+    }
+
+    .head {
+        display: flex;
+
+        a, p {
+            font-weight: 800;
+        }
+    }
+
+    .subtabCol {
+        flex-direction: column;
+    }
+
+    .subtabCol,
+    .subtabRow {
+        padding: 0 10px;
+        display: flex;
+        margin-top: 10px;
+
+        .notificationList {
+            display: none;
+        }
+
+        h4 {
+            font-weight: 300;
+        }
+    }
+
+    .subtabContent {
+        margin: 10px 0;
+        padding: 0 10px;
+    }
+
+    .taskData {
+        margin-top: 5px;
+    }
+
+    .taskHead {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+
+        i {
+            padding-left: 5px;
+        }
+        .fa-circle {
+            padding-bottom: 2px;
+        }
+    }
+
+    .eventDescription {
+        padding: 5px 10px 10px;
+        background: #17380b;
+        color: #709c3b;
+        margin-top: 1px;
+    }
+
+    .virgin:after {
+        content: '*';
+        font-size: 27px;
+        position: relative;
+        line-height: 5px;
+        top: 5px;
+        color: #c40002;
+    }
+
+    .fileLink {
+        margin-left: 5px;
+    }
+
+    .piechart {
+        margin-top: 5px;
+        margin-left: 5px;
+    }
+}

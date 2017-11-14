@@ -1,0 +1,53 @@
+@import '../../root/variables.less';
+
+.dialogBackground {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog {
+    min-width: 400px;
+    background: @colorg5;
+    border: solid 1px @colorg3;
+    border-radius: @borderRadius;
+
+    .titlebar {
+        display: flex;
+        margin-bottom: 10px;
+        background: @colorg3;
+        color: @colorg5;
+        padding: 7px 15px;
+        align-items: center;
+    }
+
+    .body {
+        padding: 0 15px;
+    }
+
+    .foot {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 5px;
+
+        button {
+            margin-left: 5px;
+        }
+    }
+
+    label {
+        display: block;
+        font-size: 0.8em;
+        margin-top: 5px;
+        font-weight: 600;
+    }
+}

@@ -1,0 +1,86 @@
+@import '../../root/variables.less';
+
+.meal {
+    width: 1000px;
+    margin: 0 auto 20px;
+    border: solid 1px @colorg3;
+
+    .titlebar {
+        padding: 5px 0;
+        margin-bottom: 10px;
+        background: @colorg3;
+
+        .title {
+            margin-left: 10px;
+            color: @colorg5;
+        }
+    }
+
+    .details {
+        display: flex;
+        justify-content: stretch;
+        align-items: stretch;
+    }
+
+    .participants {
+        flex-basis: 50%;
+        padding: 0 10px;
+
+
+        .comment {
+            font-size: 0.9em;
+            margin-left: 5px;
+        }
+        .participantsList {
+            padding-left: 20px;
+            margin: 10px 0;
+
+            li {
+                margin-bottom: 5px;
+                cursor: default;
+            }
+        }
+
+        .participation,
+        .deadline {
+            font-size: 0.9em;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+    }
+
+    .mealDetails {
+        flex-basis: 50%;
+        padding: 0 10px;
+
+        .mealImage {
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+            margin: 0 10px 10px;
+            float: left;
+        }
+
+        .description {
+            margin: 10px 0;
+        }
+    }
+
+
+    .user {
+        font-weight: 700;
+
+        &:hover .icons span{
+            display: inline-block;
+        }
+
+        .icons span {
+            cursor: pointer;
+            margin-left: 5px;
+            display: none;
+        }
+    }
+
+
+}

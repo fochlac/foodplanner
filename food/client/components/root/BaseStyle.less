@@ -1,0 +1,75 @@
+@import './variables.less';
+
+body {
+    color: @font-color-dark;
+    background: @base-color;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: 0;
+    font-size: 16px;
+    font-family: Raleway;
+    text-align: justify;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    color: @colorg1;
+    text-decoration: none;
+}
+
+h3, h4, h2, h1, h5 {
+    margin: 0;
+}
+
+.push-right {
+    margin-left: auto;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+button {
+    background: @colorg3;
+    color: @colorg5;
+    border: solid 1px @colorg1;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 5px;
+
+    &:hover {
+        background: @colorg2;
+    }
+}
+
+.red {
+    color: @colorr1;
+}
+
+.yellow {
+    color: @colory1;
+}
+
+.green {
+    color: @colorg3;
+}
+.inlineBlock {
+    display: inline-block;
+}
+.actionCursor {
+    cursor: pointer;
+}
+.fakeLink {
+    color: @colorg3;
+    cursor: pointer;
+    font-weight: 600;
+}
+.hidden {
+    display: none !important;
+}

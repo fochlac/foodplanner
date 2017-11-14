@@ -1,0 +1,46 @@
+@import '../../root/variables.less';
+
+.topbar {
+    display: flex;
+    align-items: center;
+    height: @topBarHeight;
+    box-shadow: 0 2px 5px -3px black;
+    background: @colorg3;
+    color: @colorg5;
+    position: fixed;
+    top:0;
+    width: 100%;
+    z-index: 5;
+
+    .spacer {
+        width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+    }
+
+    .fa-cutlery {
+        margin-right: 5px;
+    }
+
+    .fa-inverse {
+        color: @colorg3;
+    }
+
+    .quicklinks {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        margin-left: auto;
+
+        a {
+            color: @colorg5;
+        }
+
+        & > li {
+            padding: 5px;
+            position: relative;
+        }
+    }
+}
