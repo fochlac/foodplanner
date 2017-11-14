@@ -1,0 +1,44 @@
+#!/bin/bash
+cd "${BASH_SOURCE%/*}" || exit
+cd .. || exit
+
+cat << EOF > /etc/yum.repos.d/google-chrome.repo
+[google-chrome]
+name=google-chrome - \$basearch
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+EOF
+
+while read p; do
+  export $p
+done < ./build_scripts/variables
+curl -sL https://rpm.nodesource.com/setup_8.x | bash -
+yum install -y mariadb-server mariadb openssl nodejs google-chrome-stable
+sed -i "s/\[mysqld\]/\[mysqld\]\\nport=$ADMIN_DB_PORT/" /etc/my.cnf
+systemctl start mariadb
+mysqladmin -u $ADMIN_DB_USERNAME password "$ADMIN_DB_PASSWORD"
+mkdir $KEYSTORE
+openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -nodes -subj "/CN=$FOOD_EXTERNAL"
+
+npm install
+node_modules/webpack/bin/webpack.js -p
+node server/setup.js -y
+
+cat << EOF > /etc/systemd/system/foodd.service
+[Unit]
+Description=Essensplaner Server
+After=network.target
+
+[Service]
+ExecStart=$FOOD_HOME/index.js
+Restart=always
+Environment=PATH=/usr/bin:/usr/local/bin
+EnvironmentFile=$FOOD_ROOT/build_scripts/variables
+WorkingDirectory=$FOOD_ROOT/
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl start foodd

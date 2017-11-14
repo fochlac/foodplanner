@@ -1,0 +1,29 @@
+@import '../../variables.less';
+
+.errors {
+  position: fixed;
+  top: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  flex-direction: column;
+  padding: 0 20px;
+  box-sizing: border-box;
+
+  .fa-times {
+    margin-left: 20px;
+    cursor: pointer;
+  }
+}
+
+.error {
+  background: @colorr3;
+  padding: 5px 15px;
+  border-radius: @borderRadius;
+  border: solid 2px @colorr1;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,45 @@
+@import '../../variables.less';
+
+.mailFrame {
+  position: relative;
+  margin-bottom: 5px;
+
+  .fa-spinner {
+    position: absolute;
+    right: 5px;
+    top: calc(50% ~'-' 10px);
+  }
+
+  .mailSuggestion {
+    position: absolute;
+    display: block;
+    padding: 5px;
+    background: @colorg4;
+    z-index: 1;
+    top: 35px;
+    color: @colorg5;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: @tinyShadowDown;
+
+    &:before {
+      position: absolute;
+      display: block;
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 11px solid @colorg4;
+      top: -6px;
+      left: calc(50% ~'-' 11px);
+    }
+  }
+
+  .fa-info-circle {
+    font-size: 16px;
+    width: 0px;
+    margin-left: 5px;
+    position: relative;
+  }
+}

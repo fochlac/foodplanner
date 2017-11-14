@@ -1,0 +1,141 @@
+@import '../../variables.less';
+
+.createMeal {
+  .row {
+    display: flex;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex-grow: 1;
+  }
+
+.tabList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+
+    li {
+      border: solid 1px @colorg3;
+      padding: 2px 5px;
+      border-radius: @borderRadius;
+      margin-right: 5px;
+      cursor: pointer;
+
+      &.active {
+        color: @colorg5;
+        background: @colorg3;
+        user-select: none;
+        cursor: default;
+        font-weight: 600;
+      }
+    }
+}
+
+  .addOption,
+  .templateSelector {
+    margin-top: 5px;
+    max-width: 200px;
+    margin-bottom: 1px;
+  }
+
+  .topBorder {
+    margin-top: 10px;
+    border-top: solid 1px;
+  }
+
+  .inlineLabel {
+    font-weight: 400;
+    margin-top: 0px;
+  }
+
+  .sectionHead {
+    margin-top: 15px;
+    border-bottom: solid 1px;
+    margin-bottom: 5px;
+  }
+
+  .additionalOption {
+    margin-bottom: 5px;
+    border-bottom: solid 1px @colorg1;
+    padding-bottom: 10px;
+
+    .delLink {
+      font-size: 0.85em;
+    }
+    .optionType {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      margin-left: 10px;
+    }
+    .valueCloud {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 5px 0;
+      flex-wrap: wrap;
+
+      li {
+        padding: 2px 5px;
+        font-size: 0.9em;
+        margin: 2px 5px;
+        background: white;
+        border: solid 1px @colorg1;
+        border-radius: @borderRadius;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .fa-times {
+          margin-left: 5px;
+        }
+      }
+    }
+    .addButton {
+      margin-left: 5px;
+    }
+  }
+
+  .datefinderOption {
+    border-bottom: none;
+
+    .wrap.row {
+      flex-wrap: wrap;
+      margin-left: -5px;
+    }
+    .addButton {
+      margin-bottom: 5px;
+      min-width: 110px;
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+    .addValue {
+      min-width: 180px;
+      flex-basis: 180px;
+      white-space: nowrap;
+      flex-shrink: 1;
+      margin-bottom: 5px;
+      flex-grow: 1;
+      margin-left: 5px;
+    }
+  }
+
+  @media all and (max-width: 420px) {
+    .row.responsive {
+      flex-direction: column;
+      align-items: stretch;
+
+      & > .col {
+        align-items: stretch;
+      }
+      & > select {
+        max-width: 100%;
+        min-width: 100%;
+      }
+    }
+  }
+}

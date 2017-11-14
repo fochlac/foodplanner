@@ -1,0 +1,9 @@
+#!/bin/bash
+cd /home/food-dev/
+
+git fetch
+git reset --hard origin/develop
+
+npm install
+npm run-script build-dev
+systemctl restart food-devd

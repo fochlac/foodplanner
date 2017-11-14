@@ -1,0 +1,52 @@
+@import '../../variables.less';
+
+.subtitle_option {
+  margin-top: 10px;
+}
+
+.PriceDialog {
+  flex-basis: 425px;
+
+  .warning {
+    padding: 5px 10px;
+    background: @colory1;
+    border-radius: 2px;
+    border: solid 1px @colory2;
+    text-align: left;
+    margin-bottom: 5px;
+
+    &.title {
+      cursor: help;
+    }
+  }
+  .warning .fa-info-circle {
+    margin-left: 10px;
+  }
+
+  .warning:before {
+    content: '\f071';
+    font-family: FontAwesome;
+    font-size: 1.5em;
+    color: @colory2;
+    margin-right: 10px;
+  }
+  table {
+    width: 100%;
+  }
+  .moneySymbol {
+    margin: 0 5px;
+    font-weight: 600;
+    display: inline-block;
+  }
+  input[type='number'] {
+    text-align: right;
+    max-width: 150px;
+    margin-left: auto;
+  }
+  .paymentList {
+    th:nth-child(n + 2),
+    td:nth-child(n + 2) {
+      text-align: center;
+    }
+  }
+}

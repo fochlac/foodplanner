@@ -1,0 +1,79 @@
+version: 2
+jobs:
+  build:
+    working_directory: /home/circleci/foodplanner
+    docker:
+      - image: circleci/node:latest-browsers
+        environment:
+          CHROME_BIN: "/usr/bin/google-chrome"
+          GITHUB_SECRET_FOOD: "none"
+          FOOD_HOME: "/home/circleci/foodplanner/server/"
+          FOOD_CLIENT: "/home/circleci/foodplanner/dist/"
+          FOOD_TESTS: "/home/circleci/foodplanner/test/"
+          FOOD_ROOT: "/home/circleci/foodplanner/"
+          FOOD_DB_USERNAME: "food"
+          FOOD_DB_PASSWORD: "plan"
+          FOOD_DB_NAME: "food_circleci"
+          FOOD_PORT: "22222"
+          FOOD_EXTERNAL: "localhost"
+          FOOD_MAILPW: "none"
+          FOOD_UUID: "asdajsdlajiwdjjdibadj23hbsiu8szfhu2n23ud9s8fjs3rnun"
+          ADMIN_DB_USERNAME: "root"
+          ADMIN_DB_PASSWORD: "qwert6"
+          ADMIN_DB_PORT: "3306"
+          ADMIN_DB_HOST: "localhost"
+          DEVELOP: "true"
+          DEV_PORT: "8080"
+      - image: mariadb:latest
+        environment: 
+          MYSQL_ROOT_PASSWORD: "qwert6"
+          MYSQL_USER: "food"
+          MYSQL_PASSWORD: "plan"
+          MYSQL_DATABASE: "food_circleci"
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test
+          command: npm test
+      - run:
+          name: setup db && build client
+          command: |
+            node server/setup.js -y -test
+            npm run build
+      - run:
+          name: run smoke tests
+          command: |
+            node ./server/index.js &
+            touch test-log
+            npm run-script test-ui > test-log
+            cat test-log
+            pkill -f "node.*server/index.js"
+      - run: 
+          name: coverage
+          command: npm run coverage
+      - run: 
+          name: cleanup and post test-ui-log
+          when: on_fail
+          command: |
+            cat test-log
+            pkill -f "node.*server/index.js"
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
+      - store_test_results:
+          path: test-results.xml

@@ -1,0 +1,108 @@
+@import '../../variables.less';
+
+.dialogBackground {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  flex-basis: 400px;
+  max-width: 95%;
+  background: @colorg5;
+  border: solid 1px @colorg3;
+  border-radius: @borderRadius;
+
+  .titlebar {
+    display: flex;
+    margin-bottom: 10px;
+    background: @colorg3;
+    color: @colorg5;
+    padding: 7px 15px;
+    align-items: center;
+
+    h3 {
+      white-space: nowrap;
+      margin-right: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .body {
+    padding: 0 15px;
+    max-height: calc(95vh ~'-' 97px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-width: calc(100% ~'-' 30px);
+
+    .DayPickerInput input,
+    input[type='text'],
+    input[type='number'],
+    input[type='password'],
+    textarea {
+      width: 100%;
+      padding: 3px;
+      font-family: Raleway;
+      font-size: 1.1em;
+      box-sizing: border-box;
+    }
+
+    td {
+      white-space: nowrap;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 5px;
+    }
+  }
+
+  .foot {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 5px;
+
+    span {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    button {
+      flex-grow: 1;
+      margin-left: 5px;
+      margin-bottom: 5px;
+    }
+  }
+
+  label {
+    display: block;
+    font-size: 0.9em;
+    margin-top: 5px;
+    font-weight: 600;
+
+    &.radioLabel {
+      margin-top: 0;
+    }
+  }
+  .row {
+    display: flex;
+    align-items: center;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    flex-grow: 1;
+  }
+}

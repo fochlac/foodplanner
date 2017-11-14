@@ -1,0 +1,68 @@
+@import '../../variables.less';
+
+.landing.dashboard {
+  padding: 0;
+  background: lighten(@colorg5, 2%);
+
+  .content {
+    max-width: 1000px;
+    min-height: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 1em;
+    background: @colorg5;
+    margin-bottom: -30px;
+
+    label {
+      display: inline-block;
+    }
+
+    input {
+      width: 100%;
+      padding: 3px;
+      font-family: Raleway;
+      font-size: 1.1em;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    .title {
+      text-align: center;
+      margin: 10px 0 20px;
+    }
+
+    p {
+      margin-bottom: 5px;
+      line-height: 1.25em;
+    }
+
+    .domainInput {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5em;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .domainFinder {
+      max-width: 300px;
+      margin: 20px auto 30px;
+      padding: 20px;
+      border: solid 1px;
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      h3 {
+        align-self: center;
+        margin-bottom: 5px;
+      }
+    }
+
+    .submit {
+      flex-basis: 200px;
+    }
+  }
+}
