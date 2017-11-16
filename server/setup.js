@@ -47,19 +47,28 @@ let setup = [
         \`comment\` varchar(150)    NOT NULL,
 
         PRIMARY KEY (id)
-    );`
-
+    );`,
     `CREATE TABLE IF NOT EXISTS \`meals\` (
         \`id\`              int             NOT NULL    AUTO_INCREMENT,
         \`name\`            varchar(150)    NOT NULL,
         \`description\`     text,
         \`creator\`         varchar(150)    NOT NULL,
-        \`time\`            int             NOT NULL,
-        \`deadline\`        int             NOT NULL,
+        \`time\`            bigint          NOT NULL,
+        \`deadline\`        bigint          NOT NULL,
         \`signupLimit\`     int,
         \`image\`           varchar(150),
 
         PRIMARY KEY (id)
+    );`,
+    `CREATE TABLE IF NOT EXISTS \`mailingList\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`name\`                varchar(150)    NOT NULL,
+        \`mail\`                varchar(150)    NOT NULL,
+        \`deadlineReminder\`    int                         DEFAULT 0,
+        \`creationNotice\`      int                         DEFAULT 0,
+
+        PRIMARY KEY (id),
+        UNIQUE KEY \`mail\` (\`mail\`)
     );`
 ];
 

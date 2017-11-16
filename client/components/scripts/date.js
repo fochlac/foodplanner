@@ -36,26 +36,30 @@ export const formatTimeShort = (date) => {
     if (diff < -week) {
         `${src.getDate()}.${src.getMonth() + 1}${(diff < year) ? '' : ('.' + src.getFullYear())} ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
     } else if (diff < -day) {
-        return `${tage[src.getDay()]}, ${src.getHours()}:${src.getMinutes()}`;
-    } else if (diff < -hour) {
+        return `${tage[src.getDay()]}, ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
+    } else if (diff < -2 * hour) {
     	return `in ${-Math.floor(diff / hour)} Stunden`;
-    } else if (diff < 0) {
+    } else if (diff < -hour) {
+        return `in 1 Stunde`;
+    } else if (diff < -minute) {
         return `in ${-Math.floor(diff / minute)} Minuten`;
+    } else if (diff < 0) {
+        return `in 1 Minute`;
+    } else if (diff < 2 * minute) {
+        return `vor 1 Minute`;
     } else if (diff < hour) {
         return `vor ${Math.floor(diff / minute)} Minuten`;
+    } else if (diff < 2 * hour) {
+        return `vor 1 Stunde`;
     } else if (diff < day) {
         return `vor ${Math.floor(diff / hour)} Stunden`;
     } else if (diff < week) {
-    	return `${tage[src.getDay()]}, ${src.getHours()}:${src.getMinutes()}`;
+    	return `letzten ${tage[src.getDay()]}, ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
     }
     return `${src.getDate()}.${src.getMonth() + 1}${(diff < year) ? '' : ('.' + src.getFullYear())} ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
 }
 
-export const getUnixDate = (date) => {
-
-}
-
 export const round = (date, duration) => {
-    return moment(Math.ceil((+date) / (+duration)) * (+duration));
+    return moment(Math.ceil((+date) / (+duration * 1000)) * (+duration * 1000));
 }
 

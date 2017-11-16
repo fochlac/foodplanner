@@ -8,13 +8,14 @@ import './CreateMealDialog.less';
 
 export default class CreateMealDialog extends React.Component {
   constructor(props) {
+    const tomorrow12 = moment().endOf('day').add(12, 'hours').toDate();
     super();
-    const tomorrow12 = moment().endOf('day').add(12, 'hours').toDate()
+
     this.state = props.edit ? {
       ...props.meal,
       deadline: '',
-      deadlineHour: '',
-      timeHour: '',
+      deadlineHour: '12:00',
+      timeHour: '12:00',
       time: '',
       timeObject: new Date(props.meal.time),
       deadlineObject: new Date(props.meal.deadline),
@@ -26,8 +27,8 @@ export default class CreateMealDialog extends React.Component {
       description: '',
       signupLimit: 0,
       deadline: '',
-      deadlineHour: '',
-      timeHour: '',
+      deadlineHour: '12:00',
+      timeHour: '12:00',
       time: '',
       timeObject: tomorrow12,
       deadlineObject: tomorrow12
@@ -69,7 +70,7 @@ export default class CreateMealDialog extends React.Component {
 
   submit() {
     const s = this.state,
-      tomorrow12 = moment().endOf('day').add(12, 'hours').unix();
+      tomorrow12 = moment().endOf('day').add(12, 'hours').unix() * 1000;
 
     this.props[this.props.edit ? 'edit_meal' : 'create_meal']({
       id: s.id,
@@ -96,7 +97,11 @@ export default class CreateMealDialog extends React.Component {
     return (
       <Dialog>
         <div className="titlebar">
-          <h3>Neue Mahlzeit erstellen</h3>
+          {
+            edit
+            ? <h3>{s.name} bearbeiten</h3>
+            : <h3>Neue Mahlzeit erstellen</h3>
+          }
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
         <div className="body createMeal">

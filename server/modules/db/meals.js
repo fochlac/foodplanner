@@ -1,6 +1,7 @@
 const   getConnection   = require(process.env.FOOD_HOME + 'modules/db')
     ,   mysql           = require('mysql')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log')
+    ,   mail            = require(process.env.FOOD_HOME + 'modules/mailer')
     ,   error           = require(process.env.FOOD_HOME + 'modules/error');
 
 
@@ -86,15 +87,16 @@ module.exports = {
 
         return getConnection()
         .then (myDb => {
-            log(6, 'modules/db/meal:createSignUp - got db connection');
+            log(6, 'modules/db/meal:createMeal - got db connection');
             return new Promise((resolve, reject) => {
                 myDb.query(query, (err, result) => {
                     myDb.release();
                     if (err) {
-                        log(2, 'modules/db/meal:createSignUp.2', err, query);
+                        log(2, 'modules/db/meal:createMeal.2', err, query);
                         reject({status: 500, message: 'Error creating meal'});
                     } else {
-                        log(6, 'modules/db/meal:createSignUp - meal created');
+                        log(6, 'modules/db/meal:createMeal - meal created');
+                        mail.sendCreationNotice(options);
                         resolve({
                             name: options.name,
                             description: options.description,
@@ -115,7 +117,7 @@ module.exports = {
                 return err;
             }
 
-            return error.db.codeError('modules/db/meal.js:createSignUp.4', arguments);
+            return error.db.codeError('modules/db/meal.js:createMeal.4', arguments);
         });
     },
 

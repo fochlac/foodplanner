@@ -1,13 +1,12 @@
 const	meals	    = require('express').Router()
 	,	mealsDB 	= require(process.env.FOOD_HOME + 'modules/db/meals')
-	,	error 		= require(process.env.FOOD_HOME + 'modules/error')
-    ,   moment     = require('moment');
+	,	error 		= require(process.env.FOOD_HOME + 'modules/error');
 
 meals.get('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    mealsDB.getMealByProperty('id', req.params.id).then((signup) => {
-        res.status(200).send(signup);
+    mealsDB.getMealByProperty('id', req.params.id).then((meals) => {
+        res.status(200).send(meals);
     })
     .catch(error.router.internalError(res));
 });
@@ -30,8 +29,8 @@ meals.put('/:id', error.router.validate('params', {
     signupLimit: /^[0-9]{0,50}$/,
     image: /^[^"%;]{0,150}$/
 }), (req, res) => {
-    mealsDB.setMealByProperty('id', req.params.id, req.body).then((signup) => {
-        res.status(200).send(signup);
+    mealsDB.setMealByProperty('id', req.params.id, req.body).then((meals) => {
+        res.status(200).send(meals);
     })
     .catch(error.router.internalError(res));
 });
@@ -54,8 +53,8 @@ meals.post('/', error.router.validate('body', {
     signupLimit: /^[0-9]{0,50}$/,
     image: /^[^"%;]{0,150}$/
 }), (req, res) => {
-    mealsDB.createMeal(req.body).then((signup) => {
-        res.status(200).send(signup);
+    mealsDB.createMeal(req.body).then((meal) => {
+        res.status(200).send(meal);
     })
     .catch(error.router.internalError(res));
 });

@@ -8,6 +8,7 @@ const   express = require('express')
     ,   https = require('https')
     ,   fs = require('fs')
     ,   routes = require(process.env.FOOD_HOME + 'routes')
+    ,   scheduler = require(process.env.FOOD_HOME + 'modules/scheduler')
     ,   server_port = process.env.FOOD_PORT
     ,   server_ip_address = 'localhost'
     ,   sslServer = https.createServer({
@@ -34,3 +35,6 @@ app.use('/static/', express.static(process.env.FOOD_CLIENT + ''));
 
 // if no route and no static content, redirect to index
 app.get('*', (req, res) => res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html'));
+
+// load scheduler
+scheduler.init();

@@ -10,6 +10,14 @@ module.exports = {
 		}
 	},
 
+	checkError: (level, message) => {
+		return (err) => {
+			if (err) {
+				log(level, message, err);
+			}
+		}
+	},
+
 	db: {
 		codeError: (...err) => {
 			log(1, ...err);

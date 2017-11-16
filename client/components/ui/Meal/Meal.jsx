@@ -6,26 +6,35 @@ import './Meal.less';
 export default class Meal extends React.Component {
   constructor(props) {
     super();
+    let id = props.meal.id;
+
+    this.state = {
+      editable: (props.meal.deadline > Date.now())
+    }
+
+    this.checkDeadline = this.checkDeadline.bind(this);
+    this.editMeal = props.start_edit_meal.bind(this, id);
+    this.signup = props.start_meal_signup.bind(this, id);
+    this.cancelMeal = props.start_cancel_meal.bind(this, id);
+
+    this.edit = props.start_meal_edit.bind(this);
+    this.cancel = props.meal_cancel.bind(this);
   }
 
-  edit(id) {
-    this.props.start_meal_edit(id);
+  componentDidMount() {
+    window.addEventListener('focus', this.checkDeadline)
   }
 
-  cancel(id) {
-    this.props.meal_cancel(id);
+  componentWillUnmount() {
+    window.removeEventListener('focus', this.checkDeadline)
   }
 
-  signup() {
-    this.props.start_meal_signup(this.props.meal.id);
-  }
-
-  editMeal() {
-    this.props.start_edit_meal(this.props.meal.id);
-  }
-
-  cancelMeal() {
-    this.props.cancel_meal(this.props.meal.id);
+  checkDeadline() {
+    if (this.state.editable !== (this.props.meal.deadline > Date.now())) {
+      this.setState({
+        editable: (this.props.meal.deadline > Date.now())
+      });
+    }
   }
 
   render() {
@@ -34,11 +43,12 @@ export default class Meal extends React.Component {
     }
 
     const p = this.props,
+        s = this.state,
         signups = p.meal.signups.map(id => p.signups[id]);
 
     return (
       <div className="meal">
-        <div className="titlebar"><h4 className="title">{formatDate(p.meal.time)}: {p.meal.name}</h4><span className="fa fa-lg menuIcon fa-pencil pointer" onClick={() => this.editMeal()}></span><span onClick={() => this.cancelMeal()} className="fa fa-lg menuIcon fa-trash pointer"></span></div>
+        <div className="titlebar"><h4 className="title">{formatDate(p.meal.time)}: {p.meal.name}</h4><span className="fa fa-lg menuIcon fa-pencil pointer" onClick={this.editMeal}></span><span onClick={this.cancelMeal} className="fa fa-lg menuIcon fa-trash pointer"></span></div>
         <div className="details">
           <div className="mealDetails">
             {
@@ -46,8 +56,8 @@ export default class Meal extends React.Component {
               ? <img src={p.meal.image} className="mealImage"/>
               : null
             }
-            <p className="date">Essenszeit: <b>{formatTime(p.meal.time)}</b></p>
-            <p className="date">Veranstalter: {p.meal.creator}</p>
+            <p className="date">Zeitpunkt: <b>{formatTime(p.meal.time)}</b></p>
+            <p className="date">Organisator: {p.meal.creator}</p>
             <p className="description">{p.meal.description}</p>
           </div>
           <div className="participants">
@@ -59,8 +69,8 @@ export default class Meal extends React.Component {
             }
             <span className="deadline">Anmeldeschluss: {formatTimeShort(p.meal.deadline)}</span>
             {
-              p.meal.deadline * 1000 > Date.now()
-              ? <p className="fakeLink" onClick={() => this.signup()}><span>Teilnehmen</span><span className="fa fa-angle-double-right"></span></p>
+              s.editable
+              ? <p className="fakeLink" onClick={this.signup}><span>Teilnehmen</span><span className="fa fa-angle-double-right"></span></p>
               : null
             }
             <ul className="participantsList">
@@ -69,10 +79,14 @@ export default class Meal extends React.Component {
                   <li key={signup.id}>
                     <p className="user">
                       <span>{signup.name}</span>
-                        <span className="icons">
+                      {
+                        s.editable
+                        ? <span className="icons">
                           <span className="fa fa-pencil edit" onClick={() => this.edit(signup.id)}></span>
                           <span className="fa fa-times cancel" onClick={() => this.cancel(signup.id)}></span>
                         </span>
+                        : null
+                      }
                       {
                         signup.changing
                         ? <span className="fa fa-spinner fa-spin fa-lg fa-fw"></span>

@@ -10,6 +10,11 @@ export const initial_meals = () => ({
   enqueue: initial_signups()
 });
 
+export const initial_user = (data) => ({
+  type: 'INITIAL_USER',
+  user: data
+});
+
 export const initial_signups = () => ({
   type: 'INITIAL_SIGNUPS',
   status: 'initialized',
@@ -75,12 +80,8 @@ export const meal_edit = (data) => ({
 });
 
 export const create_settings_dialog = () => ({
-  type: 'LOGOUT',
-  status: 'initialized',
-  api: {
-    url: '/api/login',
-    method: 'delete'
-  }
+  type: 'DIALOG',
+  content: 'OPEN_SETTINGS'
 });
 
 export const create_meal_dialog = () => ({
@@ -114,6 +115,12 @@ export const edit_meal = (data) => ({
   }
 });
 
+export const start_cancel_meal = (id) => ({
+  type: 'DIALOG',
+  content: 'CANCEL_MEAL',
+  option: {meal: id}
+});
+
 export const cancel_meal = (id) => ({
   type: 'CANCEL_MEAL',
   status: 'initialized',
@@ -122,4 +129,18 @@ export const cancel_meal = (id) => ({
     url: '/api/meals/' + id,
     method: 'delete'
   }
+});
+
+export const check_mail = (mail) => ({
+  type: 'CHECK_MAIL',
+  status: 'initialized',
+  api: {
+    url: '/api/mail/search?email=' + encodeURIComponent(mail),
+    method: 'GET'
+  }
+});
+
+export const select_suggestion = (mail) => ({
+  type: 'SELECT_MAIL',
+  mail
 });

@@ -17,6 +17,10 @@ export default class App extends React.Component {
 
     componentDidMount() {
         this.props.initial_meals();
+
+        if (localStorage.user) {
+          this.props.initial_user(JSON.parse(localStorage.user));
+        }
     }
 
     render() {

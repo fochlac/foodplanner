@@ -9,3 +9,33 @@
     overflow: auto;
     margin-top: @topBarHeight;
 }
+
+.filters {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.filterList {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: flex-end;
+}
+
+.filter {
+    cursor: pointer;
+    border: solid 1px #074d0e;
+    padding: 3px 5px;
+    border-radius: 5px;
+    margin-left: 5px;
+
+    &.selected {
+        background: #074d0e;
+        color: #ebf1e3;
+        font-weight: 600;
+    }
+}
+.mealListHeader {
+    width: 1000px;
+    margin: 0 auto 10px;
+}
