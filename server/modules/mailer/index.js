@@ -11,7 +11,7 @@ module.exports = {
                 if (data.length) {
                     data.forEach(user => mail.messages().send(deadlineReminder(user, meal), error.checkError(3, 'Error sending deadline reminder.')));
                 }
-            });
+            }).catch(error.promise(4, 'error sending deadline mails'));
     },
 	sendCreationNotice(meal) {
 		mailDb.getMailsByProperty('creationNotice', 1)
@@ -19,6 +19,6 @@ module.exports = {
 				if (data.length) {
 					data.forEach(user => mail.messages().send(creationNotice(user, meal), error.checkError(3, 'Error sending creation notice.')));
 				}
-			});
+			}).catch(error.promise(4, 'error sending creation mails'));
 	}
 }

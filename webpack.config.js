@@ -3,12 +3,9 @@
 */
 const path = require('path'),
       HtmlWebpackPlugin = require('html-webpack-plugin'),
-      HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
-          template: './client/index.html',
-          filename: 'index.html',
-          inject: 'body'
-      }),
-      ExtractTextPlugin = require("extract-text-webpack-plugin");
+      ExtractTextPlugin = require("extract-text-webpack-plugin"),
+      ServiceWorkerWebpackPlugin = require("serviceworker-webpack-plugin"),
+      GoogleFontsPlugin = require("google-fonts-webpack-plugin");
 
 module.exports = {
     entry: [
@@ -33,7 +30,6 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                include: [path.resolve(__dirname, "node_modules/react-datepicker/dist/")],
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: "css-loader"
@@ -66,6 +62,23 @@ module.exports = {
             filename: "styles.css",
             disable: true
         }),
-        HtmlWebpackPluginConfig
+        new ServiceWorkerWebpackPlugin({
+            entry: './client/sw.js',
+            filename: 'sw.js'
+        }),
+        new HtmlWebpackPlugin({
+            template: './client/index.html',
+            filename: 'index.html',
+            inject: 'body',
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+            }
+        }),
+        new GoogleFontsPlugin({
+            fonts: [
+                { family: "Raleway", variants: [ "400", "600"] }
+            ]
+        })
     ]
 }

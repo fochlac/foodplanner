@@ -14,8 +14,7 @@ const   express = require('express')
     ,   sslServer = https.createServer({
             key: fs.readFileSync(process.env.KEYSTORE + 'fochlac_com_key.pem'),
             cert: fs.readFileSync(process.env.KEYSTORE + 'fochlac_com_cert_chain.pem')
-        }, app)
-    ,   index = fs.readFileSync(process.env.FOOD_CLIENT + 'index.html');
+        }, app);
 
 sslServer.listen(server_port, server_ip_address, () => {
     console.log('listening on port '+ server_port);
@@ -32,6 +31,9 @@ app.use('/', routes);
 
 // if not connected to a route, deliver static content
 app.use('/static/', express.static(process.env.FOOD_CLIENT + ''));
+
+// exception for sw, needs to be in root
+app.use('/sw.js', express.static(process.env.FOOD_CLIENT + 'sw.js'));
 
 // if no route and no static content, redirect to index
 app.get('*', (req, res) => res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html'));

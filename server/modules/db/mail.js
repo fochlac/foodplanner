@@ -69,7 +69,8 @@ module.exports = {
                     resolve({
                         name: options.name,
                         mail: options.mail,
-                        active: options.active,
+                        deadlineReminder: options.deadlineReminder,
+                        creationNotice: options.creationNotice,
                         id: parseInt(val)
                     });
                 }
@@ -139,7 +140,8 @@ module.exports = {
                         resolve({
                             name: options.name,
                             mail: options.mail,
-                            active: options.active,
+                            deadlineReminder: options.deadlineReminder,
+                            creationNotice: options.creationNotice,
                             id: result.insertId
                         });
                     }

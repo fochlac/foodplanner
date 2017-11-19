@@ -49,10 +49,12 @@ module.exports = {
 					payload = req[type];
 
 				for (param in options) {
-					log(6, `Validating ${param}: '${payload[param]}' against RegExp ${options[param]}, result ${options[param].test(payload[param])}`);
-					if (valid && !options[param].test(payload[param])) {
+					if (valid && typeof options[param] !== 'string' && !options[param].test(payload[param])) {
+						valid = false;
+					} else if (valid && options[param] === 'object' && typeof payload[param] !== 'object') {
 						valid = false;
 					}
+					log(6, `Validating ${param}: '${payload[param]}' against RegExp ${options[param]}, result ${(typeof options[param] === 'string') ? valid : options[param].test(payload[param])}`);
 				}
 
 				if (valid) {

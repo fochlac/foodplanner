@@ -1,24 +1,17 @@
 @import '../../root/variables.less';
 
-.date-picker.input-mode {
-    position: absolute;
-    background: @colorg5;
-    border: solid 1px @colorg3;
-    border-radius: 2px;
-}
 
-.date-picker-wrapper {
+.DayPickerInput {
     flex-grow: 1;
     margin-right: 10px;
 
-    .today {
+    div.DayPicker-Day.DayPicker-Day--today {
         font-weight: 600;
         color: @colorr1;
     }
 
-    .selected {
-        color: @colorg5;
-        background: @colorg3;
+    div.DayPicker-Day--selected {
+        background: @colorg3 !important;
         font-weight: 600;
     }
 

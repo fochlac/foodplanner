@@ -1,0 +1,43 @@
+@import '../../root/variables.less';
+.settingsDialog {
+    .row {
+        margin-bottom: 10px;
+    }
+    .notificationMatrix {
+        width: 100%;
+        margin-top: 5px;
+    }
+    th, td {
+        padding: 0 5px;
+        white-space: nowrap;
+    }
+
+    .mailSuggestion {
+        position: absolute;
+        display: block;
+        padding: 5px;
+        background: #074d0e;
+        z-index: 1;
+        top: 55px;
+        color: #ebf1e3;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: @tinyShadowDown;
+
+        &:before {
+            position: absolute;
+            display: block;
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 11px solid #074d0e;
+            top: -6px;
+            left: calc(50% ~"-" 11px);
+        }
+    }
+    .mailFrame {
+        position: relative;
+    }
+}

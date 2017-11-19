@@ -1,45 +1,77 @@
 import React from 'react';
 import Dialog from '../Dialog/Dialog.jsx';
+import { getNotificationPermission } from '../../scripts/serviceWorker.js';
+import './SettingsDialog.less';
 
 export default class SettingsDialog extends React.Component {
   constructor(props) {
     super();
 
-    this.state = (props.user.email ? {
-          email: props.user.email,
+    this.state = (props.user.mail ? {
+          mailId: props.user.mailId,
+          mail: props.user.mail,
           name: props.user.name ? props.user.name : '',
-          creationNotice_email: props.user.creationNotice_email ? props.user.creationNotice_email : 0,
+          creationNotice_mail: props.user.creationNotice ? props.user.creationNotice : 0,
           creationNotice_notification: props.user.creationNotice_notification ? props.user.creationNotice_notification : 0,
-          deadlineReminder_email: props.user.deadlineReminder_email ? props.user.deadlineReminder_email : 0,
+          deadlineReminder_mail: props.user.deadlineReminder ? props.user.deadlineReminder : 0,
           deadlineReminder_notification: props.user.deadlineReminder_notification ? props.user.deadlineReminder_notification : 0
         } : {
-          email: '',
+          mail: '',
           name: '',
-          creationNotice_email: 0,
+          creationNotice_mail: 0,
           creationNotice_notification: 0,
-          deadlineReminder_email: 0,
+          deadlineReminder_mail: 0,
           deadlineReminder_notification: 0
         });
 
     this.handleCheck = this.handleCheck.bind(this);
     this.selectSuggestion = this.selectSuggestion.bind(this);
-    this.emailInput = this.emailInput.bind(this);
+    this.mailInput = this.mailInput.bind(this);
+    this.handleMailInput = this.handleMailInput.bind(this);
+    this.handleTab = this.handleTab.bind(this);
     this.nameInput = this.handleInput('name').bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user.mail && (nextProps.user.mail !== this.props.user.mail || this.state.allowUpdate)) {
+      this.setState({
+          mailId: nextProps.user.mailId,
+          mail: nextProps.user.mail,
+          name: nextProps.user.name ? nextProps.user.name : '',
+          creationNotice_mail: nextProps.user.creationNotice ? nextProps.user.creationNotice : 0,
+          creationNotice_notification: nextProps.user.creationNotice_notification ? nextProps.user.creationNotice_notification : 0,
+          deadlineReminder_mail: nextProps.user.deadlineReminder ? nextProps.user.deadlineReminder : 0,
+          deadlineReminder_notification: nextProps.user.deadlineReminder_notification ? nextProps.user.deadlineReminder_notification : 0,
+          allowUpdate: false
+        });
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.app.mailSuggestion && !this.props.app.mailSuggestion && nextProps.app.mailSuggestion === this.state.mail) {
+      return false;
+    }
+    return true;
   }
 
   submit() {
     const s = this.state;
+    if (s.deadlineReminder_notification || s.creationNotice_notification) {
+      getNotificationPermission()
+        .then(() => {
+          this.props.save_settings(this.state);
+        })
+        .catch(() => {
+          // add error message
+          this.setState({
+            deadlineReminder_notification: 0,
+            creationNotice_notification: 0
+          });
+        })
+    } else {
+      this.props.save_settings(this.state);
+    }
 
-    this.props.save_settings({
-      mail: s.email,
-      name: s.name,
-      creationNotice_email: s.creationNotice_email,
-      creationNotice_notification: s.creationNotice_notification,
-      deadlineReminder_email: s.deadlineReminder_email,
-      deadlineReminder_notification: s.deadlineReminder_notification
-    });
-
-    localStorage.user = JSON.stringify(this.state);
   }
 
   cancel() {
@@ -47,28 +79,57 @@ export default class SettingsDialog extends React.Component {
   }
 
   selectSuggestion() {
-    this.props.select_suggestion(this.props.app.emailSuggestion);
+    clearTimeout(this.hideTimeout);
+    clearTimeout(this.showTimeout);
+    this.timeout = false;
+    this.setState({allowUpdate: true}, () => {
+      this.props.select_suggestion(this.props.app.mailSuggestion);
+    });
   }
 
-  emailInput() {
-    return (evt) => {
-      this.setState({
-        'email': evt.target.value
-      });
+  handleTab(evt) {
+    if (evt.keyCode === 9 && this.props.app.mailSuggestion) {
+      this.selectSuggestion();
+      evt.preventDefault();
+      evt.stopPropagation();
+    }
+  }
 
-      if (evt.target.value.length > 4 && !this.timeout) {
-        this.timeout = evt.target.value;
-        setTimeout(() => {
-          if (this.state.email !== this.timeout) {
-            this.props.check_mail(this.storedEmail);
+  handleMailInput(evt) {
+    const value = evt.target.value;
+    this.setState({
+      'mail': value
+    }, () => {
+      if (value.length > 4 && !this.timeout) {
+        this.timeout = value;
+
+        // check mail and block for 300ms
+        this.showTimeout = setTimeout(() => {
+          // clear blocker
+          // check if mail changed during timeout; if so, recheck
+          if (this.state.mail !== this.timeout) {
+            this.timeout = false;
+            this.handleMailInput({target: {value: this.state.mail}});
+          } else {
+            this.timeout = false;
           }
-          this.timeout = false;
         }, 300);
-        this.props.check_mail(evt.target.value);
+
+        // hide suggestion after 3s
+        clearTimeout(this.hideTimeout);
+        this.hideTimeout = setTimeout(() => {
+          this.props.hide_mail_suggestion();
+        }, 4000);
+
+        this.props.check_mail(value);
       } else {
-        this.storedEmail = evt.target.value;
+        this.storedEmail = value;
       }
-    };
+    });
+  }
+
+  mailInput() {
+    return this.handleMailInput;
   }
 
   handleInput(field) {
@@ -88,48 +149,56 @@ export default class SettingsDialog extends React.Component {
   }
 
   render() {
-    const suggestion = (this.props.app.emailSuggestion ? this.props.app.emailSuggestion.mail : false),
-          s = this.state;
-
+    const suggestion = (this.props.app.mailSuggestion ? this.props.app.mailSuggestion.mail : false),
+          s = this.state,
+          notificationsBlocked = Notification.permission === 'denied';
     return (
       <Dialog>
         <div className="titlebar">
           <h3>Einstellungen</h3>
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
-        <div className="body">
-          <h2>NOT DONE</h2>
-          <div>
-            <label htmlFor="SettingsDialog_email">Email</label>
-            <input type="text" id="SettingsDialog_email" defaultValue={s.email} onChange={this.emailInput()}/>
+        <div className="body settingsDialog">
+          <div className="mailFrame row">
+            <label htmlFor="SettingsDialog_mail">Email</label>
+            <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput()} onKeyDown={this.handleTab} autoComplete="off" />
             {
               suggestion
-              ? <span className="emailSuggestion" onClick={this.selectSuggestion}>{suggestion}</span>
+              ? <span className="mailSuggestion" onClick={this.selectSuggestion}>Mit Tab auswählen:<br/>{suggestion}</span>
               : null
             }
           </div>
-          <div>
+          <div className="row">
             <label htmlFor="SettingsDialog_name">Name</label>
-            <input type="text" id="SettingsDialog_name" defaultValue={s.name} onChange={this.nameInput}/>
+            <input type="text" id="SettingsDialog_name" value={s.name} onChange={this.nameInput}/>
           </div>
-          <table>
+          <h4>Benachrichtigungen:</h4>
+          <table className="notificationMatrix">
             <thead>
               <tr>
                 <th>Ereignis</th>
                 <th>Email</th>
-                <th>Notification</th>
+                <th>Push-Nachricht</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Neues Angebot</td>
-                <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'email')}/></td>
-                <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')}/></td>
+                <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice_mail}/></td>
+                {
+                  notificationsBlocked
+                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                  : <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')}  checked={this.state.creationNotice_notification}/></td>
+                }
               </tr>
               <tr>
                 <td>Anmeldungsfrist läuft ab</td>
-                <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'email')}/></td>
-                <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'notification')}/></td>
+                <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder_mail}/></td>
+                {
+                  notificationsBlocked
+                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                  : <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'notification')} checked={this.state.deadlineReminder_notification}/></td>
+                }
               </tr>
             </tbody>
           </table>

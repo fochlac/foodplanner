@@ -4,18 +4,36 @@ export const apiMiddleware = store => next => action => {
             o = action.api;
 
         next(originalAction);
+        let headers = {}
+        switch(o.headers) {
+            case 'formdata':
+                headers = {
+                  'Accept': 'application/json'
+                }
+                break;
+            default:
+                headers = {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                }
+        }
 
         let opt = {
             credentials: 'same-origin',
             method: o.method,
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
+            headers
+
         };
 
         if (o.body) {
-            opt.body = JSON.stringify(o.body);
+            switch(o.headers) {
+                case 'formdata':
+                    opt.body = o.body;
+                    break;
+                case 'json':
+                default:
+                    opt.body = JSON.stringify(o.body);
+            }
         }
 
         fetch(o.url, opt)
@@ -26,6 +44,9 @@ export const apiMiddleware = store => next => action => {
             action.api = undefined;
             action.status = 'complete';
             action.data = data;
+            if (action.type === 'SAVE_SETTINGS') {
+                action.locally.mailId = data.id;
+            }
             store.dispatch(action);
             if (action.enqueue) {
                 store.dispatch(action.enqueue);

@@ -1,27 +1,35 @@
 import React from 'react';
 import Dialog from '../Dialog/Dialog.jsx';
 import ImageUploader from '../ImageUploader/ImageUploader.jsx';
-import DateTimePicker from 'react-datetimepicker';
-import moment from 'moment';
-import { formatDate, round } from '../../scripts/date.js';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import { formatDate, formatTime, round } from '../../scripts/date.js';
+import { formDataFromObject } from '../../scripts/formData.js';
 import './CreateMealDialog.less';
+import 'react-day-picker/lib/style.css';
 
 export default class CreateMealDialog extends React.Component {
   constructor(props) {
-    const tomorrow12 = moment().endOf('day').add(12, 'hours').toDate();
+    const deadline = new Date(props.meal.deadline),
+      time = new Date(props.meal.time);
     super();
+
+    this.tomorrow12 = new Date();
+    this.tomorrow12.setDate(this.tomorrow12.getDate() + 1);
+    this.tomorrow12.setHours(12);
+    this.tomorrow12.setMinutes(0);
+    this.tomorrow12.setSeconds(0);
 
     this.state = props.edit ? {
       ...props.meal,
-      deadline: '',
-      deadlineHour: '12:00',
-      timeHour: '12:00',
-      time: '',
-      timeObject: new Date(props.meal.time),
-      deadlineObject: new Date(props.meal.deadline),
+      deadline: formatDate(deadline),
+      deadlineHour: round(deadline, 30).format('HH:mm'),
+      timeHour: round(time, 30).format('HH:mm'),
+      time: formatDate(time),
+      timeObject: time,
+      deadlineObject: deadline,
     } : {
       name: '',
-      creator: '',
+      creator: props.user.name ? props.user.name : '',
       image: '',
       imageUrl: '',
       description: '',
@@ -30,8 +38,8 @@ export default class CreateMealDialog extends React.Component {
       deadlineHour: '12:00',
       timeHour: '12:00',
       time: '',
-      timeObject: tomorrow12,
-      deadlineObject: tomorrow12
+      timeObject: this.tomorrow12,
+      deadlineObject: this.tomorrow12
     };
 
     this.nameInput = this.handleInput('name').bind(this);
@@ -40,10 +48,11 @@ export default class CreateMealDialog extends React.Component {
     this.saveImageUrl = this.handleInput('imageUrl').bind(this);
     this.descriptionInput = this.handleInput('description').bind(this);
     this.signupLimitInput = this.handleInput('signupLimit').bind(this);
-    this.deadlineHourInput = this.handleInput('deadlineHour').bind(this);
+    this.deadlineHourInput = this.handleTime('deadline').bind(this);
     this.deadlineInput = this.handleDatepicker('deadline').bind(this);
-    this.timeHourInput = this.handleInput('timeHour').bind(this);
+    this.timeHourInput = this.handleTime('time').bind(this);
     this.timeInput = this.handleDatepicker('time').bind(this);
+    this.handleImage = this.handleImage.bind(this);
   }
 
   handleInput(field) {
@@ -54,15 +63,32 @@ export default class CreateMealDialog extends React.Component {
     };
   }
 
+  handleTime(field) {
+    return (evt) => {
+      let newDate = new Date(this.state[field + 'Object']),
+          values = evt.target.value.split(':');
+      newDate.setHours(values[0]);
+      newDate.setMinutes(values[1]);
+
+      this.setState({
+        [field + 'Object']: newDate
+      });
+    };
+  }
+
+  handleImage(imageData, objectUrl) {
+    this.setState({imageData});
+  }
+
   handleDatepicker(field) {
     return (date) => {
-      let obj = {
-          [field]: formatDate(date),
-          [field + 'Object']: date
+      let jsDate = date.toDate(),
+        obj = {
+          [field + 'Object']: jsDate
         };
-      if (field === 'deadline' && this.state.timeObject < date) {
-        obj.timeObject = date;
-        obj.time =  formatDate(date);
+
+      if (field === 'deadline' && this.state.timeObject < jsDate) {
+        obj.timeObject = jsDate;
       }
       this.setState(obj);
     };
@@ -70,18 +96,24 @@ export default class CreateMealDialog extends React.Component {
 
   submit() {
     const s = this.state,
-      tomorrow12 = moment().endOf('day').add(12, 'hours').unix() * 1000;
+      data = {
+        id: s.id,
+        name: s.name,
+        creator: s.creator,
+        image: s.image,
+        imageData: s.imageData,
+        description: s.description,
+        signupLimit: s.signupLimit,
+        deadline: s.deadlineObject.getTime(),
+        time: s.timeObject.getTime()
+      },
+      formData = formDataFromObject(data);
 
-    this.props[this.props.edit ? 'edit_meal' : 'create_meal']({
-      id: s.id,
-      name: s.name,
-      creator: s.creator,
-      image: s.imageUrl,
-      description: s.description,
-      signupLimit: s.signupLimit,
-      deadline: (!s.deadline.toString().length || !s.deadlineHour.toString().length ) ? tomorrow12 : moment(s.deadline + ' ' + s.deadlineHour, 'DD.MM.YY HH:mm').unix() * 1000,
-      time: (!s.time.toString().length || !s.timeHour.toString().length ) ? tomorrow12 : moment(s.time + ' ' + s.timeHour, 'DD.MM.YY HH:mm').unix() * 1000
-    });
+    if (this.props.edit) {
+      this.props.edit_meal(s.id, formData);
+    } else {
+      this.props.create_meal(formData);
+    }
   }
 
   cancel() {
@@ -113,11 +145,11 @@ export default class CreateMealDialog extends React.Component {
               </div>
               <div>
                 <label htmlFor="SignUpDialog_creator">Veranstalter</label>
-                <input type="text" id="SignUpDialog_creator" defaultValue={edit ? s.creator : p.user.name} onChange={this.creatorInput}/>
+                <input type="text" id="SignUpDialog_creator" defaultValue={s.creator} onChange={this.creatorInput}/>
               </div>
             </div>
             <div className="col">
-              <ImageUploader callback={(image, imageUrl) => {this.saveImage(image); this.saveImageUrl(imageUrl)}} opts={{imageUrl: s.image}}/>
+              <ImageUploader callback={this.handleImage} opts={{imageUrl: s.image}}/>
             </div>
           </div>
           <div>
@@ -131,13 +163,12 @@ export default class CreateMealDialog extends React.Component {
           <div>
             <label htmlFor="SignUpDialog_deadline">Anmeldeschluss</label>
             <div className="row">
-              <DateTimePicker
-                value={this.state.deadlineObject}
-                onChange={this.deadlineInput}
-                dateFormat='DD.MM.YY'
-                time={false}
+              <DayPickerInput
+                value={this.state.deadlineObject.getDate() + '.' + (this.state.deadlineObject.getMonth() + 1) + '.' + this.state.deadlineObject.getFullYear().toString().slice(-2)}
+                format="DD.MM.YY"
+                onDayChange={this.deadlineInput}
               />
-              <select className="timePicker" onChange={this.deadlineHourInput} defaultValue={edit ? round(s.deadlineObject, 30).format('HH:mm') : "12:00"}>
+              <select className="timePicker" onChange={this.deadlineHourInput} defaultValue={edit ? s.deadlineHour : "12:00"}>
                 {times.map(time => <option key={time} value={time}>{time}</option>)}
               </select>
             </div>
@@ -145,13 +176,12 @@ export default class CreateMealDialog extends React.Component {
           <div>
             <label htmlFor="SignUpDialog_time">Lieferzeitpunkt</label>
             <div className="row">
-              <DateTimePicker
-                value={this.state.timeObject}
-                onChange={this.timeInput}
-                dateFormat='DD.MM.YY'
-                time={false}
+              <DayPickerInput
+                value={this.state.timeObject.getDate() + '.' + (this.state.timeObject.getMonth() + 1) + '.' + this.state.timeObject.getFullYear().toString().slice(-2)}
+                format="DD.MM.YY"
+                onDayChange={this.timeInput}
               />
-              <select className="timePicker" onChange={this.timeHourInput} defaultValue={edit ? round(s.timeObject, 30).format('HH:mm') : "12:00"}>
+              <select className="timePicker" onChange={this.timeHourInput} defaultValue={edit ? s.timeHour : "12:00"}>
                 {times.map(time => <option key={time} value={time}>{time}</option>)}
               </select>
             </div>

@@ -1,0 +1,234 @@
+/*global Response, Blob, clients, self, caches, Request, Headers, console, fetch, navigator, setInterval, clearInterval, clearTimeout, setTimeout, indexedDB */
+
+'use strict';
+const serverUrl = "https://food.fochlac.com";
+let version = '3',
+    dbVersion = '2',
+    assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
+    offline = new Response(new Blob(), {status: 279}),
+    staticContent = [
+        ...assets,
+        '/',
+        '/static/apple-touch-icon.png',
+        '/static/favicon-32x32.png',
+        '/static/android-chrome-192x192.png',
+        '/static/favicon-16x16.png',
+        '/static/safari-pinned-tab.svg',
+        '/static/favicon.ico'
+    ],
+    onlineFirst = [
+        '/api'
+    ],
+    offlineFirst = [
+    ],
+    requestStack = [],
+    stackTimer,
+    flushInProgress,
+    pushEventStack = [],
+    pushTimeout,
+    staticRegex   = staticContent.length ?  new RegExp(staticContent.map(str => str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')).join('$|') + '$') : undefined;
+
+function handle_push(event) {
+    clients.matchAll().then( clientList => {
+        clientList.forEach(triggerRefresh);
+    });
+    let msg = event.data.json();
+
+    event.waitUntil(initDb('food', 'userData').then(db => {
+        return db.get('user');
+    }).then((user) => {
+        if (msg.type === "creationNotice" && user.creationNotice === 1) {
+            return self.registration.showNotification('Neues Mittagsangebot vorhanden!', {
+                body: formatDateTime(msg.data.time) + ': ' + msg.data.name,
+                icon: msg.data.image ? serverUrl + msg.data.image : '',
+                requireInteraction: true
+            });
+        } else if (msg.type === "deadlineReminder" && user.deadlineReminder === 1 || 1) {
+            return self.registration.showNotification('Letzte Anmeldemöglichkeit!', {
+                body: formatDateTime(msg.data.time) + ': ' + msg.data.name + '\nAnmeldung bis: ' + formatDateTime(msg.data.deadline),
+                icon: msg.data.image ? serverUrl + msg.data.image : '',
+                requireInteraction: true
+            });
+        }
+    }));
+}
+
+function handle_click(event) {
+    self.registration.getNotifications().then(list => list.forEach(notification => notification.close()));
+
+    event.waitUntil(
+        clients.matchAll().then(
+            function(clientList) {
+                let exists = clientList.some((client) => {
+                    if (client.url.indexOf(serverUrl) !== -1 && 'focus' in client) {
+                        return client.focus();
+                    }
+                });
+                if (!exists && clients.openWindow) {
+                    return clients.openWindow(relativeUrl);
+                }
+            }
+        )
+        .catch(err => console.warn(err))
+    );
+}
+
+function triggerRefresh(client) {
+    if (client.url.indexOf(serverUrl !== -1)) {
+        client.postMessage('refresh');
+    }
+}
+
+function handle_fetch(event) {
+    if (staticRegex && staticRegex.test(event.request.url)) {
+        event.respondWith(
+            caches.open(version)
+            .then(cache => {
+                return cache.match(event.request.clone());
+            })
+            .then((res) => {
+                if (res) {
+                    return res;
+                } else {
+                    cacheStatic();
+                    return fetch(event.request).catch(err => console.warn(err));
+                }
+            }).catch(err => console.warn(err))
+        );
+    } else if (event.request.url.indexOf('/static/') !== -1) {
+        event.respondWith(
+            caches.open(version)
+            .then(cache => cache.match(event.request))
+            .then((res) => {
+                if (res) {
+                    return res;
+                } else {
+                    let req = event.request;
+
+                    return Promise.all([fetch(req.clone()), caches.open(version)])
+                    .then(results => {
+                        let res = results[0],
+                            cache = results[1]
+
+                        cache.put(req.clone(), res.clone());
+                        return res;
+                    })
+                }
+            }).catch(err => console.warn(err))
+        );
+    }
+}
+
+function cacheStatic() {
+    return caches.open(version)
+        .then(function(cache) {
+            return cache.addAll(staticContent);
+        }).catch(err => console.warn(err));
+}
+
+function initDb(DBName, storageName) {
+    let request = dbVersion ? indexedDB.open(DBName, dbVersion) : indexedDB.open(DBName),
+        db;
+
+    return new Promise((resolve, reject) => {
+        request.onupgradeneeded = function() {
+            var db = this.result;
+            if (!db.objectStoreNames.contains(storageName)) {
+                db.createObjectStore(storageName, {
+                    keyPath: 'key'
+                });
+            }
+        };
+
+        request.onerror = reject;
+
+        request.onsuccess = function() {
+            db = this.result;
+
+            db.delete = (id) => {
+                return new Promise( (resolve, reject) => {
+                    var store = db.transaction([storageName], 'readwrite').objectStore(storageName),
+                        request = store.delete(id);
+
+                    request.onsuccess = evt => resolve(evt);
+                    request.onerror = evt => reject(evt);
+                });
+            };
+
+            db.deleteAll = () => {
+                return new Promise( (resolve, reject) => {
+                    var store = db.transaction([storageName], 'readwrite').objectStore(storageName),
+                        request = store.openCursor();
+
+                    request.onsuccess = evt => {
+                        let cursor = evt.target.result;
+                        if (cursor) {
+                            cursor.delete();
+                            cursor.continue();
+                        } else {
+                            resolve(evt);
+                        }
+                    };
+
+                    request.onerror = evt => reject(evt);
+                });
+            };
+
+            db.get = (id) => {
+                return new Promise( (resolve, reject) => {
+                    var store = db.transaction([storageName], 'readonly').objectStore(storageName),
+                        request = store.get(id);
+
+                    request.onsuccess = evt => resolve(evt.target.result ? evt.target.result.data : {});
+                    request.onerror = evt => reject(evt);
+                });
+            };
+
+            db.getIndex = () => {
+                return new Promise( (resolve, reject) => {
+                    var store = db.transaction([storageName], 'readonly').objectStore(storageName),
+                        request = store.getAllKeys();
+
+                    request.onsuccess = evt => resolve(evt.target.result ? evt.target.result : []);
+                    request.onerror = evt => reject(evt);
+                });
+            };
+
+            db.set = function(id, data) {
+                return new Promise( (resolve, reject) => {
+                    var store = db.transaction([storageName], 'readwrite').objectStore(storageName),
+                        request = store.put({key: id, data: data});
+
+                    request.onsuccess = evt => resolve(evt);
+                    request.onerror = evt => reject(evt);
+                });
+            };
+
+            if (db.objectStoreNames.contains(storageName)) {
+                resolve(db);
+            } else {
+                resolve(initDb(DBName, storageName, db.dbVersion + 1));
+            }
+        };
+    });
+}
+
+self.addEventListener('notificationclick', handle_click);
+self.addEventListener('push', handle_push);
+self.addEventListener('fetch', handle_fetch);
+self.addEventListener('install', (event) => {
+    event.waitUntil(cacheStatic());
+    self.skipWaiting();
+});
+
+
+
+function fill(val, n) {
+    return ('0'.repeat(n) + val).slice(-n);
+}
+
+function formatDateTime(date) {
+    const src = new Date(date);
+
+    return `${src.getDate()}.${src.getMonth() + 1}.${src.getFullYear().toString().slice(2,4)} - ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
+}

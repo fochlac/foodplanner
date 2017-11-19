@@ -2,6 +2,7 @@ const   getConnection   = require(process.env.FOOD_HOME + 'modules/db')
     ,   mysql           = require('mysql')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log')
     ,   mail            = require(process.env.FOOD_HOME + 'modules/mailer')
+    ,   notification    = require(process.env.FOOD_HOME + 'modules/notification')
     ,   error           = require(process.env.FOOD_HOME + 'modules/error');
 
 
@@ -28,8 +29,8 @@ module.exports = {
             creator     = ${mysql.escape(options.creator)},
             time        = ${mysql.escape(options.time)},
             deadline    = ${mysql.escape(options.deadline)},
-            signupLimit = ${mysql.escape(options.signupLimit)},
-            image       = ${mysql.escape(options.image)}
+            signupLimit = ${mysql.escape(options.signupLimit)}
+            ${options.image ? ', image = ' + mysql.escape('/static/images/meals/' + options.image) : ''}
             WHERE  ${prop} = ${mysql.escape(val)};`;
 
         return getConnection()
@@ -42,7 +43,12 @@ module.exports = {
                 } else {
                     resolve({
                         name: options.name,
-                        comment: options.comment,
+                        description: options.description,
+                        creator: options.creator,
+                        time: parseInt(options.time),
+                        deadline: parseInt(options.deadline),
+                        signupLimit: parseInt(options.signupLimit),
+                        image: options.image ? '/static/images/meals/' + options.image : undefined,
                         id: parseInt(val)
                     });
                 }
@@ -74,15 +80,16 @@ module.exports = {
                 deadline,
                 signupLimit,
                 image
-            ) VALUES (
+            )
+            SELECT
                 ${mysql.escape(options.name)},
                 ${mysql.escape(options.description)},
                 ${mysql.escape(options.creator)},
                 ${mysql.escape(options.time)},
                 ${mysql.escape(options.deadline)},
                 ${mysql.escape(options.signupLimit)},
-                ${mysql.escape(options.image)}
-            )
+                ${options.image ? "CONCAT( '/static/images/meals/" + options.image[0] + "', `AUTO_INCREMENT`, '" + "." + options.image[1] + "' )" : mysql.escape(undefined)}
+            FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '${process.env.FOOD_DB_NAME}' AND TABLE_NAME = 'meals'
             ON DUPLICATE KEY UPDATE \`id\` = \`id\`;`;
 
         return getConnection()
@@ -95,18 +102,20 @@ module.exports = {
                         log(2, 'modules/db/meal:createMeal.2', err, query);
                         reject({status: 500, message: 'Error creating meal'});
                     } else {
-                        log(6, 'modules/db/meal:createMeal - meal created');
-                        mail.sendCreationNotice(options);
-                        resolve({
+                        let mealObj = {
                             name: options.name,
                             description: options.description,
                             creator: options.creator,
-                            time: options.time,
-                            deadline: options.deadline,
-                            signupLimit: options.signupLimit,
-                            image: options.image,
+                            time: parseInt(options.time),
+                            deadline: parseInt(options.deadline),
+                            signupLimit: parseInt(options.signupLimit),
+                            image: options.image ? '/static/images/meals/' + options.image[0] + result.insertId + '.' + options.image[1] : undefined,
                             id: result.insertId
-                        });
+                        };
+                        mail.sendCreationNotice(mealObj);
+                        notification.sendCreationNotice(mealObj);
+                        resolve(mealObj);
+                        log(6, 'modules/db/meal:createMeal - meal created');
                     }
                 });
             });

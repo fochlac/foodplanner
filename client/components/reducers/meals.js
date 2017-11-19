@@ -28,8 +28,11 @@ const meals = (state = [], action) => {
             }
         case 'EDIT_MEAL':
             if (action.status === 'complete') {
-                let newState = state.concat([]);
-                return newState.filter(meal => meal.id !== action.data.id).push(action.data);
+                let newState = [].concat(state),
+                    mealIndex = newState.findIndex(meal => (meal.id === action.data.id));
+
+                newState[mealIndex] = Object.assign({}, newState[mealIndex], action.data);
+                return newState;
             }
         case 'INITIAL_MEALS':
             if (action.status === 'complete') {

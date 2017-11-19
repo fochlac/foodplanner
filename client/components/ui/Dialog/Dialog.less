@@ -14,7 +14,8 @@
 }
 
 .dialog {
-    min-width: 400px;
+    flex-basis: 400px;
+    max-width: 95%;
     background: @colorg5;
     border: solid 1px @colorg3;
     border-radius: @borderRadius;
@@ -30,6 +31,7 @@
 
     .body {
         padding: 0 15px;
+        max-height: calc(95vh ~"-" 97px);
 
         input, textarea {
             width: 100%;

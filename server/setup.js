@@ -69,6 +69,15 @@ let setup = [
 
         PRIMARY KEY (id),
         UNIQUE KEY \`mail\` (\`mail\`)
+    );`,
+    `CREATE TABLE IF NOT EXISTS \`notificationList\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`hash\`                varchar(150)    NOT NULL,
+        \`subscription\`        TEXT            NOT NULL,
+        \`type\`                varchar(150)    NOT NULL
+
+        PRIMARY KEY (id),
+        UNIQUE KEY \`hash\` (\`hash\`)
     );`
 ];
 
