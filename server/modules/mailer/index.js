@@ -20,5 +20,12 @@ module.exports = {
 					data.forEach(user => mail.messages().send(creationNotice(user, meal), error.checkError(3, 'Error sending creation notice.')));
 				}
 			}).catch(error.promise(4, 'error sending creation mails'));
+	},
+	sendInvitation(data) {
+		data.map(user => {
+			if (data.length) {
+				data.forEach(user => mail.messages().send(creationNotice(user, meal), error.checkError(3, 'Error sending creation notice.')));
+			}
+		});
 	}
 }

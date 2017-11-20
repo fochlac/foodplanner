@@ -46,6 +46,11 @@ export const close_dialog = id => ({
   content: ''
 });
 
+export const set_busy  = state => ({
+  type: 'BUSY',
+  state
+});
+
 // signups
 
 export const start_meal_signup = id => ({

@@ -33,9 +33,9 @@ export default class App extends React.Component {
     render() {
         return (<Router>
             <Switch>
-                <Route path="/unsubscribe" render={({location}) => <DefaultPage dialog={Object.assign({type: "UNSUBSCRIBE", location: location, user: this.props.user}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
-                <Route path="/subscribe" render={({location}) => <DefaultPage dialog={Object.assign({type: "SUBSCRIBE", location: location}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
-                <Route exact path="/" render={() => <DefaultPage dialog={this.props.app.dialog}><Dashboard/></DefaultPage>} />
+                <Route path="/unsubscribe" render={({location}) => <DefaultPage app={this.props.app} dialog={Object.assign({type: "UNSUBSCRIBE", location: location, user: this.props.user}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
+                <Route path="/subscribe" render={({location}) => <DefaultPage app={this.props.app} dialog={Object.assign({type: "SUBSCRIBE", location: location}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
+                <Route exact path="/" render={() => <DefaultPage app={this.props.app} dialog={this.props.app.dialog}><Dashboard/></DefaultPage>} />
                 <Redirect to="/" />
             </Switch>
         </Router>)

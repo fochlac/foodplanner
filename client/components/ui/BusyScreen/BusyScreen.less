@@ -1,0 +1,86 @@
+.busyBackground {
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .busyCenter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@-webkit-keyframes sphereSpin {
+  0% { -webkit-transform: rotateX(360deg) rotateY(0deg); }
+  100% { -webkit-transform: rotateX(0deg) rotateY(360deg); }
+}
+@keyframes sphereSpin {
+  0% { transform: rotateX(360deg) rotateY(0deg); }
+  100% { transform: rotateX(0deg) rotateY(360deg); }
+}
+
+.spinner.sphere {
+  width: 30%;
+  height: 30%;
+  -webkit-transform: perspective(20em) rotateX(-24deg) rotateY(20deg) rotateZ(30deg);
+  transform: perspective(20em) rotateX(-24deg) rotateY(20deg) rotateZ(30deg);
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-animation: sphereSpin 71s cubic-bezier(0.19, 0.88, 1, 1) infinite;
+  animation: sphereSpin 71s cubic-bezier(0.19, 0.88, 1, 1) infinite;
+}
+
+.spinner .inner {
+  width: 100%;
+  height: 100%;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-animation: sphereSpin 6s linear infinite;
+  animation: sphereSpin 6s linear infinite;
+}
+
+.spinner.sphere .disc {
+  position: absolute;
+  color: white;
+  font-size: 5em;
+}
+
+@-webkit-keyframes rotateDisc2 {
+  from { -webkit-transform: rotateX(90deg) rotateZ(0deg); }
+  to { -webkit-transform: rotateX(90deg) rotateZ(360deg); }
+}
+@keyframes rotateDisc2 {
+  from { transform: rotateX(90deg) rotateZ(0deg); }
+  to { transform: rotateX(90deg) rotateZ(360deg); }
+}
+
+@-webkit-keyframes rotateDisc3 {
+  from { -webkit-transform: rotateY(90deg) rotateZ(0deg); }
+  to { -webkit-transform: rotateY(90deg) rotateZ(360deg); }
+}
+@keyframes rotateDisc3 {
+  from { transform: rotateY(90deg) rotateZ(0deg); }
+  to { transform: rotateY(90deg) rotateZ(360deg); }
+}
+
+.spinner.sphere .disc:nth-child(1) {
+  -webkit-animation: rotate 12s linear infinite;
+  animation: rotate 12s linear infinite;
+}
+.spinner.sphere .disc:nth-child(2) {
+  -webkit-animation: rotateDisc2 12s linear infinite;
+  animation: rotateDisc2 12s linear infinite;
+}
+.spinner.sphere .disc:nth-child(3) {
+  -webkit-animation: rotateDisc3 12s linear infinite;
+  animation: rotateDisc3 12s linear infinite;
+}
+
+/*inspired by oskargustafsson*/

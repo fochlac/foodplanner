@@ -4,7 +4,7 @@ const app = (state = {}, action) => {
             return {...state, dialog: {type: action.content, option: action.option}};
         case 'HIDE_MAIL_SUGGESTION':
         case 'SELECT_MAIL':
-                return {...state, mailSuggestion: undefined};
+            return {...state, mailSuggestion: undefined};
         case 'CHECK_MAIL':
             if (action.status === 'complete' && !action.data.error) {
                 return {...state, mailSuggestion: action.data};
@@ -21,6 +21,9 @@ const app = (state = {}, action) => {
             if (action.status === 'complete') {
                 return {...state, dialog: {type: ""}};
             }
+            return state;
+        case 'BUSY':
+            return {...state, busy: action.state};
 
         default:
             return state;
