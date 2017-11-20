@@ -192,7 +192,7 @@ export default class SettingsDialog extends React.Component {
                 }
               </tr>
               <tr>
-                <td>Anmeldungsfrist läuft ab</td>
+                <td>Anmeldungs&shy;frist läuft ab</td>
                 <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder_mail}/></td>
                 {
                   notificationsBlocked

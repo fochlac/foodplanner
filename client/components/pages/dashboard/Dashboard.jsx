@@ -13,15 +13,7 @@ export default class Login extends React.Component {
     }
 
     setFilter(filter) {
-        const newArr = [].concat(this.state.filter);
-
-        if (newArr.includes(filter)) {
-            newArr.splice(newArr.indexOf(filter), 1);
-        } else {
-            newArr.push(filter);
-        }
-        newArr.sort((a,b) => a.id - b.id)
-        this.setState({filter: newArr});
+        this.setState({filter: [filter]});
     }
 
     render() {

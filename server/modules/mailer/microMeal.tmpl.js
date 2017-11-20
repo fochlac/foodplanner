@@ -1,9 +1,9 @@
 const date = require(process.env.FOOD_HOME + 'helper/date.js');
 
 module.exports = (meal) =>
-`<div style="display:flex;flex-direction: column;padding:10px 20px; border:solid 1px;max-width: 700px;margin:10px 20px;">
-  <div style="border-bottom: solid 1px;">
-    <a style="text-decoration: none; font-size: 1.7em;" href="https://https://${process.env.FOOD_EXTERNAL}">${meal.name}</a>
+`<div style="padding:10px 20px; border:solid 1px; max-width: 700px; margin:10px 20px;">
+  <div style="border-bottom: solid 1px; margin-bottom: 10px;">
+    <a style="text-decoration: none; font-size: 1.7em;" href="https://${process.env.FOOD_EXTERNAL}">${meal.name}</a>
   </div>
   <div style="display:flex;">
     ${

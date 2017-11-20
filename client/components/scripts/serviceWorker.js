@@ -31,7 +31,8 @@ export const initServiceWorker = () => {
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array('BLaOlvhqet3tC5e6oIliQr5NF2Sqn8VHq9VjzR9ItF9AnHFgYaB3dN38rTuYC6tKSRxzzTFmMia6kJ_J2auGLCU')
                 });
-            });
+            })
+            .catch(err => console.warn('serviceWorker error', err));
     }
 };
 

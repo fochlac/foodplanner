@@ -32,8 +32,9 @@ app.use('/', routes);
 // if not connected to a route, deliver static content
 app.use('/static/', express.static(process.env.FOOD_CLIENT + ''));
 
-// exception for sw, needs to be in root
+// exception for sw and manifest, needs to be in root
 app.use('/sw.js', express.static(process.env.FOOD_CLIENT + 'sw.js'));
+app.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.json'));
 
 // if no route and no static content, redirect to index
 app.get('*', (req, res) => res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html'));

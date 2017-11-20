@@ -1,6 +1,7 @@
-const 	scheduler = require('node-schedule')
-	,	mail = require(process.env.FOOD_HOME + 'modules/mailer')
-	,	mealDb = require(process.env.FOOD_HOME + 'modules/db/meals');
+const 	scheduler 	= require('node-schedule')
+	,	mail 		= require(process.env.FOOD_HOME + 'modules/mailer')
+	,	mealDb 		= require(process.env.FOOD_HOME + 'modules/db/meals')
+    ,   error       = require(process.env.FOOD_HOME + 'modules/error');
 
 const second = 1000,
 	minute = 60 * second,
@@ -8,8 +9,14 @@ const second = 1000,
 	day = 24 * hour,
 	week = 7 * day;
 
-const mealDeadline = (meal) => () => {
-	mail.sendDeadlineReminder(meal);
+const mealDeadline = (meal) => {
+	mealDb.getMealByProperty('id', meal.id)
+		.then((result) => {
+			if (result.deadline) {
+				mail.sendDeadlineReminder(meal);
+			}
+		})
+		.catch(error.promise(4, 'could not find meal ' + meal.id));
 	// trigger push
 }
 
@@ -22,5 +29,8 @@ module.exports = {
 					scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline)
 				});
 			});
+	},
+	scheduleMeal: meal => {
+		scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline);
 	}
 }

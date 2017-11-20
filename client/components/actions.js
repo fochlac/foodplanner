@@ -127,7 +127,7 @@ export const save_settings = (data) => ({
   },
   localkey: 'user',
   locally: {
-      mailId: data.mailId,
+      mailId: data.mailId ? data.mailId : undefined,
       mail: data.mail,
       name: data.name,
       creationNotice: data.creationNotice_mail,
@@ -150,7 +150,7 @@ export const hide_mail_suggestion = () => ({
 
 export const check_mail = (mail) => ({
   type: 'CHECK_MAIL',
-  status: 'initialized',
+  status: 'hidden',
   api: {
     url: '/api/mail/search?email=' + encodeURIComponent(mail),
     method: 'GET'
@@ -163,7 +163,6 @@ export const select_suggestion = (mail) => ({
 });
 
 // meals
-
 export const create_meal_dialog = () => ({
   type: 'DIALOG',
   content: 'CREATE_MEAL'

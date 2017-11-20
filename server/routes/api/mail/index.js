@@ -1,6 +1,7 @@
 const	mail	     = require('express').Router()
 	,	mailDB 	     = require(process.env.FOOD_HOME + 'modules/db/mail')
-	,	error 		 = require(process.env.FOOD_HOME + 'modules/error');
+    ,   error        = require(process.env.FOOD_HOME + 'modules/error')
+	,	mailer 		 = require(process.env.FOOD_HOME + 'modules/mailer');
 
 mail.get('/search', error.router.validate('query', {
     email: /^[_A-Za-z0-9!#$%&'*+-/=?^_`{|}~.\s@]{5,100}$/
@@ -35,6 +36,11 @@ mail.post('/', error.router.validate('body', {
         res.status(200).send(mail);
     })
     .catch(error.router.internalError(res));
+});
+
+mail.post('/invite', (req, res) => {
+    mailer.sendInvitation(req.body.mail);
+    res.status(200).send(mail);
 });
 
 module.exports = mail;

@@ -56,10 +56,10 @@ module.exports = {
                 myDb.query(query, (err, result) => {
                     myDb.release();
                     if (err) {
-                        log(2, 'modules/db/notification:createSignUp.2', err, query);
+                        log(2, 'modules/db/notification:createNotification.2', err, query);
                         reject({status: 500, message: 'Error creating notification'});
                     } else {
-                        log(6, 'modules/db/notification:createSignUp - notification created');
+                        log(6, 'modules/db/notification:createNotification - notification created');
                         resolve({
                             type: options.type,
                             subscription: options.subscription,
@@ -75,7 +75,7 @@ module.exports = {
                 return err;
             }
 
-            return error.db.codeError('modules/db/notification.js:createSignUp.4', arguments);
+            return error.db.codeError('modules/db/notification.js:createNotification.4', arguments);
         });
     },
 

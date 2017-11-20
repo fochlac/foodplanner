@@ -16,10 +16,14 @@ notification.post('/', error.router.validate('body', {
     type: /^(gcm)$/,
     subscription: 'validJSON'
 }), (req, res) => {
-    notificationDB.createNotificationId(req.body).then((notification) => {
+    if (req.body.subscription === undefined) {
         res.status(200).send(notification);
-    })
-    .catch(error.router.internalError(res));
+    } else {
+        notificationDB.createNotificationId(req.body).then((notification) => {
+            res.status(200).send(notification);
+        })
+        .catch(error.router.internalError(res));
+    }
 });
 
 module.exports = notification;

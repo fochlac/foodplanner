@@ -1,6 +1,6 @@
 const   message         = require('web-push')
     ,   notificationDB  = require(process.env.FOOD_HOME + 'modules/db/notification')
-    , error             = require(process.env.FOOD_HOME + 'modules/error');
+    ,   error           = require(process.env.FOOD_HOME + 'modules/error');
 
 message.setGCMAPIKey('AIzaSyDgzSYIANLADfeZwszA3ujbVGmxTDpzxiI');
 message.setVapidDetails(
@@ -17,7 +17,8 @@ module.exports = {
                     payload = JSON.stringify({type: 'creationNotice', data: meal}),
                     ttl = meal.deadline - Date.now();
 
-                subscriptions.forEach(subscription => message.sendNotification(subscription, payload, {TTL: 36000}));
+                return Promise.all(subscriptions.map(subscription => message.sendNotification(subscription, payload, {TTL: 36000})));
+
             }).catch(error.promise(4, 'error sending creation notification'));
     }
 }

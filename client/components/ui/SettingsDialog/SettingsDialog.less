@@ -8,8 +8,10 @@
         margin-top: 5px;
     }
     th, td {
-        padding: 0 5px;
-        white-space: nowrap;
+        padding: 0 5px 5px;
+        &:nth-child(n + 2) {
+            text-align: center;
+        }
     }
 
     .mailSuggestion {

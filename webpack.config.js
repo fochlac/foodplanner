@@ -53,7 +53,15 @@ module.exports = {
             },
             {
                 test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "file-loader"
+                loader: "file-loader",
+                exclude: /static/
+            },
+            {
+                test: /\.(json|png|ico|xml)$/,
+                loader: "file-loader",
+                options: {
+                    name: '[name].[ext]'
+                }
             }
         ]
     },
@@ -72,7 +80,7 @@ module.exports = {
             inject: 'body',
             minify: {
                 removeComments: true,
-                collapseWhitespace: true,
+                collapseWhitespace: true
             }
         }),
         new GoogleFontsPlugin({

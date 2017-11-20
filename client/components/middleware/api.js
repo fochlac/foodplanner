@@ -38,6 +38,7 @@ export const apiMiddleware = store => next => action => {
 
         fetch(o.url, opt)
         .then(res => {
+            console.log(res);
             return res.json();
         })
         .then(data => {
