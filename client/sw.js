@@ -1,7 +1,7 @@
 /*global Response, Blob, clients, self, caches, Request, Headers, console, fetch, navigator, setInterval, clearInterval, clearTimeout, setTimeout, indexedDB */
 
 'use strict';
-const serverUrl = "https://food.fochlac.com";
+const serverUrl = location.origin;
 let version = '5',
     dbVersion = '2',
     assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
@@ -69,6 +69,9 @@ function triggerRefresh(client) {
 }
 
 function handle_fetch(event) {
+    if (serverUrl === 'https://food-dev.fochlac.com') {
+        return;
+    }
     if (staticRegex && staticRegex.test(event.request.url)) {
         event.respondWith(
             caches.open(version)

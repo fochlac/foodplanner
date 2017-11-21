@@ -37,7 +37,11 @@ let logStream,
     },
     currentDate = getDate().day;
 
-logStream = fs.createWriteStream(process.env.EVENT_HOME + 'log/output' + getDate().day + '.txt', {
+if (!fs.existsSync(process.env.FOOD_HOME + 'log')){
+    fs.mkdirSync(process.env.FOOD_HOME + 'log');
+}
+
+logStream = fs.createWriteStream(process.env.FOOD_HOME + 'log/output' + getDate().day + '.txt', {
     flags: 'a',
     defaultEncoding: 'utf8',
     autoClose: true

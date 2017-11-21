@@ -2,7 +2,7 @@ const   mysql           = require('mysql')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log');
 
 let db = mysql.createPool({
-  host     : process.env.FOOD_DB_HOST,
+  host     : process.env.ADMIN_DB_HOST,
   port     : process.env.ADMIN_DB_PORT,
   user     : process.env.FOOD_DB_USERNAME,
   password : process.env.FOOD_DB_PASSWORD,
