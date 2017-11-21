@@ -69,7 +69,7 @@ export default class Meal extends React.Component {
             }
             <span className="deadline">Anmeldeschluss: {formatTimeShort(p.meal.deadline)}</span>
             {
-              s.editable
+              (s.editable && (!p.meal.signupLimit) || signups.length < p.meal.signupLimit)
               ? <p className="fakeLink" onClick={this.signup}><span>Teilnehmen</span><span className="fa fa-angle-double-right"></span></p>
               : null
             }

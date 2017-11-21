@@ -12,6 +12,6 @@ module.exports = (user, meal) => ({
     <p><a href="https://${process.env.FOOD_EXTERNAL}">Trage dich schnell ein,</a> solange noch Platz ist!</p>
     <br>
     <hr>
-    <p><a href="https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}&list=deadlineReminder">Klicke hier</a> um dich von dieser Liste abzumelden, <a href="https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}">oder hier</a> um alle Emails von dieser Seite abzubestellen.</p>
+    <p><a href="https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}&list=deadlineReminder">Klicke hier</a>, um dich von dieser Liste abzumelden <a href="https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}">oder hier</a>,  um alle Emails von dieser Seite abzubestellen.</p>
     <p style="font-size: 0.8em; color: #ccc;margin-top:10px;">${picoMeal(meal)}</p>`
 });

@@ -1,10 +1,12 @@
-const	meals	    = require('express').Router()
-    ,   mealsDB     = require(process.env.FOOD_HOME + 'modules/db/meals')
-	,	image 	    = require(process.env.FOOD_HOME + 'middleware/singleImage')
-	,	error 		= require(process.env.FOOD_HOME + 'modules/error')
-    ,   scheduler   = require(process.env.FOOD_HOME + 'modules/scheduler')
-    ,   fs          = require('fs')
-    ,   log         = require(process.env.FOOD_HOME + 'modules/log');
+const   meals           = require('express').Router()
+    ,   mealsDB         = require(process.env.FOOD_HOME + 'modules/db/meals')
+    ,   image           = require(process.env.FOOD_HOME + 'middleware/singleImage')
+    ,   error           = require(process.env.FOOD_HOME + 'modules/error')
+    ,   scheduler       = require(process.env.FOOD_HOME + 'modules/scheduler')
+    ,   mail            = require(process.env.FOOD_HOME + 'modules/mailer')
+    ,   notification    = require(process.env.FOOD_HOME + 'modules/notification')
+    ,   fs              = require('fs')
+    ,   log             = require(process.env.FOOD_HOME + 'modules/log');
 
 
 meals.get('/:id', error.router.validate('params', {
@@ -127,6 +129,17 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
         } else {
             res.status(200).send(meal);
         }
+    })
+    .catch(error.router.internalError(res));
+});
+
+
+meals.post('/:id/mail', error.router.validate('params', {
+    id: /^[0-9]*$/
+}), (req, res) => {
+    mealsDB.getMealByProperty('id', req.params.id).then((meals) => {
+        mail.sendCreationNotice(meal);
+        res.status(200).send(meals);
     })
     .catch(error.router.internalError(res));
 });

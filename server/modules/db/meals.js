@@ -1,8 +1,6 @@
 const   getConnection   = require(process.env.FOOD_HOME + 'modules/db')
     ,   mysql           = require('mysql')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log')
-    ,   mail            = require(process.env.FOOD_HOME + 'modules/mailer')
-    ,   notification    = require(process.env.FOOD_HOME + 'modules/notification')
     ,   error           = require(process.env.FOOD_HOME + 'modules/error');
 
 

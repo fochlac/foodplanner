@@ -2,7 +2,7 @@
 
 'use strict';
 const serverUrl = "https://food.fochlac.com";
-let version = '4',
+let version = '5',
     dbVersion = '2',
     assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
     offline = new Response(new Blob(), {status: 279}),
@@ -54,7 +54,7 @@ function handle_click(event) {
                     }
                 });
                 if (!exists && clients.openWindow) {
-                    return clients.openWindow(relativeUrl);
+                    return clients.openWindow(serverUrl);
                 }
             }
         )
@@ -131,10 +131,14 @@ function handle_fetch(event) {
 }
 
 function cacheStatic() {
-    return caches.open(version)
-        .then(function(cache) {
-            return cache.addAll(staticContent);
-        }).catch(err => console.warn(err));
+    return
+        caches.keys()
+            .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+            .catch(err => console.log('error deleting cache', err))
+            .then(() => caches.open(version))
+            .then(function(cache) {
+                return cache.addAll(staticContent);
+            }).catch(err => console.warn(err));
 }
 
 function initDb(DBName, storageName) {

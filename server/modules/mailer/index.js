@@ -10,13 +10,13 @@ const	gmail 				= require('gmail-send')({ user: 'ep.mittagsplaner@gmail.com', pa
     ,   invitation      	= require(process.env.FOOD_HOME + 'modules/mailer/invitation.tmpl.js')
 
     ,   mail = (tmpl, cb, user, type) => {
-        stash.push({tmpl, cb});
+        stash.push({tmpl, cb, user, type});
         if (!stashTimer) {
             stashTimer = setInterval(() => {
             	let mail = stash.shift();
                 gmail(mail.tmpl, (err) => {
                 	if (!err) {
-                		log(5, `sent ${type}-mail to ${user}`);
+                		log(5, `sent ${mail.type}-mail to ${mail.user}`);
                 	}
                 	mail.cb(err);
                 });

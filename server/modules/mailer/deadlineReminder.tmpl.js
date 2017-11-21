@@ -9,5 +9,5 @@ module.exports = (user, meal) => ({
         ${microMeal(meal)}
         <p><a href="https://https://${process.env.FOOD_EXTERNAL}">Trage dich schnell ein,</a> solange noch Zeit ist!</p>
         <br>
-        <p><a href="https://https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}&list=deadlineReminder">Klicke hier</a> um dich von dieser Liste abzumelden, <a href="https://https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}">oder hier</a> um alle Emails von dieser Seite abzubestellen.</p>`
+        <p><a href="https://https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}&list=deadlineReminder">Klicke hier</a>, um dich von dieser Liste abzumelden <a href="https://https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}">oder hier</a>, um alle Emails von dieser Seite abzubestellen.</p>`
 });
