@@ -51,6 +51,11 @@ export const set_busy  = state => ({
   state
 });
 
+export const set_offline  = state => ({
+  type: 'OFFLINE',
+  state
+});
+
 // signups
 
 export const start_meal_signup = id => ({

@@ -2,6 +2,7 @@ const	meals	    = require('express').Router()
     ,   mealsDB     = require(process.env.FOOD_HOME + 'modules/db/meals')
 	,	image 	    = require(process.env.FOOD_HOME + 'middleware/singleImage')
 	,	error 		= require(process.env.FOOD_HOME + 'modules/error')
+    ,   scheduler   = require(process.env.FOOD_HOME + 'modules/scheduler')
     ,   fs          = require('fs')
     ,   log         = require(process.env.FOOD_HOME + 'modules/log');
 
@@ -43,6 +44,7 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
     }
 
     mealsDB.setMealByProperty('id', req.params.id, mealData).then((meal) => {
+        scheduler.rescheduleMeal(meal);
         if (req.file) {
             fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
                 if (err) {
@@ -70,6 +72,8 @@ meals.delete('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
     mealsDB.deleteMealByProperty('id', req.params.id).then((data) => {
+        scheduler.cancelMeal(req.params.id);
+
         fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
             if (err) {
                 log(2, 'Cant find image for product ' + req.params.id, err);
@@ -108,6 +112,12 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
     }
 
     mealsDB.createMeal(mealData).then((meal) => {
+        mail.sendCreationNotice(meal);
+        scheduler.scheduleMeal(meal);
+        if (!meal.name.includes('test')) {
+            notification.sendCreationNotice(meal);
+        }
+
         if (req.file) {
             let imageName = meal.image.split('/');
             fs.rename(req.file.path, req.file.destination + imageName[imageName.length - 1], (err) => {

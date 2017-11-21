@@ -28,6 +28,17 @@ export default class Login extends React.Component {
 
         return (
             <div className="dashboard">
+                {
+                    this.props.app.offline
+                    ? <div className="offlineBar">
+                        <div className="warning">
+                            <span className="fa fa-exclamation-triangle fa-lg"></span>
+                            Aufgrund fehlender Internetverbindung verwendet diese Seite aktuell gecachte Daten.
+                            Aktionen, die deswegen nicht gesendet werden können, werden übertragen, sobald wieder eine Internetverbindung besteht.
+                        </div>
+                    </div>
+                    : null
+                }
                 <div className="filters">
                     <ul className="filterList">
                         {

@@ -100,17 +100,20 @@ export default class SettingsDialog extends React.Component {
     this.setState({
       'mail': value
     }, () => {
-      if (value.length > 4 && !this.timeout) {
+      if (this.props.app.mailSuggestion && value === this.props.app.mailSuggestion.mail) {
+        this.selectSuggestion();
+      } else if (value.length > 4 && !this.timeout) {
         this.timeout = value;
 
         // check mail and block for 300ms
         this.showTimeout = setTimeout(() => {
-          // clear blocker
           // check if mail changed during timeout; if so, recheck
           if (this.state.mail !== this.timeout) {
+            // clear blocker
             this.timeout = false;
             this.handleMailInput({target: {value: this.state.mail}});
           } else {
+            // clear blocker
             this.timeout = false;
           }
         }, 300);
@@ -153,14 +156,14 @@ export default class SettingsDialog extends React.Component {
           s = this.state,
           notificationsBlocked = Notification.permission === 'denied';
     return (
-      <Dialog>
+      <Dialog className="settingsDialog">
         <div className="titlebar">
           <h3>Einstellungen</h3>
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
-        <div className="body settingsDialog">
+        <div className="body">
           <div className="mailFrame row">
-            <label htmlFor="SettingsDialog_mail">Email</label>
+            <label htmlFor="SettingsDialog_mail">Email<span className="fa fa-info-circle" title="Um bestehende Einstellungen zu laden,&#13;&#10;geben sie ihre Email-Addresse ein&#13;&#10;und wählen sie den Vorschlag mit Tab aus."></span></label>
             <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput()} onKeyDown={this.handleTab} autoComplete="off" />
             {
               suggestion
@@ -178,7 +181,7 @@ export default class SettingsDialog extends React.Component {
               <tr>
                 <th>Ereignis</th>
                 <th>Email</th>
-                <th>Push-Nachricht</th>
+                <th>Push-Nachricht<span className="fa fa-info-circle" title="Die Einstellungen für Push-Nachrichten gelten jeweils&#13;&#10;nur für das Gerät, auf dem sie ausgewählt wurden."></span></th>
               </tr>
             </thead>
             <tbody>
@@ -187,7 +190,7 @@ export default class SettingsDialog extends React.Component {
                 <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice_mail}/></td>
                 {
                   notificationsBlocked
-                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
                   : <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')}  checked={this.state.creationNotice_notification}/></td>
                 }
               </tr>

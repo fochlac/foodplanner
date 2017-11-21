@@ -2,7 +2,6 @@ const   getConnection   = require(process.env.FOOD_HOME + 'modules/db')
     ,   mysql           = require('mysql')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log')
     ,   mail            = require(process.env.FOOD_HOME + 'modules/mailer')
-    ,   scheduler       = require(process.env.FOOD_HOME + 'modules/scheduler')
     ,   notification    = require(process.env.FOOD_HOME + 'modules/notification')
     ,   error           = require(process.env.FOOD_HOME + 'modules/error');
 
@@ -113,11 +112,6 @@ module.exports = {
                             image: options.image ? '/static/images/meals/' + options.image[0] + result.insertId + '.' + options.image[1] : undefined,
                             id: result.insertId
                         };
-                        mail.sendCreationNotice(mealObj);
-                        scheduler.scheduleMeal(mealObj);
-                        if (!mealObj.name.includes('test')) {
-                            notification.sendCreationNotice(mealObj);
-                        }
                         resolve(mealObj);
                         log(6, 'modules/db/meal:createMeal - meal created');
                     }

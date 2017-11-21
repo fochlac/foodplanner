@@ -1,5 +1,5 @@
 export const apiMiddleware = store => next => action => {
-    if (action.api) {
+    if (action.api && action.status === 'initialized') {
         const originalAction = Object.assign({}, action),
             o = action.api;
 
@@ -38,11 +38,10 @@ export const apiMiddleware = store => next => action => {
 
         fetch(o.url, opt)
         .then(res => {
-            console.log(res);
+            action.timeDiff = Date.now() - +res.headers.get('timestamp');
             return res.json();
         })
         .then(data => {
-            action.api = undefined;
             action.status = 'complete';
             action.data = data;
             if (action.type === 'SAVE_SETTINGS') {

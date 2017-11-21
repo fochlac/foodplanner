@@ -9,14 +9,10 @@ const second = 1000,
 	day = 24 * hour,
 	week = 7 * day;
 
-const mealDeadline = (meal) => {
-	mealDb.getMealByProperty('id', meal.id)
-		.then((result) => {
-			if (result.deadline) {
-				mail.sendDeadlineReminder(meal);
-			}
-		})
-		.catch(error.promise(4, 'could not find meal ' + meal.id));
+let schedule = {};
+
+const mealDeadline = (meal) => () => {
+	mail.sendDeadlineReminder(meal);
 	// trigger push
 }
 
@@ -26,11 +22,18 @@ module.exports = {
 		mealDb.getAllMeals()
 			.then((meals) => {
 				meals.forEach(meal => {
-					scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline)
+					schedule['meal_' + meal.id] = scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline)
 				});
 			});
 	},
 	scheduleMeal: meal => {
-		scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline);
+		schedule['meal_' + meal.id] = scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline);
+	},
+	rescheduleMeal: meal => {
+		schedule['meal_' + meal.id].cancel();
+		schedule['meal_' + meal.id] = scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline);
+	},
+	cancelMeal : id => {
+		schedule['meal_' + meal.id].cancel();
 	}
 }

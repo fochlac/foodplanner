@@ -57,7 +57,7 @@ module.exports = {
                 exclude: /static/
             },
             {
-                test: /\.(json|png|ico|xml)$/,
+                test: /\.(json|png|ico|xml|svg)$/,
                 loader: "file-loader",
                 options: {
                     name: '[name].[ext]'

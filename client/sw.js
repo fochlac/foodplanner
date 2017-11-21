@@ -2,24 +2,13 @@
 
 'use strict';
 const serverUrl = "https://food.fochlac.com";
-let version = '3',
+let version = '4',
     dbVersion = '2',
     assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
     offline = new Response(new Blob(), {status: 279}),
     staticContent = [
         ...assets,
-        '/',
-        '/static/apple-touch-icon.png',
-        '/static/favicon-32x32.png',
-        '/static/android-chrome-192x192.png',
-        '/static/favicon-16x16.png',
-        '/static/safari-pinned-tab.svg',
-        '/static/favicon.ico'
-    ],
-    onlineFirst = [
-        '/api'
-    ],
-    offlineFirst = [
+        '/'
     ],
     requestStack = [],
     stackTimer,
@@ -116,6 +105,28 @@ function handle_fetch(event) {
                 }
             }).catch(err => console.warn(err))
         );
+    } else if (event.request.method === 'GET') {
+        let req = event.request.clone();
+            event.respondWith(
+                 Promise.all([fetch(event.request), caches.open(version)])
+                .then(result => {
+                    result[1].put(req.clone(), result[0].clone());
+                    return result[0];
+                })
+                .catch(() => {
+                    return caches.open(version)
+                    .then(cache => {
+                        return cache.match(req);
+                    })
+                    .then((res) => {
+                        if (res) {
+                            return res;
+                        } else {
+                            return offline.clone();
+                        }
+                    }).catch(err => console.warn(err));
+                })
+            );
     }
 }
 

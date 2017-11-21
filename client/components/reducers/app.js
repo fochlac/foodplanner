@@ -24,6 +24,8 @@ const app = (state = {}, action) => {
             return state;
         case 'BUSY':
             return {...state, busy: action.state};
+        case 'OFFLINE':
+            return {...state, offline: action.state};
 
         default:
             return state;

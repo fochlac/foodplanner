@@ -10,7 +10,7 @@ export default class Dialog extends React.Component {
     render() {
         return (
             <div className="dialogBackground">
-                <div className="dialog">
+                <div className={this.props.className ? this.props.className + ' dialog' : 'dialog'}>
                     {this.props.children}
                 </div>
             </div>
