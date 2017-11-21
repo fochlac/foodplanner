@@ -34,10 +34,10 @@ function initDb() {
 myDb = initDb();
 
 let setup = [
-    `CREATE OR REPLACE USER '${process.env.FOOD_DB_USERNAME}'@'${process.env.FOOD_DB_HOST}' IDENTIFIED BY '${process.env.FOOD_DB_PASSWORD}';`,
+    `CREATE OR REPLACE USER '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}' IDENTIFIED BY '${process.env.FOOD_DB_PASSWORD}';`,
     `DROP DATABASE IF EXISTS ${process.env.FOOD_DB_NAME};`,
     `CREATE DATABASE IF NOT EXISTS ${process.env.FOOD_DB_NAME};`,
-    `GRANT ALL PRIVILEGES ON ${process.env.FOOD_DB_NAME}.* TO '${process.env.FOOD_DB_USERNAME}'@'${process.env.FOOD_DB_HOST}';`,
+    `GRANT ALL PRIVILEGES ON ${process.env.FOOD_DB_NAME}.* TO '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}';`,
     `USE ${process.env.FOOD_DB_NAME};`,
 
     `CREATE TABLE IF NOT EXISTS \`signups\` (
@@ -74,7 +74,7 @@ let setup = [
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`hash\`                varchar(150)    NOT NULL,
         \`subscription\`        TEXT            NOT NULL,
-        \`type\`                varchar(150)    NOT NULL
+        \`type\`                varchar(150)    NOT NULL,
 
         PRIMARY KEY (id),
         UNIQUE KEY \`hash\` (\`hash\`)

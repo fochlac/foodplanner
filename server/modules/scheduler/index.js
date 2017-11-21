@@ -24,7 +24,8 @@ module.exports = {
 				meals.forEach(meal => {
 					schedule['meal_' + meal.id] = scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline)
 				});
-			});
+			})
+			.catch(error.promise(2, 'error setting up scheduler'));
 	},
 	scheduleMeal: meal => {
 		schedule['meal_' + meal.id] = scheduler.scheduleJob(new Date(meal.deadline - hour * 2), mealDeadline);
