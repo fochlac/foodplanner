@@ -163,7 +163,7 @@ export default class SettingsDialog extends React.Component {
         </div>
         <div className="body">
           <div className="mailFrame row">
-            <label htmlFor="SettingsDialog_mail">Email<span className="fa fa-info-circle" title="Um bestehende Einstellungen zu laden,&#13;&#10;geben sie ihre Email-Addresse ein&#13;&#10;und wählen sie den Vorschlag mit Tab aus."></span></label>
+            <label htmlFor="SettingsDialog_mail">E-Mail<span className="fa fa-info-circle" title="Um bestehende Einstellungen zu laden,&#13;&#10;geben Sie Ihre E-Mail-Addresse ein&#13;&#10;und wählen Sie den Vorschlag mit Tab aus."></span></label>
             <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput()} onKeyDown={this.handleTab} autoComplete="off" />
             {
               suggestion
@@ -180,7 +180,7 @@ export default class SettingsDialog extends React.Component {
             <thead>
               <tr>
                 <th>Ereignis</th>
-                <th>Email</th>
+                <th>E-Mail</th>
                 <th>Push-Nachricht<span className="fa fa-info-circle" title="Die Einstellungen für Push-Nachrichten gelten jeweils&#13;&#10;nur für das Gerät, auf dem sie ausgewählt wurden."></span></th>
               </tr>
             </thead>
@@ -190,7 +190,7 @@ export default class SettingsDialog extends React.Component {
                 <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice_mail}/></td>
                 {
                   notificationsBlocked
-                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
                   : <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')}  checked={this.state.creationNotice_notification}/></td>
                 }
               </tr>
@@ -199,7 +199,7 @@ export default class SettingsDialog extends React.Component {
                 <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder_mail}/></td>
                 {
                   notificationsBlocked
-                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
                   : <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'notification')} checked={this.state.deadlineReminder_notification}/></td>
                 }
               </tr>

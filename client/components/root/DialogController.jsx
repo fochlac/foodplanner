@@ -46,7 +46,7 @@ export default class DialogController extends React.Component {
                     params = Object.assign({}, d.user, {[params.list]: 0});
 
                 } else {
-                    message = "Erfolgreich von allen Email-Benachrichtigungen abgemeldet.";
+                    message = "Erfolgreich von allen E-Mail-Benachrichtigungen abgemeldet.";
                     params = Object.assign({}, d.user, {creationNotice: 0, deadlineReminder: 0});
                 }
 
