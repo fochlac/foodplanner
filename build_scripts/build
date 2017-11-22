@@ -4,5 +4,5 @@ cd /home/food
 git fetch
 git reset --hard origin/stable
 
-npm run_script build
+npm run-script build
 systemctl restart foodd
