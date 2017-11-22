@@ -20,6 +20,21 @@ module.exports = {
         });
     },
 
+    getSignupsByProperty: (prop, val) => {
+        return getConnection()
+        .then (myDb => {
+            return new Promise((resolve, reject) => myDb.query(`select * from signups where ${prop} = ${mysql.escape(val)}`, (err, result) => {
+                myDb.release();
+                if (err) {
+                    log(2, 'modules/db/signup:getSignupByProperty', err);
+                    reject({status: 500, message: 'Unable to find signup.'});
+                } else {
+                    resolve(result);
+                }
+            }));
+        });
+    },
+
     setSignupByProperty: (prop, val, options) => {
         const query = `UPDATE signups SET
             name = ${mysql.escape(options.name)},

@@ -32,7 +32,7 @@ function handle_push(event) {
                 icon: msg.data.image ? serverUrl + msg.data.image : '',
                 requireInteraction: true
             });
-        } else if (msg.type === "deadlineReminder" && user.deadlineReminder === 1 || 1) {
+        } else if (msg.type === "deadlineReminder" && user.deadlineReminder === 1) {
             return self.registration.showNotification('Letzte Anmeldemöglichkeit!', {
                 body: formatDateTime(msg.data.time) + ': ' + msg.data.name + '\nAnmeldung bis: ' + formatDateTime(msg.data.deadline),
                 icon: msg.data.image ? serverUrl + msg.data.image : '',

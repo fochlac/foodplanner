@@ -25,3 +25,6 @@ provide environment variables:
 
 node server/setup.js
 node server/index.js
+
+# dev-server
+https://food-dev.fochlac.com

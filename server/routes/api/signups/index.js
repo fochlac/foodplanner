@@ -1,5 +1,6 @@
 const	signups	    = require('express').Router()
-	,	signupsDB 	= require(process.env.FOOD_HOME + 'modules/db/signups')
+    ,   signupsDB   = require(process.env.FOOD_HOME + 'modules/db/signups')
+	,	mealsDB 	= require(process.env.FOOD_HOME + 'modules/db/meals')
 	,	error 		= require(process.env.FOOD_HOME + 'modules/error');
 
 
@@ -45,10 +46,27 @@ signups.post('/', error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
     meal: /^[0-9]{1,50}$/,
 }), (req, res) => {
-    signupsDB.createSignUp(req.body).then((signup) => {
+    Promise.all([
+        mealsDB.getMealByProperty('id', req.body.meal),
+        signupsDB.getSignupsByProperty('meal', req.body.meal)
+    ])
+    .then(result => {
+        if (result[0].signupLimit && result[0].signupLimit <= result[1].length) {
+            return Promise.reject({type: 1, msg: 'Dieses Angebot ist bereits voll belegt.'});
+        }
+        return signupsDB.createSignUp(req.body)
+    })
+    .then((signup) => {
         res.status(200).send(signup);
     })
-    .catch(error.router.internalError(res));
+    .catch(err => {
+        if (err.type === 1) {
+            log(4, err.message)
+            res.status(400).send(err);
+        } else {
+            error.router.internalError(res)(err);
+        }
+    });
 });
 
 module.exports = signups;
