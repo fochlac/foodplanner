@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --public dev.fochlac.com --hot --inline",
     "build": "webpack -p",
-    "build-dev": "webpack -w"
+    "build-dev": "webpack -d",
+    "watch": "webpack -w"
   },
   "author": "",
   "license": "ISC",

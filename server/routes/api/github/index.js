@@ -3,10 +3,15 @@ const	github = require('express').Router()
     ,   hmac = require(process.env.FOOD_HOME + 'modules/auth/hmac')(process.env.GITHUB_SECRET_FOOD, 'X-Hub-Signature');
 
 github.post('/', hmac, (req, res) => {
-    /*exec(process.env.FOOD_HOME + "scripts/build", (error, stdout, stderr) => {
-        console.log(stdout + error + stderr);
-    });*/
-    console.log(req.body);
+    if (process.env.DEVELOP === 'true' && req.body.ref === 'refs/heads/develop') {
+        exec(process.env.FOOD_HOME + "../build_scripts/buildDev", (error, stdout, stderr) => {
+            console.log(stdout + error + stderr);
+        });
+    } else if (!process.env.DEVELOP && req.body.ref === 'refs/heads/stable') {
+        exec(process.env.FOOD_HOME + "../build_scripts/build", (error, stdout, stderr) => {
+            console.log(stdout + error + stderr);
+        });
+    }
     res.status(200).send();
 });
 
