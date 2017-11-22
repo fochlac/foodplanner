@@ -61,6 +61,7 @@ signups.post('/', error.router.validate('body', {
     })
     .catch(err => {
         if (err.type === 1) {
+            log(4, err.message)
             res.status(400).send(err);
         } else {
             error.router.internalError(res)(err);
