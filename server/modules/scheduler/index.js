@@ -22,7 +22,7 @@ module.exports = {
 		mealDb.getAllMeals()
 			.then((meals) => {
 				meals.forEach(meal => {
-					if (Date.now() < +deadline) {
+					if (Date.now() < +meal.deadline) {
 						let date = new Date(meal.deadline - hour * 2);
 						log(6, `scheduling deadline reminder for ${meal.name} at ${date.getDate()}.${date.getMonth() + 1} - ${date.getHours()}:${date.getMinutes()}`);
 						schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline)
