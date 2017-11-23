@@ -30,5 +30,6 @@ if (env.BRANCH_NAME ==~ /PR-.*/ ) {
     print "checkout: dummy"
     print "buildChanged: dummy"
     print "testChanged: dummy"
+    print "say: dummy"
   }
 }
