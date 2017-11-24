@@ -68,7 +68,7 @@ module.exports = {
 					next();
 				} else {
 					log(4, 'Invalid Request.', payload);
-					res.status(400).send();
+					res.status(400).send({msg: 'Invalid Request.'});
 				}
 			}
 		}

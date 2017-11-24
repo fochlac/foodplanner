@@ -1,37 +1,5 @@
 @import '../../root/variables.less';
 
-
-.DayPickerInput {
-    flex-grow: 1;
-    margin-right: 10px;
-
-    div&-Overlay {
-        top: calc(50% ~"-" 152px);
-        left: calc(50% ~"-" 142px);
-        position: fixed;
-    }
-
-    div.DayPicker-Day.DayPicker-Day--today {
-        font-weight: 600;
-        color: @colorr1;
-    }
-
-    div.DayPicker-Day--selected {
-        background: @colorg3 !important;
-        font-weight: 600;
-    }
-
-    .day {
-        cursor: pointer;
-    }
-}
-
-.timePicker {
-    font-family: Raleway;
-    font-size: 1.1em;
-    padding: 2px
-}
-
 .createMeal {
     .row {
         display: flex;
@@ -66,6 +34,7 @@
             list-style: none;
             padding: 0;
             margin: 5px 0;
+            flex-wrap: wrap;
 
             li {
                 padding: 2px 5px;

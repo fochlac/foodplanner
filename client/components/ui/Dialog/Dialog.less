@@ -34,13 +34,50 @@
         max-height: calc(95vh ~"-" 97px);
         overflow-y: auto;
 
-        input[type="text"], input[type="number"], textarea {
+        .DayPickerInput input,
+        input[type="text"],
+        input[type="number"],
+        textarea {
             width: 100%;
             padding: 3px;
             font-family: Raleway;
             font-size: 1.1em;
             box-sizing: border-box;
         }
+    }
+
+    .DayPickerInput {
+        flex-grow: 1;
+        margin-right: 10px;
+        input {
+
+        }
+
+        div&-Overlay {
+            top: calc(50% ~"-" 152px);
+            left: calc(50% ~"-" 142px);
+            position: fixed;
+        }
+
+        div.DayPicker-Day.DayPicker-Day--today {
+            font-weight: 600;
+            color: @colorr1;
+        }
+
+        div.DayPicker-Day--selected {
+            background: @colorg3 !important;
+            font-weight: 600;
+        }
+
+        .day {
+            cursor: pointer;
+        }
+    }
+
+    .timePicker {
+        font-family: Raleway;
+        font-size: 1.1em;
+        padding: 2px
     }
 
     .foot {

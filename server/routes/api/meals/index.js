@@ -12,7 +12,7 @@ const   meals           = require('express').Router()
 meals.get('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    mealsDB.getMealByProperty('id', req.params.id).then((meals) => {
+    mealsDB.getMealById(req.params.id).then((meals) => {
         res.status(200).send(meals);
     })
     .catch(error.router.internalError(res));
@@ -37,6 +37,28 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
     options: 'jsonString'
 }), (req, res) => {
     let mealData = Object.assign({}, req.body, {options: JSON.parse(req.body.options)});
+
+    optionsInvalid = mealData.options.some(option => {
+        if (!/^[^"%;]{1,150}$/.test(option.name)) {
+            return true;
+        } else if (
+            option.type !== 'toggle'
+            && (
+                !option.values
+                || !option.values.length
+                || !option.values.every(value => /^[^"%;]{1,150}$/.test(value))
+            )
+        ) {
+            return true;
+        }
+
+        return false;
+    });
+
+    if (optionsInvalid) {
+        log(4, 'Options not valid.');
+        return res.status(400).send({type: 2, msg: 'Options not valid.'});
+    }
 
     if (req.file) {
         let splitfile = req.file.filename.split('.');
@@ -87,7 +109,6 @@ meals.delete('/:id', error.router.validate('params', {
             (err) => {
                 if (err) {
                     log(2, 'Cant find image for product ' + req.params.id, err);
-                    return res.status(200).send(data);
                 }
                 res.status(200).send(data);
             });
@@ -106,6 +127,28 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
     options: 'jsonString'
 }), (req, res) => {
     let mealData = Object.assign({}, req.body, {options: JSON.parse(req.body.options)});
+
+    optionsInvalid = mealData.options.some(option => {
+        if (!/^[^"%;]{1,150}$/.test(option.name)) {
+            return true;
+        } else if (
+            option.type !== 'toggle'
+            && (
+                !option.values
+                || !option.values.length
+                || !option.values.every(value => /^[^"%;]{1,150}$/.test(value))
+            )
+        ) {
+            return true;
+        }
+
+        return false;
+    });
+
+    if (optionsInvalid) {
+        log(4, 'Options not valid.');
+        return res.status(400).send({type: 2, msg: 'Options not valid.'});
+    }
 
     if (req.file) {
         let splitfile = req.file.filename.split('.');
@@ -137,7 +180,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
 meals.post('/:id/mail', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    mealsDB.getMealByProperty('id', req.params.id).then((meals) => {
+    mealsDB.getMealById(req.params.id).then((meals) => {
         mail.sendCreationNotice(meal);
         res.status(200).send(meals);
     })

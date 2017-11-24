@@ -9,7 +9,7 @@ export default class SignUpOption extends React.Component {
     return (evt) => {
       this.props.setOption({
         ...this.props.value,
-        [type]: evt.target.value
+        [type]: type === 'show' ? +evt.target.value : evt.target.value
       });
     }
   }

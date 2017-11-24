@@ -121,23 +121,25 @@ export default class Meal extends React.Component {
                         signup.options.map(option =>{
                           const mealOption = p.meal.options.find(opt => opt.id == option.id);
 
-                          return <li key={option.id} className="row">
-                            {
-                              mealOption.type === 'count'
-                              ? <span className="optionCount">{option.count}</span>
-                              : null
-                            }
-                            {
-                              (mealOption.type !== 'toggle')
-                              ? <span>{option.value}</span>
-                              : null
-                            }
-                            {
-                              (mealOption.type === 'toggle' && option.show)
-                              ? <span>{mealOption.name}</span>
-                              : null
-                            }
-                          </li>
+                          return (mealOption.type !== 'toggle' || option.show)
+                            ? <li key={option.id} className="row">
+                              {
+                                mealOption.type === 'count'
+                                ? <span className="optionCount">{option.count}</span>
+                                : null
+                              }
+                              {
+                                (mealOption.type !== 'toggle')
+                                ? <span>{option.value}</span>
+                                : null
+                              }
+                              {
+                                (mealOption.type === 'toggle')
+                                ? <span>{mealOption.name}</span>
+                                : null
+                              }
+                            </li>
+                          : null
                         })
                       }
                     </ul>

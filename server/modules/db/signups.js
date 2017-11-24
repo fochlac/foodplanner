@@ -105,6 +105,10 @@ module.exports = {
                 }
             }))
             .then(signup => {
+                if (!options.options.length) {
+                    myDb.release();
+                    return Promise.resolve(signup);
+                }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsQuery, (err, result) => {
                         myDb.release();
@@ -146,7 +150,7 @@ module.exports = {
                         myDb.release();
                         if (err) {
                             log(2, 'modules/db/signup:deleteSignupByProperty.1', err, `delete from signupOptions where signupId = ${mysql.escape(id)}`);
-                            reject({status: 500, message: 'Error creating meal'});
+                            reject({status: 500, message: 'Error deleting signup options'});
                         } else {
                             resolve(result);
                             log(6, 'modules/db/signup:deleteSignupByProperty - option values deleted');
@@ -216,15 +220,19 @@ module.exports = {
                     }
                 });
             }).then(signup => {
+                if (!options.options.length) {
+                    myDb.release();
+                    return Promise.resolve(signup);
+                }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsQuery(signup.id), (err, result) => {
                         myDb.release();
                         if (err) {
                             log(2, 'modules/db/signup:createSignUp.4', err, optionsQuery(signup.id));
-                            reject({status: 500, message: 'Error creating meal'});
+                            reject({status: 500, message: 'Error creating signup'});
                         } else {
                             resolve(signup);
-                            log(6, 'modules/db/signup:createSignUp - option values inserted - meal created');
+                            log(6, 'modules/db/signup:createSignUp - option values inserted - signup created');
                         }
                     });
                 });

@@ -17,7 +17,13 @@ export default class MealOption extends React.Component {
   }
 
   addValue() {
+    if (!this.state.addValue.length) {
+      return;
+    }
     this.setState({addValue: ''});
+    if (this.props.option.values.includes(this.state.addValue)) {
+      return;
+    }
     this.props.setOption({
       ...this.props.option,
       values: [...this.props.option.values, this.state.addValue]

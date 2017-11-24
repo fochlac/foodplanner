@@ -71,9 +71,9 @@ export default class CreateMealDialog extends React.Component {
             <label htmlFor="SignUpDialog_name">Name</label>
             <input type="text" id="SignUpDialog_name" defaultValue={p.edit ? p.signup.name : p.user.name} onChange={this.nameInput}/>
           </div>
-          {p.meal.options.map(option => {
+          {p.meal.options.map((option, index) => {
             const valueObj = this.state.options.find(opt => opt.id === option.id);
-            return <SignUpOption option={option} key={option.id} value={valueObj ? valueObj : {}
+            return <SignUpOption option={option} key={index} value={valueObj ? valueObj : {}
           } setOption={this.setOption(option.id)} />
           })}
           <div>

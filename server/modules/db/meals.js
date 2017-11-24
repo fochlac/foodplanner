@@ -46,16 +46,36 @@ function doubleFlattenResults(result) {
 
 
 module.exports = {
-    getMealByProperty: (prop, val) => {
+    getMealById: (id) => {
+        const query = `SELECT
+                meals.id,
+                meals.name,
+                meals.description,
+                meals.creator,
+                meals.time,
+                meals.deadline,
+                meals.signupLimit,
+                meals.image,
+                mealOptions.id AS mealOptionsId,
+                mealOptions.name AS mealOptionsName,
+                mealOptions.type AS mealOptionsType,
+                mealOptionValues.value AS mealOptionValue
+            FROM meals
+            LEFT JOIN mealOptions
+            ON meals.id = mealOptions.mealId
+            LEFT JOIN mealOptionValues
+            ON mealOptionValues.mealOptionId = mealOptions.id
+            WHERE meals.id = ${mysql.escape(id)}`;
+
         return getConnection()
         .then (myDb => {
-            return new Promise((resolve, reject) => myDb.query(`select * from meals where ${prop} = ${mysql.escape(val)}`, (err, result) => {
+            return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/meal:getMealByProperty', err);
-                    reject({status: 500, message: 'Unable to find meal.'});
+                    log(2, 'modules/db/meal:getMealById', err);
+                    reject({status: 500, message: 'Unable to get meallist.'});
                 } else {
-                    resolve(result[0]);
+                    resolve(doubleFlattenResults(result)[0]);
                 }
             }));
         });
@@ -123,8 +143,7 @@ module.exports = {
                         deadline: parseInt(options.deadline),
                         signupLimit: parseInt(options.signupLimit),
                         image: options.image ? '/static/images/meals/' + options.image : undefined,
-                        id: parseInt(id),
-                        options: options.options
+                        id: parseInt(id)
                     });
                 }
             }))
@@ -143,7 +162,7 @@ module.exports = {
             })
             .then(mealObj => {
                 if (!options.options.length) {
-                    return Promise.resolve(mealObj)
+                    return Promise.resolve(mealObj);
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsQuery, (err, result) => {
@@ -152,6 +171,10 @@ module.exports = {
                             reject({status: 500, message: 'Error creating meal'});
                         } else {
                             mealObj.firstOptionId = result.insertId;
+                            mealObj.options = options.options.map((option, index) => {
+                                option.id = index + +result.insertId;
+                                return option;
+                            });
                             resolve(mealObj);
                             log(6, 'modules/db/meal:setMealById - meal created');
                         }
@@ -161,7 +184,7 @@ module.exports = {
             .then(mealObj => {
                 if (!options.options.filter(option => option.values.length).length) {
                     myDb.release();
-                    return Promise.resolve(mealObj)
+                    return Promise.resolve(mealObj);
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsValuesQuery(mealObj.firstOptionId), (err, result) => {
@@ -283,8 +306,7 @@ module.exports = {
                             deadline: parseInt(options.deadline),
                             signupLimit: parseInt(options.signupLimit),
                             image: options.image ? '/static/images/meals/' + options.image[0] + result.insertId + '.' + options.image[1] : undefined,
-                            id: result.insertId,
-                            options: options.options
+                            id: result.insertId
                         };
                         resolve(mealObj);
                         log(6, 'modules/db/meal:createMeal - meal inserted');
@@ -293,7 +315,7 @@ module.exports = {
             })
             .then(mealObj => {
                 if (!options.options.length) {
-                    return Promise.resolve(mealObj)
+                    return Promise.resolve(mealObj);
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsQuery(mealObj.id), (err, result) => {
@@ -302,6 +324,10 @@ module.exports = {
                             reject({status: 500, message: 'Error creating meal'});
                         } else {
                             mealObj.firstOptionId = result.insertId;
+                            mealObj.options = options.options.map((option, index) => {
+                                option.id = index + +result.insertId;
+                                return option;
+                            });
                             log(6, 'modules/db/meal:createMeal - options inserted');
                             resolve(mealObj);
                         }
@@ -311,7 +337,7 @@ module.exports = {
             .then(mealObj => {
                 if (!options.options.filter(option => option.values.length).length) {
                     myDb.release();
-                    return Promise.resolve(mealObj)
+                    return Promise.resolve(mealObj);
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsValuesQuery(mealObj.id, mealObj.firstOptionId), (err, result) => {
