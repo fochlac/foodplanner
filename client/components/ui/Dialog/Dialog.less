@@ -32,8 +32,9 @@
     .body {
         padding: 0 15px;
         max-height: calc(95vh ~"-" 97px);
+        overflow-y: auto;
 
-        input, textarea {
+        input[type="text"], input[type="number"], textarea {
             width: 100%;
             padding: 3px;
             font-family: Raleway;
@@ -59,5 +60,20 @@
         font-size: 0.9em;
         margin-top: 5px;
         font-weight: 600;
+
+        &.radioLabel {
+            margin-top: 0;
+        }
+    }
+    .row {
+        display: flex;
+        align-items: center;
+    }
+    .col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        flex-grow: 1;
     }
 }

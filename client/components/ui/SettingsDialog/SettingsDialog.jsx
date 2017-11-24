@@ -162,7 +162,7 @@ export default class SettingsDialog extends React.Component {
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
         <div className="body">
-          <div className="mailFrame row">
+          <div className="mailFrame">
             <label htmlFor="SettingsDialog_mail">E-Mail<span className="fa fa-info-circle" title="Um bestehende Einstellungen zu laden,&#13;&#10;geben Sie Ihre E-Mail-Addresse ein&#13;&#10;und wählen Sie den Vorschlag mit Tab aus."></span></label>
             <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput()} onKeyDown={this.handleTab} autoComplete="off" />
             {
@@ -171,7 +171,7 @@ export default class SettingsDialog extends React.Component {
               : null
             }
           </div>
-          <div className="row">
+          <div>
             <label htmlFor="SettingsDialog_name">Name</label>
             <input type="text" id="SettingsDialog_name" value={s.name} onChange={this.nameInput}/>
           </div>

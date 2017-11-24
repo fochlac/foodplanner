@@ -93,6 +93,53 @@
             display: none;
         }
     }
+    .signupOptions {
+        list-style: none;
+        display: flex;
+        padding: 0;
+        margin-left: 5px;
+        font-style: italic;
 
+        li {
+            margin: 1px 5px 1px 0 !important;
+            font-size: 0.9em;
 
+            .optionCount {
+                margin-right: 2px;
+            }
+
+            &:nth-child(n+2):before {
+                content: '|';
+                margin-right: 5px;
+            }
+        }
+    }
+
+    .summary {
+        margin-bottom: 10px;
+        border-top: solid 1px @colorg1;
+
+        .optionTitle {
+            margin-right: 3px;
+        }
+
+        .optionCount {
+            margin-right: 2px;
+        }
+
+        .optionGroup {
+            margin-right: 5px;
+
+            &:nth-child(n+2):before {
+                content: '-';
+                margin-right: 5px;
+                color: @colorg1;
+            }
+        }
+
+        .optionItem:nth-child(n+3):before {
+            content: ',';
+            margin-right: 5px;
+        }
+    }
 }

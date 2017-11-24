@@ -33,9 +33,10 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
     description: /^[^"%;]*$/,
     time: /^[0-9]{1,50}$/,
     deadline: /^[0-9]{0,50}$/,
-    signupLimit: /^[0-9]{0,50}$/
+    signupLimit: /^[0-9]{0,50}$/,
+    options: 'jsonString'
 }), (req, res) => {
-    let mealData = Object.assign({}, req.body);
+    let mealData = Object.assign({}, req.body, {options: JSON.parse(req.body.options)});
 
     if (req.file) {
         let splitfile = req.file.filename.split('.');
@@ -45,7 +46,7 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
         delete mealData.image;
     }
 
-    mealsDB.setMealByProperty('id', req.params.id, mealData).then((meal) => {
+    mealsDB.setMealById(req.params.id, mealData).then((meal) => {
         scheduler.rescheduleMeal(meal);
         if (req.file) {
             fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
@@ -73,7 +74,7 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
 meals.delete('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    mealsDB.deleteMealByProperty('id', req.params.id).then((data) => {
+    mealsDB.deleteMealById(req.params.id).then((data) => {
         scheduler.cancelMeal(req.params.id);
 
         fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
@@ -101,9 +102,10 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
     description: /^[^"%;]*$/,
     time: /^[0-9]{1,50}$/,
     deadline: /^[0-9]{0,50}$/,
-    signupLimit: /^[0-9]{0,50}$/
-}), (req, res, next) => {
-    let mealData = Object.assign({}, req.body);
+    signupLimit: /^[0-9]{0,50}$/,
+    options: 'jsonString'
+}), (req, res) => {
+    let mealData = Object.assign({}, req.body, {options: JSON.parse(req.body.options)});
 
     if (req.file) {
         let splitfile = req.file.filename.split('.');
@@ -116,9 +118,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
     mealsDB.createMeal(mealData).then((meal) => {
         mail.sendCreationNotice(meal);
         scheduler.scheduleMeal(meal);
-        if (!meal.name.includes('test')) {
-            notification.sendCreationNotice(meal);
-        }
+        notification.sendCreationNotice(meal);
 
         if (req.file) {
             let imageName = meal.image.split('/');

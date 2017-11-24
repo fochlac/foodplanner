@@ -74,6 +74,7 @@ export const meal_signup = (data) => ({
       name: data.name,
       comment: data.comment,
       user: data.user,
+      options: data.options,
       meal: data.meal
     }
   }
@@ -93,6 +94,7 @@ export const meal_edit = (data) => ({
     method: 'put',
     body: {
       name: data.name,
+      options: data.options,
       comment: data.comment
     }
   }

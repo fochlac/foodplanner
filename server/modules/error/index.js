@@ -53,6 +53,13 @@ module.exports = {
 						valid = false;
 					} else if (valid && options[param] === 'object' && typeof payload[param] !== 'object') {
 						valid = false;
+					} else if (valid && options[param] === 'jsonString') {
+						try {
+							JSON.parse(payload[param])
+						}
+						catch(err) {
+							valid = false;
+						}
 					}
 					log(6, `Validating ${param}: '${payload[param]}' against RegExp ${options[param]}, result ${(typeof options[param] === 'string') ? valid : options[param].test(payload[param])}`);
 				}
