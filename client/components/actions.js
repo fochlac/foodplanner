@@ -39,6 +39,12 @@ export const connect_serviceworker = (data) => ({
   }
 });
 
+export const convert_postmessage = (evt) => ({
+  type: 'POSTMESSAGE',
+  message: evt.data.message,
+  payload: evt.data.payload
+});
+
 // general dialog
 
 export const close_dialog = id => ({
@@ -48,11 +54,6 @@ export const close_dialog = id => ({
 
 export const set_busy  = state => ({
   type: 'BUSY',
-  state
-});
-
-export const set_offline  = state => ({
-  type: 'OFFLINE',
   state
 });
 

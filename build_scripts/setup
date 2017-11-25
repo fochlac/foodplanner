@@ -1,0 +1,12 @@
+#!/bin/bash
+cd "${BASH_SOURCE%/*}" || exit
+cd .. || exit
+
+while read p; do
+  export $p
+done < .build_scripts/variables
+
+npm install
+
+npm run-script build
+systemctl restart foodd

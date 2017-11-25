@@ -18,7 +18,6 @@ export default class DefaultPage extends React.Component {
     }
 
     render() {
-        console.log(this.props.app);
         return (<div>
             <Topbar/>
             {this.props.children}
