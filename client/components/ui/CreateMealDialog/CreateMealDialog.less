@@ -1,46 +1,5 @@
 @import '../../root/variables.less';
 
-
-.DayPickerInput {
-    flex-grow: 1;
-    margin-right: 10px;
-
-    div.DayPicker-Day.DayPicker-Day--today {
-        font-weight: 600;
-        color: @colorr1;
-    }
-
-    div.DayPicker-Day--selected {
-        background: @colorg3 !important;
-        font-weight: 600;
-    }
-
-    .day {
-        cursor: pointer;
-    }
-}
-
-.month-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 5px;
-}
-
-.days {
-    padding: 5px;
-
-    td {
-        text-align: center;
-    }
-}
-
-.timePicker {
-    font-family: Raleway;
-    font-size: 1.1em;
-    padding: 2px
-}
-
 .createMeal {
     .row {
         display: flex;
@@ -51,5 +10,50 @@
         justify-content: center;
         align-items: flex-start;
         flex-grow: 1;
+    }
+    .addOption {
+        margin: 10px 0 5px;
+    }
+
+    .additionalOption {
+        margin-top: 10px;
+        border-top: solid 1px @colorg1;
+        padding-top: 5px;
+
+        .delLink {
+            font-size: 0.85em;
+        }
+        .optionType {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+        }
+        .valueCloud {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+            flex-wrap: wrap;
+
+            li {
+                padding: 2px 5px;
+                font-size: 0.9em;
+                margin: 2px 5px;
+                background: white;
+                border: solid 1px  @colorg1;
+                border-radius: @borderRadius;
+                display: flex;
+                align-items: center;
+
+                .fa-times {
+                    margin-left: 5px;
+                }
+            }
+        }
+        .addButton {
+            margin-left: 5px;
+        }
+
     }
 }

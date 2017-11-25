@@ -28,6 +28,8 @@ export default class App extends React.Component {
             .then(subscription => {
                 this.props.connect_serviceworker(subscription);
             })
+
+        navigator.serviceWorker.addEventListener('message', this.props.convert_postmessage.bind(this));
     }
 
     render() {

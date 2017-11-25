@@ -44,7 +44,35 @@ export default class Meal extends React.Component {
 
     const p = this.props,
         s = this.state,
-        signups = p.meal.signups.map(id => p.signups[id]);
+        signups = p.meal.signups.map(id => p.signups[id]),
+        summary = Object.values(signups.reduce((acc, signup) => {
+          signup.options.forEach(option => {
+            const mealOption = p.meal.options.find(opt => opt.id == option.id),
+                count = (mealOption.type === 'count') ? option.count : (mealOption.type === 'select') ? 1 : +option.show,
+                val = (mealOption.type === 'toggle') ? mealOption.name : option.value;
+
+            if (!acc[mealOption.id]) {
+              acc[mealOption.id] = {
+                name: mealOption.name,
+                type: mealOption.type,
+                values: {
+                  [val]: {
+                    count: count,
+                    value: (mealOption.type === 'toggle') ? '' : option.value
+                  }
+                }
+              };
+            } else if (!acc[mealOption.id].values[val]) {
+              acc[mealOption.id].values[val] = {
+                count: count,
+                value: option.value
+              };
+            } else {
+              acc[mealOption.id].values[val].count += count;
+            }
+          })
+          return acc;
+        }, {}));
 
     return (
       <div className="meal">
@@ -69,9 +97,9 @@ export default class Meal extends React.Component {
             }
             <span className="deadline">Anmeldeschluss: {formatTimeShort(p.meal.deadline)}</span>
             {
-              (s.editable && (!p.meal.signupLimit) || signups.length < p.meal.signupLimit)
-              ? <p className="fakeLink" onClick={this.signup}><span>Teilnehmen</span><span className="fa fa-angle-double-right"></span></p>
-              : null
+              (!s.editable || (signups.length >= p.meal.signupLimit && p.meal.signupLimit))
+              ? null
+              : <p className="fakeLink" onClick={this.signup}><span>Teilnehmen</span><span className="fa fa-angle-double-right"></span></p>
             }
             <ul className="participantsList">
               {
@@ -87,17 +115,58 @@ export default class Meal extends React.Component {
                         </span>
                         : null
                       }
-                      {
-                        signup.changing
-                        ? <span className="fa fa-spinner fa-spin fa-lg fa-fw"></span>
-                        : null
-                      }
                     </p>
+                    <ul className="signupOptions">
+                      {
+                        signup.options.map(option =>{
+                          const mealOption = p.meal.options.find(opt => opt.id == option.id);
+
+                          return (mealOption.type !== 'toggle' || option.show)
+                            ? <li key={option.id} className="row">
+                              {
+                                mealOption.type === 'count'
+                                ? <span className="optionCount">{option.count}</span>
+                                : null
+                              }
+                              {
+                                (mealOption.type !== 'toggle')
+                                ? <span>{option.value}</span>
+                                : null
+                              }
+                              {
+                                (mealOption.type === 'toggle')
+                                ? <span>{mealOption.name}</span>
+                                : null
+                              }
+                            </li>
+                          : null
+                        })
+                      }
+                    </ul>
                     <p className="comment">{signup.comment}</p>
                   </li>
                 ))
               }
             </ul>
+            {
+              summary.length
+              ? <div className="summary">
+                {
+                  summary.map((mealOption, index) =>
+                  <span key={index} className="optionGroup">
+                    <b className="optionTitle">{mealOption.name}:</b>
+                    {
+                      Object.values(mealOption.values).map((option, index) =>
+                        <span key={index} className="optionItem">
+                          <span className="optionCount">{option.count}</span>
+                          <span>{option.value}</span>
+                        </span>)
+                    }
+                  </span>)
+                }
+              </div>
+              : null
+            }
           </div>
         </div>
       </div>

@@ -1,13 +1,19 @@
 import React from 'react';
 import Dialog from '../Dialog/Dialog.jsx';
+import SignUpOption from './SignUpOption.jsx';
+import './SignUp.less';
 
 export default class CreateMealDialog extends React.Component {
   constructor(props) {
     super();
 
-    this.state = {
-      name: props.edit ? props.signup.name : props.user.name,
-      comment: props.edit ? props.signup.comment : ''
+    this.state = props.edit ? props.signup : {
+      name: props.user.name,
+      options: props.meal.options.map(option => ({
+          id: option.id,
+          value: option.values[0] ? option.values[0] : null
+        })),
+      comment: ''
     }
 
     this.nameInput = this.handleInput('name').bind(this);
@@ -29,12 +35,26 @@ export default class CreateMealDialog extends React.Component {
       name: this.state.name,
       comment: this.state.comment,
       meal: this.props.meal.id,
+      options: this.state.options,
       signup: edit ? this.props.signup.id : null
     });
   }
 
   cancel() {
     this.props.close_dialog();
+  }
+
+  setOption(id) {
+    return (newOption) => {
+      let newArr = this.state.options.concat([]),
+          pos = newArr.findIndex(opt => opt.id === id);
+
+      newArr[pos] = newOption;
+
+      this.setState({
+        options: newArr
+      });
+    }
   }
 
   render() {
@@ -47,11 +67,16 @@ export default class CreateMealDialog extends React.Component {
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
         <div className="body">
-          <div className="row">
+          <div>
             <label htmlFor="SignUpDialog_name">Name</label>
             <input type="text" id="SignUpDialog_name" defaultValue={p.edit ? p.signup.name : p.user.name} onChange={this.nameInput}/>
           </div>
-          <div className="row">
+          {p.meal.options.map((option, index) => {
+            const valueObj = this.state.options.find(opt => opt.id === option.id);
+            return <SignUpOption option={option} key={index} value={valueObj ? valueObj : {}
+          } setOption={this.setOption(option.id)} />
+          })}
+          <div>
             <label htmlFor="SignUpDialog_comment">Kommentar</label>
             <textarea type="text" id="SignUpDialog_comment" defaultValue={p.edit ? p.signup.comment : null} onChange={this.commentInput}></textarea>
           </div>

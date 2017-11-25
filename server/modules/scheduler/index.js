@@ -38,8 +38,8 @@ module.exports = {
 	rescheduleMeal: meal => {
 		let date = new Date(meal.deadline - hour * 2);
 		log(6, `rescheduling deadline reminder for ${meal.name} at ${date.getDate()}.${date.getMonth() + 1} - ${date.getHours()}:${date.getMinutes()}`);
-		if (schedule['meal_' + id]) {
-			schedule['meal_' + id].cancel();
+		if (schedule['meal_' + meal.id]) {
+			schedule['meal_' + meal.id].cancel();
 		}
 		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline)
 	},

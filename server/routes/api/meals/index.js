@@ -12,7 +12,7 @@ const   meals           = require('express').Router()
 meals.get('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    mealsDB.getMealByProperty('id', req.params.id).then((meals) => {
+    mealsDB.getMealById(req.params.id).then((meals) => {
         res.status(200).send(meals);
     })
     .catch(error.router.internalError(res));
@@ -33,9 +33,32 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
     description: /^[^"%;]*$/,
     time: /^[0-9]{1,50}$/,
     deadline: /^[0-9]{0,50}$/,
-    signupLimit: /^[0-9]{0,50}$/
+    signupLimit: /^[0-9]{0,50}$/,
+    options: 'jsonString'
 }), (req, res) => {
-    let mealData = Object.assign({}, req.body);
+    let mealData = Object.assign({}, req.body, {options: JSON.parse(req.body.options)});
+
+    optionsInvalid = mealData.options.some(option => {
+        if (!/^[^"%;]{1,150}$/.test(option.name)) {
+            return true;
+        } else if (
+            option.type !== 'toggle'
+            && (
+                !option.values
+                || !option.values.length
+                || !option.values.every(value => /^[^"%;]{1,150}$/.test(value))
+            )
+        ) {
+            return true;
+        }
+
+        return false;
+    });
+
+    if (optionsInvalid) {
+        log(4, 'Options not valid.');
+        return res.status(400).send({type: 2, msg: 'Options not valid.'});
+    }
 
     if (req.file) {
         let splitfile = req.file.filename.split('.');
@@ -45,7 +68,7 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
         delete mealData.image;
     }
 
-    mealsDB.setMealByProperty('id', req.params.id, mealData).then((meal) => {
+    mealsDB.setMealById(req.params.id, mealData).then((meal) => {
         scheduler.rescheduleMeal(meal);
         if (req.file) {
             fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
@@ -73,7 +96,7 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
 meals.delete('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    mealsDB.deleteMealByProperty('id', req.params.id).then((data) => {
+    mealsDB.deleteMealById(req.params.id).then((data) => {
         scheduler.cancelMeal(req.params.id);
 
         fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
@@ -86,7 +109,6 @@ meals.delete('/:id', error.router.validate('params', {
             (err) => {
                 if (err) {
                     log(2, 'Cant find image for product ' + req.params.id, err);
-                    return res.status(200).send(data);
                 }
                 res.status(200).send(data);
             });
@@ -101,9 +123,32 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
     description: /^[^"%;]*$/,
     time: /^[0-9]{1,50}$/,
     deadline: /^[0-9]{0,50}$/,
-    signupLimit: /^[0-9]{0,50}$/
-}), (req, res, next) => {
-    let mealData = Object.assign({}, req.body);
+    signupLimit: /^[0-9]{0,50}$/,
+    options: 'jsonString'
+}), (req, res) => {
+    let mealData = Object.assign({}, req.body, {options: JSON.parse(req.body.options)});
+
+    optionsInvalid = mealData.options.some(option => {
+        if (!/^[^"%;]{1,150}$/.test(option.name)) {
+            return true;
+        } else if (
+            option.type !== 'toggle'
+            && (
+                !option.values
+                || !option.values.length
+                || !option.values.every(value => /^[^"%;]{1,150}$/.test(value))
+            )
+        ) {
+            return true;
+        }
+
+        return false;
+    });
+
+    if (optionsInvalid) {
+        log(4, 'Options not valid.');
+        return res.status(400).send({type: 2, msg: 'Options not valid.'});
+    }
 
     if (req.file) {
         let splitfile = req.file.filename.split('.');
@@ -116,9 +161,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
     mealsDB.createMeal(mealData).then((meal) => {
         mail.sendCreationNotice(meal);
         scheduler.scheduleMeal(meal);
-        if (!meal.name.includes('test')) {
-            notification.sendCreationNotice(meal);
-        }
+        notification.sendCreationNotice(meal);
 
         if (req.file) {
             let imageName = meal.image.split('/');
@@ -137,7 +180,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
 meals.post('/:id/mail', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    mealsDB.getMealByProperty('id', req.params.id).then((meals) => {
+    mealsDB.getMealById(req.params.id).then((meals) => {
         mail.sendCreationNotice(meal);
         res.status(200).send(meals);
     })

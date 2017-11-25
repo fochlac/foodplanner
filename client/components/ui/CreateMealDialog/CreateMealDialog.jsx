@@ -1,6 +1,7 @@
 import React from 'react';
 import Dialog from '../Dialog/Dialog.jsx';
 import ImageUploader from '../ImageUploader/ImageUploader.jsx';
+import MealOption from './MealOption.jsx';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { formatDate, formatTime, round } from '../../scripts/date.js';
 import { formDataFromObject } from '../../scripts/formData.js';
@@ -21,6 +22,7 @@ export default class CreateMealDialog extends React.Component {
 
     this.state = props.edit ? {
       ...props.meal,
+      options: props.meal.options ? props.meal.options : [] ,
       deadline: formatDate(deadline),
       deadlineHour: round(deadline, 30).format('HH:mm'),
       timeHour: round(time, 30).format('HH:mm'),
@@ -39,7 +41,8 @@ export default class CreateMealDialog extends React.Component {
       timeHour: '12:00',
       time: '',
       timeObject: this.tomorrow12,
-      deadlineObject: this.tomorrow12
+      deadlineObject: this.tomorrow12,
+      options: []
     };
 
     this.nameInput = this.handleInput('name').bind(this);
@@ -105,7 +108,8 @@ export default class CreateMealDialog extends React.Component {
         description: s.description,
         signupLimit: s.signupLimit,
         deadline: s.deadlineObject.getTime(),
-        time: s.timeObject.getTime()
+        time: s.timeObject.getTime(),
+        options: JSON.stringify(s.options)
       },
       formData = formDataFromObject(data);
 
@@ -118,6 +122,33 @@ export default class CreateMealDialog extends React.Component {
 
   cancel() {
     this.props.close_dialog();
+  }
+
+  setOption(index) {
+    return (newOption) => {
+      let newArr = [...this.state.options];
+      newArr[index] = newOption;
+
+      this.setState({
+        options: newArr
+      });
+    }
+  }
+
+  addOption() {
+    this.setState({
+      options: [...this.state.options, {
+        name: '',
+        type: 'select',
+        values: []
+      }]
+    });
+  }
+
+  deleteOption(index) {
+    this.setState({
+      options: this.state.options.filter((val, ind) => ind !== index)
+    });
   }
 
   render() {
@@ -164,7 +195,7 @@ export default class CreateMealDialog extends React.Component {
             <label htmlFor="SignUpDialog_deadline">Anmeldeschluss</label>
             <div className="row">
               <DayPickerInput
-                value={this.state.deadlineObject.getDate() + '.' + (this.state.deadlineObject.getMonth() + 1) + '.' + this.state.deadlineObject.getFullYear().toString().slice(-2)}
+                value={s.deadlineObject.getDate() + '.' + (s.deadlineObject.getMonth() + 1) + '.' + s.deadlineObject.getFullYear().toString().slice(-2)}
                 format="DD.MM.YY"
                 onDayChange={this.deadlineInput}
               />
@@ -177,7 +208,7 @@ export default class CreateMealDialog extends React.Component {
             <label htmlFor="SignUpDialog_time">Lieferzeitpunkt</label>
             <div className="row">
               <DayPickerInput
-                value={this.state.timeObject.getDate() + '.' + (this.state.timeObject.getMonth() + 1) + '.' + this.state.timeObject.getFullYear().toString().slice(-2)}
+                value={s.timeObject.getDate() + '.' + (s.timeObject.getMonth() + 1) + '.' + s.timeObject.getFullYear().toString().slice(-2)}
                 format="DD.MM.YY"
                 onDayChange={this.timeInput}
               />
@@ -186,6 +217,12 @@ export default class CreateMealDialog extends React.Component {
               </select>
             </div>
           </div>
+          {s.options.map((option, index) => <MealOption key={index} option={option} index={index} setOption={this.setOption(index)} deleteOption={() => this.deleteOption(index)} editable={!edit || !p.meal.signups.length}/>)}
+          {
+            !edit || !p.meal.signups.length
+            ? <p className="fakeLink addOption" onClick={this.addOption.bind(this)}><span className="fa fa-plus fa-lg"></span> Option hinzufügen</p>
+            : null
+          }
         </div>
         <div className="foot">
           <button type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>

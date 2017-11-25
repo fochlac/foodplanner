@@ -2,25 +2,23 @@
 
 'use strict';
 const serverUrl = location.origin;
-let version = '5',
+let version = '9',
     dbVersion = '2',
     assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
     offline = new Response(new Blob(), {status: 279}),
     staticContent = [
         ...assets,
-        '/'
+        '/',
+        '/manifest.json'
     ],
     requestStack = [],
     stackTimer,
     flushInProgress,
     pushEventStack = [],
     pushTimeout,
-    staticRegex   = staticContent.length ?  new RegExp(staticContent.map(str => str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')).join('$|') + '$') : undefined;
+    staticRegex = staticContent.length ?  new RegExp(staticContent.map(str => str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')).join('$|') + '$') : undefined;
 
 function handle_push(event) {
-    clients.matchAll().then( clientList => {
-        clientList.forEach(triggerRefresh);
-    });
     let msg = event.data.json();
 
     event.waitUntil(initDb('food', 'userData').then(db => {
@@ -40,6 +38,19 @@ function handle_push(event) {
             });
         }
     }));
+}
+
+function triggerOfflineWarning(state) {
+    clients.matchAll().then( clientList => {
+        clientList.forEach((client) => {
+            if (client.url.includes(serverUrl)) {
+                client.postMessage({
+                    message: 'offline', 
+                    payload: {state}
+                });
+            }
+        });
+    });
 }
 
 function handle_click(event) {
@@ -62,16 +73,8 @@ function handle_click(event) {
     );
 }
 
-function triggerRefresh(client) {
-    if (client.url.indexOf(serverUrl !== -1)) {
-        client.postMessage('refresh');
-    }
-}
-
 function handle_fetch(event) {
-    if (serverUrl === 'https://food-dev.fochlac.com') {
-        return;
-    }
+
     if (staticRegex && staticRegex.test(event.request.url)) {
         event.respondWith(
             caches.open(version)
@@ -117,6 +120,7 @@ function handle_fetch(event) {
                     return result[0];
                 })
                 .catch(() => {
+                    triggerOfflineWarning(true);
                     return caches.open(version)
                     .then(cache => {
                         return cache.match(req);
@@ -134,14 +138,13 @@ function handle_fetch(event) {
 }
 
 function cacheStatic() {
-    return
-        caches.keys()
-            .then(keys => Promise.all(keys.map(key => caches.delete(key))))
-            .catch(err => console.log('error deleting cache', err))
-            .then(() => caches.open(version))
-            .then(function(cache) {
-                return cache.addAll(staticContent);
-            }).catch(err => console.warn(err));
+    return caches.keys()
+        .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+        .catch(err => console.log('error deleting cache', err))
+        .then(() => caches.open(version))
+        .then(function(cache) {
+            return cache.addAll(staticContent);
+        }).catch(err => console.warn(err));
 }
 
 function initDb(DBName, storageName) {
