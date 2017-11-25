@@ -149,10 +149,29 @@ module.exports = {
             }))
             .then(mealObj => {
                 return new Promise((resolve, reject) => {
+                    myDb.query(`SELECT * FROM signups WHERE meal = ${mysql.escape(id)};`, (err, result) => {
+                        if (err) {
+                            log(2, 'modules/db/meal:setMealById.2', err, deleteOptionsQuery);
+                            reject({status: 500, message: 'error getting signups'});
+                        } else {
+                            if (result.length) {
+                                mealObj.ignoreOptions = true;
+                            }
+                            resolve(mealObj);
+                            log(6, 'modules/db/meal:setMealById - meal created');
+                        }
+                    });
+                });
+            })
+            .then(mealObj => {
+                if (mealObj.ignoreOptions) {
+                    return Promise.resolve(mealObj);
+                }
+                return new Promise((resolve, reject) => {
                     myDb.query(deleteOptionsQuery, (err, result) => {
                         if (err) {
                             log(2, 'modules/db/meal:setMealById.2', err, deleteOptionsQuery);
-                            reject({status: 500, message: 'deleting old options'});
+                            reject({status: 500, message: 'error deleting old options'});
                         } else {
                             resolve(mealObj);
                             log(6, 'modules/db/meal:setMealById - meal created');
@@ -161,7 +180,7 @@ module.exports = {
                 });
             })
             .then(mealObj => {
-                if (!options.options.length) {
+                if (!options.options.length || mealObj.ignoreOptions) {
                     return Promise.resolve(mealObj);
                 }
                 return new Promise((resolve, reject) => {
@@ -182,7 +201,7 @@ module.exports = {
                 });
             })
             .then(mealObj => {
-                if (!options.options.filter(option => option.values.length).length) {
+                if (!options.options.filter(option => option.values.length).length || mealObj.ignoreOptions) {
                     myDb.release();
                     return Promise.resolve(mealObj);
                 }
