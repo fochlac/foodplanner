@@ -90,7 +90,7 @@ module.exports = {
             deadline    = ${mysql.escape(options.deadline)},
             signupLimit = ${mysql.escape(options.signupLimit)}
             ${options.image ? ', image = ' + mysql.escape('/static/images/meals/' + options.image) : ''}
-            WHERE  ${id} = ${mysql.escape(id)};`,
+            WHERE id = ${mysql.escape(id)};`,
             optionsQuery = `
                 INSERT INTO mealOptions (
                     mealId,
