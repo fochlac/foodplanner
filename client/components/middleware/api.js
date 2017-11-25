@@ -1,5 +1,5 @@
 export const apiMiddleware = store => next => action => {
-    if (action.api && action.status === 'initialized') {
+    if (action.api && action.status !== 'complete') {
         const originalAction = Object.assign({}, action),
             o = action.api;
 
