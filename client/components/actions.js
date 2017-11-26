@@ -57,6 +57,13 @@ export const set_busy  = state => ({
   state
 });
 
+// impressum
+
+export const show_impressum = () => ({
+  type: 'DIALOG',
+  content: 'OPEN_IMPRESSUM'
+});
+
 // signups
 
 export const start_meal_signup = id => ({

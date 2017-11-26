@@ -3,6 +3,7 @@ import SignUpDialog from '../ui/SignUpDialog.js';
 import CreateMealDialog from '../ui/CreateMealDialog.js';
 import ConfirmationDialog from '../ui/ConfirmationDialog.js';
 import SettingsDialog from '../ui/SettingsDialog.js';
+import ImpressumDialog from '../ui/ImpressumDialog.js';
 
 export default class DialogController extends React.Component {
     constructor(props) {
@@ -53,6 +54,9 @@ export default class DialogController extends React.Component {
                 return <ConfirmationDialog message={message} action="save_settings_locally" parameter={[params]} noCancel={true}/>;
             case 'OPEN_SETTINGS':
                 return <SettingsDialog />;
+
+            case 'OPEN_IMPRESSUM':
+                return <ImpressumDialog />;
 
             case 'CANCEL_MEAL':
                 return <ConfirmationDialog message="Bist du dir sicher, dass du dieses Angebot löschen möchtest?" action="cancel_meal" parameter={[d.option.meal]} />;

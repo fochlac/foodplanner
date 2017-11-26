@@ -23,6 +23,10 @@ export default class DefaultPage extends React.Component {
             {this.props.children}
             <DialogController dialog={this.props.dialog}/>
             <BusyScreen show={this.props.app.busy} />
+            <div className="footer">
+                <a href="https://github.com/ep-friedel/foodplanner/" target="_blank">Github</a>
+                <div className="impressum pointer" onClick={this.props.show_impressum.bind(this)}>Impressum & Datenschutz</div>
+            </div>
         </div>)
     }
 }
