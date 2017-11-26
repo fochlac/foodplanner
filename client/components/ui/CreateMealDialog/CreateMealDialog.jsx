@@ -74,7 +74,8 @@ export default class CreateMealDialog extends React.Component {
       newDate.setMinutes(values[1]);
 
       this.setState({
-        [field + 'Object']: newDate
+        [field + 'Object']: newDate,
+        [field + 'Hour']: evt.target.value
       });
     };
   }
@@ -86,9 +87,14 @@ export default class CreateMealDialog extends React.Component {
   handleDatepicker(field) {
     return (date) => {
       let jsDate = date.toDate(),
-        obj = {
-          [field + 'Object']: jsDate
-        };
+        obj;
+
+      jsDate.setHours(this.state[field + 'Object'].getHours());
+      jsDate.setMinutes(this.state[field + 'Object'].getMinutes());
+
+      obj = {
+        [field + 'Object']: jsDate
+      };
 
       if (field === 'deadline' && this.state.timeObject < jsDate) {
         obj.timeObject = jsDate;
