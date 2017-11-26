@@ -1,7 +1,8 @@
 import React from 'react';
 import Dialog from '../Dialog/Dialog.jsx';
+import './ImpressumDialog.less';
 
-export default class ConfirmationDialog extends React.Component {
+export default class ImpressumDialog extends React.Component {
   constructor(props) {
     super();
   }
@@ -21,18 +22,18 @@ export default class ConfirmationDialog extends React.Component {
           <h3>Impressum</h3>
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
-        <div className="body">
+        <div className="body impressum">
             <h1>Impressum</h1>
             <p>Angaben gemäß § 5 TMG</p>
             <p>
-                <span itemprop="creator">Florian Riedel</span>
+                <span itemProp="creator">Florian Riedel</span>
                 <br/>Lutherstraße 52
                 <br/>07743 Jena<br/>
             </p>
             <p>
                 <strong>Kontakt:</strong> <br/>
                 Telefon: +049 3641-17371<br/>
-                E-Mail: <a href="" onclick="this.href='mailto:' + 'fochlac' + '@' + 'gmail' + '.de';">fochlac<span className="hidden">qwasdacad</span>&#64;<span className="hidden">qwasfasdaxcad</span>gma<span className="hidden">qsfasdad</span>il.<span className="hidden">qwasdawxcad</span>co<span className="hidden">qwasfadaxcad</span>m</a><br/>
+                E-Mail: <a href="" onClick={(evt) => evt.target.href='mailto:' + 'fochlac' + '@' + 'gmail' + '.de'}>fochlac<span className="hidden">qwasdacad</span>&#64;<span className="hidden">qwasfasdaxcad</span>gma<span className="hidden">qsfasdad</span>il.<span className="hidden">qwasdawxcad</span>co<span className="hidden">qwasfadaxcad</span>m</a><br/>
             </p>
             <p>
                 <strong>Haftungsausschluss: </strong><br/><br/><strong>Haftung für Inhalte</strong><br/>
