@@ -2,7 +2,7 @@
 
 'use strict';
 const serverUrl = location.origin;
-let version = '9',
+let version = '10',
     dbVersion = '2',
     assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
     offline = new Response(new Blob(), {status: 279}),
@@ -45,7 +45,7 @@ function triggerOfflineWarning(state) {
         clientList.forEach((client) => {
             if (client.url.includes(serverUrl)) {
                 client.postMessage({
-                    message: 'offline', 
+                    message: 'offline',
                     payload: {state}
                 });
             }
@@ -74,6 +74,9 @@ function handle_click(event) {
 }
 
 function handle_fetch(event) {
+    if (event.request.url.includes('food-dev')) {
+        return;
+    }
 
     if (staticRegex && staticRegex.test(event.request.url)) {
         event.respondWith(
