@@ -32,7 +32,7 @@ export default class ConfirmationDialog extends React.Component {
             <p>
                 <strong>Kontakt:</strong> <br/>
                 Telefon: +049 3641-17371<br/>
-                E-Mail: <a href="" onclick="this.href='mailto:' + 'fochlac' + '@' + 'gmail' + '.de';">fochlac<span class="hidden">qwasdacad</span>&#64;<span class="hidden">qwasfasdaxcad</span>gma<span class="hidden">qsfasdad</span>il.<span class="hidden">qwasdawxcad</span>co<span class="hidden">qwasfadaxcad</span>m</a><br/>
+                E-Mail: <a href="" onclick="this.href='mailto:' + 'fochlac' + '@' + 'gmail' + '.de';">fochlac<span className="hidden">qwasdacad</span>&#64;<span className="hidden">qwasfasdaxcad</span>gma<span className="hidden">qsfasdad</span>il.<span className="hidden">qwasdawxcad</span>co<span className="hidden">qwasfadaxcad</span>m</a><br/>
             </p>
             <p>
                 <strong>Haftungsausschluss: </strong><br/><br/><strong>Haftung für Inhalte</strong><br/>
