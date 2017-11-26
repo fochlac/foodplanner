@@ -1,5 +1,5 @@
 import React from 'react';
-import Dialog from '../Dialog/Dialog.jsx';
+import Dialog from '../Dialog.js';
 import ImageUploader from '../ImageUploader/ImageUploader.jsx';
 import MealOption from './MealOption.jsx';
 import DayPickerInput from 'react-day-picker/DayPickerInput';

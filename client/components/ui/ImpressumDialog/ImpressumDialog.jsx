@@ -1,5 +1,5 @@
 import React from 'react';
-import Dialog from '../Dialog/Dialog.jsx';
+import Dialog from '../Dialog.js';
 import './ImpressumDialog.less';
 
 export default class ImpressumDialog extends React.Component {

@@ -1,5 +1,5 @@
 import React from 'react';
-import Dialog from '../Dialog/Dialog.jsx';
+import Dialog from '../Dialog.js';
 import { getNotificationPermission } from '../../scripts/serviceWorker.js';
 import './SettingsDialog.less';
 

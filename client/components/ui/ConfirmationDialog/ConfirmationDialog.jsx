@@ -1,5 +1,5 @@
 import React from 'react';
-import Dialog from '../Dialog/Dialog.jsx';
+import Dialog from '../Dialog.js';
 
 export default class ConfirmationDialog extends React.Component {
   constructor(props) {
