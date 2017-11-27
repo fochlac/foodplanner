@@ -30,7 +30,7 @@ module.exports = {
 				log(2, 'Invalid Auth Hash from IP: ' + ip);
 				log(10, 'Invalid Auth Hash: ', res);
 
-				res.status(401).send({success: false, type: 'Authentication_Error'})
+				res.status(401).send({success: false, type: 'Authentication_Error'});
 		},
 
 		internalError: (res) => {
@@ -38,7 +38,7 @@ module.exports = {
 				log(2, 'Internal Error: ', err);
 				log(10, 'Internal Error: ', res);
 
-				res.status(500).send({success: false, type: 'Internal_Error'})
+				res.status(500).send({success: false, type: 'Internal_Error'});
 			}
 		},
 
@@ -58,7 +58,7 @@ module.exports = {
 						invalidParams.push(param);
 					} else if (options[param] === 'jsonString') {
 						try {
-							JSON.parse(payload[param])
+							JSON.parse(payload[param]);
 						}
 						catch(err) {
 							valid = false;
