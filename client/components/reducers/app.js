@@ -24,6 +24,8 @@ const app = (state = {}, action) => {
             return state;
         case 'BUSY':
             return {...state, busy: action.state};
+        case 'HIDDEN_BUSY':
+            return {...state, hiddenBusy: action.state};
         case 'POSTMESSAGE':
             if (action.message === 'offline') {
                 return {...state, offline: action.payload.state};

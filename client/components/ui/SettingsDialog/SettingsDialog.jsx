@@ -164,7 +164,10 @@ export default class SettingsDialog extends React.Component {
         <div className="body">
           <div className="mailFrame">
             <label htmlFor="SettingsDialog_mail">E-Mail<span className="fa fa-info-circle" title="Um bestehende Einstellungen zu laden,&#13;&#10;geben Sie Ihre E-Mail-Addresse ein&#13;&#10;und wählen Sie den Vorschlag mit Tab aus."></span></label>
-            <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput()} onKeyDown={this.handleTab} autoComplete="off" />
+            <div className="row">
+              <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput()} onKeyDown={this.handleTab} autoComplete="off" />
+              <span className={'fa fa-lg fa-fw fa-spin fa-spinner' + (this.props.app.hiddenBusy ? '' : ' invisible')}></span>
+            </div>
             {
               suggestion
               ? <span className="mailSuggestion" onClick={this.selectSuggestion}>Mit Tab auswählen:<br/>{suggestion}</span>

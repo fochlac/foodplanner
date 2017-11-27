@@ -22,7 +22,7 @@ export const store = configureStore({
         name: ''
     },
     app: {
-        dialog: 0,
+        dialog: '',
         errors: {}
     },
     meals: [

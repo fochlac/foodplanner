@@ -22,6 +22,13 @@ export default class Topbar extends React.Component {
           <span className="fa fa-cutlery fa-lg"></span>
           <h3 className="pointer" onClick={() => window.location.href = window.location.origin}>Mittagsplaner</h3>
           <ul className="quicklinks">
+            {
+              (this.props.app.hiddenBusy && this.props.app.dialog === '')
+              ? <li>
+                  <span className="fa fa-refresh fa-spin fa-lg"></span>
+              </li>
+              : null
+            }
             <li>
                 <span className="fa fa-cog fa-lg pointer" title="Einstellungen" onClick={() => this.showSettings()}></span>
             </li>
