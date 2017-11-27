@@ -9,6 +9,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         user: state.user,
         meal: (ownProps.id !== undefined) ? state.meals.filter(meal => meal.id === ownProps.id)[0] : {},
+        meals: state.meals,
         edit
     };
 

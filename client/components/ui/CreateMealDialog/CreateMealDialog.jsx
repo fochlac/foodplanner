@@ -157,6 +157,16 @@ export default class CreateMealDialog extends React.Component {
     });
   }
 
+  selectOptions(evt) {
+    const options = this.props.meals[evt.target.value].options.map(option => {
+      let newOptions = Object.assign({}, option);
+      newOptions.values = [].concat(option.values);
+      return newOptions;
+    });
+
+    this.setState({options});
+  }
+
   render() {
     const p = this.props,
           s = this.state,
@@ -225,8 +235,20 @@ export default class CreateMealDialog extends React.Component {
           </div>
           {s.options.map((option, index) => <MealOption key={index} option={option} index={index} setOption={this.setOption(index)} deleteOption={() => this.deleteOption(index)} editable={!edit || !p.meal.signups.length}/>)}
           {
-            !edit || !p.meal.signups.length
-            ? <p className="fakeLink addOption" onClick={this.addOption.bind(this)}><span className="fa fa-plus fa-lg"></span> Option hinzufügen</p>
+            (!edit || !p.meal.signups.length)
+            ? <div className="row">
+              <p className="fakeLink addOption" onClick={this.addOption.bind(this)}><span className="fa fa-plus fa-lg"></span> Option hinzufügen</p>
+              {
+                (!s.options.length)
+                ? <select className="push-right templateSelector" onChange={this.selectOptions.bind(this)}>
+                  <option value="">Optionen laden</option>
+                  {
+                    p.meals.map((meal, index) => <option value={index} key={meal.id}>{meal.name}</option>)
+                  }
+                </select>
+                : null
+              }
+            </div>
             : null
           }
         </div>

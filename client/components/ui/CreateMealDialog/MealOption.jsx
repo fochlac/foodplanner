@@ -57,7 +57,7 @@ export default class MealOption extends React.Component {
         <div className="row">
           {
             editable
-            ? <span className="delLink fakeLink push-right">Löschen <span className="fa fa-trash fa-lg" onClick={() => this.props.deleteOption(index)}></span></span>
+            ? <span className="delLink fakeLink push-right" onClick={() => this.props.deleteOption(index)}>Löschen <span className="fa fa-trash fa-lg"></span></span>
             : null
           }
         </div>
