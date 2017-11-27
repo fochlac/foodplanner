@@ -24,10 +24,19 @@ const app = (state = {}, action) => {
             return state;
         case 'BUSY':
             return {...state, busy: action.state};
+        case 'HIDDEN_BUSY':
+            return {...state, hiddenBusy: action.state};
         case 'POSTMESSAGE':
             if (action.message === 'offline') {
                 return {...state, offline: action.payload.state};
             }
+            return state;
+        case 'SHOW_ERROR':
+            return {...state, errors: {...state.errors, [action.id]: action.content}};
+        case 'DELETE_ERROR':
+            let errors = {...state.errors};
+            delete errors[action.id];
+            return {...state, errors: errors};
 
         default:
             return state;

@@ -30,7 +30,7 @@ module.exports = {
 				log(2, 'Invalid Auth Hash from IP: ' + ip);
 				log(10, 'Invalid Auth Hash: ', res);
 
-				res.status(401).send({success: false, error: 'Authentication_Error'})
+				res.status(401).send({success: false, type: 'Authentication_Error'});
 		},
 
 		internalError: (res) => {
@@ -38,7 +38,7 @@ module.exports = {
 				log(2, 'Internal Error: ', err);
 				log(10, 'Internal Error: ', res);
 
-				res.status(500).send({success: false, error: 'Internal_Error'})
+				res.status(500).send({success: false, type: 'Internal_Error'});
 			}
 		},
 
@@ -46,29 +46,32 @@ module.exports = {
 			return (req, res, next) => {
 				let param,
 					valid = true,
-					payload = req[type];
+					payload = req[type],
+					invalidParams = [];
 
 				for (param in options) {
-					if (valid && typeof options[param] !== 'string' && !options[param].test(payload[param])) {
+					if (typeof options[param] !== 'string' && !options[param].test(payload[param])) {
 						valid = false;
-					} else if (valid && options[param] === 'object' && typeof payload[param] !== 'object') {
+						invalidParams.push(param);
+					} else if (options[param] === 'object' && typeof payload[param] !== 'object') {
 						valid = false;
-					} else if (valid && options[param] === 'jsonString') {
+						invalidParams.push(param);
+					} else if (options[param] === 'jsonString') {
 						try {
-							JSON.parse(payload[param])
+							JSON.parse(payload[param]);
 						}
 						catch(err) {
 							valid = false;
+							invalidParams.push(param);
 						}
 					}
 					log(6, `Validating ${param}: '${payload[param]}' against RegExp ${options[param]}, result ${(typeof options[param] === 'string') ? valid : options[param].test(payload[param])}`);
 				}
-
 				if (valid) {
 					next();
 				} else {
 					log(4, 'Invalid Request.', payload);
-					res.status(400).send({msg: 'Invalid Request.'});
+					res.status(400).send({type: 'Invalid_Request', data: invalidParams});
 				}
 			}
 		}

@@ -1,13 +1,13 @@
 import {createHash} from './scripts/crypto.js';
 
-export const initial_meals = () => ({
+export const initial_meals = (hidden) => ({
   type: 'INITIAL_MEALS',
-  status: 'initialized',
+  status: hidden ? 'hidden' : 'initialized',
   api: {
     url: '/api/meals',
     method: 'get'
   },
-  enqueue: initial_signups()
+  enqueue: initial_signups(hidden)
 });
 
 export const initial_user = (data) => ({
@@ -15,9 +15,9 @@ export const initial_user = (data) => ({
   mail: data
 });
 
-export const initial_signups = () => ({
+export const initial_signups = (hidden) => ({
   type: 'INITIAL_SIGNUPS',
-  status: 'initialized',
+  status: hidden ? 'hidden' : 'initialized',
   api: {
     url: '/api/signups',
     method: 'get'
@@ -57,11 +57,29 @@ export const set_busy  = state => ({
   state
 });
 
+export const set_hidden_busy  = state => ({
+  type: 'HIDDEN_BUSY',
+  state
+});
+
 // impressum
 
 export const show_impressum = () => ({
   type: 'DIALOG',
   content: 'OPEN_IMPRESSUM'
+});
+
+// error
+
+export const create_error = (id, msg) => ({
+  type: 'SHOW_ERROR',
+  content: msg,
+  id: id
+});
+
+export const delete_error = (id) => ({
+  type: 'DELETE_ERROR',
+  id: id
 });
 
 // signups

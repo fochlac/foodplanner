@@ -1,5 +1,5 @@
 const resizeHandler = () => {
-    document.activeElement.scrollIntoViewIfNeeded();
+    document.activeElement.scrollIntoView();
 };
 
 export const resizeFocus = () => window.addEventListener('resize', resizeHandler);

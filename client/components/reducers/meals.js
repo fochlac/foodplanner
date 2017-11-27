@@ -36,9 +36,14 @@ const meals = (state = [], action) => {
             }
         case 'INITIAL_MEALS':
             if (action.status === 'complete') {
-                return action.data.map(meal => {
-                    meal.signups = [];
-                    return meal;
+                return action.data.map(newMeal => {
+                    let oldMeal = state.find((meal) => meal.id === newMeal.id);
+                    if (oldMeal) {
+                        newMeal = Object.assign({}, oldMeal, newMeal);
+                    } else {
+                        newMeal.signups = [];
+                    }
+                    return newMeal;
                 });
             }
         case 'INITIAL_SIGNUPS':

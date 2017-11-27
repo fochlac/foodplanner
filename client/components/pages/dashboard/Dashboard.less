@@ -1,13 +1,14 @@
 @import '../../root/variables.less';
 
 .dashboard {
-    height: calc(100vh ~"-" @topBarHeight);
+    height: calc(100vh ~"-" @topBarHeight ~"-" @footerHeight);
     box-sizing: border-box;
     padding: 10px;
     width: 100%;
     background: @colorg5;
     overflow: auto;
     margin-top: @topBarHeight;
+    margin-bottom: @footerHeight;
 }
 
 .filters {

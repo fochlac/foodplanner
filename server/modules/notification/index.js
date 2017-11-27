@@ -9,15 +9,27 @@ message.setVapidDetails(
   'XUrwfTFYENtpbX63Wx9drwlfsB8n3RWnmc-156PeexI'
 );
 
+
+
 module.exports = {
     sendCreationNotice: (meal) => {
         return notificationDB.getAllNotificationIds()
             .then(results => {
-                const subscriptions = results.map(result => JSON.parse(result.subscription)),
-                    payload = JSON.stringify({type: 'creationNotice', data: meal}),
-                    ttl = meal.deadline - Date.now();
+                const payload = JSON.stringify({type: 'creationNotice', data: meal}),
+                      ttl = meal.deadline - Date.now();
 
-                return Promise.all(subscriptions.map(subscription => message.sendNotification(subscription, payload, {TTL: 36000})));
+                return Promise.all(results.map(row => {
+                  const subscription = JSON.parse(row.subscription);
+
+                  message.sendNotification(subscription, payload, {TTL: 100000})
+                    .catch(err => {
+                      if (err.statusCode === 410) {
+                        return notificationDB.deleteNotificationIdByProperty('id', row.id);
+                      } else {
+                        return Promise.reject(err);
+                      }
+                    })
+                  }));
 
             }).catch(error.promise(4, 'error sending creation notification'));
     }

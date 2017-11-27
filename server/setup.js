@@ -93,7 +93,7 @@ let setup = [
         \`id\`      int             NOT NULL    AUTO_INCREMENT,
         \`name\`    varchar(150)    NOT NULL,
         \`meal\`    int             NOT NULL,
-        \`comment\` varchar(150)    NOT NULL,
+        \`comment\` varchar(255)    NOT NULL,
 
         PRIMARY KEY (id)
     );`,
