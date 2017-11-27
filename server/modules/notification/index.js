@@ -16,7 +16,7 @@ module.exports = {
         return notificationDB.getAllNotificationIds()
             .then(results => {
                 const payload = JSON.stringify({type: 'creationNotice', data: meal}),
-                    ttl = meal.deadline - Date.now();
+                      ttl = meal.deadline - Date.now();
 
                 return Promise.all(results.map(row => {
                   const subscription = JSON.parse(row.subscription);
