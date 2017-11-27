@@ -55,7 +55,7 @@ signups.put('/:id', error.router.validate('params', {
         });
 
         if (optionsInvalid) {
-            return Promise.reject({type: 2, msg: 'Options not valid.'});
+            return Promise.reject({type: 2, msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
         }
 
         return signupsDB.setSignupById(req.params.id, req.body);
@@ -83,7 +83,7 @@ signups.delete('/:id', error.router.validate('params', {
 });
 
 signups.post('/', error.router.validate('body', {
-    comment: /^[^"%;]{0,150}$/,
+    comment: /^[^"%;]{0,250}$/,
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
     meal: /^[0-9]{1,50}$/,
 }), (req, res) => {
@@ -96,7 +96,7 @@ signups.post('/', error.router.validate('body', {
             signups = result[1];
 
         if (result[0].signupLimit && result[0].signupLimit <= result[1].length) {
-            return Promise.reject({type: 1, msg: 'Dieses Angebot ist bereits voll belegt.'});
+            return Promise.reject({id: 1, msg: 'Bad_Request', reason: 'offer_full'});
         }
 
         const optionsInvalid = meal.options.some(option => {
@@ -125,7 +125,7 @@ signups.post('/', error.router.validate('body', {
         });
 
         if (optionsInvalid) {
-            return Promise.reject({type: 2, msg: 'Options not valid.'});
+            return Promise.reject({id: 2, msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
         }
 
 
@@ -135,7 +135,7 @@ signups.post('/', error.router.validate('body', {
         res.status(200).send(signup);
     })
     .catch(err => {
-        if ([1, 2].includes(err.type)) {
+        if ([1, 2].includes(err.id)) {
             log(4, err.msg)
             res.status(400).send(err);
         } else {

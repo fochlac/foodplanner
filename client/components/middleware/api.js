@@ -40,7 +40,7 @@ export const apiMiddleware = store => next => action => {
         .then(res => {
             action.timeDiff = Date.now() - +res.headers.get('timestamp');
             if (res.status >= 400) {
-                return Promise.reject(res.json());
+                return res.json().then(data => Promise.reject(data));
             }
             return res.json();
         })

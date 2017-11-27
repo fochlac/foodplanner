@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { formatDate, formatDateTime, formatTime, formatTimeShort } from '../../scripts/date.js';
+import { formatDate, formatDateTime, formatTime, formatTimeShort, formatDayNameDate } from '../../scripts/date.js';
 import './Meal.less';
 
 export default class Meal extends React.Component {
@@ -76,7 +76,7 @@ export default class Meal extends React.Component {
 
     return (
       <div className="meal">
-        <div className="titlebar"><h4 className="title">{formatDate(p.meal.time)}: {p.meal.name}</h4><span className="fa fa-lg menuIcon fa-pencil pointer" onClick={this.editMeal}></span><span onClick={this.cancelMeal} className="fa fa-lg menuIcon fa-trash pointer"></span></div>
+        <div className="titlebar"><h4 className="title">{formatDayNameDate(p.meal.time)}: {p.meal.name}</h4><span className="fa fa-lg menuIcon fa-pencil pointer" onClick={this.editMeal}></span><span onClick={this.cancelMeal} className="fa fa-lg menuIcon fa-trash pointer"></span></div>
         <div className="details">
           <div className="mealDetails">
             {

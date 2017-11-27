@@ -18,6 +18,12 @@ export const formatDate = (date) => {
     return `${src.getDate()}.${src.getMonth() + 1}.${src.getFullYear().toString().slice(2,4)}`;
 }
 
+export const formatDayNameDate = (date) => {
+    const src = new Date((date.toString().length === 10) ? (date * 1000) : date);
+
+    return `${tage[src.getDay()]}, ${src.getDate()}.${src.getMonth() + 1}.${src.getFullYear().toString().slice(2,4)}`;
+}
+
 export const formatTime = (date) => {
     const src = new Date((date.toString().length === 10) ? (date * 1000) : date);
 

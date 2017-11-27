@@ -5,7 +5,8 @@ import { show_impressum } from '../actions.js';
 
 const mapStateToProps = (state, ownProps) => ({
   dialog: ownProps.dialog,
-  app: state.app
+  app: state.app,
+  errors: state.app.errors
 });
 
 export default connect(mapStateToProps, { show_impressum })(DefaultPage);

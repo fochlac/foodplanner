@@ -57,7 +57,7 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
 
     if (optionsInvalid) {
         log(4, 'Options not valid.');
-        return res.status(400).send({type: 2, msg: 'Options not valid.'});
+        return res.status(400).send({msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
     }
 
     if (req.file) {
@@ -147,7 +147,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
 
     if (optionsInvalid) {
         log(4, 'Options not valid.');
-        return res.status(400).send({type: 2, msg: 'Options not valid.'});
+        return res.status(400).send({msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
     }
 
     if (req.file) {

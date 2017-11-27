@@ -64,6 +64,19 @@ export const show_impressum = () => ({
   content: 'OPEN_IMPRESSUM'
 });
 
+// error
+
+export const create_error = (id, msg) => ({
+  type: 'SHOW_ERROR',
+  content: msg,
+  id: id
+});
+
+export const delete_error = (id) => ({
+  type: 'DELETE_ERROR',
+  id: id
+});
+
 // signups
 
 export const start_meal_signup = id => ({
