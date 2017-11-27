@@ -7,9 +7,15 @@ export default class Dialog extends React.Component {
         super();
     }
 
+    closeDialog(evt) {
+        if (evt.target.classList.contains('dialogBackground')) {
+            this.props.close_dialog();
+        }
+    }
+
     render() {
         return (
-            <div className="dialogBackground" onClick={this.props.close_dialog.bind(this)}>
+            <div className="dialogBackground" onClick={this.closeDialog.bind(this)}>
                 <div className={this.props.className ? this.props.className + ' dialog' : 'dialog'}>
                     {this.props.children}
                 </div>
