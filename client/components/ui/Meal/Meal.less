@@ -4,6 +4,7 @@
     max-width: 1000px;
     margin: 0 auto 20px;
     border: solid 1px @colorg3;
+    border-radius: @borderRadius;
 
     .titlebar {
         padding: 5px 10px;
@@ -77,6 +78,7 @@
             display: inline-block;
             margin: 0 10px 10px 0;
             float: left;
+            border-radius: @borderRadius;
         }
 
         .description {
@@ -119,6 +121,8 @@
     .summary {
         margin-bottom: 10px;
         border-top: solid 1px @colorg1;
+        display: flex;
+        flex-wrap: wrap;
 
         .optionTitle {
             margin-right: 3px;
@@ -130,12 +134,6 @@
 
         .optionGroup {
             margin-right: 5px;
-
-            &:nth-child(n+2):before {
-                content: '-';
-                margin-right: 5px;
-                color: @colorg1;
-            }
         }
 
         .optionItem:nth-child(n+3):before {
