@@ -6,7 +6,7 @@ while read p; do
   export $p
 done < .build_scripts/variables
 
-yum install -y mariadb-server mariadb node
+yum install -y mariadb-server mariadb epel-release node
 sed -i "s/\[mysqld\]/\[mysqld\]\\nport=$ADMIN_DB_PORT/" /etc/my.cnf
 systemctl start mariadb
 
