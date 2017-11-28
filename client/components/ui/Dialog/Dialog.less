@@ -27,6 +27,13 @@
         color: @colorg5;
         padding: 7px 15px;
         align-items: center;
+
+        h3 {
+            white-space: nowrap;
+            margin-right: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 
     .body {
@@ -112,7 +119,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: flex-start;
+        align-items: stretch;
         flex-grow: 1;
     }
 }
