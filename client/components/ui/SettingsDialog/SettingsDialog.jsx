@@ -59,6 +59,9 @@ export default class SettingsDialog extends React.Component {
     if (s.deadlineReminder_notification || s.creationNotice_notification) {
       getNotificationPermission()
         .then(() => {
+          if (location.href !== location.origin) {
+            history.pushState({}, "Mittagsplaner", location.origin);
+          }
           this.props.save_settings(this.state);
         })
         .catch(() => {
@@ -69,6 +72,9 @@ export default class SettingsDialog extends React.Component {
           });
         })
     } else {
+      if (location.href !== location.origin) {
+        history.pushState({}, "Mittagsplaner", location.origin);
+      }
       this.props.save_settings(this.state);
     }
 
