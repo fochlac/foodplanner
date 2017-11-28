@@ -6,7 +6,13 @@ while read p; do
   export $p
 done < .build_scripts/variables
 
-npm install
+yum install -y mariadb-server mariadb node
+sed -i "s/\[mysqld\]/\[mysqld\]\\nport=$ADMIN_DB_PORT/" /etc/my.cnf
+systemctl start mariadb
 
-npm run-script build
-systemctl restart foodd
+mysqladmin -u $ADMIN_DB_USERNAME password $ADMIN_DB_PASSWORD
+
+npm install
+/npm_modules/webpack/bin/webpack.js -p
+node server/setup.js -y
+node server/index.js

@@ -128,36 +128,39 @@ function setupDB() {
 
     });
 }
+if (process.argv.includes('-y')) {
+    setupDB();
+} else {
+    process.stdin.resume();
+    process.stdin.setEncoding('utf8');
 
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
+    console.log(
+    `--------------------------------------------------
+    |           Setup Foodplanner Server             |
+    --------------------------------------------------
+    |                                                |
+    |      Warnung: Sollten bereits Daten in der     |
+    |       Datenbank existieren, werden diese       |
+    |     durch die Installation gelöscht werden     |
+    |                                                |
+    --------------------------------------------------
+    |  Bitte bestätigen Sie den Installationswunsch  |
+    --------------------------------------------------
+    (y/n): `.replace(/:\n/, ':'));
 
-console.log(
-`--------------------------------------------------
-|           Setup Trainingsplan Server           |
---------------------------------------------------
-|                                                |
-|      Warnung: Sollten bereits Daten in der     |
-|       Datenbank existieren, werden diese       |
-|     durch die Installation gelöscht werden     |
-|                                                |
---------------------------------------------------
-|  Bitte bestätigen Sie den Installationswunsch  |
---------------------------------------------------
-(y/n): `.replace(/:\n/, ':'));
-
-process.stdin.on('data', function (text) {
-    if (text === 'y\n') {
-        setupDB();
-    } else if (text === 'n\n') {
-        process.exit()
-    } else {
-        console.log(
-`--------------------------------------------------
-|  Ungültige Eingabe, bitte bestätigen Sie den   |
-|              Installationswunsch               |
---------------------------------------------------
-(y/n): `.replace(/:\n/, ':')
-        );
-    }
-});
+    process.stdin.on('data', function (text) {
+        if (text === 'y\n') {
+            setupDB();
+        } else if (text === 'n\n') {
+            process.exit()
+        } else {
+            console.log(
+    `--------------------------------------------------
+    |  Ungültige Eingabe, bitte bestätigen Sie den   |
+    |              Installationswunsch               |
+    --------------------------------------------------
+    (y/n): `.replace(/:\n/, ':')
+            );
+        }
+    });
+}
