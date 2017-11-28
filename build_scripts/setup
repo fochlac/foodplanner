@@ -4,15 +4,16 @@ cd .. || exit
 
 while read p; do
   export $p
-done < .build_scripts/variables
-
-yum install -y mariadb-server mariadb epel-release node
+done < ./build_scripts/variables
+curl -sL https://rpm.nodesource.com/setup_8.x | bash -
+yum install -y mariadb-server mariadb openssl nodejs
 sed -i "s/\[mysqld\]/\[mysqld\]\\nport=$ADMIN_DB_PORT/" /etc/my.cnf
 systemctl start mariadb
-
-mysqladmin -u $ADMIN_DB_USERNAME password $ADMIN_DB_PASSWORD
+mysqladmin -u $ADMIN_DB_USERNAME password "$ADMIN_DB_PASSWORD"
+mkdir $KEYSTORE
+openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -nodes -subj "/CN=$FOOD_EXTERNAL"
 
 npm install
-/npm_modules/webpack/bin/webpack.js -p
+node_modules/webpack/bin/webpack.js -p
 node server/setup.js -y
 node server/index.js

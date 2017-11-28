@@ -12,8 +12,8 @@ const   express = require('express')
     ,   server_port = process.env.FOOD_PORT
     ,   server_ip_address = 'localhost'
     ,   sslServer = https.createServer({
-            key: fs.readFileSync(process.env.KEYSTORE + 'fochlac_com_key.pem'),
-            cert: fs.readFileSync(process.env.KEYSTORE + 'fochlac_com_cert_chain.pem')
+            key: fs.readFileSync(process.env.SSLKEY),
+            cert: fs.readFileSync(process.env.SSLCERT)
         }, app);
 
 sslServer.listen(server_port, server_ip_address, () => {
