@@ -34,9 +34,11 @@ function initDb() {
 myDb = initDb();
 
 let setup = [
-    `CREATE OR REPLACE USER '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}' IDENTIFIED BY '${process.env.FOOD_DB_PASSWORD}';`,
+    `GRANT USAGE ON *.* TO '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}';`,
+    `DROP USER '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}';`,
+    `CREATE USER '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}' IDENTIFIED BY '${process.env.FOOD_DB_PASSWORD}';`,
     `DROP DATABASE IF EXISTS ${process.env.FOOD_DB_NAME};`,
-    `CREATE DATABASE IF NOT EXISTS ${process.env.FOOD_DB_NAME};`,
+    `CREATE DATABASE ${process.env.FOOD_DB_NAME};`,
     `GRANT ALL PRIVILEGES ON ${process.env.FOOD_DB_NAME}.* TO '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}';`,
     `USE ${process.env.FOOD_DB_NAME};`,
 
@@ -128,36 +130,39 @@ function setupDB() {
 
     });
 }
+if (process.argv.includes('-y')) {
+    setupDB();
+} else {
+    process.stdin.resume();
+    process.stdin.setEncoding('utf8');
 
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
+    console.log(
+    `--------------------------------------------------
+    |           Setup Foodplanner Server             |
+    --------------------------------------------------
+    |                                                |
+    |      Warnung: Sollten bereits Daten in der     |
+    |       Datenbank existieren, werden diese       |
+    |     durch die Installation gelöscht werden     |
+    |                                                |
+    --------------------------------------------------
+    |  Bitte bestätigen Sie den Installationswunsch  |
+    --------------------------------------------------
+    (y/n): `.replace(/:\n/, ':'));
 
-console.log(
-`--------------------------------------------------
-|           Setup Trainingsplan Server           |
---------------------------------------------------
-|                                                |
-|      Warnung: Sollten bereits Daten in der     |
-|       Datenbank existieren, werden diese       |
-|     durch die Installation gelöscht werden     |
-|                                                |
---------------------------------------------------
-|  Bitte bestätigen Sie den Installationswunsch  |
---------------------------------------------------
-(y/n): `.replace(/:\n/, ':'));
-
-process.stdin.on('data', function (text) {
-    if (text === 'y\n') {
-        setupDB();
-    } else if (text === 'n\n') {
-        process.exit()
-    } else {
-        console.log(
-`--------------------------------------------------
-|  Ungültige Eingabe, bitte bestätigen Sie den   |
-|              Installationswunsch               |
---------------------------------------------------
-(y/n): `.replace(/:\n/, ':')
-        );
-    }
-});
+    process.stdin.on('data', function (text) {
+        if (text === 'y\n') {
+            setupDB();
+        } else if (text === 'n\n') {
+            process.exit()
+        } else {
+            console.log(
+    `--------------------------------------------------
+    |  Ungültige Eingabe, bitte bestätigen Sie den   |
+    |              Installationswunsch               |
+    --------------------------------------------------
+    (y/n): `.replace(/:\n/, ':')
+            );
+        }
+    });
+}
