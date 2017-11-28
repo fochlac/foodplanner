@@ -31,7 +31,7 @@ if (env.BRANCH_NAME == VERSION_BRANCH) {
 if (env.BRANCH_NAME ==~ /PR-.*/ ) {
   node(NODE) {
     foodPlanner.checkout()
-    foodPlanner.build()
+    foodPlanner.build(env.BRANCH_NAME)
     print "buildChanged: dummy"
     print "testChanged: dummy"
     print "say: dummy"
