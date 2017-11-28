@@ -25,16 +25,14 @@ def checkout() {
  */
 def build(String branch) {
 
-  stage("Build: ${env.BRANCH_NAME}") {
-    /*try {
+  stage("Build: ${branch}") {
+    try {
       sh """
-        npm run-script build-dev
-        systemctl restart food-devd
+        npm install
       """
     } finally {
       echo "Clean up workspace, Removing old packages"
       deleteDir()
-    }*/
-    sh "${pwd()}"
+    }
   }
 }
