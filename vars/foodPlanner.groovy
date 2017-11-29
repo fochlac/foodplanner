@@ -27,9 +27,12 @@ def build(String branch) {
 
   stage("Build: ${branch}") {
     try {
-      sh """
-        npm install
-      """
+      sh 'npm install'
+      sh '''
+        while read p; do
+          export $p
+        done < ./build_scripts/variables
+      '''
     } finally {
       echo "Clean up workspace, Removing old packages"
       deleteDir()
