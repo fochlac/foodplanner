@@ -73,7 +73,7 @@ export default class Meal extends React.Component {
           })
           return acc;
         }, {}));
-    console.log(signups);
+
     return (
       <div className="meal">
         <div className="titlebar">

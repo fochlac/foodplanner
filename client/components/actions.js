@@ -193,6 +193,14 @@ export const select_suggestion = (mail) => ({
   mail
 });
 
+export const sign_out = () => ({
+  type: 'SIGNOUT',
+  status: 'complete',
+  localkey: 'user',
+  locally: {}
+});
+
+
 // meals
 export const create_meal_dialog = () => ({
   type: 'DIALOG',
