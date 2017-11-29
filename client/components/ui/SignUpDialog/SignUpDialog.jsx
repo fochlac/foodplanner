@@ -9,6 +9,8 @@ export default class CreateMealDialog extends React.Component {
 
     this.state = props.edit ? props.signup : {
       name: props.user.name,
+      userId: props.user.id,
+      paid: 0,
       options: props.meal.options.map(option => ({
           id: option.id,
           value: option.values[0] ? option.values[0] : null
@@ -33,6 +35,7 @@ export default class CreateMealDialog extends React.Component {
 
     this.props[edit ? 'meal_edit' : 'meal_signup']({
       name: this.state.name,
+      userId: (this.state.name === this.props.user.name) ? this.state.userId : undefined,
       comment: this.state.comment,
       meal: this.props.meal.id,
       options: this.state.options,
@@ -58,7 +61,8 @@ export default class CreateMealDialog extends React.Component {
   }
 
   render() {
-    const p = this.props;
+    const p = this.props,
+          s = this.state;
 
     return (
       <Dialog>
@@ -67,10 +71,38 @@ export default class CreateMealDialog extends React.Component {
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
         <div className="body">
-          <div>
-            <label htmlFor="SignUpDialog_name">Name</label>
-            <input type="text" id="SignUpDialog_name" defaultValue={p.edit ? p.signup.name : p.user.name} onChange={this.nameInput}/>
-          </div>
+          {
+            !s.userId
+            ? <div className="warning row" title="Als anonymer Nutzer kann nur der Organisator dieses Termins deine Anmeldung verändern. Bitte logge dich mit deiner E-Mail ein um deine Anmeldungen verwalten zu können.">
+              <p>Du meldest dich als anonymer Nutzer an.</p>
+            </div>
+            : null
+          }
+          {
+            (p.user.name && s.name === p.user.name) || p.edit
+            ? <div>
+              <label htmlFor="SignUpDialog_name">Name</label>
+              <div className="row">
+                <span className="signupName">{s.name}</span>
+                {
+                  !p.edit
+                  ? <span className="fakeLink push-right editName" onClick={this.setState.bind(this, {name: undefined, userId: undefined}, null)}><span className="fa fa-pencil"></span>Anonymen Nutzer anmelden</span>
+                  : null
+                }
+              </div>
+            </div>
+            : <div>
+              <div className="row">
+                <label htmlFor="SignUpDialog_name" className="inlineBlock">Name</label>
+                {
+                  (!p.edit && p.user.name && !s.userId)
+                  ? <span className="fakeLink push-right editName inlineBlock" onClick={this.setState.bind(this, {name: p.user.name, userId: p.user.id}, null)}><span className="fa fa-times"></span> Abbrechen</span>
+                  : null
+                }
+              </div>
+              <input type="text" id="SignUpDialog_name" defaultValue={s.name} onChange={this.nameInput} />
+            </div>
+          }
           {p.meal.options.map((option, index) => {
             const valueObj = this.state.options.find(opt => opt.id === option.id);
             return <SignUpOption option={option} key={index} value={valueObj ? valueObj : {}

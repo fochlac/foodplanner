@@ -7,14 +7,6 @@ export default class Topbar extends React.Component {
     super();
   }
 
-  showSettings() {
-    this.props.create_settings_dialog();
-  }
-
-  createMeal() {
-    this.props.create_meal_dialog();
-  }
-
   render() {
     return (
       <div className="topbar">
@@ -30,11 +22,22 @@ export default class Topbar extends React.Component {
               : null
             }
             <li>
-                <span className="fa fa-cog fa-lg pointer" title="Einstellungen" onClick={() => this.showSettings()}></span>
+                <span className="fa fa-cog fa-lg pointer" title="Einstellungen" onClick={this.props.create_settings_dialog.bind(this)}></span>
             </li>
-            <li>
-                <span className="fa fa-plus fa-lg pointer" title="Mahlzeit anlegen" onClick={() => this.createMeal()}></span>
-            </li>
+            {
+              this.props.user.id
+              ? <li>
+                  <span className="fa fa-plus fa-lg pointer" title="Mahlzeit anlegen" onClick={this.props.create_meal_dialog.bind(this)}></span>
+              </li>
+              : null
+            }
+            {
+              this.props.user.id
+              ? <li>
+                  <span className="fa fa-sign-out fa-lg pointer" title="Abmelden" onClick={this.props.sign_out.bind(this)}></span>
+              </li>
+              : null
+            }
           </ul>
         </div>
       </div>

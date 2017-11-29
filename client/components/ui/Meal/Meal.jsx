@@ -76,7 +76,17 @@ export default class Meal extends React.Component {
 
     return (
       <div className="meal">
-        <div className="titlebar"><h4 className="title">{formatDayNameDate(p.meal.time)}: {p.meal.name}</h4><span className="fa fa-lg menuIcon fa-pencil pointer" onClick={this.editMeal}></span><span onClick={this.cancelMeal} className="fa fa-lg menuIcon fa-trash pointer"></span></div>
+        <div className="titlebar">
+          <h4 className="title">{formatDayNameDate(p.meal.time)}: {p.meal.name}</h4>
+          {
+            (p.user.id === p.meal.creatorId)
+            ? <span>
+              <span className="fa fa-lg menuIcon fa-pencil pointer" onClick={this.editMeal}></span>
+              <span onClick={this.cancelMeal} className="fa fa-lg menuIcon fa-trash pointer"></span>
+            </span>
+            : null
+          }
+        </div>
         <div className="details">
           <div className="mealDetails">
             {
@@ -108,7 +118,7 @@ export default class Meal extends React.Component {
                     <p className="user">
                       <span>{signup.name}</span>
                       {
-                        s.editable
+                        s.editable && (p.user.id === p.meal.creatorId || p.user.id === signup.userId)
                         ? <span className="icons">
                           <span className="fa fa-pencil edit" onClick={() => this.edit(signup.id)}></span>
                           <span className="fa fa-times cancel" onClick={() => this.cancel(signup.id)}></span>

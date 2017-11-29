@@ -7,12 +7,15 @@ export const initial_meals = (hidden) => ({
     url: '/api/meals',
     method: 'get'
   },
-  enqueue: initial_signups(hidden)
+  enqueue: initial_signups.bind(null, hidden)
 });
 
-export const initial_user = (data) => ({
+export const initial_user = (id) => ({
   type: 'INITIAL_USER',
-  mail: data
+  api: {
+    url: '/api/user/' + id,
+    method: 'get'
+  }
 });
 
 export const initial_signups = (hidden) => ({
@@ -99,7 +102,7 @@ export const meal_signup = (data) => ({
     body: {
       name: data.name,
       comment: data.comment,
-      user: data.user,
+      userId: data.userId,
       options: data.options,
       meal: data.meal
     }
@@ -121,7 +124,8 @@ export const meal_edit = (data) => ({
     body: {
       name: data.name,
       options: data.options,
-      comment: data.comment
+      comment: data.comment,
+      meal: data.meal
     }
   }
 });
@@ -148,26 +152,20 @@ export const save_settings = (data) => ({
   type: 'SAVE_SETTINGS',
   status: 'initialized',
   api: {
-    url: '/api/mail' + ((data.mailId !== undefined) ? ('/' + data.mailId) : ''),
-    method: ((data.mailId !== undefined) ? 'put' : 'post'),
+    url: '/api/user' + ((data.id !== undefined) ? ('/' + data.id) : ''),
+    method: ((data.id !== undefined) ? 'put' : 'post'),
     body: {
-      id: data.mailId,
+      id: data.id,
       mail: data.mail,
       name: data.name,
       creationNotice: data.creationNotice_mail,
       deadlineReminder: data.deadlineReminder_mail
     }
   },
-  localkey: 'user',
-  locally: {
-      mailId: data.mailId ? data.mailId : undefined,
-      mail: data.mail,
-      name: data.name,
-      creationNotice: data.creationNotice_mail,
-      deadlineReminder: data.deadlineReminder_mail,
+  enqueue: data => save_settings_locally(Object.assign({}, {
       creationNotice_notification: data.creationNotice_notification,
       deadlineReminder_notification: data.deadlineReminder_notification
-    }
+    }, data))
 });
 
 export const save_settings_locally = (data) => ({
@@ -194,6 +192,14 @@ export const select_suggestion = (mail) => ({
   type: 'SELECT_MAIL',
   mail
 });
+
+export const sign_out = () => ({
+  type: 'SIGNOUT',
+  status: 'complete',
+  localkey: 'user',
+  locally: {}
+});
+
 
 // meals
 export const create_meal_dialog = () => ({

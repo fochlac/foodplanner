@@ -31,7 +31,8 @@ export default class CreateMealDialog extends React.Component {
       deadlineObject: deadline,
     } : {
       name: '',
-      creator: props.user.name ? props.user.name : '',
+      creator: props.user.name,
+      creatorId: props.user.id,
       image: '',
       imageUrl: '',
       description: '',
@@ -109,6 +110,7 @@ export default class CreateMealDialog extends React.Component {
         id: s.id,
         name: s.name,
         creator: s.creator,
+        creatorId: s.creatorId,
         image: s.image,
         imageData: s.imageData,
         description: s.description,
@@ -191,8 +193,8 @@ export default class CreateMealDialog extends React.Component {
                 <input type="text" id="SignUpDialog_name" defaultValue={s.name} onChange={this.nameInput}/>
               </div>
               <div>
-                <label htmlFor="SignUpDialog_creator">Veranstalter</label>
-                <input type="text" id="SignUpDialog_creator" defaultValue={s.creator} onChange={this.creatorInput}/>
+                <label htmlFor="SignUpDialog_signupLimit">Teilnehmerbegrenzung</label>
+                <input type="number" id="SignUpDialog_signupLimit" defaultValue={edit ? s.signupLimit : 0} onChange={this.signupLimitInput}/>
               </div>
             </div>
             <div className="col">
@@ -202,10 +204,6 @@ export default class CreateMealDialog extends React.Component {
           <div>
             <label htmlFor="SignUpDialog_comment">Beschreibung</label>
             <textarea type="text" id="SignUpDialog_description" onChange={this.descriptionInput} defaultValue={s.description}></textarea>
-          </div>
-          <div>
-            <label htmlFor="SignUpDialog_signupLimit">Teilnehmerbegrenzung</label>
-            <input type="number" id="SignUpDialog_signupLimit" defaultValue={edit ? s.signupLimit : 0} onChange={this.signupLimitInput}/>
           </div>
           <div>
             <label htmlFor="SignUpDialog_deadline">Anmeldeschluss</label>

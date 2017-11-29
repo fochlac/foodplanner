@@ -2,6 +2,12 @@
 
 Small food planning tool
 
+# Full Installation Using Install Script
+
+First clone the repo. Then go to the folder 'buildScripts' and adjust the 'variables' file according to your preferences.
+
+Then run the script 'buildScripts/setup' to install the project and all dependencies.
+
 # Building the project
 First go to the project folder, then run the following commands:
 ```

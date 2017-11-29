@@ -4,7 +4,7 @@ let stash = [],
 const	gmail 				= require('gmail-send')({ user: 'ep.mittagsplaner@gmail.com', pass: process.env.FOOD_MAILPW })
 	,	error 	            = require(process.env.FOOD_HOME + 'modules/error')
 	,	log 	            = require(process.env.FOOD_HOME + 'modules/log')
-	,	mailDb 	            = require(process.env.FOOD_HOME + 'modules/db/mail')
+	,	userDb 	            = require(process.env.FOOD_HOME + 'modules/db/user')
     ,   deadlineReminder    = require(process.env.FOOD_HOME + 'modules/mailer/deadlineReminder.tmpl.js')
     ,   creationNotice      = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice.tmpl.js')
     ,   invitation      	= require(process.env.FOOD_HOME + 'modules/mailer/invitation.tmpl.js')
@@ -29,7 +29,7 @@ const	gmail 				= require('gmail-send')({ user: 'ep.mittagsplaner@gmail.com', pa
 
 module.exports = {
     sendDeadlineReminder(meal) {
-        mailDb.getMailsByProperty('deadlineReminder', 1)
+        userDb.getUsersByProperty('deadlineReminder', 1)
             .then((data) => {
                 if (data.length) {
                     data.forEach(user => mail(deadlineReminder(user, meal), error.checkError(3, 'Error sending deadline reminder.'), user.name, 'creationNotice'));
@@ -37,7 +37,7 @@ module.exports = {
             }).catch(error.promise(4, 'error sending deadline mails'));
     },
 	sendCreationNotice(meal) {
-		mailDb.getMailsByProperty('creationNotice', 1)
+		userDb.getUsersByProperty('creationNotice', 1)
 			.then((data) => {
 				if (data.length) {
 					data.filter(user => (meal.name.includes('test') && user.name.includes('Florian') || !meal.name.includes('test')))

@@ -1,3 +1,5 @@
+@import '../../root/variables.less';
+
 .optionSelect{
   width: 100%;
 }
@@ -9,4 +11,31 @@ input.count {
 
 .yesNo div {
     width: 60px;
+}
+
+.warning {
+    padding: 5px 10px;
+    background: @colory1;
+    border-radius: 2px;
+    border: solid 1px @colory2;
+    cursor: help;
+}
+.warning .fa-info-circle {
+    margin-left: 10px
+}
+
+.warning:before {
+    content: "\f071";
+    font-family: FontAwesome;
+    font-size: 1.5em;
+    color: @colory2;
+    margin-right: 10px;
+}
+
+.editName {
+	font-size: 0.9em;
+}
+
+.signupName {
+	margin-left: 5px;
 }

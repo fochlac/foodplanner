@@ -11,6 +11,7 @@ const mapStateToProps = (state, ownProps) => {
         return {
             edit: true,
             signup,
+            user: state.user,
             meal: state.meals.filter(meal => meal.id === signup.meal)[0]
         };
     } else {

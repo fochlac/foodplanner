@@ -8,6 +8,9 @@ export default class ConfirmationDialog extends React.Component {
 
   submit() {
     this.props[this.props.action](...this.props.parameter);
+    if (location.href !== location.origin) {
+      history.pushState({}, "Mittagsplaner", location.origin);
+    }
   }
 
   cancel() {
