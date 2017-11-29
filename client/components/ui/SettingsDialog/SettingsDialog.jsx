@@ -32,21 +32,6 @@ export default class SettingsDialog extends React.Component {
     this.nameInput = this.handleInput('name').bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user.mail && (nextProps.user.mail !== this.props.user.mail || this.state.allowUpdate)) {
-      this.setState({
-          id: nextProps.user.id,
-          mail: nextProps.user.mail,
-          name: nextProps.user.name ? nextProps.user.name : '',
-          creationNotice_mail: nextProps.user.creationNotice ? nextProps.user.creationNotice : 0,
-          creationNotice_notification: nextProps.user.creationNotice_notification ? nextProps.user.creationNotice_notification : 0,
-          deadlineReminder_mail: nextProps.user.deadlineReminder ? nextProps.user.deadlineReminder : 0,
-          deadlineReminder_notification: nextProps.user.deadlineReminder_notification ? nextProps.user.deadlineReminder_notification : 0,
-          allowUpdate: false
-        });
-    }
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.app.mailSuggestion && !this.props.app.mailSuggestion && nextProps.app.mailSuggestion === this.state.mail) {
       return false;
@@ -88,9 +73,7 @@ export default class SettingsDialog extends React.Component {
     clearTimeout(this.hideTimeout);
     clearTimeout(this.showTimeout);
     this.timeout = false;
-    this.setState({allowUpdate: true}, () => {
-      this.props.select_suggestion(this.props.app.mailSuggestion);
-    });
+    this.setState(Object.assign({}, this.state, this.props.app.mailSuggestion, {allowUpdate: true, creationNotice_mail: this.props.app.mailSuggestion.creationNotice, deadlineReminder_mail: this.props.app.mailSuggestion.deadlineReminder}), this.props.select_suggestion.bind(this, null));
   }
 
   handleTab(evt) {

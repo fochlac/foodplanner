@@ -28,5 +28,6 @@ export const store = configureStore({
     meals: [
     ],
     signups: {
-    }
+    },
+    user: {}
 });
