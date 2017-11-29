@@ -5,14 +5,14 @@ const   getConnection   = require(process.env.FOOD_HOME + 'modules/db')
 
 
 module.exports = {
-    getMailByProperty: (prop, val) => {
+    getUserByProperty: (prop, val) => {
         return getConnection()
         .then (myDb => {
-            return new Promise((resolve, reject) => myDb.query(`select * from mailingList where ${prop} = ${mysql.escape(val)}`, (err, result) => {
+            return new Promise((resolve, reject) => myDb.query(`select * from users where ${prop} = ${mysql.escape(val)}`, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/mail:getMailByProperty', err);
-                    reject({status: 500, message: 'Unable to find mail.'});
+                    log(2, 'modules/db/user:getUserByProperty', err);
+                    reject({status: 500, message: 'Unable to find user.'});
                 } else {
                     resolve(result[0]);
                 }
@@ -20,14 +20,14 @@ module.exports = {
         });
     },
 
-    getMailsByProperty: (prop, val) => {
+    getUsersByProperty: (prop, val) => {
         return getConnection()
         .then (myDb => {
-            return new Promise((resolve, reject) => myDb.query(`select * from mailingList where ${prop} = ${mysql.escape(val)}`, (err, result) => {
+            return new Promise((resolve, reject) => myDb.query(`select * from users where ${prop} = ${mysql.escape(val)}`, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/mail:getMailByProperty', err);
-                    reject({status: 500, message: 'Unable to find mail.'});
+                    log(2, 'modules/db/user:getUserByProperty', err);
+                    reject({status: 500, message: 'Unable to find user.'});
                 } else {
                     resolve(result);
                 }
@@ -35,14 +35,14 @@ module.exports = {
         });
     },
 
-    searchMailsByProperty: (prop, val) => {
+    searchUsersByProperty: (prop, val) => {
         return getConnection()
         .then (myDb => {
-            return new Promise((resolve, reject) => myDb.query(`select * from mailingList where ${prop} like ${mysql.escape(val + '%')}`, (err, result) => {
+            return new Promise((resolve, reject) => myDb.query(`select * from users where ${prop} like ${mysql.escape(val + '%')}`, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/mail:getMailByProperty', err);
-                    reject({status: 500, message: 'Unable to find mail.'});
+                    log(2, 'modules/db/user:getUserByProperty', err);
+                    reject({status: 500, message: 'Unable to find user.'});
                 } else {
                     resolve(result);
                 }
@@ -50,8 +50,8 @@ module.exports = {
         });
     },
 
-    setMailByProperty: (prop, val, options) => {
-        const query = `UPDATE mailingList SET
+    setUserByProperty: (prop, val, options) => {
+        const query = `UPDATE users SET
             name                = ${mysql.escape(options.name)},
             mail                = ${mysql.escape(options.mail)},
             deadlineReminder    = ${mysql.escape(options.deadlineReminder)},
@@ -63,7 +63,7 @@ module.exports = {
             return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/mail:setMailByProperty', err);
+                    log(2, 'modules/db/user:setUserByProperty', err);
                     reject({status: 500, message: 'Unable to insert data.'});
                 } else {
                     resolve({
@@ -78,8 +78,8 @@ module.exports = {
         });
     },
 
-    setMailPropertyById: (id, option, value) => {
-        const query = `UPDATE mailingList SET
+    setUserPropertyById: (id, option, value) => {
+        const query = `UPDATE users SET
             ${mysql.escapeId(option)} = ${mysql.escape(value)}
             WHERE id = ${mysql.escape(id)};`;
 
@@ -88,7 +88,7 @@ module.exports = {
             return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/mail:setMailPropertyById', err);
+                    log(2, 'modules/db/user:setUserPropertyById', err);
                     reject({status: 500, message: 'Unable to insert data.'});
                 } else {
                     resolve({});
@@ -97,14 +97,14 @@ module.exports = {
         });
     },
 
-    deleteMailByProperty: (prop, val) => {
+    deleteUserByProperty: (prop, val) => {
         return getConnection()
         .then (myDb => {
-            return new Promise((resolve, reject) => myDb.query(`delete from mailingList where ${mysql.escapeId(prop)} = ${mysql.escape(val)};`, (err, result) => {
+            return new Promise((resolve, reject) => myDb.query(`delete from users where ${mysql.escapeId(prop)} = ${mysql.escape(val)};`, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/mail:deleteMailByProperty', err);
-                    reject({status: 500, message: 'Unable to delete mail.'});
+                    log(2, 'modules/db/user:deleteUserByProperty', err);
+                    reject({status: 500, message: 'Unable to delete user.'});
                 } else {
                     resolve({result: result[0], [prop]: val});
                 }
@@ -112,8 +112,8 @@ module.exports = {
         });
     },
 
-    createMail: (options) => {
-        const query = `INSERT INTO mailingList (
+    createUser: (options) => {
+        const query = `INSERT INTO users (
                 name,
                 mail,
                 deadlineReminder,
@@ -128,20 +128,21 @@ module.exports = {
 
         return getConnection()
         .then (myDb => {
-            log(6, 'modules/db/mail:createSignUp - got db connection');
+            log(6, 'modules/db/user:createSignUp - got db connection');
             return new Promise((resolve, reject) => {
                 myDb.query(query, (err, result) => {
                     myDb.release();
                     if (err) {
-                        log(2, 'modules/db/mail:createSignUp.2', err, query);
-                        reject({status: 500, message: 'Error creating mail'});
+                        log(2, 'modules/db/user:createSignUp.2', err, query);
+                        reject({status: 500, message: 'Error creating user'});
                     } else {
-                        log(6, 'modules/db/mail:createSignUp - mail created');
+                        log(6, 'modules/db/user:createSignUp - user created');
                         resolve({
                             name: options.name,
                             mail: options.mail,
                             deadlineReminder: options.deadlineReminder,
                             creationNotice: options.creationNotice,
+                            balance: 0,
                             id: result.insertId
                         });
                     }
@@ -154,20 +155,20 @@ module.exports = {
                 return err;
             }
 
-            return error.db.codeError('modules/db/mail.js:createSignUp.4', arguments);
+            return error.db.codeError('modules/db/user.js:createSignUp.4', arguments);
         });
     },
 
-    getAllMails: () => {
+    getAllUsers: () => {
         return getConnection()
         .then (myDb => {
-            const query = `SELECT * FROM mailingList;`;
+            const query = `SELECT * FROM users;`;
 
             return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/mail:getAllMails', err);
-                    reject({status: 500, message: 'Unable to get maillist.'});
+                    log(2, 'modules/db/user:getAllUsers', err);
+                    reject({status: 500, message: 'Unable to get userlist.'});
                 } else {
                     resolve(result);
                 }

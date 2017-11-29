@@ -18,6 +18,8 @@ function flattenResults(result) {
                 name: row.name,
                 comment: row.comment,
                 meal: row.meal,
+                paid: row.paid,
+                userId: row.userId,
                 options: (row.signupOptionsId !== null) ? [{
                     id: row.signupOptionsId,
                     value: row.signupOptionsValue,
@@ -67,9 +69,9 @@ module.exports = {
 
     setSignupById: (id, options) => {
         const query = `UPDATE signups SET
-            \`name\` = ${mysql.escape(options.name)},
+            \`name\`    = ${mysql.escape(options.name)},
             \`comment\` = ${mysql.escape(options.comment)}
-            WHERE  \`id\` = ${mysql.escape(id)};`,
+            WHERE \`id\` = ${mysql.escape(id)};`,
             optionsQuery = `INSERT INTO signupOptions (
                     \`signupId\`,
                     \`mealOptionId\`,
@@ -173,10 +175,12 @@ module.exports = {
         const query = `INSERT INTO signups (
                 \`name\`,
                 \`meal\`,
+                \`userId\`,
                 \`comment\`
             ) VALUES (
                 ${mysql.escape(options.name)},
                 ${mysql.escape(options.meal)},
+                ${mysql.escape(options.userId)},
                 ${mysql.escape(options.comment)}
             )
             ON DUPLICATE KEY UPDATE \`id\` = \`id\`;`,
@@ -214,6 +218,8 @@ module.exports = {
                             name: options.name,
                             meal: options.meal,
                             comment: options.comment,
+                            userId: options.userId,
+                            paid: 0,
                             options: options.options,
                             id: result.insertId
                         });
@@ -254,6 +260,8 @@ module.exports = {
             const query = `SELECT
                 signups.id,
                 signups.name,
+                signups.paid,
+                signups.userId,
                 signups.meal,
                 signups.comment,
                 signupOptions.mealOptionId AS signupOptionsId,

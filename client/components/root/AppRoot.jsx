@@ -21,7 +21,7 @@ export default class App extends React.Component {
         this.props.initial_meals();
         initDb('food', 'userData')
             .then(db => db.get('user'))
-            .then(user => this.props.initial_user(user))
+            .then(user => this.props.initial_user(user.id))
             .catch(console.log);
 
         initServiceWorker()

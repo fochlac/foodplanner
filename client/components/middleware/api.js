@@ -47,12 +47,9 @@ export const apiMiddleware = store => next => action => {
         .then(data => {
             action.status = 'complete';
             action.data = data;
-            if (action.type === 'SAVE_SETTINGS') {
-                action.locally.mailId = data.id;
-            }
             store.dispatch(action);
             if (action.enqueue) {
-                store.dispatch(action.enqueue);
+                store.dispatch(action.enqueue(data));
             }
         })
         .catch(err => {

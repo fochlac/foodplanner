@@ -42,10 +42,11 @@ let setup = [
     `GRANT ALL PRIVILEGES ON ${process.env.FOOD_DB_NAME}.* TO '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}';`,
     `USE ${process.env.FOOD_DB_NAME};`,
 
-    `CREATE TABLE IF NOT EXISTS \`mailingList\` (
+    `CREATE TABLE IF NOT EXISTS \`users\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`name\`                varchar(150)    NOT NULL,
         \`mail\`                varchar(150)    NOT NULL,
+        \`balance\`             int                         DEFAULT 0,
         \`deadlineReminder\`    int                         DEFAULT 0,
         \`creationNotice\`      int                         DEFAULT 0,
 
@@ -66,6 +67,7 @@ let setup = [
         \`name\`            varchar(150)    NOT NULL,
         \`description\`     text,
         \`creator\`         varchar(150)    NOT NULL,
+        \`creatorId\`       int             NOT NULL,
         \`time\`            bigint          NOT NULL,
         \`deadline\`        bigint          NOT NULL,
         \`signupLimit\`     int,
@@ -96,8 +98,11 @@ let setup = [
         \`name\`    varchar(150)    NOT NULL,
         \`meal\`    int             NOT NULL,
         \`comment\` varchar(255)    NOT NULL,
+        \`userId\`  int,
+        \`paid\`    int                         DEFAULT 0,
 
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        UNIQUE KEY \`userId\` (\`meal\`, \`userId\`)
     );`,
     `CREATE TABLE IF NOT EXISTS \`signupOptions\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,

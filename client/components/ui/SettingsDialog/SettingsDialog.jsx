@@ -8,7 +8,7 @@ export default class SettingsDialog extends React.Component {
     super();
 
     this.state = (props.user.mail ? {
-          mailId: props.user.mailId,
+          id: props.user.id,
           mail: props.user.mail,
           name: props.user.name ? props.user.name : '',
           creationNotice_mail: props.user.creationNotice ? props.user.creationNotice : 0,
@@ -35,7 +35,7 @@ export default class SettingsDialog extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.mail && (nextProps.user.mail !== this.props.user.mail || this.state.allowUpdate)) {
       this.setState({
-          mailId: nextProps.user.mailId,
+          id: nextProps.user.id,
           mail: nextProps.user.mail,
           name: nextProps.user.name ? nextProps.user.name : '',
           creationNotice_mail: nextProps.user.creationNotice ? nextProps.user.creationNotice : 0,
@@ -104,7 +104,8 @@ export default class SettingsDialog extends React.Component {
   handleMailInput(evt) {
     const value = evt.target.value;
     this.setState({
-      'mail': value
+      'mail': value,
+      'id': undefined
     }, () => {
       if (this.props.app.mailSuggestion && value === this.props.app.mailSuggestion.mail) {
         this.selectSuggestion();

@@ -26,6 +26,7 @@ signups.put('/:id', error.router.validate('params', {
 }), error.router.validate('body', {
     comment: /^[^"%;]{0,150}$/,
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
+    meal: /^[0-9]{1,50}$/
 }), (req, res) => {
     mealsDB.getMealById(req.body.meal)
     .then(meal => {
@@ -85,7 +86,7 @@ signups.delete('/:id', error.router.validate('params', {
 signups.post('/', error.router.validate('body', {
     comment: /^[^"%;]{0,250}$/,
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
-    meal: /^[0-9]{1,50}$/,
+    meal: /^[0-9]{1,50}$/
 }), (req, res) => {
     Promise.all([
         mealsDB.getMealById(req.body.meal),

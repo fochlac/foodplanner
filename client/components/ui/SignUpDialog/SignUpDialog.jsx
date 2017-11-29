@@ -9,6 +9,8 @@ export default class CreateMealDialog extends React.Component {
 
     this.state = props.edit ? props.signup : {
       name: props.user.name,
+      userId: props.user.id,
+      paid: 0,
       options: props.meal.options.map(option => ({
           id: option.id,
           value: option.values[0] ? option.values[0] : null
@@ -33,6 +35,7 @@ export default class CreateMealDialog extends React.Component {
 
     this.props[edit ? 'meal_edit' : 'meal_signup']({
       name: this.state.name,
+      userId: (this.state.name === this.props.user.name) ? this.state.userId : undefined,
       comment: this.state.comment,
       meal: this.props.meal.id,
       options: this.state.options,
@@ -69,7 +72,7 @@ export default class CreateMealDialog extends React.Component {
         <div className="body">
           <div>
             <label htmlFor="SignUpDialog_name">Name</label>
-            <input type="text" id="SignUpDialog_name" defaultValue={p.edit ? p.signup.name : p.user.name} onChange={this.nameInput}/>
+            <input type="text" id="SignUpDialog_name" defaultValue={p.edit ? p.signup.name : p.user.name} onChange={this.nameInput} disabled={p.edit && p.user.id === this.state.userId}/>
           </div>
           {p.meal.options.map((option, index) => {
             const valueObj = this.state.options.find(opt => opt.id === option.id);

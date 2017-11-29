@@ -50,6 +50,8 @@ export const getNotificationPermission = () => {
                     reject();
                 }
             });
+        } else {
+            reject();
         }
     });
 }

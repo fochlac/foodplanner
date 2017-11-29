@@ -11,7 +11,6 @@ export default class DefaultPage extends React.Component {
     }
 
     componentDidMount() {
-        console.log('componentDidMount');
         this.initial_meals = this.props.initial_meals.bind(this, true);
         resizeFocus();
         window.addEventListener('focus', this.initial_meals);

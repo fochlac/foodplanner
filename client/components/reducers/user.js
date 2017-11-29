@@ -1,11 +1,9 @@
 const users = (state = [], action) => {
     switch (action.type) {
         case 'SELECT_MAIL':
+            return Object.assign({}, state, action.mail);
         case 'INITIAL_USER':
-        	let newData = Object.assign({}, action.mail, {mailId: action.mail.id});
-        	delete newData.id;
-
-            return Object.assign({}, state, newData);
+            return Object.assign({}, state, action.data);
         case 'SAVE_SETTINGS':
         	if(action.status === "complete") {
         		return Object.assign({}, state.user, action.locally);
