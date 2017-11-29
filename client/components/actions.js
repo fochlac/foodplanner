@@ -188,9 +188,8 @@ export const check_mail = (mail) => ({
   }
 });
 
-export const select_suggestion = (mail) => ({
-  type: 'SELECT_MAIL',
-  mail
+export const select_suggestion = () => ({
+  type: 'SELECT_MAIL'
 });
 
 export const sign_out = () => ({
