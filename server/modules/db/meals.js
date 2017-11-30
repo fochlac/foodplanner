@@ -7,13 +7,14 @@ function doubleFlattenResults(result) {
     let objectResult = result.reduce((acc, row) => {
         if (acc[row.id]) {
             if (acc[row.id].options[row.mealOptionsId]) {
-                acc[row.id].options[row.mealOptionsId].values.push(row.mealOptionValue);
+                acc[row.id].options[row.mealOptionsId].values.push({name: row.mealOptionValue, price: row.mealOptionPrice});
             } else {
                 acc[row.id].options[row.mealOptionsId] = {
                     id: row.mealOptionsId,
                     name: row.mealOptionsName,
                     type: row.mealOptionsType,
-                    values: row.mealOptionValue !== null ? [row.mealOptionValue] : []
+                    price: row.mealOptionsPrice,
+                    values: row.mealOptionValue !== null ? [{name: row.mealOptionValue, price: row.mealOptionPrice}] : []
                 };
             }
         } else {
@@ -27,11 +28,13 @@ function doubleFlattenResults(result) {
                 deadline: row.deadline,
                 signupLimit: row.signupLimit,
                 image: row.image,
+                price: row.price,
                 options: (row.mealOptionsId !== null) ? {[row.mealOptionsId]: {
                     id: row.mealOptionsId,
                     name: row.mealOptionsName,
                     type: row.mealOptionsType,
-                    values: row.mealOptionValue !== null ? [row.mealOptionValue] : []
+                    price: row.mealOptionsPrice,
+                    values: row.mealOptionValue !== null ? [{name: row.mealOptionValue, price: row.mealOptionPrice}] : []
                 }} : {}
             }
         }
@@ -58,10 +61,13 @@ module.exports = {
                 meals.deadline,
                 meals.signupLimit,
                 meals.image,
+                meals.price,
                 mealOptions.id AS mealOptionsId,
                 mealOptions.name AS mealOptionsName,
                 mealOptions.type AS mealOptionsType,
-                mealOptionValues.value AS mealOptionValue
+                mealOptions.price AS mealOptionsPrice,
+                mealOptionValues.name AS mealOptionValue,
+                mealOptionValues.price AS mealOptionPrice
             FROM meals
             LEFT JOIN mealOptions
             ON meals.id = mealOptions.mealId
@@ -89,6 +95,7 @@ module.exports = {
             description = ${mysql.escape(options.description)},
             time        = ${mysql.escape(options.time)},
             deadline    = ${mysql.escape(options.deadline)},
+            price       = ${mysql.escape(options.price)},
             signupLimit = ${mysql.escape(options.signupLimit)}
             ${options.image ? ', image = ' + mysql.escape('/static/images/meals/' + options.image) : ''}
             WHERE id = ${mysql.escape(id)};`,
@@ -96,11 +103,13 @@ module.exports = {
                 INSERT INTO mealOptions (
                     mealId,
                     name,
+                    price,
                     type
                 ) VALUES
                 ${options.options.map(option => `(
                     ${mysql.escape(id)},
                     ${mysql.escape(option.name)},
+                    ${mysql.escape(option.price)},
                     ${mysql.escape(option.type)}
                 )`).join(',')}
                 ON DUPLICATE KEY UPDATE
@@ -117,17 +126,19 @@ module.exports = {
                 INSERT INTO mealOptionValues (
                     mealId,
                     mealOptionId,
-                    value
+                    price,
+                    name
                 ) VALUES
                 ${options.options
                     .filter(option => option.values.length)
                     .map((option, index) => option.values.map( value => `(
                         ${mysql.escape(id)},
                         ${mysql.escape(+optionId + index)},
-                        ${mysql.escape(value)}
+                        ${mysql.escape(value.price ? value.price : 0)},
+                        ${mysql.escape(value.name)}
                     )`).join(',')).join(',')}
                 ON DUPLICATE KEY UPDATE
-                    \`value\`=VALUES(\`value\`);`;
+                    \`name\`=VALUES(\`name\`);`;
 
         return getConnection()
         .then (myDb => {
@@ -268,6 +279,7 @@ module.exports = {
                 time,
                 deadline,
                 signupLimit,
+                price,
                 image
             )
             SELECT
@@ -278,6 +290,7 @@ module.exports = {
                 ${mysql.escape(options.time)},
                 ${mysql.escape(options.deadline)},
                 ${mysql.escape(options.signupLimit)},
+                ${mysql.escape(options.price ? options.price : 0)},
                 ${options.image ? "CONCAT( '/static/images/meals/" + options.image[0] + "', `AUTO_INCREMENT`, '" + "." + options.image[1] + "' )" : mysql.escape(undefined)}
             FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '${process.env.FOOD_DB_NAME}' AND TABLE_NAME = 'meals'
             ON DUPLICATE KEY UPDATE \`id\` = \`id\`;`,
@@ -285,11 +298,13 @@ module.exports = {
                 INSERT INTO mealOptions (
                     mealId,
                     name,
+                    price,
                     type
                 ) VALUES
                 ${options.options.map(option => `(
                     ${mysql.escape(id)},
                     ${mysql.escape(option.name)},
+                    ${mysql.escape(option.price ? option.price : 0)},
                     ${mysql.escape(option.type)}
                 )`).join(',')}
                 ON DUPLICATE KEY UPDATE
@@ -299,17 +314,19 @@ module.exports = {
                 INSERT INTO mealOptionValues (
                     mealId,
                     mealOptionId,
-                    value
+                    price,
+                    name
                 ) VALUES
                 ${options.options
                     .filter(option => option.values.length)
                     .map((option, index) => option.values.map( value => `(
                         ${mysql.escape(id)},
                         ${mysql.escape(+optionId + index)},
-                        ${mysql.escape(value)}
+                        ${mysql.escape(value.price ? value.price : 0)},
+                        ${mysql.escape(value.name)}
                     )`).join(',')).join(',')}
                 ON DUPLICATE KEY UPDATE
-                    \`value\`=VALUES(\`value\`);`;
+                    \`name\`=VALUES(\`name\`);`;
 
 
         return getConnection()
@@ -401,10 +418,13 @@ module.exports = {
                 meals.deadline,
                 meals.signupLimit,
                 meals.image,
+                meals.price,
                 mealOptions.id AS mealOptionsId,
                 mealOptions.name AS mealOptionsName,
                 mealOptions.type AS mealOptionsType,
-                mealOptionValues.value AS mealOptionValue
+                mealOptions.price AS mealOptionsPrice,
+                mealOptionValues.name AS mealOptionValue,
+                mealOptionValues.price AS mealOptionPrice
             FROM meals
             LEFT JOIN mealOptions
             ON meals.id = mealOptions.mealId

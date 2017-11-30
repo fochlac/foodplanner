@@ -22,6 +22,12 @@ module.exports = {
 		codeError: (...err) => {
 			log(1, ...err);
 			return Promise.reject();
+		},
+		queryError: (level, db, message) => {
+			return (err) => {
+				db.release();
+				log(level, message, err);
+			}
 		}
 	},
 

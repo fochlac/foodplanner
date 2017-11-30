@@ -76,18 +76,22 @@ module.exports = {
                     \`signupId\`,
                     \`mealOptionId\`,
                     \`value\`,
+                    \`valueId\`,
                     \`count\`,
                     \`show\`
-                ) VALUES
-                ${options.options.map(option => `(
+                ) SELECT
+                ${options.options.map(option => `
                     ${mysql.escape(id)},
                     ${mysql.escape(option.id)},
                     ${mysql.escape(option.value)},
+                    ${option.value ? 'id' : mysql.escape(undefined)},
                     ${mysql.escape(option.count)},
                     ${mysql.escape(option.show)}
-                )`).join(',')}
+                    ${option.value ? `FROM mealOptionValues WHERE name = ${mysql.escape(option.value)} and mealOptionId = ${mysql.escape(option.id)}` : ''}
+                `).join(' UNION ALL SELECT')}
                 ON DUPLICATE KEY UPDATE
                     \`value\`=VALUES(\`value\`),
+                    \`valueId\`=VALUES(\`valueId\`),
                     \`count\`=VALUES(\`count\`),
                     \`show\`=VALUES(\`show\`);`;
 
@@ -119,7 +123,7 @@ module.exports = {
                             reject({status: 500, message: 'Error updating signup'});
                         } else {
                             resolve(signup);
-                            log(6, 'modules/db/signup:setSignupById - option values inserted - signup updated');
+                            log(6, 'modules/db/signup:setSignupById - option values inserted - signup updated', optionsQuery);
                         }
                     });
                 });
@@ -189,16 +193,19 @@ module.exports = {
                     \`signupId\`,
                     \`mealOptionId\`,
                     \`value\`,
+                    \`valueId\`,
                     \`count\`,
                     \`show\`
-                ) VALUES
-                ${options.options.map(option => `(
+                ) SELECT
+                ${options.options.map(option => `
                     ${mysql.escape(id)},
                     ${mysql.escape(option.id)},
                     ${mysql.escape(option.value)},
+                    ${option.value ? 'id' : mysql.escape(undefined)},
                     ${mysql.escape(option.count)},
                     ${mysql.escape(option.show)}
-                )`).join(',')}
+                    ${option.value ? `FROM mealOptionValues WHERE name = ${mysql.escape(option.value)} and mealOptionId = ${mysql.escape(option.id)}` : ''}
+                `).join(' UNION ALL SELECT')}
                 ON DUPLICATE KEY UPDATE
                     \`value\`=VALUES(\`value\`),
                     \`count\`=VALUES(\`count\`),
@@ -265,7 +272,7 @@ module.exports = {
                 signups.meal,
                 signups.comment,
                 signupOptions.mealOptionId AS signupOptionsId,
-                signupOptions.value AS signupOptionsValue ,
+                signupOptions.value AS signupOptionsValue,
                 signupOptions.count AS signupOptionsCount,
                 signupOptions.show AS signupOptionsShow
             FROM signups

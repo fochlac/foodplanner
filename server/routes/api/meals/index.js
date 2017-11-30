@@ -1,5 +1,6 @@
 const   meals           = require('express').Router()
     ,   mealsDB         = require(process.env.FOOD_HOME + 'modules/db/meals')
+    ,   paymentDB       = require(process.env.FOOD_HOME + 'modules/db/payment')
     ,   image           = require(process.env.FOOD_HOME + 'middleware/singleImage')
     ,   error           = require(process.env.FOOD_HOME + 'modules/error')
     ,   scheduler       = require(process.env.FOOD_HOME + 'modules/scheduler')
@@ -8,6 +9,26 @@ const   meals           = require('express').Router()
     ,   fs              = require('fs')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log');
 
+
+meals.get('/:id/payment', error.router.validate('params', {
+    id: /^[0-9]*$/
+}), (req, res) => {
+    paymentDB.getEligibleSignups(req.params.id)
+        .then((eligibleSignups) => Promise.all(
+            eligibleSignups.map(
+                result => paymentDB.payForSignup(result.id)
+                    .then(res => Promise.resolve({error: false, data: res}),
+                        err => Promise.resolve({error: true, data: err})
+                    )
+            )
+        ))
+        .then(results => log(6, results.filter(res => !res.error).length + ' payments of ' + results.length + ' failed.'))
+        .then(() => paymentDB.getPricesByMeal(req.params.id))
+        .then(result => {
+            res.status(200).send(result);
+        })
+        .catch(error.router.internalError(res));
+});
 
 meals.get('/:id', error.router.validate('params', {
     id: /^[0-9]*$/

@@ -68,6 +68,7 @@ let setup = [
         \`description\`     text,
         \`creator\`         varchar(150)    NOT NULL,
         \`creatorId\`       int             NOT NULL,
+        \`price\`           int                         DEFAULT 0,
         \`time\`            bigint          NOT NULL,
         \`deadline\`        bigint          NOT NULL,
         \`signupLimit\`     int,
@@ -78,6 +79,7 @@ let setup = [
     `CREATE TABLE IF NOT EXISTS \`mealOptions\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`mealId\`              int             NOT NULL,
+        \`price\`               int                         DEFAULT 0,
         \`name\`                varchar(150)    NOT NULL,
         \`type\`                varchar(150)    NOT NULL,
 
@@ -88,10 +90,11 @@ let setup = [
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`mealId\`              int             NOT NULL,
         \`mealOptionId\`        int             NOT NULL,
-        \`value\`               varchar(150)    NOT NULL,
+        \`price\`               int                         DEFAULT 0,
+        \`name\`               varchar(150)    NOT NULL,
 
         PRIMARY KEY (id),
-        UNIQUE KEY \`mealOptionId\` (\`mealOptionId\`, \`value\`)
+        UNIQUE KEY \`mealOptionId\` (\`mealOptionId\`, \`name\`)
     );`,
     `CREATE TABLE IF NOT EXISTS \`signups\` (
         \`id\`      int             NOT NULL    AUTO_INCREMENT,
@@ -108,12 +111,22 @@ let setup = [
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`signupId\`            int             NOT NULL,
         \`mealOptionId\`        int             NOT NULL,
+        \`valueId\`             int,
         \`value\`               varchar(150),
         \`count\`               int,
         \`show\`                int,
 
         PRIMARY KEY (id),
         UNIQUE KEY \`signupId\` (\`signupId\`, \`mealOptionId\`)
+    );`,
+    `CREATE TABLE IF NOT EXISTS \`transactions\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`source\`              int             NOT NULL,
+        \`target\`              int             NOT NULL,
+        \`amount\`              int             NOT NULL,
+        \`mealId\`              int             NOT NULL,
+
+        PRIMARY KEY (id)
     );`
 ];
 

@@ -8,12 +8,12 @@ export default class CreateMealDialog extends React.Component {
     super();
 
     this.state = props.edit ? props.signup : {
-      name: props.user.name,
-      userId: props.user.id,
+      name: props.user.name ? props.user.name : '',
+      userId: props.user.id ? props.user.id : 0,
       paid: 0,
       options: props.meal.options.map(option => ({
           id: option.id,
-          value: option.values[0] ? option.values[0] : null
+          value: option.values[0] ? option.values[0].name : null
         })),
       comment: ''
     }
