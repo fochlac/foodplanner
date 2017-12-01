@@ -217,9 +217,26 @@ export const create_meal = (data) => ({
   }
 });
 
+export const submit_prices = (prices) => ({
+  type: 'SUBMIT_PRICES',
+  status: 'initialized',
+  prices: prices,
+  api: {
+    url: '/api/meals/prices',
+    method: 'post',
+    body: {prices}
+  }
+});
+
 export const start_edit_meal = (id) => ({
   type: 'DIALOG',
   content: 'EDIT_MEAL',
+  option: {meal: id}
+});
+
+export const start_edit_price = (id) => ({
+  type: 'DIALOG',
+  content: 'EDIT_PRICE',
   option: {meal: id}
 });
 

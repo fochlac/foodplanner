@@ -30,6 +30,34 @@ meals.get('/:id/payment', error.router.validate('params', {
         .catch(error.router.internalError(res));
 });
 
+meals.post('/prices', error.router.validate('body', {
+    prices: 'array'
+}), (req, res) => {
+    let errorElem,
+        valid = !req.body.prices.some((price) => {
+            if (!(
+                ['meals', 'mealOptions', 'mealOptionValues'].includes(price.db)
+                && /^[0-9]*$/.test(price.id)
+                && /^[0-9.]*$/.test(price.price)
+            )) {
+                errorElem = price;
+                return true;
+            }
+            return false;
+        });
+
+    if (!valid) {
+        log(4, 'PriceArray not valid.');
+        return res.status(400).send({msg: 'Options not valid.', type: 'Invalid_Request', data: [JSON.stringify(errorElem)]});
+    }
+
+    paymentDB.setPrices(req.body.prices)
+        .then(result => {
+            res.status(200).send(result);
+        })
+        .catch(error.router.internalError(res));
+});
+
 meals.get('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {

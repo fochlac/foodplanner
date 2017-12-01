@@ -16,6 +16,7 @@ export default class Meal extends React.Component {
     this.editMeal = props.start_edit_meal.bind(this, id);
     this.signup = props.start_meal_signup.bind(this, id);
     this.cancelMeal = props.start_cancel_meal.bind(this, id);
+    this.editPrices = props.start_edit_price.bind(this, id);
 
     this.edit = props.start_meal_edit.bind(this);
     this.cancel = props.meal_cancel.bind(this);
@@ -81,6 +82,7 @@ export default class Meal extends React.Component {
           {
             (p.user.id === p.meal.creatorId)
             ? <span>
+              <span className="fa fa-lg menuIcon fa-euro pointer" onClick={this.editPrices}></span>
               <span className="fa fa-lg menuIcon fa-pencil pointer" onClick={this.editMeal}></span>
               <span onClick={this.cancelMeal} className="fa fa-lg menuIcon fa-trash pointer"></span>
             </span>

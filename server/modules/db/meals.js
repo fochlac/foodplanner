@@ -7,14 +7,14 @@ function doubleFlattenResults(result) {
     let objectResult = result.reduce((acc, row) => {
         if (acc[row.id]) {
             if (acc[row.id].options[row.mealOptionsId]) {
-                acc[row.id].options[row.mealOptionsId].values.push({name: row.mealOptionValue, price: row.mealOptionPrice});
+                acc[row.id].options[row.mealOptionsId].values.push({name: row.mealOptionValueName, price: row.mealOptionValuePrice, id: row.mealOptionValueId});
             } else {
                 acc[row.id].options[row.mealOptionsId] = {
                     id: row.mealOptionsId,
                     name: row.mealOptionsName,
                     type: row.mealOptionsType,
                     price: row.mealOptionsPrice,
-                    values: row.mealOptionValue !== null ? [{name: row.mealOptionValue, price: row.mealOptionPrice}] : []
+                    values: row.mealOptionValue !== null ? [{name: row.mealOptionValueName, price: row.mealOptionValuePrice, id: row.mealOptionValueId}] : []
                 };
             }
         } else {
@@ -34,7 +34,7 @@ function doubleFlattenResults(result) {
                     name: row.mealOptionsName,
                     type: row.mealOptionsType,
                     price: row.mealOptionsPrice,
-                    values: row.mealOptionValue !== null ? [{name: row.mealOptionValue, price: row.mealOptionPrice}] : []
+                    values: row.mealOptionValue !== null ? [{name: row.mealOptionValueName, price: row.mealOptionValuePrice, id: row.mealOptionValueId}] : []
                 }} : {}
             }
         }
@@ -66,8 +66,9 @@ module.exports = {
                 mealOptions.name AS mealOptionsName,
                 mealOptions.type AS mealOptionsType,
                 mealOptions.price AS mealOptionsPrice,
-                mealOptionValues.name AS mealOptionValue,
-                mealOptionValues.price AS mealOptionPrice
+                mealOptionValues.name AS mealOptionValueName,
+                mealOptionValues.price AS mealOptionValuePrice,
+                mealOptionValues.id AS mealOptionValueId
             FROM meals
             LEFT JOIN mealOptions
             ON meals.id = mealOptions.mealId
@@ -151,7 +152,7 @@ module.exports = {
                         name: options.name,
                         description: options.description,
                         creator: options.creator,
-                        creatorId: options.creatorId,
+                        creatorId: parseInt(options.creatorId),
                         time: parseInt(options.time),
                         deadline: parseInt(options.deadline),
                         signupLimit: parseInt(options.signupLimit),
@@ -342,7 +343,7 @@ module.exports = {
                             name: options.name,
                             description: options.description,
                             creator: options.creator,
-                            creatorId: options.creatorId,
+                            creatorId: parseInt(options.creatorId),
                             time: parseInt(options.time),
                             deadline: parseInt(options.deadline),
                             signupLimit: parseInt(options.signupLimit),
@@ -423,8 +424,9 @@ module.exports = {
                 mealOptions.name AS mealOptionsName,
                 mealOptions.type AS mealOptionsType,
                 mealOptions.price AS mealOptionsPrice,
-                mealOptionValues.name AS mealOptionValue,
-                mealOptionValues.price AS mealOptionPrice
+                mealOptionValues.name AS mealOptionValueName,
+                mealOptionValues.price AS mealOptionValuePrice,
+                mealOptionValues.id AS mealOptionValueId
             FROM meals
             LEFT JOIN mealOptions
             ON meals.id = mealOptions.mealId

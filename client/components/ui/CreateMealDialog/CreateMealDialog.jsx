@@ -209,7 +209,7 @@ export default class CreateMealDialog extends React.Component {
             <label htmlFor="SignUpDialog_deadline">Anmeldeschluss</label>
             <div className="row">
               <DayPickerInput
-                value={s.deadlineObject.getDate() + '.' + (s.deadlineObject.getMonth() + 1) + '.' + s.deadlineObject.getFullYear().toString().slice(-2)}
+                value={formatDate(s.deadlineObject)}
                 format="DD.MM.YY"
                 onDayChange={this.deadlineInput}
               />
@@ -222,7 +222,7 @@ export default class CreateMealDialog extends React.Component {
             <label htmlFor="SignUpDialog_time">Lieferzeitpunkt</label>
             <div className="row">
               <DayPickerInput
-                value={s.timeObject.getDate() + '.' + (s.timeObject.getMonth() + 1) + '.' + s.timeObject.getFullYear().toString().slice(-2)}
+                value={formatDate(s.timeObject)}
                 format="DD.MM.YY"
                 onDayChange={this.timeInput}
               />
@@ -241,7 +241,7 @@ export default class CreateMealDialog extends React.Component {
                 ? <select className="push-right templateSelector" onChange={this.selectOptions.bind(this)}>
                   <option value="">Optionen laden</option>
                   {
-                    p.meals.map((meal, index) => <option value={index} key={meal.id}>{meal.name}</option>)
+                    p.meals.filter(meal => meal.options.length).map((meal, index) => <option value={index} key={meal.id}>{meal.name}</option>)
                   }
                 </select>
                 : null

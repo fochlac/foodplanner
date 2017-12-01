@@ -161,5 +161,36 @@ module.exports = {
                     }
                 })));
         });
+    },
+    setPrices: (prices) => {
+        const mealQuery = (db, id, price) => `UPDATE ${mysql.escapeId(db)} SET price = ${mysql.escape(price)} WHERE id = ${mysql.escape(id)};`;
+
+        return getConnection()
+        .then (myDb => {
+            return new Promise((resolve, reject) => myDb.beginTransaction(err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                }))
+                .then(() => Promise.all(prices.map(priceObj => executeQuery(myDb, mealQuery(priceObj.db, priceObj.id, priceObj.price)))))
+                .then(() => new Promise((resolve, reject) => myDb.commit(err => {
+                    if (err) {
+                        log(2, 'modules/db/payment:setPrices', 'error commiting transaction');
+                        reject({status: 500, message: 'Unable to commit transaction.'});
+                    } else {
+                        myDb.release();
+                        resolve(prices);
+                    }
+                })))
+                .catch(err => new Promise((resolve, reject) =>  myDb.rollback(rbErr => {
+                    if (rbErr) {
+                        log(2, 'rollback failed for errors: ', err, rbErr);
+                    }
+                    myDb.release();
+                    return reject(err);
+                })));
+        });
     }
 }

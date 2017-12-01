@@ -64,6 +64,24 @@ export default class CreateMealDialog extends React.Component {
     const p = this.props,
           s = this.state;
 
+    let calculatedPrice = 0;
+
+    calculatedPrice += +p.meal.price;
+    s.options.forEach(option => {
+      let opt = p.meal.options.find(opt => opt.id === option.id);
+      switch(opt.type) {
+        case 'select':
+          calculatedPrice += opt.values.find(val => val.name === option.value).price;
+          break;
+        case 'count':
+          calculatedPrice += opt.values.find(val => val.name === option.value).price * option.count;
+          break;
+        case 'toggle':
+          calculatedPrice += option.show ? opt.price : 0;
+          break;
+      }
+    })
+
     return (
       <Dialog>
         <div className="titlebar">
@@ -108,6 +126,9 @@ export default class CreateMealDialog extends React.Component {
             return <SignUpOption option={option} key={index} value={valueObj ? valueObj : {}
           } setOption={this.setOption(option.id)} />
           })}
+          <div className="estimated_price" title="Der Preis wurde noch nicht finalisiert und kann sich jederzeig ändern.">
+            <span className="push-right">Vorläufiger Preis: {calculatedPrice ? calculatedPrice : 'unbekannt'} €</span>
+          </div>
           <div>
             <label htmlFor="SignUpDialog_comment">Kommentar</label>
             <textarea type="text" id="SignUpDialog_comment" defaultValue={p.edit ? p.signup.comment : null} onChange={this.commentInput}></textarea>

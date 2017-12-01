@@ -62,6 +62,9 @@ module.exports = {
 					} else if (options[param] === 'object' && typeof payload[param] !== 'object') {
 						valid = false;
 						invalidParams.push(param);
+					} else if (options[param] === 'array' && !Array.isArray(payload[param])) {
+						valid = false;
+						invalidParams.push(param);
 					} else if (options[param] === 'jsonString') {
 						try {
 							JSON.parse(payload[param]);

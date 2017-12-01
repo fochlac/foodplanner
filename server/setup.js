@@ -68,7 +68,7 @@ let setup = [
         \`description\`     text,
         \`creator\`         varchar(150)    NOT NULL,
         \`creatorId\`       int             NOT NULL,
-        \`price\`           int                         DEFAULT 0,
+        \`price\`           FLOAT(10, 2)                DEFAULT 0,
         \`time\`            bigint          NOT NULL,
         \`deadline\`        bigint          NOT NULL,
         \`signupLimit\`     int,
@@ -79,7 +79,7 @@ let setup = [
     `CREATE TABLE IF NOT EXISTS \`mealOptions\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`mealId\`              int             NOT NULL,
-        \`price\`               int                         DEFAULT 0,
+        \`price\`               FLOAT(10, 2)                DEFAULT 0,
         \`name\`                varchar(150)    NOT NULL,
         \`type\`                varchar(150)    NOT NULL,
 
@@ -90,8 +90,8 @@ let setup = [
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`mealId\`              int             NOT NULL,
         \`mealOptionId\`        int             NOT NULL,
-        \`price\`               int                         DEFAULT 0,
-        \`name\`               varchar(150)    NOT NULL,
+        \`price\`               FLOAT(10, 2)                DEFAULT 0,
+        \`name\`                varchar(150)    NOT NULL,
 
         PRIMARY KEY (id),
         UNIQUE KEY \`mealOptionId\` (\`mealOptionId\`, \`name\`)

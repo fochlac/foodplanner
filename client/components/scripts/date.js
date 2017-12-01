@@ -15,7 +15,7 @@ function fill(val, n) {
 export const formatDate = (date) => {
     const src = new Date((date.toString().length === 10) ? (date * 1000) : date);
 
-    return `${src.getDate()}.${src.getMonth() + 1}.${src.getFullYear().toString().slice(2,4)}`;
+    return `${fill(src.getDate(), 2)}.${fill(src.getMonth() + 1, 2)}.${fill(src.getFullYear(), 2)}`;
 }
 
 export const formatDayNameDate = (date) => {
