@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import SettingsDialog from './SettingsDialog/SettingsDialog.jsx';
-import { save_settings, close_dialog, check_mail, select_mail, select_suggestion, hide_mail_suggestion } from '../actions.js';
+import { save_settings, close_dialog } from '../actions.js';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -11,4 +11,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default connect(mapStateToProps, { save_settings, close_dialog, check_mail, select_mail, select_suggestion, hide_mail_suggestion })(SettingsDialog);
+export default connect(mapStateToProps, { save_settings, close_dialog })(SettingsDialog);

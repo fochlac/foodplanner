@@ -14,7 +14,7 @@ function doubleFlattenResults(result) {
                     name: row.mealOptionsName,
                     type: row.mealOptionsType,
                     price: row.mealOptionsPrice,
-                    values: row.mealOptionValue !== null ? [{name: row.mealOptionValueName, price: row.mealOptionValuePrice, id: row.mealOptionValueId}] : []
+                    values: row.mealOptionValueName !== null ? [{name: row.mealOptionValueName, price: row.mealOptionValuePrice, id: row.mealOptionValueId}] : []
                 };
             }
         } else {
@@ -29,12 +29,13 @@ function doubleFlattenResults(result) {
                 signupLimit: row.signupLimit,
                 image: row.image,
                 price: row.price,
+                locked: row.locked,
                 options: (row.mealOptionsId !== null) ? {[row.mealOptionsId]: {
                     id: row.mealOptionsId,
                     name: row.mealOptionsName,
                     type: row.mealOptionsType,
                     price: row.mealOptionsPrice,
-                    values: row.mealOptionValue !== null ? [{name: row.mealOptionValueName, price: row.mealOptionValuePrice, id: row.mealOptionValueId}] : []
+                    values: row.mealOptionValueName !== null ? [{name: row.mealOptionValueName, price: row.mealOptionValuePrice, id: row.mealOptionValueId}] : []
                 }} : {}
             }
         }
@@ -62,6 +63,7 @@ module.exports = {
                 meals.signupLimit,
                 meals.image,
                 meals.price,
+                meals.locked,
                 mealOptions.id AS mealOptionsId,
                 mealOptions.name AS mealOptionsName,
                 mealOptions.type AS mealOptionsType,
@@ -96,7 +98,7 @@ module.exports = {
             description = ${mysql.escape(options.description)},
             time        = ${mysql.escape(options.time)},
             deadline    = ${mysql.escape(options.deadline)},
-            price       = ${mysql.escape(options.price)},
+            price       = ${mysql.escape(options.price ? options.price : 0)},
             signupLimit = ${mysql.escape(options.signupLimit)}
             ${options.image ? ', image = ' + mysql.escape('/static/images/meals/' + options.image) : ''}
             WHERE id = ${mysql.escape(id)};`,
@@ -110,7 +112,7 @@ module.exports = {
                 ${options.options.map(option => `(
                     ${mysql.escape(id)},
                     ${mysql.escape(option.name)},
-                    ${mysql.escape(option.price)},
+                    ${mysql.escape(option.price ? option.price : 0)},
                     ${mysql.escape(option.type)}
                 )`).join(',')}
                 ON DUPLICATE KEY UPDATE
@@ -131,13 +133,17 @@ module.exports = {
                     name
                 ) VALUES
                 ${options.options
-                    .filter(option => option.values.length)
-                    .map((option, index) => option.values.map( value => `(
-                        ${mysql.escape(id)},
-                        ${mysql.escape(+optionId + index)},
-                        ${mysql.escape(value.price ? value.price : 0)},
-                        ${mysql.escape(value.name)}
-                    )`).join(',')).join(',')}
+                    .map((option, index) => {
+                        if (!option.values.length) {
+                            return false;
+                        }
+                        return option.values.map( value => `(
+                            ${mysql.escape(id)},
+                            ${mysql.escape(+optionId + index)},
+                            ${mysql.escape(value.price ? value.price : 0)},
+                            ${mysql.escape(value.name)}
+                        )`).join(',')
+                    }).filter(option => (option !== false)).join(',')}
                 ON DUPLICATE KEY UPDATE
                     \`name\`=VALUES(\`name\`);`;
 
@@ -149,14 +155,6 @@ module.exports = {
                     reject({status: 500, message: 'Unable to insert data.'});
                 } else {
                     resolve({
-                        name: options.name,
-                        description: options.description,
-                        creator: options.creator,
-                        creatorId: parseInt(options.creatorId),
-                        time: parseInt(options.time),
-                        deadline: parseInt(options.deadline),
-                        signupLimit: parseInt(options.signupLimit),
-                        image: options.image ? '/static/images/meals/' + options.image : undefined,
                         id: parseInt(id)
                     });
                 }
@@ -195,6 +193,7 @@ module.exports = {
             })
             .then(mealObj => {
                 if (!options.options.length || mealObj.ignoreOptions) {
+                    mealObj.options = options.options;
                     return Promise.resolve(mealObj);
                 }
                 return new Promise((resolve, reject) => {
@@ -217,7 +216,7 @@ module.exports = {
             .then(mealObj => {
                 if (!options.options.filter(option => option.values.length).length || mealObj.ignoreOptions) {
                     myDb.release();
-                    return Promise.resolve(mealObj);
+                    return Promise.resolve(mealObj.id);
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsValuesQuery(mealObj.firstOptionId), (err, result) => {
@@ -226,8 +225,7 @@ module.exports = {
                             log(2, 'modules/db/meal:setMealById.4', err, optionsValuesQuery);
                             reject({status: 500, message: 'Error creating meal'});
                         } else {
-                            delete mealObj.firstOptionId;
-                            resolve(mealObj);
+                            resolve(mealObj.id);
                             log(6, 'modules/db/meal:setMealById - meal created');
                         }
                     });
@@ -319,13 +317,17 @@ module.exports = {
                     name
                 ) VALUES
                 ${options.options
-                    .filter(option => option.values.length)
-                    .map((option, index) => option.values.map( value => `(
-                        ${mysql.escape(id)},
-                        ${mysql.escape(+optionId + index)},
-                        ${mysql.escape(value.price ? value.price : 0)},
-                        ${mysql.escape(value.name)}
-                    )`).join(',')).join(',')}
+                    .map((option, index) => {
+                        if (!option.values.length) {
+                            return false;
+                        }
+                        return option.values.map( value => `(
+                            ${mysql.escape(id)},
+                            ${mysql.escape(+optionId + index)},
+                            ${mysql.escape(value.price ? value.price : 0)},
+                            ${mysql.escape(value.name)}
+                        )`).join(',')
+                    }).filter(option => (option !== false)).join(',')}
                 ON DUPLICATE KEY UPDATE
                     \`name\`=VALUES(\`name\`);`;
 
@@ -339,57 +341,40 @@ module.exports = {
                         log(2, 'modules/db/meal:createMeal.2', err, query);
                         reject({status: 500, message: 'Error creating meal'});
                     } else {
-                        let mealObj = {
-                            name: options.name,
-                            description: options.description,
-                            creator: options.creator,
-                            creatorId: parseInt(options.creatorId),
-                            time: parseInt(options.time),
-                            deadline: parseInt(options.deadline),
-                            signupLimit: parseInt(options.signupLimit),
-                            image: options.image ? '/static/images/meals/' + options.image[0] + result.insertId + '.' + options.image[1] : undefined,
-                            id: result.insertId
-                        };
-                        resolve(mealObj);
+                        resolve(result.insertId);
                         log(6, 'modules/db/meal:createMeal - meal inserted');
                     }
                 });
             })
-            .then(mealObj => {
+            .then(mealId => {
                 if (!options.options.length) {
-                    return Promise.resolve(mealObj);
+                    return Promise.resolve(mealId);
                 }
                 return new Promise((resolve, reject) => {
-                    myDb.query(optionsQuery(mealObj.id), (err, result) => {
+                    myDb.query(optionsQuery(mealId), (err, result) => {
                         if (err) {
-                            log(2, 'modules/db/meal:createMeal.3', err, optionsQuery(mealObj.id));
+                            log(2, 'modules/db/meal:createMeal.3', err, optionsQuery(mealId));
                             reject({status: 500, message: 'Error creating meal'});
                         } else {
-                            mealObj.firstOptionId = result.insertId;
-                            mealObj.options = options.options.map((option, index) => {
-                                option.id = index + +result.insertId;
-                                return option;
-                            });
                             log(6, 'modules/db/meal:createMeal - options inserted');
-                            resolve(mealObj);
+                            resolve({mealId, optionId: result.insertId});
                         }
                     });
                 });
             })
-            .then(mealObj => {
+            .then(mealData => {
                 if (!options.options.filter(option => option.values.length).length) {
                     myDb.release();
-                    return Promise.resolve(mealObj);
+                    return Promise.resolve(mealData);
                 }
                 return new Promise((resolve, reject) => {
-                    myDb.query(optionsValuesQuery(mealObj.id, mealObj.firstOptionId), (err, result) => {
+                    myDb.query(optionsValuesQuery(mealData.mealId, mealData.optionId), (err, result) => {
                         myDb.release();
                         if (err) {
-                            log(2, 'modules/db/meal:createMeal.4', err, optionsValuesQuery(mealObj.id, mealObj.firstOptionId));
+                            log(2, 'modules/db/meal:createMeal.4', err, optionsValuesQuery(mealData.mealId, mealData.optionId));
                             reject({status: 500, message: 'Error creating meal'});
                         } else {
-                            delete mealObj.firstOptionId;
-                            resolve(mealObj);
+                            resolve(mealData.mealId);
                             log(6, 'modules/db/meal:createMeal - option values inserted - meal created');
                         }
                     });
@@ -420,6 +405,7 @@ module.exports = {
                 meals.signupLimit,
                 meals.image,
                 meals.price,
+                meals.locked,
                 mealOptions.id AS mealOptionsId,
                 mealOptions.name AS mealOptionsName,
                 mealOptions.type AS mealOptionsType,

@@ -45,8 +45,9 @@ let setup = [
     `CREATE TABLE IF NOT EXISTS \`users\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`name\`                varchar(150)    NOT NULL,
+        \`admin\`               int             NOT NULL    DEFAULT 0,
         \`mail\`                varchar(150)    NOT NULL,
-        \`balance\`             int                         DEFAULT 0,
+        \`balance\`             FLOAT(10, 2)    NOT NULL    DEFAULT 0,
         \`deadlineReminder\`    int                         DEFAULT 0,
         \`creationNotice\`      int                         DEFAULT 0,
 
@@ -68,10 +69,11 @@ let setup = [
         \`description\`     text,
         \`creator\`         varchar(150)    NOT NULL,
         \`creatorId\`       int             NOT NULL,
-        \`price\`           FLOAT(10, 2)                DEFAULT 0,
+        \`price\`           FLOAT(10, 2)    NOT NULL    DEFAULT 0,
         \`time\`            bigint          NOT NULL,
         \`deadline\`        bigint          NOT NULL,
         \`signupLimit\`     int,
+        \`locked\`          int                         DEFAULT 0,
         \`image\`           varchar(150),
 
         PRIMARY KEY (id)
@@ -79,7 +81,7 @@ let setup = [
     `CREATE TABLE IF NOT EXISTS \`mealOptions\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`mealId\`              int             NOT NULL,
-        \`price\`               FLOAT(10, 2)                DEFAULT 0,
+        \`price\`               FLOAT(10, 2)    NOT NULL    DEFAULT 0,
         \`name\`                varchar(150)    NOT NULL,
         \`type\`                varchar(150)    NOT NULL,
 
@@ -90,7 +92,7 @@ let setup = [
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`mealId\`              int             NOT NULL,
         \`mealOptionId\`        int             NOT NULL,
-        \`price\`               FLOAT(10, 2)                DEFAULT 0,
+        \`price\`               FLOAT(10, 2)    NOT NULL    DEFAULT 0,
         \`name\`                varchar(150)    NOT NULL,
 
         PRIMARY KEY (id),
@@ -103,6 +105,7 @@ let setup = [
         \`comment\` varchar(255)    NOT NULL,
         \`userId\`  int,
         \`paid\`    int                         DEFAULT 0,
+        \`price\`   FLOAT(10, 2)    NOT NULL    DEFAULT 0,
 
         PRIMARY KEY (id),
         UNIQUE KEY \`userId\` (\`meal\`, \`userId\`)
@@ -123,7 +126,7 @@ let setup = [
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`source\`              int             NOT NULL,
         \`target\`              int             NOT NULL,
-        \`amount\`              int             NOT NULL,
+        \`amount\`              FLOAT(10, 2)    NOT NULL,
         \`mealId\`              int             NOT NULL,
 
         PRIMARY KEY (id)

@@ -4,7 +4,7 @@ const users = (state = {}, action) => {
             return Object.assign({}, state, action.data);
         case 'SAVE_SETTINGS':
             if(action.status === "complete") {
-                return Object.assign({}, state.user, action.locally);
+                return Object.assign({}, state, action.locally);
             }
             return state;
         case 'SIGNOUT':

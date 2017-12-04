@@ -1,4 +1,5 @@
 import React from 'react';
+import sEqual from 'shallow-equals';
 import Dialog from '../Dialog.js';
 import ImageUploader from '../ImageUploader/ImageUploader.jsx';
 import MealOption from './MealOption.jsx';
@@ -57,6 +58,21 @@ export default class CreateMealDialog extends React.Component {
     this.timeHourInput = this.handleTime('time').bind(this);
     this.timeInput = this.handleDatepicker('time').bind(this);
     this.handleImage = this.handleImage.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextState.timeObject !== this.state.timeObject
+      || nextState.deadlineObject !== this.state.deadlineObject
+      || nextState.image !== this.state.image
+      || !sEqual(nextState.options, this.state.options)
+    ) {
+      return true;
+    }
+    if (!sEqual(nextProps.meals, this.props.meals)) {
+      return true;
+    }
+    return false;
   }
 
   handleInput(field) {
@@ -174,6 +190,8 @@ export default class CreateMealDialog extends React.Component {
           s = this.state,
           edit = p.edit;
     let times = Array(21).fill(0).map((item, index) => ('00' + (8 + Math.floor(index / 2)) + ':' + ((index % 2) ? '30' : '00')).slice(-5));
+
+    console.warn('render')
 
     return (
       <Dialog>

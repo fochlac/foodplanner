@@ -7,28 +7,18 @@ export default class SettingsDialog extends React.Component {
   constructor(props) {
     super();
 
-    this.state = (props.user.mail ? {
+    this.state = {
           id: props.user.id,
-          mail: props.user.mail,
+          mail: props.user.mail ? props.user.mail : '',
           name: props.user.name ? props.user.name : '',
           creationNotice_mail: props.user.creationNotice ? props.user.creationNotice : 0,
           creationNotice_notification: props.user.creationNotice_notification ? props.user.creationNotice_notification : 0,
           deadlineReminder_mail: props.user.deadlineReminder ? props.user.deadlineReminder : 0,
           deadlineReminder_notification: props.user.deadlineReminder_notification ? props.user.deadlineReminder_notification : 0
-        } : {
-          mail: '',
-          name: '',
-          creationNotice_mail: 0,
-          creationNotice_notification: 0,
-          deadlineReminder_mail: 0,
-          deadlineReminder_notification: 0
-        });
+        };
 
     this.handleCheck = this.handleCheck.bind(this);
-    this.selectSuggestion = this.selectSuggestion.bind(this);
-    this.mailInput = this.mailInput.bind(this);
-    this.handleMailInput = this.handleMailInput.bind(this);
-    this.handleTab = this.handleTab.bind(this);
+    this.mailInput = this.handleInput('mail').bind(this);
     this.nameInput = this.handleInput('name').bind(this);
   }
 
@@ -69,62 +59,6 @@ export default class SettingsDialog extends React.Component {
     this.props.close_dialog();
   }
 
-  selectSuggestion() {
-    clearTimeout(this.hideTimeout);
-    clearTimeout(this.showTimeout);
-    this.timeout = false;
-    this.setState(Object.assign({}, this.state, this.props.app.mailSuggestion, {allowUpdate: true, creationNotice_mail: this.props.app.mailSuggestion.creationNotice, deadlineReminder_mail: this.props.app.mailSuggestion.deadlineReminder}), this.props.select_suggestion.bind(this, null));
-  }
-
-  handleTab(evt) {
-    if (evt.keyCode === 9 && this.props.app.mailSuggestion) {
-      this.selectSuggestion();
-      evt.preventDefault();
-      evt.stopPropagation();
-    }
-  }
-
-  handleMailInput(evt) {
-    const value = evt.target.value;
-    this.setState({
-      'mail': value,
-      'id': undefined
-    }, () => {
-      if (this.props.app.mailSuggestion && value === this.props.app.mailSuggestion.mail) {
-        this.selectSuggestion();
-      } else if (value.length > 4 && !this.timeout) {
-        this.timeout = value;
-
-        // check mail and block for 300ms
-        this.showTimeout = setTimeout(() => {
-          // check if mail changed during timeout; if so, recheck
-          if (this.state.mail !== this.timeout) {
-            // clear blocker
-            this.timeout = false;
-            this.handleMailInput({target: {value: this.state.mail}});
-          } else {
-            // clear blocker
-            this.timeout = false;
-          }
-        }, 300);
-
-        // hide suggestion after 3s
-        clearTimeout(this.hideTimeout);
-        this.hideTimeout = setTimeout(() => {
-          this.props.hide_mail_suggestion();
-        }, 4000);
-
-        this.props.check_mail(value);
-      } else {
-        this.storedEmail = value;
-      }
-    });
-  }
-
-  mailInput() {
-    return this.handleMailInput;
-  }
-
   handleInput(field) {
     return (evt) => {
       this.setState({
@@ -142,9 +76,9 @@ export default class SettingsDialog extends React.Component {
   }
 
   render() {
-    const suggestion = (this.props.app.mailSuggestion ? this.props.app.mailSuggestion.mail : false),
-          s = this.state,
+    const s = this.state,
           notificationsBlocked = Notification.permission === 'denied';
+
     return (
       <Dialog className="settingsDialog">
         <div className="titlebar">
@@ -152,18 +86,17 @@ export default class SettingsDialog extends React.Component {
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
         <div className="body">
-          <div className="mailFrame">
-            <label htmlFor="SettingsDialog_mail">E-Mail<span className="fa fa-info-circle" title="Um bestehende Einstellungen zu laden,&#13;&#10;geben Sie Ihre E-Mail-Addresse ein&#13;&#10;und wählen Sie den Vorschlag mit Tab aus."></span></label>
-            <div className="row">
-              <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput()} onKeyDown={this.handleTab} autoComplete="off" />
-              <span className={'fa fa-lg fa-fw fa-spin fa-spinner' + (this.props.app.hiddenBusy ? '' : ' invisible')}></span>
+          {
+            this.props.user.id
+            ? <div className="mailFrame">
+              <label htmlFor="SettingsDialog_mail">E-Mail<span className="fa fa-info-circle" title="Um bestehende Einstellungen zu laden,&#13;&#10;geben Sie Ihre E-Mail-Addresse ein&#13;&#10;und wählen Sie den Vorschlag mit Tab aus."></span></label>
+              <div className="row">
+                <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput} autoComplete="off" />
+                <span className={'fa fa-lg fa-fw fa-spin fa-spinner' + (this.props.app.hiddenBusy ? '' : ' invisible')}></span>
+              </div>
             </div>
-            {
-              suggestion
-              ? <span className="mailSuggestion" onClick={this.selectSuggestion}>Mit Tab auswählen:<br/>{suggestion}</span>
-              : null
-            }
-          </div>
+            : null
+          }
           <div>
             <label htmlFor="SettingsDialog_name">Name</label>
             <input type="text" id="SettingsDialog_name" value={s.name} onChange={this.nameInput}/>
@@ -180,7 +113,11 @@ export default class SettingsDialog extends React.Component {
             <tbody>
               <tr>
                 <td>Neues Angebot</td>
-                <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice_mail}/></td>
+                {
+                  !this.props.user.id
+                  ? <td><input type="checkbox" disabled="disabled" title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
+                  : <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice_mail}/></td>
+                }
                 {
                   notificationsBlocked
                   ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
@@ -189,7 +126,11 @@ export default class SettingsDialog extends React.Component {
               </tr>
               <tr>
                 <td>Anmeldungs&shy;frist läuft ab</td>
-                <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder_mail}/></td>
+                {
+                  !this.props.user.id
+                  ? <td><input type="checkbox" disabled="disabled" title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
+                  : <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder_mail}/></td>
+                }
                 {
                   notificationsBlocked
                   ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>

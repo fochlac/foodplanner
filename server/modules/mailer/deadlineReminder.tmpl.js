@@ -1,7 +1,7 @@
 const microMeal = require('./microMeal.tmpl.js');
 
 module.exports = (user, meal) => ({
-  from: 'Essensplaner <food@fochlac.com>',
+  from: 'Essensplaner',
   to: `${user.name} <${user.mail}>`,
   subject: `Erinnerung: Anmeldefrist für ${meal.name} läuft ab!`,
   html: `<h3>Hallo ${user.name}</h3>

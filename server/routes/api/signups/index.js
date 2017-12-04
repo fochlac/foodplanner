@@ -6,11 +6,22 @@ const	signups	    = require('express').Router()
     ,   log         = require(process.env.FOOD_HOME + 'modules/log');
 
 
-signups.get('/:id/pay', error.router.validate('params', {
+signups.post('/:id/paid', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    paymentDB.payForSignup(req.params.id).then((signup) => {
-        res.status(200).send(signup);
+    signupsDB.setSignupPaymentStatusById(req.params.id, true)
+    .then((signup) => {
+        res.status(200).send({success: true});
+    })
+    .catch(error.router.internalError(res));
+});
+
+signups.delete('/:id/paid', error.router.validate('params', {
+    id: /^[0-9]*$/
+}), (req, res) => {
+    signupsDB.setSignupPaymentStatusById(req.params.id, false)
+    .then((signup) => {
+        res.status(200).send({success: true});
     })
     .catch(error.router.internalError(res));
 });

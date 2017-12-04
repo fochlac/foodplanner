@@ -13,8 +13,30 @@ const second = 1000,
 let schedule = {};
 
 const mealDeadline = (meal) => () => {
+	log(5, 'deadline reminder for meal ' + meal.name + 'triggered.');
 	mail.sendDeadlineReminder(meal);
-	// trigger push
+
+	// trigger autopay if prices are finalized
+
+	mealDb.getMealById(meal.if)
+		.then(meal => {
+			if (meal.locked) {
+				return meal.id;
+			} else {
+				return Promise.reject('meal not locked yet')
+			}
+		})
+		.then(id => paymentDB.getEligibleSignups(id))
+        .then((eligibleSignups) => Promise.all(
+            eligibleSignups.map(
+                result => paymentDB.payForSignup(result.id)
+                    .then(res => Promise.resolve({error: false, data: res}),
+                        err => Promise.resolve({error: true, data: err})
+                    )
+            )
+        ))
+        .then(results => log(6, results.filter(res => !res.error).length + ' payments of ' + results.length + ' possible payments failed.'))
+        .catch(error.promise(4, 'unable to trigger autopayment'));
 }
 
 module.exports = {

@@ -19,7 +19,7 @@ export default class ConfirmationDialog extends React.Component {
 
   render() {
     return (
-      <Dialog>
+      <Dialog closeOnBackdrop={true}>
         <div className="titlebar">
           <h3>{this.props.title ? this.props.title : 'Bestätigung'}</h3>
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>

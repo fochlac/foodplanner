@@ -6,6 +6,23 @@
     border: solid 1px @colorg3;
     border-radius: @borderRadius;
 
+    .moneyFrame {
+        margin-left: 5px;
+        font-style: italic;
+        font-size: 0.9em;
+        color: @colorg1;
+
+        .money {
+            position: relative;
+            top: -1px;
+        }
+
+        &:before {
+            content: '-';
+            margin-right: 5px;
+        }
+    }
+
     .titlebar {
         padding: 5px 10px;
         margin-bottom: 10px;

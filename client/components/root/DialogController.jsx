@@ -40,6 +40,9 @@ export default class DialogController extends React.Component {
                 return <CreateMealDialog type="edit" id={d.option.meal}/>;
 
             case 'EDIT_PRICE':
+                if (d.option.locked) {
+                    return <PriceDialog id={d.option.meal}/>;
+                }
                 return <PriceDialog id={d.option.meal}/>;
 
             case 'SUBSCRIBE':

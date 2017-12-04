@@ -71,13 +71,13 @@ export default class CreateMealDialog extends React.Component {
       let opt = p.meal.options.find(opt => opt.id === option.id);
       switch(opt.type) {
         case 'select':
-          calculatedPrice += opt.values.find(val => val.name === option.value).price;
+          calculatedPrice += +opt.values.find(val => val.name === option.value).price;
           break;
         case 'count':
-          calculatedPrice += opt.values.find(val => val.name === option.value).price * option.count;
+          calculatedPrice += +opt.values.find(val => val.name === option.value).price * option.count;
           break;
         case 'toggle':
-          calculatedPrice += option.show ? opt.price : 0;
+          calculatedPrice += option.show ? +opt.price : 0;
           break;
       }
     })

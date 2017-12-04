@@ -19,6 +19,7 @@ function flattenResults(result) {
                 comment: row.comment,
                 meal: row.meal,
                 paid: row.paid,
+                price: row.price,
                 userId: row.userId,
                 options: (row.signupOptionsId !== null) ? [{
                     id: row.signupOptionsId,
@@ -60,6 +61,21 @@ module.exports = {
                 if (err) {
                     log(2, 'modules/db/signup:getSignupByProperty', err);
                     reject({status: 500, message: 'Unable to find signup.'});
+                } else {
+                    resolve(result);
+                }
+            }));
+        });
+    },
+
+    setSignupPaymentStatusById: (id, state) => {
+        return getConnection()
+        .then (myDb => {
+            return new Promise((resolve, reject) => myDb.query(`UPDATE signups SET paid = ${mysql.escape(state ? 1 : 0)} where id = ${mysql.escape(id)}`, (err, result) => {
+                myDb.release();
+                if (err) {
+                    log(2, 'modules/db/signup:setSignupPaymentStatusById', err);
+                    reject({status: 500, message: 'Unable to set signup ' + id + ' to paid.'});
                 } else {
                     resolve(result);
                 }
@@ -268,6 +284,7 @@ module.exports = {
                 signups.id,
                 signups.name,
                 signups.paid,
+                signups.price,
                 signups.userId,
                 signups.meal,
                 signups.comment,

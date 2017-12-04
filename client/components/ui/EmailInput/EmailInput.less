@@ -1,42 +1,23 @@
 @import '../../root/variables.less';
 
-.dialog.settingsDialog {
-    flex-basis: 500px;
+.mailFrame {
+    position: relative;
+    margin-bottom: 5px;
 
-    h4 {
-        margin-top: 10px;
-    }
-
-    .row {
-        margin-bottom: 10px;
-    }
-    .notificationMatrix {
-        width: 100%;
-        margin-top: 5px;
-    }
-    th, td {
-        padding: 0 5px 5px;
-        &:nth-child(n + 2) {
-            text-align: center;
-        }
-    }
-
-    #SettingsDialog_mail {
-        margin-right: 2px;
-    }
     .fa-spinner {
         position: absolute;
         right: 5px;
+        top: calc(50% ~"-" 10px);
     }
 
     .mailSuggestion {
         position: absolute;
         display: block;
         padding: 5px;
-        background: #074d0e;
+        background: @colorg4;
         z-index: 1;
-        top: 55px;
-        color: #ebf1e3;
+        top: 35px;
+        color: @colorg5;
         font-weight: 600;
         cursor: pointer;
         box-shadow: @tinyShadowDown;
@@ -49,14 +30,12 @@
             height: 0;
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
-            border-bottom: 11px solid #074d0e;
+            border-bottom: 11px solid @colorg4;
             top: -6px;
             left: calc(50% ~"-" 11px);
         }
     }
-    .mailFrame {
-        position: relative;
-    }
+
     .fa-info-circle {
         font-size: 16px;
         width: 0px;

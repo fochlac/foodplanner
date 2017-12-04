@@ -1,4 +1,6 @@
 import React from 'react';
+import sEqual from 'shallow-equals';
+import dEqual from 'deep-equals';
 import { Link } from 'react-router-dom';
 import { formatDate, formatDateTime, formatTime, formatTimeShort, formatDayNameDate } from '../../scripts/date.js';
 import './Meal.less';
@@ -20,6 +22,26 @@ export default class Meal extends React.Component {
 
     this.edit = props.start_meal_edit.bind(this);
     this.cancel = props.meal_cancel.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if ( nextState.editable !== this.state.editable ) {
+      return true;
+    }
+    if (
+      !dEqual(nextProps.meal, this.props.meal)
+      || !dEqual(nextProps.signups, this.props.signups)
+      || !dEqual(nextProps.user, this.props.user)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.meal.deadline !== prevProps.meal.deadline) {
+      this.checkDeadline()
+    }
   }
 
   componentDidMount() {
@@ -81,7 +103,7 @@ export default class Meal extends React.Component {
           <h4 className="title">{formatDayNameDate(p.meal.time)}: {p.meal.name}</h4>
           {
             (p.user.id === p.meal.creatorId)
-            ? <span>
+            ? <span className="noWrap">
               <span className="fa fa-lg menuIcon fa-euro pointer" onClick={this.editPrices}></span>
               <span className="fa fa-lg menuIcon fa-pencil pointer" onClick={this.editMeal}></span>
               <span onClick={this.cancelMeal} className="fa fa-lg menuIcon fa-trash pointer"></span>
@@ -119,6 +141,11 @@ export default class Meal extends React.Component {
                   <li key={signup.id}>
                     <p className="user">
                       <span>{signup.name}</span>
+                      {
+                        signup.price
+                        ? <span className="moneyFrame"><span className="money">{signup.price}</span><span className="moneySymbol">€</span></span>
+                        : null
+                      }
                       {
                         s.editable && (p.user.id === p.meal.creatorId || p.user.id === signup.userId)
                         ? <span className="icons">

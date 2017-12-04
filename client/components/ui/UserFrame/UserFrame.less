@@ -1,0 +1,69 @@
+@import '../../root/variables.less';
+
+.userFrame {
+    position: fixed;
+    left: calc(50vw ~"+" @dashboardWidth / 2 ~"+" 30px);
+    border: solid 1px @colorg1;
+    padding: 10px;
+    border-radius: @borderRadius;
+    top: calc(10px ~"+" 2em ~"+" 27px ~"+" @topBarHeight);
+
+    .userName {
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .balance {
+        margin-bottom: 5px;
+    }
+
+    .moneySymbol {
+        margin: 0 5px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    &.register {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        max-width: 200px;
+        margin-left: 0px;
+        margin-bottom: calc(-2em ~"-" 17px);
+
+        input {
+            padding: 5px;
+            display: block;
+            margin-bottom: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-bottom: 5px;
+        }
+    }
+}
+@media all and (max-width: 1400px) {
+    .userFrame {
+        position: initial;
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+
+        .userDescription,
+        .userName{
+            display: inline-block;
+            margin-right: 5px;
+        }
+    }
+}
+
+@media all and (max-width: 600px) {
+    .userFrame.register {
+        max-width: 100%;
+        margin-left: 0px;
+        margin-bottom: 5px;
+    }
+}

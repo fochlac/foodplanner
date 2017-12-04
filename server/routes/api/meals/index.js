@@ -9,11 +9,31 @@ const   meals           = require('express').Router()
     ,   fs              = require('fs')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log');
 
-
-meals.get('/:id/payment', error.router.validate('params', {
+meals.post('/:id/lock', error.router.validate('params', {
     id: /^[0-9]*$/
+}), error.router.validate('body', {
+    prices: 'array'
 }), (req, res) => {
-    paymentDB.getEligibleSignups(req.params.id)
+    let errorElem,
+        valid = !req.body.prices.some((price) => {
+            if (!(
+                ['meals', 'mealOptions', 'mealOptionValues'].includes(price.db)
+                && /^[0-9]*$/.test(price.id)
+                && /^[0-9.]*$/.test(price.price)
+            )) {
+                errorElem = price;
+                return true;
+            }
+            return false;
+        });
+
+    if (!valid) {
+        log(4, 'PriceArray not valid.');
+        return res.status(400).send({msg: 'Options not valid.', type: 'Invalid_Request', data: [JSON.stringify(errorElem)]});
+    }
+    paymentDB.setPrices(req.body.prices)
+        .then(() => paymentDB.lockMealPrices(req.params.id))
+        .then(() => paymentDB.getEligibleSignups(req.params.id))
         .then((eligibleSignups) => Promise.all(
             eligibleSignups.map(
                 result => paymentDB.payForSignup(result.id)
@@ -22,7 +42,7 @@ meals.get('/:id/payment', error.router.validate('params', {
                     )
             )
         ))
-        .then(results => log(6, results.filter(res => !res.error).length + ' payments of ' + results.length + ' failed.'))
+        .then(results => log(6, results.filter(res => res.error).length + ' payments of ' + results.length + ' possible payments failed.'))
         .then(() => paymentDB.getPricesByMeal(req.params.id))
         .then(result => {
             res.status(200).send(result);
@@ -117,7 +137,9 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
         delete mealData.image;
     }
 
-    mealsDB.setMealById(req.params.id, mealData).then((meal) => {
+    mealsDB.setMealById(req.params.id, mealData)
+        .then(id => mealsDB.getMealById(id))
+        .then((meal) => {
         scheduler.rescheduleMeal(meal);
         if (req.file) {
             fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
@@ -207,7 +229,9 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
         delete mealData.image;
     }
 
-    mealsDB.createMeal(mealData).then((meal) => {
+    mealsDB.createMeal(mealData)
+        .then(id => mealsDB.getMealById(id))
+        .then((meal) => {
         mail.sendCreationNotice(meal);
         scheduler.scheduleMeal(meal);
         notification.sendCreationNotice(meal);

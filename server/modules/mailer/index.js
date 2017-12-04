@@ -20,7 +20,7 @@ const	gmail 				= require('gmail-send')({ user: 'ep.mittagsplaner@gmail.com', pa
                 	}
                 	mail.cb(err);
                 });
-                if (!mail.length) {
+                if (!stash.length) {
                 	clearInterval(stashTimer);
                 }
             }, 1000);
@@ -40,8 +40,7 @@ module.exports = {
 		userDb.getUsersByProperty('creationNotice', 1)
 			.then((data) => {
 				if (data.length) {
-					data.filter(user => (meal.name.includes('test') && user.name.includes('Florian') || !meal.name.includes('test')))
-						.forEach(user => mail(creationNotice(user, meal), error.checkError(3, 'Error sending creation notice.'), user.name, 'creationNotice'));
+					data.forEach(user => mail(creationNotice(user, meal), error.checkError(3, 'Error sending creation notice.'), user.name, 'creationNotice'));
 				}
 			}).catch(error.promise(4, 'error sending creation mails'));
 	},

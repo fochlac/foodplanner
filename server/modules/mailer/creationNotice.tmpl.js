@@ -2,7 +2,7 @@ const microMeal = require('./microMeal.tmpl.js');
 const picoMeal = require('./picoMeal.tmpl.js');
 
 module.exports = (user, meal) => ({
-  from: 'Essensplaner <food@fochlac.com>',
+  from: 'Essensplaner',
   to:  `${user.name} <${user.mail}>`,
   subject: `Neues Angebot: ${meal.name} von ${meal.creator}`,
   html: `<style>p {margin: 3px 0;}h3,h4{margin: 5px 0 7px; flex-direction: column;}</style>
