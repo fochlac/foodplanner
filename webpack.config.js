@@ -19,6 +19,10 @@ module.exports = {
     module: {
         loaders: [
             {
+                test: /.*(deep-equals|shallow-equals).*\.js$/,
+                loader: 'babel-loader'
+            },
+            {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/
