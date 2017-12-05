@@ -27,7 +27,7 @@ export default class Prices extends React.Component {
             <td><b>{option.name}:</b></td>
             <td>
               <div className="row">
-                <input type="number" step="0.1" defaultValue={option.price ? option.price : 0} onChange={this.handlePrice('mealOptions', option.id)} />
+                <input type="number" step="0.1" defaultValue={option.price ? option.price.toFixed(2) : 0} onChange={this.handlePrice('mealOptions', option.id)} />
                 <span className="moneySymbol">€</span>
               </div>
             </td>
@@ -39,7 +39,7 @@ export default class Prices extends React.Component {
           <td>{option.name}:</td>
           <td>
             <div className="row">
-              <input type="number" step="0.1" defaultValue={option.price ? option.price : 0} onChange={this.handlePrice('mealOptionValues', option.id)} />
+              <input type="number" step="0.1" defaultValue={option.price ? option.price.toFixed(2) : 0} onChange={this.handlePrice('mealOptionValues', option.id)} />
               <span className="moneySymbol">€</span>
             </div>
           </td>
@@ -72,7 +72,7 @@ export default class Prices extends React.Component {
               <td><b>Basispreis:</b></td>
               <td>
                 <div className="row">
-                  <input type="number" step="0.1" id="PriceDialog_meal" defaultValue={m.price ? m.price : 0} onChange={this.handlePrice('meals', m.id)} />
+                  <input type="number" step="0.1" id="PriceDialog_meal" defaultValue={m.price ? m.price.toFixed(2) : 0} onChange={this.handlePrice('meals', m.id)} />
                   <span className="moneySymbol">€</span>
                 </div>
               </td>
