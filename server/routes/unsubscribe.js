@@ -6,9 +6,9 @@ unsubscribe.use('/', (req, res, next) => {
     let promise;
 
     if (req.query.list) {
-        promise = userDB.setMailPropertyById(req.query.id, req.query.list, 0);
+        promise = userDB.setUserPropertyById(req.query.id, req.query.list, 0);
     } else {
-        promise = Promise.all(['deadlineReminder', 'creationNotice'].map(list => userDB.setMailPropertyById(req.query.id, list, 0)));
+        promise = Promise.all(['deadlineReminder', 'creationNotice'].map(list => userDB.setUserPropertyById(req.query.id, list, 0)));
     }
 
     promise.then(() => next()).catch(error.router.internalError(res));
