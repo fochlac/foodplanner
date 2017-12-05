@@ -128,7 +128,7 @@ export default class CreateMealDialog extends React.Component {
           } setOption={this.setOption(option.id)} />
           })}
           <div className="estimated_price" title="Der Preis wurde noch nicht finalisiert und kann sich jederzeig ändern.">
-            <span className="push-right">Vorläufiger Preis: {calculatedPrice ? calculatedPrice : 'unbekannt'} €</span>
+            <span className="push-right">Vorläufiger Preis: {calculatedPrice ? calculatedPrice.toFixed(2) : 'unbekannt'} €</span>
           </div>
           <div>
             <label htmlFor="SignUpDialog_comment">Kommentar</label>

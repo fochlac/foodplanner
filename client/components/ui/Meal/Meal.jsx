@@ -143,7 +143,7 @@ export default class Meal extends React.Component {
                       <span>{signup.name}</span>
                       {
                         signup.price
-                        ? <span className="moneyFrame"><span className="money">{signup.price}</span><span className="moneySymbol">€</span></span>
+                        ? <span className="moneyFrame"><span className="money">{signup.price.toFixed(2)}</span><span className="moneySymbol">€</span></span>
                         : null
                       }
                       {

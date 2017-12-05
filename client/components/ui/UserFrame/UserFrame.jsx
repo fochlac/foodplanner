@@ -68,7 +68,7 @@ export default class UserFrame extends React.Component {
                         u.admin ? <div className="role">Administrator</div> : null
                     }
                 </span>
-                <div className="balance"><span>Guthaben: </span><b>{u.balance ? u.balance : 0.00}</b><span className="moneySymbol">€</span></div>
+                <div className="balance"><span>Guthaben: </span><b>{u.balance ? u.balance.toFixed(2) : 0.00}</b><span className="moneySymbol">€</span></div>
                 <div className="fakeLink" onClick={this.props.show_transaction_history.bind(this, u.id)}>Kontoauszug</div>
                 <div className="fakeLink userManagementLink" onClick={this.props.start_send_money.bind(this)}>Geld senden</div>
             </div>
