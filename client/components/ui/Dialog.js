@@ -4,7 +4,10 @@ import Dialog from './Dialog/Dialog.jsx';
 import { close_dialog } from '../actions.js';
 
 const mapStateToProps = (state, ownProps) => {
-    return ownProps;
+    return {
+        ...ownProps,
+        app: state.app
+    };
 };
 
 export default connect(mapStateToProps, { close_dialog })(Dialog);

@@ -2,9 +2,6 @@ const app = (state = {}, action) => {
     switch (action.type) {
         case 'DIALOG':
             return {...state, dialog: {type: action.content, option: action.option}};
-        case 'HIDE_MAIL_SUGGESTION':
-        case 'SELECT_MAIL':
-            return {...state, mailSuggestion: undefined};
         case 'CHECK_MAIL':
             if (action.status === 'complete' && !action.data.error) {
                 return {...state, mailSuggestion: action.data};
@@ -12,11 +9,21 @@ const app = (state = {}, action) => {
                 return {...state, mailSuggestion: undefined};
             }
             return state;
+
+        case 'SEND_MONEY':
+            if (action.status === 'complete' && !action.data.error) {
+                return {...state, mailSuggestion: undefined, dialog: {type: ""}};
+            }
+            return state;
+
         case 'SAVE_SETTINGS':
+            return {...state, mailSuggestion: undefined, dialog: {type: ""}};
+
         case 'MEAL_SIGNUP':
         case 'MEAL_EDIT':
         case 'CREATE_MEAL':
         case 'CANCEL_MEAL':
+        case 'SUBMIT_PRICES':
         case 'EDIT_MEAL':
             if (action.status === 'complete') {
                 return {...state, dialog: {type: ""}};

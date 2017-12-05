@@ -8,7 +8,7 @@ export default class Dialog extends React.Component {
     }
 
     closeDialog(evt) {
-        if (evt.target.classList.contains('dialogBackground')) {
+        if (evt.target.classList.contains('dialogBackground') && this.props.closeOnBackdrop) {
             this.props.close_dialog();
         }
     }

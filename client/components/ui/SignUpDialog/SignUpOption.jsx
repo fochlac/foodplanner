@@ -30,7 +30,7 @@ export default class SignUpOption extends React.Component {
               : null
             }
             <select onChange={this.setOption('value')} defaultValue={val.value} className="optionSelect">
-              {opt.values.map(value => <option key={value} value={value}>{value}</option>)}
+              {opt.values.map(value => <option key={value.name} value={value.name}>{value.name}</option>)}
             </select>
           </div>
           : <div className="row yesNo">
@@ -40,7 +40,7 @@ export default class SignUpOption extends React.Component {
             </div>
             <div className="row">
               <label className="radioLabel" htmlFor={'SignUpDialog_Option_yes_' + opt.id}>Nein</label>
-              <input type="radio" name={'SignUpDialog_Option_' + opt.id} id={'SignUpDialog_Option_no_' + opt.id} onChange={this.setOption('show')} value={0} defaultChecked={val.show === false}/>
+              <input type="radio" name={'SignUpDialog_Option_' + opt.id} id={'SignUpDialog_Option_no_' + opt.id} onChange={this.setOption('show')} value={0} defaultChecked={!val.show}/>
             </div>
           </div>
         }

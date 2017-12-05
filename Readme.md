@@ -2,6 +2,9 @@
 
 Small food planning tool
 
+component structure:
+![ComponentStructure](https://raw.githubusercontent.com/ep-friedel/foodplanner/develop/componentschema.svg "Map of the components")
+
 # Full Installation Using Install Script
 
 First clone the repo. Then go to the folder 'buildScripts' and adjust the 'variables' file according to your preferences.

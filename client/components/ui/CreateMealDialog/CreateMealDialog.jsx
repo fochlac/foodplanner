@@ -1,4 +1,5 @@
 import React from 'react';
+import sEqual from 'shallow-equals';
 import Dialog from '../Dialog.js';
 import ImageUploader from '../ImageUploader/ImageUploader.jsx';
 import MealOption from './MealOption.jsx';
@@ -57,6 +58,21 @@ export default class CreateMealDialog extends React.Component {
     this.timeHourInput = this.handleTime('time').bind(this);
     this.timeInput = this.handleDatepicker('time').bind(this);
     this.handleImage = this.handleImage.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextState.timeObject !== this.state.timeObject
+      || nextState.deadlineObject !== this.state.deadlineObject
+      || nextState.image !== this.state.image
+      || !sEqual(nextState.options, this.state.options)
+    ) {
+      return true;
+    }
+    if (!sEqual(nextProps.meals, this.props.meals)) {
+      return true;
+    }
+    return false;
   }
 
   handleInput(field) {
@@ -160,20 +176,22 @@ export default class CreateMealDialog extends React.Component {
   }
 
   selectOptions(evt) {
-    const options = this.props.meals[evt.target.value].options.map(option => {
-      let newOptions = Object.assign({}, option);
-      newOptions.values = [].concat(option.values);
-      return newOptions;
-    });
+    if (evt.target.value != -1) {
+      const options = this.props.meals.find(meal => meal.id == evt.target.value).options.map(option => {
+        let newOptions = Object.assign({}, option);
+        newOptions.values = [].concat(option.values);
+        return newOptions;
+      });
 
-    this.setState({options});
+      this.setState({options});
+    }
   }
 
   render() {
     const p = this.props,
           s = this.state,
           edit = p.edit;
-    let times = Array(21).fill(0).map((item, index) => ('00' + (8 + Math.floor(index / 2)) + ':' + ((index % 2) ? '30' : '00')).slice(-5));
+    let times = Array(48).fill(0).map((item, index) => ('00' + (Math.floor(index / 2)) + ':' + ((index % 2) ? '30' : '00')).slice(-5));
 
     return (
       <Dialog>
@@ -209,7 +227,7 @@ export default class CreateMealDialog extends React.Component {
             <label htmlFor="SignUpDialog_deadline">Anmeldeschluss</label>
             <div className="row">
               <DayPickerInput
-                value={s.deadlineObject.getDate() + '.' + (s.deadlineObject.getMonth() + 1) + '.' + s.deadlineObject.getFullYear().toString().slice(-2)}
+                value={formatDate(s.deadlineObject)}
                 format="DD.MM.YY"
                 onDayChange={this.deadlineInput}
               />
@@ -222,7 +240,7 @@ export default class CreateMealDialog extends React.Component {
             <label htmlFor="SignUpDialog_time">Lieferzeitpunkt</label>
             <div className="row">
               <DayPickerInput
-                value={s.timeObject.getDate() + '.' + (s.timeObject.getMonth() + 1) + '.' + s.timeObject.getFullYear().toString().slice(-2)}
+                value={formatDate(s.timeObject)}
                 format="DD.MM.YY"
                 onDayChange={this.timeInput}
               />
@@ -239,9 +257,9 @@ export default class CreateMealDialog extends React.Component {
               {
                 (!s.options.length)
                 ? <select className="push-right templateSelector" onChange={this.selectOptions.bind(this)}>
-                  <option value="">Optionen laden</option>
+                  <option value="-1">Optionen laden</option>
                   {
-                    p.meals.map((meal, index) => <option value={index} key={meal.id}>{meal.name}</option>)
+                    p.meals.filter(meal => meal.options.length).map((meal) => <option value={meal.id} key={meal.id}>{meal.name}</option>)
                   }
                 </select>
                 : null

@@ -21,12 +21,12 @@ export default class MealOption extends React.Component {
       return;
     }
     this.setState({addValue: ''});
-    if (this.props.option.values.includes(this.state.addValue)) {
+    if (this.props.option.values.map(value => value.name).includes(this.state.addValue)) {
       return;
     }
     this.props.setOption({
       ...this.props.option,
-      values: [...this.props.option.values, this.state.addValue]
+      values: [...this.props.option.values, {name: this.state.addValue}]
     });
   }
 
@@ -81,7 +81,7 @@ export default class MealOption extends React.Component {
         ? <div>
           <ul className="valueCloud">
             {
-              opt.values.map((val, ind) => <li key={ind}>{val} {editable ? <span className="fa fa-times pointer" onClick={() => this.deleteValue(ind)}></span> : null}</li>)
+              opt.values.map((val, ind) => <li key={ind}>{val.name} {editable ? <span className="fa fa-times pointer" onClick={() => this.deleteValue(ind)}></span> : null}</li>)
             }
           </ul>
           <div>

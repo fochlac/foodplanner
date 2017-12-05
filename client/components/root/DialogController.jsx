@@ -3,7 +3,10 @@ import SignUpDialog from '../ui/SignUpDialog.js';
 import CreateMealDialog from '../ui/CreateMealDialog.js';
 import ConfirmationDialog from '../ui/ConfirmationDialog.js';
 import SettingsDialog from '../ui/SettingsDialog.js';
+import PriceDialog from '../ui/PriceDialog.js';
+import TransactionDialog from '../ui/TransactionDialog.js';
 import ImpressumDialog from '../ui/ImpressumDialog.js';
+import SendMoneyDialog from '../ui/SendMoneyDialog.js';
 
 export default class DialogController extends React.Component {
     constructor(props) {
@@ -38,8 +41,17 @@ export default class DialogController extends React.Component {
             case 'EDIT_MEAL':
                 return <CreateMealDialog type="edit" id={d.option.meal}/>;
 
+            case 'SEND_MONEY':
+                return <SendMoneyDialog />;
+
+            case 'EDIT_PRICE':
+                return <PriceDialog id={d.option.meal}/>;
+
             case 'SUBSCRIBE':
                 return <SettingsDialog predef={params}/>;
+
+            case 'OPEN_TRANSACTIONS':
+                return <TransactionDialog predef={params}/>;
 
             case 'UNSUBSCRIBE':
                 if (params.list) {

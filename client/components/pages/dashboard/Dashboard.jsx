@@ -1,5 +1,6 @@
 import React from 'react';
 import Meal from '../../ui/Meal.js';
+import UserFrame from '../../ui/UserFrame.js';
 import './Dashboard.less';
 
 
@@ -39,6 +40,7 @@ export default class Login extends React.Component {
                     </div>
                     : null
                 }
+                <UserFrame />
                 <div className="filters">
                     <ul className="filterList">
                         {
