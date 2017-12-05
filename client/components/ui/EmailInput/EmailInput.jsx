@@ -6,7 +6,8 @@ export default class EmailInput extends React.Component {
     super();
 
     this.state = {
-          mail: ''
+          mail: '',
+          id: props.id ? props.id : 'email_input_' + Date.now()
         };
 
     this.handleMailInput = this.handleMailInput.bind(this);
@@ -22,7 +23,7 @@ export default class EmailInput extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.app.mailSuggestion && nextProps.app.mailSuggestion !== this.props.app.mailSuggestion) {
       this.setState({mail: nextProps.app.mailSuggestion.mail});
-      document.getElementById('login_mail').blur();
+      document.getElementById(this.state.id).blur();
     }
   }
 
@@ -58,7 +59,7 @@ export default class EmailInput extends React.Component {
     return (
       <div className="mailFrame">
         <div className="row">
-          <input type="text" id="login_mail" value={s.mail} onChange={this.handleMailInput} autoComplete="off" placeholder="E-Mail" />
+          <input type="text" id={this.state.id} value={s.mail} onChange={this.handleMailInput} autoComplete="off" placeholder="E-Mail" />
           <span className={'fa fa-lg fa-fw fa-spin fa-spinner' + (this.props.app.hiddenBusy ? '' : ' invisible')}></span>
         </div>
       </div>

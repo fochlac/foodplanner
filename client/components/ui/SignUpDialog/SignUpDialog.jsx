@@ -13,7 +13,8 @@ export default class CreateMealDialog extends React.Component {
       paid: 0,
       options: props.meal.options.map(option => ({
           id: option.id,
-          value: option.values[0] ? option.values[0].name : null
+          value: option.values[0] ? option.values[0].name : null,
+          show: (option.type === 'toggle') ? 0 : undefined
         })),
       comment: ''
     }

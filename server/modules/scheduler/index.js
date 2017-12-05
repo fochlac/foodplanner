@@ -1,6 +1,7 @@
 const 	scheduler 	= require('node-schedule')
 	,	mail 		= require(process.env.FOOD_HOME + 'modules/mailer')
 	,	mealDb 		= require(process.env.FOOD_HOME + 'modules/db/meals')
+	,	paymentDb 	= require(process.env.FOOD_HOME + 'modules/db/payment')
     ,   log         = require(process.env.FOOD_HOME + 'modules/log')
     ,   error       = require(process.env.FOOD_HOME + 'modules/error');
 
@@ -13,12 +14,12 @@ const second = 1000,
 let schedule = {};
 
 const mealDeadline = (meal) => () => {
-	log(5, 'deadline reminder for meal ' + meal.name + 'triggered.');
+	log(5, 'deadline reminder for meal ' + meal.name + ' triggered.');
 	mail.sendDeadlineReminder(meal);
 
 	// trigger autopay if prices are finalized
 
-	mealDb.getMealById(meal.if)
+	mealDb.getMealById(meal.id)
 		.then(meal => {
 			if (meal.locked) {
 				return meal.id;
@@ -26,10 +27,10 @@ const mealDeadline = (meal) => () => {
 				return Promise.reject('meal not locked yet')
 			}
 		})
-		.then(id => paymentDB.getEligibleSignups(id))
+		.then(id => paymentDb.getEligibleSignups(id))
         .then((eligibleSignups) => Promise.all(
             eligibleSignups.map(
-                result => paymentDB.payForSignup(result.id)
+                result => paymentDb.payForSignup(result.id)
                     .then(res => Promise.resolve({error: false, data: res}),
                         err => Promise.resolve({error: true, data: err})
                     )
@@ -41,13 +42,14 @@ const mealDeadline = (meal) => () => {
 
 module.exports = {
 	init: () => {
+		console.log(Date.now())
 		mealDb.getAllMeals()
 			.then((meals) => {
 				meals.forEach(meal => {
-					if (Date.now() < +meal.deadline) {
+					if (Date.now() < +meal.deadline - hour * 2) {
 						let date = new Date(meal.deadline - hour * 2);
 						log(6, `scheduling deadline reminder for ${meal.name} at ${date.getDate()}.${date.getMonth() + 1} - ${date.getHours()}:${date.getMinutes()}`);
-						schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline)
+						schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline(meal))
 					}
 				});
 			});
@@ -55,7 +57,7 @@ module.exports = {
 	scheduleMeal: meal => {
 		let date = new Date(meal.deadline - hour * 2);
 		log(6, `scheduling deadline reminder for ${meal.name} at ${date.getDate()}.${date.getMonth() + 1} - ${date.getHours()}:${date.getMinutes()}`);
-		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline)
+		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline(meal))
 	},
 	rescheduleMeal: meal => {
 		let date = new Date(meal.deadline - hour * 2);
@@ -63,7 +65,7 @@ module.exports = {
 		if (schedule['meal_' + meal.id]) {
 			schedule['meal_' + meal.id].cancel();
 		}
-		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline)
+		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline(meal))
 	},
 	cancelMeal : id => {
 		log(6, `canceling deadline reminder for meal_${id}`);

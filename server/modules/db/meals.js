@@ -425,6 +425,7 @@ module.exports = {
                     log(2, 'modules/db/meal:getAllMeals', err);
                     reject({status: 500, message: 'Unable to get meallist.'});
                 } else {
+                    log(6, 'modules/db/meal:getAllMeals', 'got all data');
                     resolve(doubleFlattenResults(result));
                 }
             }));

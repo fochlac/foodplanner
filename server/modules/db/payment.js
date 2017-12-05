@@ -71,7 +71,7 @@ module.exports = {
             FROM signups
             WHERE id = ${mysql.escape(signupId)};`,
         queryGetBalance = `
-            SELECT users.balance
+            SELECT (CASE WHEN users.admin = 1 THEN 9999999 ELSE users.balance END) AS balance
             FROM signups
             LEFT JOIN users
             ON signups.userId = users.id
@@ -99,17 +99,20 @@ module.exports = {
                 \`source\`,
                 \`target\`,
                 \`amount\`,
-                \`mealId\`
+                \`reason\`,
+                \`time\`
             ) SELECT
                 signups.userId,
                 meals.creatorId,
                 (CASE WHEN ${mysql.escape(price)} IS NULL THEN 0 ELSE ${mysql.escape(price)} END),
-                meals.id
+                meals.name,
+                ${Date.now()}
             FROM signups
             LEFT JOIN meals
             ON meals.id = signups.meal
             WHERE signups.id = ${mysql.escape(signupId)};`,
-        querySetPaid = `UPDATE signups SET paid = 1 WHERE signups.id = ${mysql.escape(signupId)};`;
+        querySetPaid = `UPDATE signups SET paid = 1 WHERE signups.id = ${mysql.escape(signupId)};`,
+        queryGetTotal = `SELECT SUM(users.balance) AS total FROM users;`;
 
         return getConnection()
         .then (myDb => {
@@ -142,6 +145,13 @@ module.exports = {
                         executeQuery(myDb, queryCreateTransaction(price)),
                         executeQuery(myDb, querySetPaid)
                     ]);
+                })
+                .then(() => executeQuery(myDb, queryGetTotal))
+                .then(result => {
+                    if (+result[0].total !== 0) {
+                        log(1, 'Error in balance, stopping transaction!');
+                        return Promise.reject({type: 2, status: 500, message: 'Error in total balance. Stopping transaction.'});
+                    }
                 })
                 .then(() => new Promise((resolve, reject) => myDb.commit(err => {
                     if (err) {
@@ -252,17 +262,100 @@ module.exports = {
         });
     },
 
+    sendMoney: (source, target, amount) => {
+        const queryGetBalance = `
+                SELECT (CASE WHEN users.admin = 1 THEN 9999999 ELSE users.balance END) AS balance
+                FROM users
+                WHERE users.id = ${mysql.escape(source)};`,
+            queryRemoveBalance = `
+                UPDATE users
+                SET users.balance = (users.balance - CASE WHEN ${mysql.escape(amount)} IS NULL THEN 0 ELSE ${mysql.escape(amount)} END)
+                WHERE users.id = ${mysql.escape(source)};`,
+            queryAddBalance =  `
+                UPDATE users
+                SET users.balance = (users.balance + CASE WHEN ${mysql.escape(amount)} IS NULL THEN 0 ELSE ${mysql.escape(amount)} END)
+               WHERE users.id = ${mysql.escape(target)};`,
+            queryCreateTransaction = `
+                INSERT INTO transactions (
+                    \`source\`,
+                    \`target\`,
+                    \`amount\`,
+                    \`reason\`,
+                    \`time\`
+                ) Values (
+                    ${mysql.escape(source)},
+                    ${mysql.escape(target)},
+                    ${mysql.escape(amount)},
+                    ${mysql.escape('Private Transaction')},
+                    ${Date.now()}
+                );`,
+            queryGetTotal = `SELECT SUM(users.balance) AS total FROM users;`;
+
+        return getConnection()
+        .then (myDb => {
+            return new Promise((resolve, reject) => myDb.beginTransaction(err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                }))
+                .then(() => executeQuery(myDb, queryGetBalance))
+                .then(result => {
+                    const balance = result[0].balance;
+
+                    if (+amount >= +balance) {
+                        log(2, 'modules/db/payment:payForSignup', 'stopped transaction - insufficient balance.');
+                        return Promise.reject({type: 1, status: 400, message: 'Insufficient balance.'});
+                    }
+
+                    return Promise.all([
+                        executeQuery(myDb, queryRemoveBalance),
+                        executeQuery(myDb, queryAddBalance),
+                        executeQuery(myDb, queryCreateTransaction)
+                    ]);
+                })
+                .then(() => executeQuery(myDb, queryGetTotal))
+                .then(result => {
+                    if (+result[0].total !== 0) {
+                        log(1, 'Error in balance, stopping transaction!');
+                        return Promise.reject({type: 2, status: 500, message: 'Error in total balance. Stopping transaction.'});
+                    }
+                })
+                .then(() => new Promise((resolve, reject) => myDb.commit(err => {
+                    if (err) {
+                        log(2, 'modules/db/payment:sendMoney', 'error commiting transaction');
+                        reject({status: 500, message: 'Unable to commit transaction.'});
+                    } else {
+                        log(6, 'modules/db/payment:sendMoney', 'commited transaction')
+                        myDb.release();
+                        resolve();
+                    }
+                })))
+                .catch(err => new Promise((resolve, reject) =>  myDb.rollback(rbErr => {
+                    if (rbErr) {
+                        log(2, 'rollback failed for errors: ', err, rbErr);
+                    }
+                    myDb.release();
+                    if (err.type === 1) {
+                        return resolve(err);
+                    } else {
+                        return reject(err);
+                    }
+                })));
+        });
+    },
+
     getHistoryByUserId: (userId) => {
         const mealQuery = `
             SELECT
                 (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.amount ELSE -1 * transactions.amount END) AS diff,
                 users.name AS user,
-                meals.name AS meal
+                transactions.reason,
+                transactions.time
             FROM transactions
             LEFT JOIN users
             ON users.id = (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.source ELSE transactions.target END)
-            LEFT JOIN meals
-            ON meals.id = transactions.mealId
             WHERE ${mysql.escape(userId)} in (transactions.target, transactions.source)
             AND NOT transactions.target = transactions.source;`;
 

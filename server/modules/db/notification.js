@@ -90,6 +90,7 @@ module.exports = {
                     log(2, 'modules/db/notification:getAllNotificationIds', err);
                     reject({status: 500, message: 'Unable to get notificationlist.'});
                 } else {
+                    log(6, 'modules/db/notification:createNotification - notification created');
                     resolve(result);
                 }
             }));

@@ -1,8 +1,21 @@
 const	user	     = require('express').Router()
 	,	userDB 	     = require(process.env.FOOD_HOME + 'modules/db/user')
-    ,   paymentDB       = require(process.env.FOOD_HOME + 'modules/db/payment')
+    ,   paymentDB    = require(process.env.FOOD_HOME + 'modules/db/payment')
     ,   error        = require(process.env.FOOD_HOME + 'modules/error')
+    ,   log          = require(process.env.FOOD_HOME + 'modules/log')
 	,	mailer 		 = require(process.env.FOOD_HOME + 'modules/mailer');
+
+user.put('/:id/money', error.router.validate('params', {
+    id: /^[0-9]*$/
+}), error.router.validate('body', {
+    source: /^[0-9]{1,10}$/,
+    amount: /^[0-9]{1,10}[.0-9]{0,3}$/
+}), (req, res) => {
+    paymentDB.sendMoney(req.body.source, req.params.id, req.body.amount).then(() => {
+        res.status(200).send({success: true});
+    })
+    .catch(error.router.internalError(res));
+});
 
 user.put('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
@@ -31,6 +44,7 @@ user.get('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
     userDB.getUserByProperty('id', req.params.id).then((result) => {
+        log(6, 'got user data');
         res.status(200).send(result ? result : {});
     })
     .catch(error.router.internalError(res));

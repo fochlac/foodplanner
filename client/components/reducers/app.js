@@ -9,7 +9,16 @@ const app = (state = {}, action) => {
                 return {...state, mailSuggestion: undefined};
             }
             return state;
+
+        case 'SEND_MONEY':
+            if (action.status === 'complete' && !action.data.error) {
+                return {...state, mailSuggestion: undefined, dialog: {type: ""}};
+            }
+            return state;
+
         case 'SAVE_SETTINGS':
+            return {...state, mailSuggestion: undefined, dialog: {type: ""}};
+
         case 'MEAL_SIGNUP':
         case 'MEAL_EDIT':
         case 'CREATE_MEAL':

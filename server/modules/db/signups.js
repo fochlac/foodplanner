@@ -39,15 +39,32 @@ function flattenResults(result) {
 
 module.exports = {
     getSignupByProperty: (prop, val) => {
+        const query = `SELECT
+                signups.id,
+                signups.name,
+                signups.paid,
+                signups.price,
+                signups.userId,
+                signups.meal,
+                signups.comment,
+                signupOptions.mealOptionId AS signupOptionsId,
+                signupOptions.value AS signupOptionsValue,
+                signupOptions.count AS signupOptionsCount,
+                signupOptions.show AS signupOptionsShow
+            FROM signups
+            LEFT JOIN signupOptions
+            ON signups.id = signupOptions.signupId
+            WHERE signups.${prop} = ${mysql.escape(val)};`;
+
         return getConnection()
         .then (myDb => {
-            return new Promise((resolve, reject) => myDb.query(`select * from signups where ${prop} = ${mysql.escape(val)}`, (err, result) => {
+            return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
                     log(2, 'modules/db/signup:getSignupByProperty', err);
                     reject({status: 500, message: 'Unable to find signup.'});
                 } else {
-                    resolve(result[0]);
+                    resolve(flattenResults(result)[0]);
                 }
             }));
         });
@@ -225,7 +242,32 @@ module.exports = {
                 ON DUPLICATE KEY UPDATE
                     \`value\`=VALUES(\`value\`),
                     \`count\`=VALUES(\`count\`),
-                    \`show\`=VALUES(\`show\`);`;
+                    \`show\`=VALUES(\`show\`);`,
+            setPriceQuery = id => `
+                UPDATE signups
+                    LEFT JOIN (
+                        SELECT (
+                                meals.price
+                                + (CASE WHEN SUM(mealOptions.price * signupOptions.show) IS NULL THEN 0 ELSE SUM(mealOptions.price * signupOptions.show) END)
+                                + (CASE WHEN SUM(mealOptionValues.price * (CASE WHEN signupOptions.count IS NULL THEN 1 ELSE signupOptions.count END)) IS NULL THEN 0 ELSE SUM(mealOptionValues.price * (CASE WHEN signupOptions.count IS NULL THEN 1 ELSE signupOptions.count END)) END)
+                            ) AS sum,
+                            signups.id AS id
+                        FROM signups
+                        LEFT JOIN meals
+                        ON signups.meal = meals.id
+                        LEFT JOIN signupOptions
+                        ON signupOptions.signupId = signups.id
+                        LEFT JOIN mealOptions
+                        ON signupOptions.mealOptionId = mealOptions.id
+                        LEFT JOIN mealOptionValues
+                        ON mealOptionValues.id = signupOptions.valueId
+                        WHERE signups.id = ${mysql.escape(id)}
+                        AND meals.locked = 1
+                        GROUP BY signups.id
+                    ) AS sum
+                    ON signups.id = sum.id
+                set signups.price = (CASE WHEN sum.sum IS NULL THEN 0 ELSE sum.sum END)
+                WHERE signups.id = ${mysql.escape(id)};`;
 
         return getConnection()
         .then (myDb => {
@@ -238,30 +280,34 @@ module.exports = {
                     } else {
                         log(6, 'modules/db/signup:createSignUp - signup created');
                         resolve({
-                            name: options.name,
-                            meal: options.meal,
-                            comment: options.comment,
-                            userId: options.userId,
-                            paid: 0,
-                            options: options.options,
                             id: result.insertId
                         });
                     }
                 });
             }).then(signup => {
                 if (!options.options.length) {
-                    myDb.release();
                     return Promise.resolve(signup);
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsQuery(signup.id), (err, result) => {
-                        myDb.release();
                         if (err) {
                             log(2, 'modules/db/signup:createSignUp.4', err, optionsQuery(signup.id));
                             reject({status: 500, message: 'Error creating signup'});
                         } else {
                             resolve(signup);
-                            log(6, 'modules/db/signup:createSignUp - option values inserted - signup created');
+                        }
+                    });
+                });
+            }).then(signup => {
+                return new Promise((resolve, reject) => {
+                    myDb.query(setPriceQuery(signup.id), (err, result) => {
+                        myDb.release();
+                        if (err) {
+                            log(2, 'modules/db/signup:createSignUp.4', err, setPriceQuery(signup.id));
+                            reject({status: 500, message: 'Error setting price'});
+                        } else {
+                            resolve(signup);
+                            log(6, 'modules/db/signup:createSignUp - price set - signup created');
                         }
                     });
                 });
@@ -302,6 +348,7 @@ module.exports = {
                     log(2, 'modules/db/signup:getAllSignups', err);
                     reject({status: 500, message: 'Unable to get signuplist.'});
                 } else {
+                    log(6, 'modules/db/meal:getAllSignups', 'got all data');
                     resolve(flattenResults(result));
                 }
             }));

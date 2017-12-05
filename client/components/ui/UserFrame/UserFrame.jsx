@@ -60,17 +60,17 @@ export default class UserFrame extends React.Component {
         return (
             <div className="userFrame">
                 <span>
-                    <div className="userDescription">Angemeldet als:</div>
-                    <div className="userName">{u.name}</div>
+                    <span>
+                        <div className="userDescription">Angemeldet als:</div>
+                        <div className="userName">{u.name}</div>
+                    </span>
+                    {
+                        u.admin ? <div className="role">Administrator</div> : null
+                    }
                 </span>
-                {
-                    u.admin ? <div className="role">Administrator</div> : null
-                }
                 <div className="balance"><span>Guthaben: </span><b>{u.balance ? u.balance : 0.00}</b><span className="moneySymbol">€</span></div>
-                <div className="fakeLink">Kontoauszug</div>
-                {
-                    u.admin ? <div className="fakeLink">Nutzerverwaltung</div> : null
-                }
+                <div className="fakeLink" onClick={this.props.show_transaction_history.bind(this, u.id)}>Kontoauszug</div>
+                <div className="fakeLink userManagementLink" onClick={this.props.start_send_money.bind(this)}>Geld senden</div>
             </div>
         );
     }

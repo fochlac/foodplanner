@@ -13,14 +13,22 @@
         font-weight: 600;
     }
 
-    .balance {
-        margin-bottom: 5px;
-    }
-
     .moneySymbol {
         margin: 0 5px;
         font-weight: 600;
         display: inline-block;
+    }
+
+    .role {
+        margin-top: -5px;
+        margin-bottom: 8px;
+        font-size: 0.9em;
+        font-style: italic;
+        color: @colorr1;
+    }
+
+    .userManagementLink {
+        margin-top: 2px;
     }
 
     &.register {
@@ -51,12 +59,26 @@
         max-width: 1000px;
         margin: 0 auto;
         display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        &.register {
+            margin-left: calc(50vw ~"-" 518px);
+        }
 
         .userDescription,
         .userName{
             display: inline-block;
             margin-right: 5px;
         }
+        .role {
+            margin-bottom: 0px;
+        }
+    }
+}
+@media all and (max-width: 1040px) {
+    .userFrame.register {
+        margin-left: 0px;
     }
 }
 

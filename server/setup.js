@@ -127,7 +127,8 @@ let setup = [
         \`source\`              int             NOT NULL,
         \`target\`              int             NOT NULL,
         \`amount\`              FLOAT(10, 2)    NOT NULL,
-        \`mealId\`              int             NOT NULL,
+        \`reason\`              varchar(255)    NOT NULL,
+        \`time\`                bigint          NOT NULL,
 
         PRIMARY KEY (id)
     );`

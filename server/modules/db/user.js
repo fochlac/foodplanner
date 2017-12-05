@@ -6,14 +6,19 @@ const   getConnection   = require(process.env.FOOD_HOME + 'modules/db')
 
 module.exports = {
     getUserByProperty: (prop, val) => {
+
+        log(6, 'getting user data');
         return getConnection()
         .then (myDb => {
+            log(6, 'getting user data : got connection');
             return new Promise((resolve, reject) => myDb.query(`select * from users where ${prop} = ${mysql.escape(val)}`, (err, result) => {
+                log(6, 'getting user data : query complete');
                 myDb.release();
                 if (err) {
                     log(2, 'modules/db/user:getUserByProperty', err);
                     reject({status: 500, message: 'Unable to find user.'});
                 } else {
+                    log(6, 'getting user data : query complete - positive result');
                     resolve(result[0]);
                 }
             }));

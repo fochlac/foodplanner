@@ -65,6 +65,35 @@ export const set_hidden_busy  = state => ({
   state
 });
 
+// transactions
+
+export const show_transaction_history = (id) => ({
+  type: 'DIALOG',
+  content: 'OPEN_TRANSACTIONS',
+  status: 'initialized',
+  api: {
+    url: `/api/user/${id}/history`,
+    method: 'get'
+  }
+});
+
+export const start_send_money = (id) => ({
+  type: 'DIALOG',
+  content: 'SEND_MONEY'
+});
+
+export const send_money = (data) => ({
+  type: 'SEND_MONEY',
+  status: 'initialized',
+  ...data,
+  api: {
+    url: `/api/user/${data.target}/money`,
+    method: 'put',
+    body: data
+  }
+});
+
+
 // impressum
 
 export const show_impressum = () => ({

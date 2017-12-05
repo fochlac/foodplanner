@@ -153,6 +153,7 @@ signups.post('/', error.router.validate('body', {
 
         return signupsDB.createSignUp(req.body);
     })
+    .then((signup) => signupsDB.getSignupByProperty('id', signup.id))
     .then((signup) => {
         res.status(200).send(signup);
     })
