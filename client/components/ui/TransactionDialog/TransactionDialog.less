@@ -1,0 +1,28 @@
+@import '../../root/variables.less';
+
+.body {
+    .negative {
+        color: @colorr2;
+    }
+    .textAlignCenter {
+        text-align: center;
+    }
+    .transactions {
+        border-collapse: collapse;
+        border: solid 1px @colorg3;
+
+        th {
+            padding: 3px 3px 8px;
+        }
+        td {
+            padding: 3px;
+        }
+        tbody > tr:nth-child(odd) {
+            background: rgba(7, 77, 14, 0.5);
+            color: @colorg5;
+        }
+    }
+}
+.transactionDialog {
+    flex-basis: 500px;
+}

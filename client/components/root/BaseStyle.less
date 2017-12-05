@@ -88,3 +88,26 @@ select {
 .inlineBlock {
     display: inline-block !important;
 }
+.red {
+    background: @colorr1 !important;
+}
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    padding: 0 1px;
+}
+.noWrap {
+    white-space: nowrap;
+}
+.margin{
+    &Left {
+        margin-left: 5px;
+    }
+    &Right {
+        margin-right: 5px;
+    }
+}

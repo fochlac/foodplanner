@@ -17,7 +17,7 @@ export default class ImpressumDialog extends React.Component {
 
   render() {
     return (
-      <Dialog>
+      <Dialog closeOnBackdrop={true}>
         <div className="titlebar">
           <h3>Impressum</h3>
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>

@@ -9,6 +9,11 @@
     align-items: center;
     z-index: 20;
     flex-direction:column;
+
+    .fa-times {
+        margin-left: 20px;
+        cursor: pointer;
+    }
 }
 
 .error {
@@ -17,9 +22,6 @@
     border-radius: @borderRadius;
     border: solid 2px @colorr1;
     margin-top: 10px;
-}
-
-.error .fa-times {
-    margin-left: 20px;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
 }

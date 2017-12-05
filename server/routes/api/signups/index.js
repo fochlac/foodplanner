@@ -1,15 +1,36 @@
 const	signups	    = require('express').Router()
     ,   signupsDB   = require(process.env.FOOD_HOME + 'modules/db/signups')
+    ,   paymentDB   = require(process.env.FOOD_HOME + 'modules/db/payment')
 	,	mealsDB 	= require(process.env.FOOD_HOME + 'modules/db/meals')
 	,	error 		= require(process.env.FOOD_HOME + 'modules/error')
     ,   log         = require(process.env.FOOD_HOME + 'modules/log');
 
 
+signups.post('/:id/paid', error.router.validate('params', {
+    id: /^[0-9]*$/
+}), (req, res) => {
+    signupsDB.setSignupPaymentStatusById(req.params.id, true)
+    .then((signup) => {
+        res.status(200).send({success: true});
+    })
+    .catch(error.router.internalError(res));
+});
+
+signups.delete('/:id/paid', error.router.validate('params', {
+    id: /^[0-9]*$/
+}), (req, res) => {
+    signupsDB.setSignupPaymentStatusById(req.params.id, false)
+    .then((signup) => {
+        res.status(200).send({success: true});
+    })
+    .catch(error.router.internalError(res));
+});
+
 signups.get('/:id', error.router.validate('params', {
     id: /^[0-9]*$/
 }), (req, res) => {
-    signupsDB.getSignupByProperty('id', req.params.id).then((signup) => {
-        res.status(200).send(signup);
+    signupsDB.getSignupByProperty('id', req.params.id).then(() => {
+        res.status(200).send({result: 'success'});
     })
     .catch(error.router.internalError(res));
 });
@@ -132,6 +153,7 @@ signups.post('/', error.router.validate('body', {
 
         return signupsDB.createSignUp(req.body);
     })
+    .then((signup) => signupsDB.getSignupByProperty('id', signup.id))
     .then((signup) => {
         res.status(200).send(signup);
     })

@@ -65,6 +65,35 @@ export const set_hidden_busy  = state => ({
   state
 });
 
+// transactions
+
+export const show_transaction_history = (id) => ({
+  type: 'DIALOG',
+  content: 'OPEN_TRANSACTIONS',
+  status: 'initialized',
+  api: {
+    url: `/api/user/${id}/history`,
+    method: 'get'
+  }
+});
+
+export const start_send_money = (id) => ({
+  type: 'DIALOG',
+  content: 'SEND_MONEY'
+});
+
+export const send_money = (data) => ({
+  type: 'SEND_MONEY',
+  status: 'initialized',
+  ...data,
+  api: {
+    url: `/api/user/${data.target}/money`,
+    method: 'put',
+    body: data
+  }
+});
+
+
 // impressum
 
 export const show_impressum = () => ({
@@ -86,6 +115,18 @@ export const delete_error = (id) => ({
 });
 
 // signups
+
+export const toggle_paid = (id, state) => ({
+  type: 'SIGNUP_PAID',
+  status: 'initialized',
+  state,
+  id,
+  api: {
+    url: `/api/signups/${id}/paid`,
+    method: state ? 'post' : 'delete',
+    body: {}
+  }
+});
 
 export const start_meal_signup = id => ({
   type: 'DIALOG',
@@ -141,65 +182,6 @@ export const meal_cancel = id => ({
 });
 
 
-// settings dialog
-
-export const create_settings_dialog = () => ({
-  type: 'DIALOG',
-  content: 'OPEN_SETTINGS'
-});
-
-export const save_settings = (data) => ({
-  type: 'SAVE_SETTINGS',
-  status: 'initialized',
-  api: {
-    url: '/api/user' + ((data.id !== undefined) ? ('/' + data.id) : ''),
-    method: ((data.id !== undefined) ? 'put' : 'post'),
-    body: {
-      id: data.id,
-      mail: data.mail,
-      name: data.name,
-      creationNotice: data.creationNotice_mail,
-      deadlineReminder: data.deadlineReminder_mail
-    }
-  },
-  enqueue: data => save_settings_locally(Object.assign({}, {
-      creationNotice_notification: data.creationNotice_notification,
-      deadlineReminder_notification: data.deadlineReminder_notification
-    }, data))
-});
-
-export const save_settings_locally = (data) => ({
-  type: 'SAVE_SETTINGS',
-  status: 'complete',
-  localkey: 'user',
-  locally: data
-});
-
-export const hide_mail_suggestion = () => ({
-  type: 'HIDE_MAIL_SUGGESTION'
-});
-
-export const check_mail = (mail) => ({
-  type: 'CHECK_MAIL',
-  status: 'hidden',
-  api: {
-    url: '/api/mail/search?email=' + encodeURIComponent(mail),
-    method: 'GET'
-  }
-});
-
-export const select_suggestion = () => ({
-  type: 'SELECT_MAIL'
-});
-
-export const sign_out = () => ({
-  type: 'SIGNOUT',
-  status: 'complete',
-  localkey: 'user',
-  locally: {}
-});
-
-
 // meals
 export const create_meal_dialog = () => ({
   type: 'DIALOG',
@@ -217,9 +199,39 @@ export const create_meal = (data) => ({
   }
 });
 
+export const submit_prices = (prices, mealId) => ({
+  type: 'SUBMIT_PRICES',
+  status: 'initialized',
+  prices,
+  mealId,
+  api: {
+    url: '/api/meals/prices',
+    method: 'post',
+    body: {prices}
+  }
+});
+
+export const start_payment = (prices, mealId) => ({
+  type: 'FINALIZE_PRICES',
+  status: 'initialized',
+  prices,
+  mealId,
+  api: {
+    url: `/api/meals/${mealId}/lock`,
+    method: 'post',
+    body: {prices}
+  }
+});
+
 export const start_edit_meal = (id) => ({
   type: 'DIALOG',
   content: 'EDIT_MEAL',
+  option: {meal: id}
+});
+
+export const start_edit_price = (id) => ({
+  type: 'DIALOG',
+  content: 'EDIT_PRICE',
   option: {meal: id}
 });
 
@@ -258,5 +270,56 @@ export const cancel_meal = (id) => ({
     url: '/api/meals/' + id,
     method: 'delete'
   }
+});
+
+
+// settings dialog
+
+export const create_settings_dialog = () => ({
+  type: 'DIALOG',
+  content: 'OPEN_SETTINGS'
+});
+
+export const save_settings = (data) => ({
+  type: 'SAVE_SETTINGS',
+  status: 'initialized',
+  api: {
+    url: '/api/user' + ((data.id !== undefined) ? ('/' + data.id) : ''),
+    method: ((data.id !== undefined) ? 'put' : 'post'),
+    body: {
+      id: data.id,
+      mail: data.mail,
+      name: data.name,
+      creationNotice: data.creationNotice_mail,
+      deadlineReminder: data.deadlineReminder_mail
+    }
+  },
+  enqueue: data => save_settings_locally(Object.assign({}, {
+      creationNotice_notification: data.creationNotice_notification,
+      deadlineReminder_notification: data.deadlineReminder_notification
+    }, data))
+});
+
+export const save_settings_locally = (data) => ({
+  type: 'SAVE_SETTINGS',
+  status: 'complete',
+  localkey: 'user',
+  locally: data
+});
+
+export const check_mail = (mail) => ({
+  type: 'CHECK_MAIL',
+  status: 'hidden',
+  api: {
+    url: '/api/mail/search?email=' + encodeURIComponent(mail),
+    method: 'GET'
+  }
+});
+
+export const sign_out = () => ({
+  type: 'SIGNOUT',
+  status: 'complete',
+  localkey: 'user',
+  locally: {}
 });
 
