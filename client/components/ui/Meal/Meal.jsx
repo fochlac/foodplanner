@@ -40,16 +40,16 @@ export default class Meal extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.meal.deadline !== prevProps.meal.deadline) {
-      this.checkDeadline()
+      this.checkDeadline();
     }
   }
 
   componentDidMount() {
-    window.addEventListener('focus', this.checkDeadline)
+    window.addEventListener('focus', this.checkDeadline);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('focus', this.checkDeadline)
+    window.removeEventListener('focus', this.checkDeadline);
   }
 
   checkDeadline() {

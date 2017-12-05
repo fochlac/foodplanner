@@ -45,9 +45,6 @@ export default class DialogController extends React.Component {
                 return <SendMoneyDialog />;
 
             case 'EDIT_PRICE':
-                if (d.option.locked) {
-                    return <PriceDialog id={d.option.meal}/>;
-                }
                 return <PriceDialog id={d.option.meal}/>;
 
             case 'SUBSCRIBE':
@@ -66,15 +63,15 @@ export default class DialogController extends React.Component {
                     params = Object.assign({}, d.user, {creationNotice: 0, deadlineReminder: 0});
                 }
 
-                return <ConfirmationDialog closeOnBackdrop={true} message={message} action="save_settings_locally" parameter={[params]} noCancel={true}/>;
+                return <ConfirmationDialog message={message} action="save_settings_locally" parameter={[params]} noCancel={true}/>;
             case 'OPEN_SETTINGS':
                 return <SettingsDialog />;
 
             case 'OPEN_IMPRESSUM':
-                return <ImpressumDialog closeOnBackdrop={true} />;
+                return <ImpressumDialog />;
 
             case 'CANCEL_MEAL':
-                return <ConfirmationDialog closeOnBackdrop={true} message="Bist du dir sicher, dass du dieses Angebot löschen möchtest?" action="cancel_meal" parameter={[d.option.meal]} />;
+                return <ConfirmationDialog message="Bist du dir sicher, dass du dieses Angebot löschen möchtest?" action="cancel_meal" parameter={[d.option.meal]} />;
 
             default:
                 return null;

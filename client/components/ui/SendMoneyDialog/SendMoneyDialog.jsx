@@ -52,7 +52,7 @@ export default class SendMoneyDialog extends React.Component {
           <label htmlFor="SendMoneyDialog_amount">Betrag</label>
           <div className="row">
             <input type="number" id="SendMoneyDialog_amount" onChange={this.amountInput}/>
-            <span className="moneySymbol">€</span>
+            <span className="moneySymbol marginLeft">€</span>
           </div>
         </div>
         <div className="foot">

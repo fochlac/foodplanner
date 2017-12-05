@@ -4,12 +4,12 @@ const signups = (state = {}, action) => {
             if (action.status === 'complete') {
                 return {...state, [action.data.id]: Object.assign({}, state[action.data.id], action.data)};
             }
-            return state
+            return state;
         case 'SIGNUP_PAID':
             if (action.status === 'complete') {
                 return {...state, [action.id]: Object.assign({}, state[action.id], {paid: action.state})};
             }
-            return state
+            return state;
         case 'FINALIZE_PRICES':
             if (action.status === 'complete') {
                 let newState =  {...state};
@@ -18,12 +18,12 @@ const signups = (state = {}, action) => {
 
                 return newState;
             }
-            return state
+            return state;
         case 'MEAL_SIGNUP':
             if (action.status === 'complete') {
                 return {...state, [action.data.id]: action.data};
             }
-            return state
+            return state;
         case 'INITIAL_SIGNUPS':
             if (action.status === 'complete') {
                 return action.data.reduce((acc,signup) => {
@@ -31,19 +31,19 @@ const signups = (state = {}, action) => {
                     return acc;
                 }, {});
             }
-            return state
+            return state;
         case 'MEAL_CANCEL':
             if (action.status === 'complete') {
                 delete state[action.id];
             }
-            return state
+            return state;
         case 'SIGNUP_PAID':
             if (action.status === 'complete') {
                 state[action.id].paid = action.state;
             }
-            return state
+            return state;
         default:
-            return state
+            return state;
     }
 }
 
