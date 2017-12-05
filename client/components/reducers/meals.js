@@ -50,7 +50,7 @@ const meals = (state = [], action) => {
                     priceReference = action.prices.reduce((acc, priceObj) => {
                         switch(priceObj.db) {
                             case 'meals':
-                                acc.m = priceObj.price;
+                                acc.m = priceObj.price ? priceObj.price : 0;
                                 break;
                             case 'mealOptions':
                                 acc.o[priceObj.id] = priceObj.price;
@@ -60,7 +60,7 @@ const meals = (state = [], action) => {
                                 break;
                         }
                         return acc;
-                    }, {m: {}, o:{}, v:{}}),
+                    }, {o:{}, v:{}}),
                     clonedMeal = Object.assign({}, newState[mealIndex], (priceReference.m ? {price: priceReference.m} : {}));
 
                 clonedMeal.options = newState[mealIndex].options.map(option => Object.assign(
