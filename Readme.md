@@ -3,7 +3,7 @@
 Small food planning tool
 
 component structure:
-![ComponentStructure](https://github.com/ep-friedel/foodplanner/raw/develop/components.svg "Map of the components")
+![ComponentStructure](https://raw.githubusercontent.com/ep-friedel/foodplanner/develop/componentschema.svg "Map of the components")
 
 # Full Installation Using Install Script
 
