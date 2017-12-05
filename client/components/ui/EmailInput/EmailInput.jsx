@@ -21,9 +21,12 @@ export default class EmailInput extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.app.mailSuggestion && nextProps.app.mailSuggestion !== this.props.app.mailSuggestion) {
-      this.setState({mail: nextProps.app.mailSuggestion.mail});
-      document.getElementById(this.state.id).blur();
+    if (nextProps.app.mailSuggestion && (this.props.app.mailSuggestion && nextProps.app.mailSuggestion.mail !== this.props.app.mailSuggestion.mail || !this.props.app.mailSuggestion)) {
+      this.setState({mail: nextProps.app.mailSuggestion.mail},
+        () => {
+          document.activeElement.blur();
+          document.querySelector('.userFrame button').focus();
+        });
     }
   }
 
