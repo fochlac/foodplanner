@@ -1,6 +1,6 @@
 import React from 'react';
-import Dialog from '../Dialog.js';
-import { formatDate } from '../../scripts/date.js';
+import Dialog from 'UI/Dialog.js';
+import { formatDate } from 'SCRIPTS/date.js';
 import './TransactionDialog.less';
 
 export default class TransactionDialog extends React.Component {

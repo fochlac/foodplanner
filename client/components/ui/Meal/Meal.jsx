@@ -2,7 +2,7 @@ import React from 'react';
 import sEqual from 'shallow-equals';
 import dEqual from 'deep-equals';
 import { Link } from 'react-router-dom';
-import { formatDate, formatDateTime, formatTime, formatTimeShort, formatDayNameDate } from '../../scripts/date.js';
+import { formatDate, formatDateTime, formatTime, formatTimeShort, formatDayNameDate } from 'SCRIPTS/date.js';
 import './Meal.less';
 
 export default class Meal extends React.Component {

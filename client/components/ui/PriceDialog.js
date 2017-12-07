@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PriceDialog from './PriceDialog/PriceDialog.jsx';
-import { close_dialog, submit_prices, start_payment, toggle_paid } from '../actions.js';
+import PriceDialog from 'UI/PriceDialog/PriceDialog.jsx';
+import { close_dialog, submit_prices, start_payment, toggle_paid } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     let meal = state.meals.find(meal => meal.id === ownProps.id);

@@ -1,11 +1,11 @@
 import React from 'react';
 import sEqual from 'shallow-equals';
-import Dialog from '../Dialog.js';
-import ImageUploader from '../ImageUploader/ImageUploader.jsx';
+import Dialog from 'UI/Dialog.js';
+import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx';
 import MealOption from './MealOption.jsx';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import { formatDate, formatTime, round } from '../../scripts/date.js';
-import { formDataFromObject } from '../../scripts/formData.js';
+import { formatDate, formatTime, round } from 'SCRIPTS/date.js';
+import { formDataFromObject } from 'SCRIPTS/formData.js';
 import './CreateMealDialog.less';
 import 'react-day-picker/lib/style.css';
 

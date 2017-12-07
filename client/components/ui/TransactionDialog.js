@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TransactionDialog from './TransactionDialog/TransactionDialog.jsx';
-import { close_dialog} from '../actions.js';
+import TransactionDialog from 'UI/TransactionDialog/TransactionDialog.jsx';
+import { close_dialog} from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Dialog from '../Dialog.js';
+import Dialog from 'UI/Dialog.js';
 import SignUpOption from './SignUpOption.jsx';
 import './SignUp.less';
 

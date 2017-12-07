@@ -1,6 +1,6 @@
 import React from 'react';
 import './UserFrame.less';
-import EmailInput from '../EmailInput.js';
+import EmailInput from 'UI/EmailInput.js';
 
 
 export default class UserFrame extends React.Component {

@@ -6,11 +6,11 @@ import {
       Switch
     } from 'react-router-dom';
 
-import DefaultPage from './DefaultPage.js';
-import { initServiceWorker } from '../scripts/serviceWorker.js';
-import { initDb } from '../scripts/indexedDb.js';
-import Dashboard from '../pages/Dashboard.js';
-import './BaseStyle.less';
+import DefaultPage              from 'ROOT/DefaultPage.js';
+import { initServiceWorker }    from 'SCRIPTS/serviceWorker.js';
+import { initDb }               from 'SCRIPTS/indexedDb.js';
+import Dashboard                from 'PAGES/Dashboard.js';
+import 'ROOT/BaseStyle.less';
 
 export default class App extends React.Component {
     constructor(props) {

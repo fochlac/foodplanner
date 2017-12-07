@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import SettingsDialog from './SettingsDialog/SettingsDialog.jsx';
-import { save_settings, close_dialog } from '../actions.js';
+import SettingsDialog from 'UI/SettingsDialog/SettingsDialog.jsx';
+import { save_settings, close_dialog } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     return {

@@ -2,20 +2,25 @@
     ./webpack.config.js
 */
 const path = require('path'),
-      HtmlWebpackPlugin = require('html-webpack-plugin'),
-      ExtractTextPlugin = require("extract-text-webpack-plugin"),
-      ServiceWorkerWebpackPlugin = require("serviceworker-webpack-plugin"),
-      GoogleFontsPlugin = require("google-fonts-webpack-plugin");
+      nodeExternals = require('webpack-node-externals'),
+      HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: [
         './client/index.js'
     ],
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'test_dist'),
         filename: 'index_bundle.js',
         publicPath: '/static/'
     },
+    target: 'node',
+    externals: [nodeExternals({
+        whitelist: [
+            /.*(shallow-equals).*/,
+            /.*(deep-equals).*/
+        ]
+    })],
     module: {
         loaders: [
             {
@@ -34,22 +39,12 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader"
-                })
+                loader: 'null-loader'
             },
             {
                 test: /\.less$/,
                 exclude: /node_modules/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: [{
-                        loader: "css-loader"
-                    }, {
-                        loader: "less-loader"
-                    }]
-                })
+                loader: 'null-loader'
             },
             {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -81,14 +76,6 @@ module.exports = {
         }
     },
     plugins: [
-        new ExtractTextPlugin({
-            filename: "styles.css",
-            disable: true
-        }),
-        new ServiceWorkerWebpackPlugin({
-            entry: './client/sw.js',
-            filename: 'sw.js'
-        }),
         new HtmlWebpackPlugin({
             template: './client/index.html',
             filename: 'index.html',
@@ -97,11 +84,6 @@ module.exports = {
                 removeComments: true,
                 collapseWhitespace: true
             }
-        }),
-        new GoogleFontsPlugin({
-            fonts: [
-                { family: "Raleway", variants: [ "400", "600"] }
-            ]
         })
     ]
 }

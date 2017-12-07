@@ -1,5 +1,5 @@
 import React from 'react';
-import Dialog from '../Dialog.js';
+import Dialog from 'UI/Dialog.js';
 
 export default class ConfirmationDialog extends React.Component {
   constructor(props) {
@@ -30,10 +30,10 @@ export default class ConfirmationDialog extends React.Component {
         <div className="foot">
           {
             !this.props.noCancel
-            ? <button type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
+            ? <button type="button" className="test-cancel" onClick={this.cancel.bind(this)}>Abbrechen</button>
             : null
           }
-          <button type="button" onClick={this.submit.bind(this)}>Bestätigen</button>
+          <button type="button" className="test-submit" onClick={this.submit.bind(this)}>Bestätigen</button>
         </div>
       </Dialog>
     );

@@ -1,9 +1,9 @@
 import React from 'react';
-import Topbar from '../ui/Topbar.js';
-import BusyScreen from '../ui/BusyScreen/BusyScreen.jsx';
-import Error from '../ui/Error.js';
-import DialogController from './DialogController.jsx';
-import {resizeFocus, removeResizeFocus} from '../scripts/resizeFocus.js';
+import Topbar from 'UI/Topbar.js';
+import BusyScreen from 'UI/BusyScreen/BusyScreen.jsx';
+import Error from 'UI/Error.js';
+import DialogController from 'ROOT/DialogController.jsx';
+import {resizeFocus, removeResizeFocus} from 'SCRIPTS/resizeFocus.js';
 
 export default class DefaultPage extends React.Component {
     constructor(props) {
