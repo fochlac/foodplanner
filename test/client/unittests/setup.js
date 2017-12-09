@@ -1,5 +1,6 @@
 const Enzyme = require('enzyme');
 const Adapter = require('enzyme-adapter-react-16');
+const chai = require('chai');
 Enzyme.configure({ adapter: new Adapter() });
 
 var jsdom = require('jsdom');
@@ -15,6 +16,7 @@ Object.keys(document.defaultView).forEach((property) => {
         global[property] = document.defaultView[property];
     }
 });
+
 global.navigator = {
     userAgent: 'node.js'
 };

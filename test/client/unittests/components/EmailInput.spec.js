@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
-import EmailInput from '~/ui/EmailInput/EmailInput.jsx';
+import EmailInput from 'UI/EmailInput/EmailInput.jsx';
 
 describe('EmailInput', () => {
   it('should render an input', () => {
@@ -26,10 +26,10 @@ describe('EmailInput', () => {
     let check_mail_value = 0;
     const wrapper = shallow(<EmailInput id="test" app={{hiddenBusy: true}} check_mail={(value) => {check_mail_value = value.length}} />);
 
-    wrapper.find('input').simulate('change', {target: {value: 'test'}})
+    wrapper.find('input').simulate('change', {target: {value: 'test'}});
 
     expect(check_mail_value).to.equal(0);
-    wrapper.find('input').simulate('change', {target: {value: 'test123'}})
+    wrapper.find('input').simulate('change', {target: {value: 'test123'}});
 
     expect(check_mail_value).to.equal(7);
   });

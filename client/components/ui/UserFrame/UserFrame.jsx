@@ -41,8 +41,8 @@ export default class UserFrame extends React.Component {
                     {
                         this.state.register
                         ? <div className="register">
-                            <input type="text" placeholder="Name" onChange={this.nameInput}/>
-                            <input type="text" placeholder="E-Mail" onChange={this.mailInput}/>
+                            <input className="name" type="text" placeholder="Name" onChange={this.nameInput}/>
+                            <input className="mail" type="text" placeholder="E-Mail" onChange={this.mailInput}/>
                         </div>
                         : <EmailInput />
                     }
@@ -50,8 +50,8 @@ export default class UserFrame extends React.Component {
                     <button onClick={this.submit.bind(this)}>{ this.state.register ? 'Registrieren' : 'Anmelden' }</button>
                     {
                         this.state.register
-                        ? <span className="fakeLink" onClick={this.setState.bind(this, {register: false}, null)}>Anmelden</span>
-                        : <span className="fakeLink" onClick={this.setState.bind(this, {register: true}, null)}>Registrieren</span>
+                        ? <span className="fakeLink signinLink" onClick={this.setState.bind(this, {register: false}, null)}>Anmelden</span>
+                        : <span className="fakeLink registerLink" onClick={this.setState.bind(this, {register: true}, null)}>Registrieren</span>
                     }
                 </div>
             );
@@ -69,7 +69,7 @@ export default class UserFrame extends React.Component {
                     }
                 </span>
                 <div className="balance"><span>Guthaben: </span><b>{u.balance ? u.balance.toFixed(2) : 0.00}</b><span className="moneySymbol">€</span></div>
-                <div className="fakeLink" onClick={this.props.show_transaction_history.bind(this, u.id)}>Kontoauszug</div>
+                <div className="fakeLink historyLink" onClick={this.props.show_transaction_history.bind(this, u.id)}>Kontoauszug</div>
                 <div className="fakeLink userManagementLink" onClick={this.props.start_send_money.bind(this)}>Geld senden</div>
             </div>
         );

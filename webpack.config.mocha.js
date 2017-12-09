@@ -6,12 +6,11 @@ const path = require('path'),
       HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+    devtool: 'inline-source-map',
     entry: [
         './client/index.js'
     ],
     output: {
-        path: path.resolve(__dirname, 'test_dist'),
-        filename: 'index_bundle.js',
         publicPath: '/static/'
     },
     target: 'node',
@@ -23,10 +22,6 @@ module.exports = {
     })],
     module: {
         loaders: [
-            {
-                test: /.*(deep-equals|shallow-equals).*\.js$/,
-                loader: 'babel-loader'
-            },
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
@@ -48,16 +43,16 @@ module.exports = {
             },
             {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000&mimetype=application/font-woff"
+                loader: "null-loader"
             },
             {
                 test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "file-loader",
+                loader: "null-loader",
                 exclude: /static/
             },
             {
                 test: /\.(json|png|ico|xml|svg)$/,
-                loader: "file-loader",
+                loader: "null-loader",
                 options: {
                     name: '[name].[ext]'
                 }
@@ -72,7 +67,9 @@ module.exports = {
             SCRIPTS:    path.resolve('./client/components/scripts'),
             PAGES:      path.resolve('./client/components/pages'),
             ROOT:       path.resolve('./client/components/root'),
-            ACTIONS$:   path.resolve('./client/components/actions.js')
+            ACTIONS:    path.resolve('./client/components/actions.js'),
+            T_UI:       path.resolve('./test/client/uitests'),
+            T_UNIT:    path.resolve('./test/client/unittests')
         }
     },
     plugins: [

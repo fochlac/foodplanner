@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
-import Error from '~/ui/Error/Error.jsx';
+import Error from 'UI/Error/Error.jsx';
 
 const ERROR_MESSAGE = 'testmessage';
 let delete_error_called = false;

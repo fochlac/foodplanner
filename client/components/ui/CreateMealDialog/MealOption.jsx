@@ -20,7 +20,6 @@ export default class MealOption extends React.Component {
     if (!this.state.addValue.length) {
       return;
     }
-    this.setState({addValue: ''});
     if (this.props.option.values.map(value => value.name).includes(this.state.addValue)) {
       return;
     }
@@ -28,6 +27,7 @@ export default class MealOption extends React.Component {
       ...this.props.option,
       values: [...this.props.option.values, {name: this.state.addValue}]
     });
+    this.setState({addValue: ''});
   }
 
   deleteValue(index) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
-import ConfirmationDialog from '~/ui/ConfirmationDialog/ConfirmationDialog.jsx';
+import ConfirmationDialog from 'UI/ConfirmationDialog/ConfirmationDialog.jsx';
 
 describe('ConfirmationDialog', () => {
   it('should render all elements', () => {
