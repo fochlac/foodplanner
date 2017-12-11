@@ -25,11 +25,23 @@ openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -node
 npm install
 node_modules/webpack/bin/webpack.js -p
 node server/setup.js -y
-node server/index.js
 
+cat << EOF > /etc/systemd/foodd.service
+[Unit]
+Description=Essensplaner Server
+After=network.target
 
-while read p; do
-  export $p
-done < ./build_scripts/variables
+[Service]
+ExecStart=$FOOD_HOME/index.js
+Restart=always
+Environment=PATH=/usr/bin:/usr/local/bin
+EnvironmentFile=$FOOD_ROOT/build_scripts/variables
+WorkingDirectory=$FOOD_ROOT/
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl start foodd
+
+npm test
 npm run-script test-ui
-npm testvim log
