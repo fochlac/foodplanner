@@ -32,7 +32,7 @@ describe('ConfirmationDialog', () => {
 
     const wrapper = shallow(<ConfirmationDialog action="test" test={() => action_called=true} message="" noCancel={false} close_dialog={() => dialog_closed=true}/>);
 
-    wrapper.find('button.test-cancel').simulate('click');
+    wrapper.find('button.cancel').simulate('click');
 
     expect(dialog_closed).to.true;
   });
@@ -53,7 +53,7 @@ describe('ConfirmationDialog', () => {
     const PARAMS = "params",
           wrapper = shallow(<ConfirmationDialog action="test" parameter={[PARAMS]} test={(params) => action_called=params} message="" noCancel={false} />);
 
-    wrapper.find('button.test-submit').simulate('click');
+    wrapper.find('button.submit').simulate('click');
 
     expect(action_called).to.be.equal(PARAMS);
   });
