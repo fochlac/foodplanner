@@ -104,8 +104,10 @@ describe('login area', () => {
     it('should remain logged in on page refresh', async function() {
         this.timeout(5000);
 
-        this.driver.refresh();
+        await this.driver.refresh();
 
-        return this.checkLoggedin();
+        await this.driver.awaitBusyComplete();
+
+        await this.checkLoggedin();
     });
 });
