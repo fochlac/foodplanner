@@ -42,6 +42,3 @@ WantedBy=multi-user.target
 EOF
 
 systemctl start foodd
-
-npm test
-npm run-script test-ui
