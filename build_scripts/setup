@@ -1,6 +1,6 @@
 #!/bin/bash
 cd "${BASH_SOURCE%/*}" || exit
-npmcd .. || exit
+cd .. || exit
 
 cat << EOF > /etc/yum.repos.d/google-chrome.repo
 [google-chrome]
@@ -25,6 +25,11 @@ openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -node
 npm install
 node_modules/webpack/bin/webpack.js -p
 node server/setup.js -y
-node server/index.js &
+node server/index.js
+
+
+while read p; do
+  export $p
+done < ./build_scripts/variables
 npm run-script test-ui
-npm test
+npm testvim log
