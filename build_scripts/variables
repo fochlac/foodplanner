@@ -3,6 +3,7 @@ GITHUB_SECRET_FOOD=none
 FOOD_HOME=/root/foodplanner/server/
 FOOD_CLIENT=/root/foodplanner/dist/
 FOOD_TESTS=/root/foodplanner/test/
+FOOD_ROOT=/root/foodplanner/
 FOOD_DB_USERNAME=food
 FOOD_DB_PASSWORD=plan
 FOOD_DB_NAME=food

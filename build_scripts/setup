@@ -26,7 +26,7 @@ npm install
 node_modules/webpack/bin/webpack.js -p
 node server/setup.js -y
 
-cat << EOF > /etc/systemd/foodd.service
+cat << EOF > /etc/systemd/system/foodd.service
 [Unit]
 Description=Essensplaner Server
 After=network.target
