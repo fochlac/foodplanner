@@ -19,8 +19,18 @@ export default class UserFrame extends React.Component {
     submit() {
         if (this.state.register && this.state.name.length && this.state.mail.length) {
             this.props.save_settings(Object.assign({creationNotice_mail: 0, deadlineReminder_mail: 0}, this.props.user, {name: this.state.name, mail: this.state.mail}));
+            this.setState({
+                register: false,
+                name: '',
+                mail: ''
+            });
         } else if (!this.state.register && this.props.app.mailSuggestion) {
             this.props.save_settings_locally(this.props.app.mailSuggestion);
+            this.setState({
+                register: false,
+                name: '',
+                mail: ''
+            });
         }
     }
 
@@ -61,16 +71,20 @@ export default class UserFrame extends React.Component {
             <div className="userFrame">
                 <span>
                     <span>
-                        <div className="userDescription">Angemeldet als:</div>
-                        <div className="userName">{u.name}</div>
+                        <span>
+                            <div className="userDescription">Angemeldet als:</div>
+                            <div className="userName">{u.name}</div>
+                        </span>
+                        {
+                            u.admin ? <div className="role">Administrator</div> : null
+                        }
                     </span>
-                    {
-                        u.admin ? <div className="role">Administrator</div> : null
-                    }
+                    <div className="balance noWrap"><span>Guthaben: </span><b>{u.balance ? u.balance.toFixed(2) : 0.00}</b><span className="moneySymbol">€</span></div>
                 </span>
-                <div className="balance"><span>Guthaben: </span><b>{u.balance ? u.balance.toFixed(2) : 0.00}</b><span className="moneySymbol">€</span></div>
-                <div className="fakeLink historyLink" onClick={this.props.show_transaction_history.bind(this, u.id)}>Kontoauszug</div>
-                <div className="fakeLink userManagementLink" onClick={this.props.start_send_money.bind(this)}>Geld senden</div>
+                <span>
+                    <div className="fakeLink historyLink" onClick={this.props.show_transaction_history.bind(this, u.id)}>Kontoauszug</div>
+                    <div className="fakeLink userManagementLink noWrap" onClick={this.props.start_send_money.bind(this)}>Geld senden</div>
+                </span>
             </div>
         );
     }

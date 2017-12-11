@@ -84,7 +84,7 @@ export default class CreateMealDialog extends React.Component {
     })
 
     return (
-      <Dialog>
+      <Dialog className="SignUpDialog">
         <div className="titlebar">
           <h3>Anmeldung für: {p.meal.name}</h3>
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
@@ -136,8 +136,8 @@ export default class CreateMealDialog extends React.Component {
           </div>
         </div>
         <div className="foot">
-          <button type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
-          <button type="button" onClick={this.submit.bind(this)}>{p.edit ? 'Speichern' : 'Anmelden'}</button>
+          <button type="button" className="cancel" onClick={this.cancel.bind(this)}>Abbrechen</button>
+          <button type="button" className="submit" onClick={this.submit.bind(this)}>{p.edit ? 'Speichern' : 'Anmelden'}</button>
         </div>
       </Dialog>
     );

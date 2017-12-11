@@ -1,12 +1,21 @@
 #!/bin/bash
 cd "${BASH_SOURCE%/*}" || exit
-cd .. || exit
+npmcd .. || exit
+
+cat << EOF > /etc/yum.repos.d/google-chrome.repo
+[google-chrome]
+name=google-chrome - \$basearch
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+EOF
 
 while read p; do
   export $p
 done < ./build_scripts/variables
 curl -sL https://rpm.nodesource.com/setup_8.x | bash -
-yum install -y mariadb-server mariadb openssl nodejs
+yum install -y mariadb-server mariadb openssl nodejs google-chrome-stable
 sed -i "s/\[mysqld\]/\[mysqld\]\\nport=$ADMIN_DB_PORT/" /etc/my.cnf
 systemctl start mariadb
 mysqladmin -u $ADMIN_DB_USERNAME password "$ADMIN_DB_PASSWORD"
@@ -16,4 +25,6 @@ openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -node
 npm install
 node_modules/webpack/bin/webpack.js -p
 node server/setup.js -y
-node server/index.js
+node server/index.js &
+npm run-script test-ui
+npm test

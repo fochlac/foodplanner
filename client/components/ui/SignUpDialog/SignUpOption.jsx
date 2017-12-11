@@ -19,7 +19,7 @@ export default class SignUpOption extends React.Component {
         val = this.props.value;
 
     return (
-      <div>
+      <div className="SignUpOption">
         <label>{opt.name}</label>
         {
           ['count', 'select'].includes(opt.type)

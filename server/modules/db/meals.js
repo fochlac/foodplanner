@@ -83,7 +83,7 @@ module.exports = {
             return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
-                    log(2, 'modules/db/meal:getMealById', err);
+                    log(2, 'modules/db/meal:getMealById', err, query);
                     reject({status: 500, message: 'Unable to get meallist.'});
                 } else {
                     resolve(doubleFlattenResults(result)[0]);
@@ -365,7 +365,7 @@ module.exports = {
             .then(mealData => {
                 if (!options.options.filter(option => option.values.length).length) {
                     myDb.release();
-                    return Promise.resolve(mealData);
+                    return Promise.resolve(mealData.mealId);
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsValuesQuery(mealData.mealId, mealData.optionId), (err, result) => {

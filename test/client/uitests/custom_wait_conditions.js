@@ -10,3 +10,16 @@ until.elementIsNotPresent = function elementIsNotPresent(locator) {
     });
   });
 };
+
+until.elementValueIs = function elementIsNotPresent(element, value) {
+  return new Condition('for element value to be ' + value, function(driver) {
+      return element.getAttribute('value').then(val => val === value);
+  });
+};
+
+until.elementCountIs = function elementIsNotPresent(count, selector, parent) {
+  return new Condition('for number of found elements to be ' + count, async function(driver) {
+      const targets = await (parent ? parent : driver).findElements(selector);
+      return +count === targets.length;
+  });
+};
