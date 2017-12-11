@@ -100,6 +100,5 @@ describe('PriceDialog', () => {
       'mealOptions_1': {id: 1, db: 'mealOptions', price: 2},
       'mealOptionValues_4': {id: 4, db: 'mealOptionValues', price: 3}
     });
-
   });
 });
