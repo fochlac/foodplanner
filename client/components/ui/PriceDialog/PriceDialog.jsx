@@ -1,6 +1,6 @@
 import React from 'react';
 import dEqual from 'deep-equals';
-import Dialog from '../Dialog.js';
+import Dialog from 'UI/Dialog.js';
 import Payment from './Payment.jsx';
 import Price from './Price.jsx';
 import './PriceDialog.less';

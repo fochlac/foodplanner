@@ -2,7 +2,7 @@ import React from 'react';
 import sEqual from 'shallow-equals';
 import dEqual from 'deep-equals';
 import { Link } from 'react-router-dom';
-import { formatDate, formatDateTime, formatTime, formatTimeShort, formatDayNameDate } from '../../scripts/date.js';
+import { formatDate, formatDateTime, formatTime, formatTimeShort, formatDayNameDate } from 'SCRIPTS/date.js';
 import './Meal.less';
 
 export default class Meal extends React.Component {
@@ -100,7 +100,7 @@ export default class Meal extends React.Component {
     return (
       <div className="meal">
         <div className="titlebar">
-          <h4 className="title">{formatDayNameDate(p.meal.time)}: {p.meal.name}</h4>
+          <h4 className="title">{formatDayNameDate(p.meal.time)}: <span className="name">{p.meal.name}</span></h4>
           {
             (p.user.id === p.meal.creatorId)
             ? <span className="noWrap">
@@ -119,21 +119,21 @@ export default class Meal extends React.Component {
               : null
             }
             <p className="date">Zeitpunkt: <b>{formatTime(p.meal.time)}</b></p>
-            <p className="date">Organisator: {p.meal.creator}</p>
+            <p className="creator">Organisator: <span>{p.meal.creator}</span></p>
             <p className="description">{p.meal.description}</p>
           </div>
           <div className="participants">
             <h4 className="participantsTitle">Teilnehmerliste</h4>
             {
               p.meal.signupLimit
-              ? <span className="participation">{signups.length} von {p.meal.signupLimit} Teilnehmern</span>
-              : <span className="participation">{signups.length} Teilnehmer</span>
+              ? <span className="participation"><span className="count">{signups.length}</span> von <span className="limit">{p.meal.signupLimit}</span> Teilnehmern</span>
+              : <span className="participation"><span className="count">{signups.length}</span> Teilnehmer</span>
             }
             <span className="deadline">Anmeldeschluss: {formatTimeShort(p.meal.deadline)}</span>
             {
               (!s.editable || (signups.length >= p.meal.signupLimit && p.meal.signupLimit))
               ? null
-              : <p className="fakeLink" onClick={this.signup}><span>Teilnehmen</span><span className="fa fa-angle-double-right"></span></p>
+              : <p className="fakeLink participate" onClick={this.signup}><span>Teilnehmen</span><span className="fa fa-angle-double-right"></span></p>
             }
             <ul className="participantsList">
               {

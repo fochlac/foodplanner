@@ -1,6 +1,6 @@
 import React from 'react';
-import Dialog from '../Dialog.js';
-import { getNotificationPermission } from '../../scripts/serviceWorker.js';
+import Dialog from 'UI/Dialog.js';
+import { getNotificationPermission } from 'SCRIPTS/serviceWorker.js';
 import './SettingsDialog.less';
 
 export default class SettingsDialog extends React.Component {

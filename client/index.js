@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { store } from './components/store.js'
+import { store } from 'COMPONENTS/store.js'
 import { Provider } from 'react-redux'
-import Controller from './components/Controller.jsx';
+import Controller from 'COMPONENTS/Controller.jsx';
 require("font-awesome-webpack");
 require.context('./static/', true, /.*/);
 

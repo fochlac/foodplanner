@@ -1,12 +1,12 @@
 import React from 'react';
-import SignUpDialog from '../ui/SignUpDialog.js';
-import CreateMealDialog from '../ui/CreateMealDialog.js';
-import ConfirmationDialog from '../ui/ConfirmationDialog.js';
-import SettingsDialog from '../ui/SettingsDialog.js';
-import PriceDialog from '../ui/PriceDialog.js';
-import TransactionDialog from '../ui/TransactionDialog.js';
-import ImpressumDialog from '../ui/ImpressumDialog.js';
-import SendMoneyDialog from '../ui/SendMoneyDialog.js';
+import SignUpDialog from 'UI/SignUpDialog.js';
+import CreateMealDialog from 'UI/CreateMealDialog.js';
+import ConfirmationDialog from 'UI/ConfirmationDialog.js';
+import SettingsDialog from 'UI/SettingsDialog.js';
+import PriceDialog from 'UI/PriceDialog.js';
+import TransactionDialog from 'UI/TransactionDialog.js';
+import ImpressumDialog from 'UI/ImpressumDialog.js';
+import SendMoneyDialog from 'UI/SendMoneyDialog.js';
 
 export default class DialogController extends React.Component {
     constructor(props) {

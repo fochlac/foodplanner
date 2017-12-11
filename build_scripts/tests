@@ -1,0 +1,10 @@
+#!/bin/bash
+cd "${BASH_SOURCE%/*}" || exit
+cd .. || exit
+
+while read p; do
+  export $p
+done < ./build_scripts/variables
+
+npm run-script test
+npm run-script test-ui

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Error from './Error/Error.jsx';
-import { delete_error } from '../actions.js';
+import Error from 'UI/Error/Error.jsx';
+import { delete_error } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     return {

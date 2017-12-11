@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import CreateMealDialog from './CreateMealDialog/CreateMealDialog.jsx';
-import {meal_signup, create_meal, edit_meal, close_dialog} from '../actions.js';
+import CreateMealDialog from 'UI/CreateMealDialog/CreateMealDialog.jsx';
+import {meal_signup, create_meal, edit_meal, close_dialog} from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     const edit = ownProps.type === 'edit';

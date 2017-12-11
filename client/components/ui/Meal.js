@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Meal from './Meal/Meal.jsx';
-import { start_meal_signup, meal_cancel, start_meal_edit, start_cancel_meal, start_edit_meal, start_edit_price } from '../actions.js';
+import Meal from 'UI/Meal/Meal.jsx';
+import { start_meal_signup, meal_cancel, start_meal_edit, start_cancel_meal, start_edit_meal, start_edit_price } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => ({
   meal: state.meals.find(meal => meal.id === ownProps.id),

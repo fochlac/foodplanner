@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Dialog from './Dialog/Dialog.jsx';
-import { close_dialog } from '../actions.js';
+import Dialog from 'UI/Dialog/Dialog.jsx';
+import { close_dialog } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     return {

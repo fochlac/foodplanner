@@ -155,9 +155,12 @@
             margin-right: 5px;
         }
 
-        .optionItem:nth-child(n+3):before {
+        .optionItem:after {
             content: ',';
             margin-right: 5px;
+        }
+        .optionItem:last-child:after {
+            content: '';
         }
     }
 }

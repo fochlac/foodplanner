@@ -1,11 +1,11 @@
 import React from 'react';
 import sEqual from 'shallow-equals';
-import Dialog from '../Dialog.js';
-import ImageUploader from '../ImageUploader/ImageUploader.jsx';
+import Dialog from 'UI/Dialog.js';
+import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx';
 import MealOption from './MealOption.jsx';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import { formatDate, formatTime, round } from '../../scripts/date.js';
-import { formDataFromObject } from '../../scripts/formData.js';
+import { formatDate, formatTime, round } from 'SCRIPTS/date.js';
+import { formDataFromObject } from 'SCRIPTS/formData.js';
 import './CreateMealDialog.less';
 import 'react-day-picker/lib/style.css';
 
@@ -225,7 +225,7 @@ export default class CreateMealDialog extends React.Component {
           </div>
           <div>
             <label htmlFor="SignUpDialog_deadline">Anmeldeschluss</label>
-            <div className="row">
+            <div className="row deadline">
               <DayPickerInput
                 value={formatDate(s.deadlineObject)}
                 format="DD.MM.YY"
@@ -238,7 +238,7 @@ export default class CreateMealDialog extends React.Component {
           </div>
           <div>
             <label htmlFor="SignUpDialog_time">Lieferzeitpunkt</label>
-            <div className="row">
+            <div className="row time">
               <DayPickerInput
                 value={formatDate(s.timeObject)}
                 format="DD.MM.YY"
@@ -269,8 +269,8 @@ export default class CreateMealDialog extends React.Component {
           }
         </div>
         <div className="foot">
-          <button type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
-          <button type="button" onClick={this.submit.bind(this)}>Speichern</button>
+          <button className="cancel" type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
+          <button className="submit" type="button" onClick={this.submit.bind(this)}>Speichern</button>
         </div>
       </Dialog>
     );

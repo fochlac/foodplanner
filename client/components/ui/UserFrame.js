@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import UserFrame from './UserFrame/UserFrame.jsx';
-import { save_settings_locally, save_settings, show_transaction_history, start_send_money } from '../actions.js';
+import UserFrame from 'UI/UserFrame/UserFrame.jsx';
+import { save_settings_locally, save_settings, show_transaction_history, start_send_money } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
 
