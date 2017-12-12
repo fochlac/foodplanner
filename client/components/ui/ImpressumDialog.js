@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ImpressumDialog from './ImpressumDialog/ImpressumDialog.jsx';
-import { close_dialog } from '../actions.js';
+import ImpressumDialog from 'UI/ImpressumDialog/ImpressumDialog.jsx';
+import { close_dialog } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     return ownProps;

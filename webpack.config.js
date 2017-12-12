@@ -67,7 +67,18 @@ module.exports = {
                     name: '[name].[ext]'
                 }
             }
-        ]
+        ],
+    },
+    resolve: {
+        extensions: ['.js', '.jsx', 'less'],
+        alias: {
+            COMPONENTS: path.resolve('./client/components'),
+            UI:         path.resolve('./client/components/ui'),
+            SCRIPTS:    path.resolve('./client/components/scripts'),
+            PAGES:      path.resolve('./client/components/pages'),
+            ROOT:       path.resolve('./client/components/root'),
+            ACTIONS$:   path.resolve('./client/components/actions.js')
+        }
     },
     plugins: [
         new ExtractTextPlugin({

@@ -232,21 +232,21 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
     mealsDB.createMeal(mealData)
         .then(id => mealsDB.getMealById(id))
         .then((meal) => {
-        mail.sendCreationNotice(meal);
-        scheduler.scheduleMeal(meal);
-        notification.sendCreationNotice(meal);
+            mail.sendCreationNotice(meal);
+            scheduler.scheduleMeal(meal);
+            notification.sendCreationNotice(meal);
 
-        if (req.file) {
-            let imageName = meal.image.split('/');
-            fs.rename(req.file.path, req.file.destination + imageName[imageName.length - 1], (err) => {
-                error.checkError(3, 'failed renaming ' + req.file.path)(err);
+            if (req.file) {
+                let imageName = meal.image.split('/');
+                fs.rename(req.file.path, req.file.destination + imageName[imageName.length - 1], (err) => {
+                    error.checkError(3, 'failed renaming ' + req.file.path)(err);
+                    res.status(200).send(meal);
+                });
+            } else {
                 res.status(200).send(meal);
-            });
-        } else {
-            res.status(200).send(meal);
-        }
-    })
-    .catch(error.router.internalError(res));
+            }
+        })
+        .catch(error.router.internalError(res));
 });
 
 

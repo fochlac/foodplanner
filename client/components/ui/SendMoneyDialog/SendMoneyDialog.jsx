@@ -1,7 +1,7 @@
 import React from 'react';
-import Dialog from '../Dialog.js';
-import EmailInput from '../EmailInput.js';
-import { formatDate } from '../../scripts/date.js';
+import Dialog from 'UI/Dialog.js';
+import EmailInput from 'UI/EmailInput.js';
+import { formatDate } from 'SCRIPTS/date.js';
 
 export default class SendMoneyDialog extends React.Component {
   constructor(props) {

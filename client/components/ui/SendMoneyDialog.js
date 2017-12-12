@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import SendMoneyDialog from './SendMoneyDialog/SendMoneyDialog.jsx';
-import { close_dialog, send_money } from '../actions.js';
+import SendMoneyDialog from 'UI/SendMoneyDialog/SendMoneyDialog.jsx';
+import { close_dialog, send_money } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
 

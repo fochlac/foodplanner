@@ -59,7 +59,7 @@
         max-width: 1000px;
         margin: 0 auto;
         display: flex;
-        align-items: center;
+        align-items: stretch;
         justify-content: space-around;
 
         &.register {
@@ -79,6 +79,15 @@
 @media all and (max-width: 1040px) {
     .userFrame.register {
         margin-left: 0px;
+    }
+}
+
+@media all and (min-width: 600px) and (max-width: 1400px) {
+    .userFrame > span {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-grow: 1;
     }
 }
 

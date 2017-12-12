@@ -2,6 +2,8 @@ const app = (state = {}, action) => {
     switch (action.type) {
         case 'DIALOG':
             return {...state, dialog: {type: action.content, option: action.option}};
+        case 'HISTORY':
+            return action.app;
         case 'CHECK_MAIL':
             if (action.status === 'complete' && !action.data.error) {
                 return {...state, mailSuggestion: action.data};

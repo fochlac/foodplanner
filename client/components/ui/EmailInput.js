@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import EmailInput from './EmailInput/EmailInput.jsx';
-import { check_mail } from '../actions.js';
+import EmailInput from 'UI/EmailInput/EmailInput.jsx';
+import { check_mail } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     return {

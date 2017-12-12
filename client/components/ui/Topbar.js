@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Topbar from './Topbar/Topbar.jsx';
-import {create_settings_dialog, create_meal_dialog, sign_out } from '../actions.js';
+import Topbar from 'UI/Topbar/Topbar.jsx';
+import {create_settings_dialog, create_meal_dialog, sign_out } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => ({
 	app: state.app,

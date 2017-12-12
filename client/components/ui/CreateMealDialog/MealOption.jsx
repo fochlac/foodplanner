@@ -20,7 +20,6 @@ export default class MealOption extends React.Component {
     if (!this.state.addValue.length) {
       return;
     }
-    this.setState({addValue: ''});
     if (this.props.option.values.map(value => value.name).includes(this.state.addValue)) {
       return;
     }
@@ -28,6 +27,7 @@ export default class MealOption extends React.Component {
       ...this.props.option,
       values: [...this.props.option.values, {name: this.state.addValue}]
     });
+    this.setState({addValue: ''});
   }
 
   deleteValue(index) {
@@ -61,7 +61,7 @@ export default class MealOption extends React.Component {
             : null
           }
         </div>
-        <div className="row">
+        <div className="row name">
           <div>
             <label htmlFor={"SignUpDialog_optionname_" + index}>Name</label>
             <input type="text" id={"SignUpDialog_optionname_" + index} defaultValue={opt.name} onChange={this.setOption('name')} disabled={!editable} />
@@ -86,7 +86,7 @@ export default class MealOption extends React.Component {
           </ul>
           <div>
             <label htmlFor={"SignUpDialog_optionvalue_" + index}>Wert</label>
-            <div className="row">
+            <div className="row addValue">
               <input type="text" id={"SignUpDialog_optionvalue_" + index} onChange={this.setAddValue} value={this.state.addValue} disabled={!editable} />
               <button className="addButton" onClick={this.addValue} disabled={!editable} >Hinzufügen</button>
             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
-import Meal from '../../ui/Meal.js';
-import UserFrame from '../../ui/UserFrame.js';
+import Meal from 'UI/Meal.js';
+import UserFrame from 'UI/UserFrame.js';
 import './Dashboard.less';
 
 

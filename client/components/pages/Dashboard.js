@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Dashboard from './dashboard/Dashboard.jsx';
-import {} from '../actions.js';
+import Dashboard from 'PAGES/dashboard/Dashboard.jsx';
+import {} from 'ACTIONS';
 
 let startOfDay = new Date().setHours(0,0,0);
 
