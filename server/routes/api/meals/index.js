@@ -231,7 +231,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
 
     mealsDB.createMeal(mealData)
         .then(id => mealsDB.getMealById(id))
-        .then((meal) => {
+        .then(meal => {
             mail.sendCreationNotice(meal);
             scheduler.scheduleMeal(meal);
             notification.sendCreationNotice(meal);
