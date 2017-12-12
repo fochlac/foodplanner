@@ -52,7 +52,14 @@ export const convert_postmessage = (evt) => ({
 
 export const close_dialog = id => ({
   type: 'DIALOG',
-  content: ''
+  content: '',
+  url: '/',
+  title: 'Mittagsplaner'
+});
+
+export const apply_history = opt => ({
+  type: 'HISTORY',
+  app: opt.app
 });
 
 export const set_busy  = state => ({
@@ -71,6 +78,8 @@ export const show_transaction_history = (id) => ({
   type: 'DIALOG',
   content: 'OPEN_TRANSACTIONS',
   status: 'initialized',
+  url: '/konto',
+  title: 'Mittagsplaner - Kontoübersicht',
   api: {
     url: `/api/user/${id}/history`,
     method: 'get'
@@ -79,7 +88,10 @@ export const show_transaction_history = (id) => ({
 
 export const start_send_money = (id) => ({
   type: 'DIALOG',
-  content: 'SEND_MONEY'
+  content: 'SEND_MONEY',
+  url: '/bezahlung',
+  title: 'Mittagsplaner - Geld senden',
+  config: true
 });
 
 export const send_money = (data) => ({
@@ -98,7 +110,9 @@ export const send_money = (data) => ({
 
 export const show_impressum = () => ({
   type: 'DIALOG',
-  content: 'OPEN_IMPRESSUM'
+  content: 'OPEN_IMPRESSUM',
+  url: '/impressum',
+  title: 'Mittagsplaner - Impressum'
 });
 
 // error
@@ -131,7 +145,10 @@ export const toggle_paid = (id, state) => ({
 export const start_meal_signup = id => ({
   type: 'DIALOG',
   content: 'MEAL_SIGNUP',
-  option: {meal: id}
+  option: {meal: id},
+  url: '/anmeldung',
+  title: 'Mittagsplaner - Anmeldung',
+  config: true
 });
 
 export const meal_signup = (data) => ({
@@ -153,7 +170,10 @@ export const meal_signup = (data) => ({
 export const start_meal_edit = id => ({
   type: 'DIALOG',
   content: 'MEAL_EDIT',
-  option: {signup: id}
+  option: {signup: id},
+  url: '/anmeldung',
+  title: 'Mittagsplaner - Anmeldung bearbeiten',
+  config: true
 });
 
 export const meal_edit = (data) => ({
@@ -185,7 +205,10 @@ export const meal_cancel = id => ({
 // meals
 export const create_meal_dialog = () => ({
   type: 'DIALOG',
-  content: 'CREATE_MEAL'
+  content: 'CREATE_MEAL',
+  url: '/angebot',
+  title: 'Mittagsplaner - Angebot erstellen',
+  config: true
 });
 
 export const create_meal = (data) => ({
@@ -226,13 +249,19 @@ export const start_payment = (prices, mealId) => ({
 export const start_edit_meal = (id) => ({
   type: 'DIALOG',
   content: 'EDIT_MEAL',
-  option: {meal: id}
+  option: {meal: id},
+  url: '/angebot',
+  title: 'Mittagsplaner - Angebot bearbeiten',
+  config: true
 });
 
 export const start_edit_price = (id) => ({
   type: 'DIALOG',
   content: 'EDIT_PRICE',
-  option: {meal: id}
+  option: {meal: id},
+  url: '/preise',
+  title: 'Mittagsplaner - Preise festlegen',
+  config: true
 });
 
 export const edit_meal = (id, data) => ({
@@ -259,7 +288,10 @@ export const meal_new_image = (data) => ({
 export const start_cancel_meal = (id) => ({
   type: 'DIALOG',
   content: 'CANCEL_MEAL',
-  option: {meal: id}
+  option: {meal: id},
+  url: '/angebot',
+  title: 'Mittagsplaner - Angebot zurückziehen',
+  config: true
 });
 
 export const cancel_meal = (id) => ({
@@ -277,7 +309,10 @@ export const cancel_meal = (id) => ({
 
 export const create_settings_dialog = () => ({
   type: 'DIALOG',
-  content: 'OPEN_SETTINGS'
+  content: 'OPEN_SETTINGS',
+  url: '/einstellungen',
+  title: 'Mittagsplaner - Einstellungen',
+  config: true
 });
 
 export const save_settings = (data) => ({
