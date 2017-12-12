@@ -38,7 +38,7 @@ class App extends React.Component {
 
         navigator.serviceWorker.addEventListener('message', this.props.convert_postmessage.bind(this));
 
-        if (history.state) {
+        if (history.state && history.state.app) {
             this.props.apply_history(history.state);
         }
         window.addEventListener('popstate', (evt) => {
@@ -49,14 +49,18 @@ class App extends React.Component {
     render() {
         return (<Router>
             <Switch>
-                <Route path="/abmeldung" render={({location}) => <DefaultPage dialog={Object.assign({type: "UNSUBSCRIBE", location: location, user: this.props.user}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
+                <Route path="/unsubscribe" render={({location}) => <DefaultPage dialog={Object.assign({type: "UNSUBSCRIBE", location: location, user: this.props.user}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
+                <Route path="/" exact render={() => <DefaultPage dialog={this.props.app.dialog}><Dashboard/></DefaultPage>} />
+                {
+                    (history.state && history.state.app)
+                    ? null
+                    : <Redirect to="/" />
+                }
                 <Route path="/" render={() => <DefaultPage dialog={this.props.app.dialog}><Dashboard/></DefaultPage>} />
             </Switch>
         </Router>)
     }
 }
-
-//<Route path="/subscribe" render={({location}) => <DefaultPage dialog={Object.assign({type: "SUBSCRIBE", location: location}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
 
 const mapStateToProps = (state, ownProps) => ({
   user: state.user,
