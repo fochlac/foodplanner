@@ -1,5 +1,5 @@
 import React from 'react';
-import dEqual from 'deep-equals';
+import dEqual from 'fast-deep-equal';
 import Dialog from 'UI/Dialog.js';
 import Payment from './Payment.jsx';
 import Price from './Price.jsx';
