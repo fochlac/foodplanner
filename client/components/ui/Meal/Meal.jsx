@@ -1,6 +1,6 @@
 import React from 'react';
 import sEqual from 'shallow-equals';
-import dEqual from 'deep-equals';
+import dEqual from 'fast-deep-equal';
 import { Link } from 'react-router-dom';
 import { formatDate, formatDateTime, formatTime, formatTimeShort, formatDayNameDate } from 'SCRIPTS/date.js';
 import './Meal.less';
