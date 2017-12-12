@@ -33,6 +33,7 @@ def build(String branch) {
           export $p
         done < ./build_scripts/variables
       '''
+      sh 'openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -nodes -subj "/CN=$FOOD_EXTERNAL"'
     } finally {
       echo "Clean up workspace, Removing old packages"
       deleteDir()
