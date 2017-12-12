@@ -12,7 +12,10 @@ import { initDb }               from 'SCRIPTS/indexedDb.js';
 import Dashboard                from 'PAGES/Dashboard.js';
 import 'ROOT/BaseStyle.less';
 
-export default class App extends React.Component {
+import { connect } from 'react-redux';
+import { initial_meals, initial_user, connect_serviceworker, convert_postmessage, apply_history } from 'COMPONENTS/actions.js';
+
+class App extends React.Component {
     constructor(props) {
         super();
     }
@@ -34,16 +37,34 @@ export default class App extends React.Component {
             })
 
         navigator.serviceWorker.addEventListener('message', this.props.convert_postmessage.bind(this));
+
+        if (history.state && history.state.app) {
+            this.props.apply_history(history.state);
+        }
+        window.addEventListener('popstate', (evt) => {
+            this.props.apply_history(evt.state);
+        });
     }
 
     render() {
         return (<Router>
             <Switch>
                 <Route path="/unsubscribe" render={({location}) => <DefaultPage dialog={Object.assign({type: "UNSUBSCRIBE", location: location, user: this.props.user}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
-                <Route path="/subscribe" render={({location}) => <DefaultPage dialog={Object.assign({type: "SUBSCRIBE", location: location}, this.props.app.dialog)}><Dashboard/></DefaultPage>} />
-                <Route exact path="/" render={() => <DefaultPage dialog={this.props.app.dialog}><Dashboard/></DefaultPage>} />
-                <Redirect to="/" />
+                <Route path="/" exact render={() => <DefaultPage dialog={this.props.app.dialog}><Dashboard/></DefaultPage>} />
+                {
+                    (history.state && history.state.app)
+                    ? null
+                    : <Redirect to="/" />
+                }
+                <Route path="/" render={() => <DefaultPage dialog={this.props.app.dialog}><Dashboard/></DefaultPage>} />
             </Switch>
         </Router>)
     }
 }
+
+const mapStateToProps = (state, ownProps) => ({
+  user: state.user,
+  app: state.app
+});
+
+export default connect(mapStateToProps, { initial_meals, initial_user, connect_serviceworker, convert_postmessage, apply_history })(App);

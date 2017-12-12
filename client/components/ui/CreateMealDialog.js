@@ -7,6 +7,7 @@ const mapStateToProps = (state, ownProps) => {
     const edit = ownProps.type === 'edit';
 
     return {
+        app: state.app,
         user: state.user,
         meal: (ownProps.id !== undefined) ? state.meals.filter(meal => meal.id === ownProps.id)[0] : {},
         meals: state.meals,

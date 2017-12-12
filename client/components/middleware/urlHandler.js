@@ -1,9 +1,10 @@
-export const logMiddleware = store => next => action => {
+export const urlHandler = ({ getState }) => next => action => {
     if (action.url) {
+        let app ={...(getState().app), dialog: {type: action.content, option: action.option}};
+
         history.pushState({
-            type: 'dialog',
-            dialog: this.state.app.dialog
-        }, 'dialog', '/');
+            app,
+        }, action.title, action.url);
     }
 
     next(action);
