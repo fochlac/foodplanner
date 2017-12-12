@@ -348,7 +348,7 @@ module.exports = {
             })
             .then(mealId => {
                 if (!options.options.length) {
-                    return Promise.resolve(mealId);
+                    return Promise.resolve({mealId});
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsQuery(mealId), (err, result) => {
