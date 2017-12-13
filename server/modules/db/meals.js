@@ -430,5 +430,32 @@ module.exports = {
                 }
             }));
         });
+    },
+
+    getUnsignedUsersByProp: (mealId, prop, val) => {
+        return getConnection()
+        .then (myDb => {
+            const query = `
+                SELECT * FROM users
+                WHERE NOT users.id IN (
+                SELECT users.id FROM signups
+                LEFT JOIN meals
+                ON signups.meal = meals.id
+                LEFT JOIN users
+                ON signups.userId = users.id
+                WHERE meals.id = ${mysql.escape(mealId)}
+                AND NOT users.id IS NULL)
+                AND ${prop} = ${val};`;
+
+            return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
+                myDb.release();
+                if (err) {
+                    log(2, 'modules/db/meals:getUnsignedUsers', err);
+                    reject({status: 500, message: 'Unable to get userlist.'});
+                } else {
+                    resolve(result);
+                }
+            }));
+        });
     }
 }

@@ -32,6 +32,7 @@ if (env.BRANCH_NAME ==~ /PR-.*/ ) {
   node(NODE) {
     foodPlanner.checkout()
     foodPlanner.build(env.BRANCH_NAME)
+    foodPlanner.tests(env.BRANCH_NAME)
     print "buildChanged: dummy"
     print "testChanged: dummy"
     print "say: dummy"

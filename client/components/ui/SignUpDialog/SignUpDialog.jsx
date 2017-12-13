@@ -11,6 +11,7 @@ export default class CreateMealDialog extends React.Component {
       name: props.user.name ? props.user.name : '',
       userId: props.user.id ? props.user.id : 0,
       paid: 0,
+      signedUp: props.signedUp,
       options: props.meal.options.map(option => ({
           id: option.id,
           value: option.values[0] ? option.values[0].name : null,
@@ -92,8 +93,15 @@ export default class CreateMealDialog extends React.Component {
         <div className="body">
           {
             !s.userId
-            ? <div className="warning row" title="Als anonymer Nutzer kann nur der Organisator dieses Termins deine Anmeldung verändern. Bitte logge dich mit deiner E-Mail ein um deine Anmeldungen verwalten zu können.">
+            ? <div className="warning row title" title="Als anonymer Nutzer kann nur der Organisator dieses Termins deine Anmeldung verändern. Bitte logge dich mit deiner E-Mail ein um deine Anmeldungen verwalten zu können.">
               <p>Du meldest dich als anonymer Nutzer an.</p>
+            </div>
+            : null
+          }
+          {
+            s.signedUp && s.userId
+            ? <div className="warning row" >
+              <p>Du bist für dieses Angebot bereits angemeldet!</p>
             </div>
             : null
           }

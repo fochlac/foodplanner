@@ -24,7 +24,7 @@ export default class EmailInput extends React.Component {
     if (nextProps.app.mailSuggestion && (this.props.app.mailSuggestion && nextProps.app.mailSuggestion.mail !== this.props.app.mailSuggestion.mail || !this.props.app.mailSuggestion)) {
       this.setState({mail: nextProps.app.mailSuggestion.mail},
         () => {
-          let elem = document.querySelector('.userFrame button');
+          let elem = document.querySelector(this.props.selector);
           document.activeElement.blur();
           if (elem) {
             elem.focus();

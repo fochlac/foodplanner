@@ -31,12 +31,45 @@ def build(String branch) {
       sh '''
         while read p; do
           export $p
-        done < ./build_scripts/variables
+        done < /root/variables
+        export FOOD_HOME=$(pwd)/server/
+        export FOOD_CLIENT=$(pwd)/dist/
+        export FOOD_TESTS=$(pwd)/test/
+        export FOOD_ROOT=$(pwd)/
+        openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -nodes -subj "/CN=$FOOD_EXTERNAL"
+        node ./server/setup.js -y
+        npm run-script build
       '''
-      sh 'openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -nodes -subj "/CN=$FOOD_EXTERNAL"'
     } finally {
       echo "Clean up workspace, Removing old packages"
-      deleteDir()
     }
+  }
+}
+
+/**
+ * Runs unit tests and ui tests.
+ *
+ * @param branch we want to build the esf for.
+ */
+def tests(String branch) {
+
+  stage("Unit tests: ${branch}") {
+
+    sh 'npm test'
+  }
+
+  stage("UI tests: ${branch}") {
+
+    sh '''
+        while read p; do
+          export $p
+        done < /root/variables
+        export FOOD_HOME=$(pwd)/server/
+        export FOOD_CLIENT=$(pwd)/dist/
+        export FOOD_TESTS=$(pwd)/test/
+        export FOOD_ROOT=$(pwd)/
+        node ./server/index.js & > /dev/null
+        npm run-script test-ui
+    '''
   }
 }

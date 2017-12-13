@@ -67,9 +67,9 @@ export default class PriceDialog extends React.Component {
               <button type="button" onClick={this.cancel.bind(this)}>Schließen</button>
             </span>
             : <span>
-              <button type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
-              <button type="button" onClick={this.submit.bind(this)}>Speichern</button>
-              <button type="button" className="red" onClick={this.finalize.bind(this)}>Preise finalisieren</button>
+              <button className="cancel" type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
+              <button className="submit" type="button" onClick={this.submit.bind(this)}>Speichern</button>
+              <button type="button" className="finalize red" onClick={this.finalize.bind(this)}>Preise finalisieren</button>
             </span>
           }
         </div>
