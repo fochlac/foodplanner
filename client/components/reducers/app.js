@@ -4,6 +4,10 @@ const app = (state = {}, action) => {
             return {...state, dialog: {type: action.content, option: action.option}};
         case 'HISTORY':
             return action.app;
+        case 'INITIAL_USER':
+            if (action.status === 'complete' && history.state && history.state.app) {
+                return history.state.app;
+            }
         case 'CHECK_MAIL':
             if (action.status === 'complete' && !action.data.error) {
                 return {...state, mailSuggestion: action.data};
@@ -18,6 +22,7 @@ const app = (state = {}, action) => {
             }
             return state;
 
+        case 'SIGNOUT':
         case 'SAVE_SETTINGS':
             return {...state, mailSuggestion: undefined, dialog: {type: ""}};
 
