@@ -21,7 +21,9 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        this.props.initial_meals();
+        if (!window.defaultStore) {
+            this.props.initial_meals();
+        }
         initDb('food', 'userData')
             .then(db => db.get('user'))
             .then(user => {
@@ -38,9 +40,6 @@ class App extends React.Component {
 
         navigator.serviceWorker.addEventListener('message', this.props.convert_postmessage.bind(this));
 
-        if (history.state && history.state.app) {
-            this.props.apply_history(history.state);
-        }
         window.addEventListener('popstate', (evt) => {
             this.props.apply_history(evt.state);
         });

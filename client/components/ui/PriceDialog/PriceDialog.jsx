@@ -58,7 +58,14 @@ export default class PriceDialog extends React.Component {
         <div className="foot">
           {
             m.locked
-            ? <button className="cancel" type="button" onClick={this.cancel.bind(this)}>Schließen</button>
+            ? <span>
+              {
+                (Date.now() > m.deadline)
+                ? <button type="button" className="red" onClick={this.finalize.bind(this)}>Zahlungen anfordern</button>
+                : null
+              }
+              <button type="button" onClick={this.cancel.bind(this)}>Schließen</button>
+            </span>
             : <span>
               <button className="cancel" type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
               <button className="submit" type="button" onClick={this.submit.bind(this)}>Speichern</button>

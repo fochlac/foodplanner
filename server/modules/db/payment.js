@@ -40,8 +40,8 @@ module.exports = {
         const queryGetPrices = `
             SELECT (
                 meals.price
-                + SUM(mealOptions.price * signupOptions.show)
-                + SUM(mealOptionValues.price * (CASE WHEN signupOptions.count IS NULL THEN 1 ELSE signupOptions.count END))
+                + (CASE WHEN SUM(mealOptions.price * signupOptions.show) IS NULL THEN 0 ELSE SUM(mealOptions.price * signupOptions.show) END)
+                + (CASE WHEN SUM(mealOptionValues.price * (CASE WHEN signupOptions.count IS NULL THEN 1 ELSE signupOptions.count END)) IS NULL THEN 0 ELSE SUM(mealOptionValues.price * (CASE WHEN signupOptions.count IS NULL THEN 1 ELSE signupOptions.count END)) END)
             ) AS "price",
             signups.id,
             signups.paid
@@ -220,6 +220,10 @@ module.exports = {
     },
 
     setPrices: (prices) => {
+        if (prices.length === 0) {
+            log(6, 'modules/db/payment:setPrices', 'Nothing to do.');
+            return Promise.resolve();
+        }
         const mealQuery = (db, id, price) => `
             UPDATE ${mysql.escapeId(db)}
             SET ${mysql.escapeId(db)}.price = ${mysql.escape(price)}

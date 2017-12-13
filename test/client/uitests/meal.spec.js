@@ -180,12 +180,18 @@ const meal = {
                 type: 'Ja-Nein'
             }
         ]
+    },
+    meal3 = {
+        name: 'test1a',
+        participants: 5,
+        description: 'asda asda asda',
+        image: '/testimage.jpg',
+        options: []
     }
 
 
 describe('create meal', () => {
     before(function() {
-        this.setDay = setDay.bind(this);
         this.setupMeal = setupMeal.bind(this);
         this.testMeal = testMeal.bind(this);
         this.setOption = setOption.bind(this);
@@ -314,5 +320,57 @@ describe('delete meal', () => {
         await this.driver.awaitBusyComplete();
 
         return this.driver.wait(until.elementIsNotPresent(S.db.getMealByName(meal.name)), 2000);
+    });
+});
+
+
+describe('create meal without options', () => {
+    before(function() {
+        this.setupMeal = setupMeal.bind(this);
+        this.testMeal = testMeal.bind(this);
+        this.setOption = setOption.bind(this);
+        this.addOption = addOption.bind(this);
+        this.openMealDialog = openMealDialog.bind(this);
+        this.openSignupDialog = openSignupDialog.bind(this);
+        this.checkSignupOptions = checkSignupOptions.bind(this);
+    });
+
+    it('should create a meal using the provided options', async function() {
+        this.timeout(20000);
+
+        await this.openMealDialog();
+        await this.setupMeal(meal3);
+
+        await this.driver.awaitBusyComplete();
+        await this.driver.wait(until.elementCountIs(1, S.db.meal), 5000);
+        const dialog = await this.driver.findElements(S.dialog.meal),
+            mealElems = await this.driver.findElements(S.db.meal);
+
+        expect(dialog.length).to.equal(0);
+        expect(mealElems.length).to.equal(1);
+
+        await this.testMeal(mealElems[0], meal3);
+    });
+
+    it('should display no meal options on signup', async function() {
+        this.timeout(5000);
+        const dialog = await this.openSignupDialog();
+        expect(await dialog.findElements(S.su.option)).to.have.lengthOf(0);
+        dialog.findElement(S.dialog.cancel).click();
+        await this.driver.wait(until.elementIsNotPresent(S.dialog.signup));
+    });
+
+    after(async function() {
+        this.timeout(5000);
+        const dialog = await this.driver.findElements(S.dialog.dialog);
+        if (dialog.length) {
+            dialog[0].findElement(S.dialog.cancel).click();
+            await this.driver.wait(until.elementIsNotPresent(S.dialog.dialog));
+        }
+        await this.driver.findElement(S.db.getMealByName(meal3.name)).findElement(S.db.m.delete).click();
+        await this.driver.waitElementLocated(S.dialog.submit).click();
+        await this.driver.awaitBusyComplete();
+
+        return this.driver.wait(until.elementIsNotPresent(S.db.getMealByName(meal3.name)), 2000);
     });
 });

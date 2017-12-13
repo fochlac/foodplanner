@@ -54,7 +54,7 @@ export default class UserFrame extends React.Component {
                             <input className="name" type="text" placeholder="Name" onChange={this.nameInput}/>
                             <input className="mail" type="text" placeholder="E-Mail" onChange={this.mailInput}/>
                         </div>
-                        : <EmailInput />
+                        : <EmailInput selector=".userFrame button"/>
                     }
 
                     <button onClick={this.submit.bind(this)}>{ this.state.register ? 'Registrieren' : 'Anmelden' }</button>

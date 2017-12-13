@@ -48,7 +48,7 @@ export default class SendMoneyDialog extends React.Component {
         </div>
         <div className="body">
           <label htmlFor="SendMoneyDialog_mail">E-Mail</label>
-          <EmailInput id="SendMoneyDialog_mail" />
+          <EmailInput id="SendMoneyDialog_mail" selector="#SendMoneyDialog_amount"/>
           <label htmlFor="SendMoneyDialog_amount">Betrag</label>
           <div className="row">
             <input type="number" id="SendMoneyDialog_amount" onChange={this.amountInput}/>

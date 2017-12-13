@@ -98,7 +98,7 @@ module.exports = {
             description = ${mysql.escape(options.description)},
             time        = ${mysql.escape(options.time)},
             deadline    = ${mysql.escape(options.deadline)},
-            price       = ${mysql.escape(options.price ? options.price : 0)},
+            ${options.price ? `price       = ${mysql.escape(options.price)},` : ''}
             signupLimit = ${mysql.escape(options.signupLimit)}
             ${options.image ? ', image = ' + mysql.escape('/static/images/meals/' + options.image) : ''}
             WHERE id = ${mysql.escape(id)};`,
@@ -278,7 +278,7 @@ module.exports = {
                 time,
                 deadline,
                 signupLimit,
-                price,
+                ${options.price ? 'price,' : ''}
                 image
             )
             SELECT
@@ -289,7 +289,7 @@ module.exports = {
                 ${mysql.escape(options.time)},
                 ${mysql.escape(options.deadline)},
                 ${mysql.escape(options.signupLimit)},
-                ${mysql.escape(options.price ? options.price : 0)},
+                ${options.price ? `${mysql.escape(options.price)},` : ''}
                 ${options.image ? "CONCAT( '/static/images/meals/" + options.image[0] + "', `AUTO_INCREMENT`, '" + "." + options.image[1] + "' )" : mysql.escape(undefined)}
             FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '${process.env.FOOD_DB_NAME}' AND TABLE_NAME = 'meals'
             ON DUPLICATE KEY UPDATE \`id\` = \`id\`;`,
@@ -348,7 +348,7 @@ module.exports = {
             })
             .then(mealId => {
                 if (!options.options.length) {
-                    return Promise.resolve(mealId);
+                    return Promise.resolve({mealId});
                 }
                 return new Promise((resolve, reject) => {
                     myDb.query(optionsQuery(mealId), (err, result) => {

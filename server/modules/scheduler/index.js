@@ -16,9 +16,9 @@ let schedule = {};
 const mealDeadline = (meal) => () => {
 	log(5, 'deadline reminder for meal ' + meal.name + ' triggered.');
 	mail.sendDeadlineReminder(meal);
+}
 
-	// trigger autopay if prices are finalized
-
+const mealPayment = (meal) => () => {
 	mealDb.getMealById(meal.id)
 		.then(meal => {
 			if (meal.locked) {
@@ -55,22 +55,35 @@ module.exports = {
 			});
 	},
 	scheduleMeal: meal => {
-		let date = new Date(meal.deadline - hour * 2);
+		let date = new Date(meal.deadline - hour * 2),
+			date2 = new Date(meal.deadline + minute * 2);
 		log(6, `scheduling deadline reminder for ${meal.name} at ${date.getDate()}.${date.getMonth() + 1} - ${date.getHours()}:${date.getMinutes()}`);
-		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline(meal))
+		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline(meal));
+		schedule['meal_payment_' + meal.id] = scheduler.scheduleJob(date2, mealPayment(meal));
 	},
 	rescheduleMeal: meal => {
-		let date = new Date(meal.deadline - hour * 2);
+		let date = new Date(meal.deadline - hour * 2),
+			date2 = new Date(meal.deadline + minute * 2);
+
 		log(6, `rescheduling deadline reminder for ${meal.name} at ${date.getDate()}.${date.getMonth() + 1} - ${date.getHours()}:${date.getMinutes()}`);
+
 		if (schedule['meal_' + meal.id]) {
 			schedule['meal_' + meal.id].cancel();
 		}
-		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline(meal))
+		if (schedule['meal_payment_' + meal.id]) {
+			schedule['meal_payment_' + meal.id].cancel();
+		}
+
+		schedule['meal_' + meal.id] = scheduler.scheduleJob(date, mealDeadline(meal));
+		schedule['meal_payment_' + meal.id] = scheduler.scheduleJob(date2, mealPayment(meal));
 	},
 	cancelMeal : id => {
 		log(6, `canceling deadline reminder for meal_${id}`);
 		if (schedule['meal_' + id]) {
 			schedule['meal_' + id].cancel();
+		}
+		if (schedule['meal_payment_' + id]) {
+			schedule['meal_payment_' + id].cancel();
 		}
 	}
 }
