@@ -32,11 +32,29 @@ def build(String branch) {
         while read p; do
           export $p
         done < ./build_scripts/variables
+        openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -nodes -subj "/CN=$FOOD_EXTERNAL"
       '''
-      sh 'openssl req -x509 -newkey rsa:4096 -keyout $SSLKEY -out $SSLCERT -days 365 -nodes -subj "/CN=$FOOD_EXTERNAL"'
     } finally {
       echo "Clean up workspace, Removing old packages"
       deleteDir()
     }
+  }
+}
+
+/**
+ * Runs unit tests and ui tests.
+ *
+ * @param branch we want to build the esf for.
+ */
+def tests(String branch) {
+
+  stage("Unit tests: ${branch}") {
+
+    sh 'npm test'
+  }
+
+  stage("UI tests: ${branch}") {
+
+    sh 'npm run-script test-ui'
   }
 }
