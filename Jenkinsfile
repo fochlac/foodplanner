@@ -11,9 +11,9 @@ String VERSION_BRANCH="stable"
 if (env.BRANCH_NAME == DEV_BRANCH) {
   node(NODE) {
 
-      foodPlanner.checkout()
-      foodPlanner.build(env.BRANCH_NAME)
-      foodPlanner.tests(env.BRANCH_NAME)
+      //foodPlanner.checkout()
+      //foodPlanner.build(env.BRANCH_NAME)
+      //foodPlanner.tests(env.BRANCH_NAME)
       print "merge: dev->stable"
   }
 }
