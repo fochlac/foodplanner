@@ -19,6 +19,7 @@ const mapStateToProps = (state, ownProps) => {
         return {
             edit: false,
             meal,
+            signedUp: !!meal.signups.map(id => state.signups[id]).find(signup => signup.userId === state.user.id),
             user: state.user
         };
     }

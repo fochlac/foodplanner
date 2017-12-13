@@ -32,7 +32,7 @@ const   gmail               = require('gmail-send')({ user: 'ep.mittagsplaner@gm
 
 module.exports = {
     sendDeadlineReminder(meal) {
-        userDb.getUsersByProperty('deadlineReminder', 1)
+        userDb.getUnsignedUsersByProp(meal.id, 'deadlineReminder', 1)
             .then((data) => {
                 if (data.length) {
                     data.forEach(user => mail(deadlineReminder(user, meal), error.checkError(3, 'Error sending deadline reminder.'), user.name, 'deadlineReminder'));
