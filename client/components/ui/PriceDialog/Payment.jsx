@@ -22,7 +22,7 @@ export default class Payment extends React.Component {
                   this.props.signups.map((signup, index) => (
                     <tr key={index}>
                       <td>{signup.name}</td>
-                      <td className="noWrap">{signup.price.toFixed(2)}<span className="moneySymbol">€</span></td>
+                      <td className="noWrap">{signup.price ? signup.price.toFixed(2) : 'unbekannt'}<span className="moneySymbol">€</span></td>
                       <td className="pointer" onClick={() => this.props.toggle_paid(signup.id, !signup.paid)}><span className={'fa fa-lg ' + (signup.paid ? 'fa-check' : 'fa-times')}></span></td>
                     </tr>
                   ))
