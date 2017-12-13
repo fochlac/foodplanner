@@ -316,10 +316,10 @@ module.exports = {
         .catch(err => {
             if (err && err.status) {
                 err.success = false;
-                return err;
+                return Promise.reject(err);
             }
 
-            return error.db.codeError('modules/db/signup.js:createSignUp.4', arguments);
+            return error.db.codeError('modules/db/signup.js:createSignUp.4', err);
         });
     },
 
