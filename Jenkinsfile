@@ -11,10 +11,10 @@ String VERSION_BRANCH="stable"
 if (env.BRANCH_NAME == DEV_BRANCH) {
   node(NODE) {
 
-    print "checkout: dummy"
-    print "build: dummy"
-    print "testAll: dummy"
-    print "merge: dev->stable"
+      //foodPlanner.checkout()
+      //foodPlanner.build(env.BRANCH_NAME)
+      //foodPlanner.tests(env.BRANCH_NAME)
+      print "merge: dev->stable"
   }
 }
 
@@ -30,11 +30,8 @@ if (env.BRANCH_NAME == VERSION_BRANCH) {
 // Testing pull requests.
 if (env.BRANCH_NAME ==~ /PR-.*/ ) {
   node(NODE) {
-    foodPlanner.checkout()
-    foodPlanner.build(env.BRANCH_NAME)
-    foodPlanner.tests(env.BRANCH_NAME)
-    print "buildChanged: dummy"
-    print "testChanged: dummy"
-    print "say: dummy"
+      foodPlanner.checkout()
+      foodPlanner.build(env.BRANCH_NAME)
+      foodPlanner.tests(env.BRANCH_NAME)
   }
 }
