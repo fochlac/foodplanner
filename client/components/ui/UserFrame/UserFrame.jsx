@@ -1,4 +1,5 @@
 import React from 'react';
+import dEqual from 'fast-deep-equal';
 import './UserFrame.less';
 import EmailInput from 'UI/EmailInput.js';
 
@@ -14,6 +15,13 @@ export default class UserFrame extends React.Component {
 
         this.nameInput = this.handleInput('name').bind(this);
         this.mailInput = this.handleInput('mail').bind(this);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (dEqual(nextProps.user, this.props.user) && dEqual(nextProps.app.mailSuggestion, this.props.app.mailSuggestion) && nextState.register === this.state.register) {
+            return false;
+        }
+        return true;
     }
 
     submit() {

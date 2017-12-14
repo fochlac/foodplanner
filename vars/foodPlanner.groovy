@@ -68,8 +68,11 @@ def tests(String branch) {
         export FOOD_CLIENT=$(pwd)/dist/
         export FOOD_TESTS=$(pwd)/test/
         export FOOD_ROOT=$(pwd)/
-        node ./server/index.js & > /dev/null
-        npm run-script test-ui
+        node ./server/index.js &
+        touch test-log
+        npm run-script test-ui > test-log
+        cat test-log
+        pkill -f "node.*server/index.js"
     '''
   }
 }
