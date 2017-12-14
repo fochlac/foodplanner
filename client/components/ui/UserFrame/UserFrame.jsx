@@ -17,8 +17,8 @@ export default class UserFrame extends React.Component {
         this.mailInput = this.handleInput('mail').bind(this);
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (dEqual(nextProps.user, this.props.user) && dEqual(nextProps.app.mailSuggestion, this.props.app.mailSuggestion)) {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (dEqual(nextProps.user, this.props.user) && dEqual(nextProps.app.mailSuggestion, this.props.app.mailSuggestion) && nextState.register === this.state.register) {
             return false;
         }
         return true;
