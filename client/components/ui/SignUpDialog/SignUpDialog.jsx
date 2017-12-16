@@ -22,11 +22,21 @@ export default class CreateMealDialog extends React.Component {
 
     this.nameInput = this.handleInput('name').bind(this);
     this.commentInput = this.handleInput('comment').bind(this);
+
+    this.mySetState = function (data, cb) {
+      this.setState(data, () => {
+        const app = history.state.app ? history.state.app : {};
+        if (cb) {
+          cb();
+        }
+        history.replaceState({app: {...app, dialog: {...(app.dialog ? app.dialog : {}), state: this.state}}}, document.title, document.location.pathname);
+      });
+    }    
   }
 
   handleInput(field) {
     return (evt) => {
-      this.setState({
+      this.mySetState({
         [field]: evt.target.value
       });
     };
@@ -56,7 +66,7 @@ export default class CreateMealDialog extends React.Component {
 
       newArr[pos] = newOption;
 
-      this.setState({
+      this.mySetState({
         options: newArr
       });
     }

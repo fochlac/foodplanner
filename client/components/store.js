@@ -1,5 +1,4 @@
 import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
 import reducers from './reducers.js';
 import { apiMiddleware } from './middleware/api.js';
 import { addActionId } from './middleware/addActionId.js';
@@ -27,7 +26,7 @@ export function configureStore(initialState = {}) {
   const store = createStore(
     reducers,
     initialState,
-    applyMiddleware(thunkMiddleware, addActionId, apiMiddleware, localDb, urlHandler, handleAssync, handleErrors, logMiddleware)
+    applyMiddleware(addActionId, apiMiddleware, localDb, urlHandler, handleAssync, handleErrors, logMiddleware)
   )
   return store;
 };

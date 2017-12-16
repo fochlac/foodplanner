@@ -23,13 +23,13 @@ function handle_push(event) {
     event.waitUntil(initDb('food', 'userData').then(db => {
         return db.get('user');
     }).then((user) => {
-        if (msg.type === "creationNotice" && user.creationNotice === 1) {
+        if (msg.type === "creationNotice" && user.creationNotice_notification === 1) {
             return self.registration.showNotification('Neues Mittagsangebot vorhanden!', {
                 body: formatDateTime(msg.data.time) + ': ' + msg.data.name,
                 icon: msg.data.image ? serverUrl + msg.data.image : '',
                 requireInteraction: true
             });
-        } else if (msg.type === "deadlineReminder" && user.deadlineReminder === 1) {
+        } else if (msg.type === "deadlineReminder" && user.deadlineReminder_notification === 1) {
             return self.registration.showNotification('Letzte Anmeldemöglichkeit!', {
                 body: formatDateTime(msg.data.time) + ': ' + msg.data.name + '\nAnmeldung bis: ' + formatDateTime(msg.data.deadline),
                 icon: msg.data.image ? serverUrl + msg.data.image : '',
