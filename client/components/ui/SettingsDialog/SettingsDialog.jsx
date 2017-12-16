@@ -20,6 +20,16 @@ export default class SettingsDialog extends React.Component {
     this.handleCheck = this.handleCheck.bind(this);
     this.mailInput = this.handleInput('mail').bind(this);
     this.nameInput = this.handleInput('name').bind(this);
+
+    this.mySetState = function (data, cb) {
+      this.setState(data, () => {
+        const app = history.state.app ? history.state.app : {};
+        if (cb) {
+          cb();
+        }
+        history.replaceState({app: {...app, dialog: {...(app.dialog ? app.dialog : {}), state: this.state}}}, document.title, document.location.pathname);
+      });
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -34,23 +44,17 @@ export default class SettingsDialog extends React.Component {
     if (s.deadlineReminder_notification || s.creationNotice_notification) {
       getNotificationPermission()
         .then(() => {
-          if (location.href !== location.origin) {
-            history.pushState({}, "Mittagsplaner", location.origin);
-          }
-          this.props.save_settings(this.state);
+          this.props.save_settings(s);
         })
         .catch(() => {
           // add error message
-          this.setState({
+          this.mySetState({
             deadlineReminder_notification: 0,
             creationNotice_notification: 0
           });
         })
     } else {
-      if (location.href !== location.origin) {
-        history.pushState({}, "Mittagsplaner", location.origin);
-      }
-      this.props.save_settings(this.state);
+      this.props.save_settings(s);
     }
 
   }
@@ -61,7 +65,7 @@ export default class SettingsDialog extends React.Component {
 
   handleInput(field) {
     return (evt) => {
-      this.setState({
+      this.mySetState({
         [field]: evt.target.value
       });
     };
@@ -69,7 +73,7 @@ export default class SettingsDialog extends React.Component {
 
   handleCheck(event, type) {
     return (evt) => {
-      this.setState({
+      this.mySetState({
         [event + '_' + type]: +evt.target.checked
       });
     };
@@ -92,7 +96,6 @@ export default class SettingsDialog extends React.Component {
               <label htmlFor="SettingsDialog_mail">E-Mail</label>
               <div className="row">
                 <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput} autoComplete="off" />
-                <span className={'fa fa-lg fa-fw fa-spin fa-spinner' + (this.props.app.hiddenBusy ? '' : ' invisible')}></span>
               </div>
             </div>
             : null

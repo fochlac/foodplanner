@@ -28,7 +28,10 @@ class App extends React.Component {
             .then(db => db.get('user'))
             .then(user => {
                 if (user.id) {
-                    this.props.initial_user(user.id)
+                    this.props.initial_user(user.id, {
+                        creationNotice_notification: user.creationNotice_notification, 
+                        deadlineReminder_notification: user.deadlineReminder_notification
+                    });
                 }
             })
             .catch(console.log);

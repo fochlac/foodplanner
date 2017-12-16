@@ -10,12 +10,13 @@ export const initial_meals = (hidden) => ({
   enqueue: initial_signups.bind(null, hidden)
 });
 
-export const initial_user = (id) => ({
+export const initial_user = (id, localSettings) => ({
   type: 'INITIAL_USER',
   api: {
     url: '/api/user/' + id,
     method: 'get'
-  }
+  },
+  localSettings
 });
 
 export const initial_signups = (hidden) => ({
@@ -329,10 +330,10 @@ export const save_settings = (data) => ({
       deadlineReminder: data.deadlineReminder_mail
     }
   },
-  enqueue: data => save_settings_locally(Object.assign({}, {
-      creationNotice_notification: data.creationNotice_notification,
-      deadlineReminder_notification: data.deadlineReminder_notification
-    }, data))
+  enqueue: resData => save_settings_locally(Object.assign({}, resData, {
+    creationNotice_notification: data.creationNotice_notification,
+    deadlineReminder_notification: data.deadlineReminder_notification
+  }))
 });
 
 export const save_settings_locally = (data) => ({
