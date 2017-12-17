@@ -145,8 +145,8 @@ describe('CreateMealDialog', () => {
     expect(wrapper.find('#SignUpDialog_name').prop('defaultValue'), 'name input not set correctly').to.equal(TEST_MEAL.name);
     expect(wrapper.find('#SignUpDialog_description').prop('defaultValue'), 'description input not set correctly').to.equal(TEST_MEAL.description);
     expect(wrapper.find('#SignUpDialog_signupLimit').prop('defaultValue'), 'singup limit input not set correctly').to.equal(TEST_MEAL.signupLimit);
-    expect(wrapper.find('.deadline .timePicker').prop('defaultValue'), 'deadline hour select input not set correctly').to.equal(('00' + ((deadline.getMinutes() > 45) ? deadline.getHours() + 1 :  deadline.getHours())).slice(-2) + ':' + ((deadline.getMinutes() < 15 || deadline.getMinutes() > 45) ? '00' : '30'));
-    expect(wrapper.find('.time .timePicker').prop('defaultValue'), 'time hour select not set correctly').to.equal(('00' + ((time.getMinutes() > 45) ? time.getHours() + 1 :  time.getHours())).slice(-2) + ':' + ((time.getMinutes() < 15 || time.getMinutes() > 45) ? '00' : '30'));
+    expect(wrapper.find('.deadline .timePicker').prop('defaultValue'), 'deadline hour select input not set correctly').to.equal(formatTime(round(deadline, 30 * 60)));
+    expect(wrapper.find('.time .timePicker').prop('defaultValue'), 'time hour select not set correctly').to.equal(formatTime(round(time, 30 * 60)));
     expect(wrapper.find('.templateSelector'), 'template selector not found').to.have.lengthOf(0);
     expect(wrapper.find('.addOption'), 'add option link not found').to.have.lengthOf(1);
   });

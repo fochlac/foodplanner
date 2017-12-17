@@ -6,17 +6,11 @@ Enzyme.configure({ adapter: new Adapter() });
 var jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const { document } = (new JSDOM('', {
-<<<<<<< HEAD
 	  url: "https://example.org/",
 	})).window;
 global.document = Object.assign({}, document);
-=======
-	  url: "https://example.org/"
-	})).window;
-global.document = document;
->>>>>>> send money & create meal dialog tests
 
-var exposedProperties = ['window', 'navigator', 'document', 'location'];
+var exposedProperties = ['window', 'navigator', 'document', 'location', 'Notification'];
 global.window = document.defaultView;
 Object.keys(document.defaultView).forEach((property) => {
     if (typeof global[property] === 'undefined') {
@@ -48,3 +42,7 @@ global.document.createElement = (type, preventLoop) => {
 	global.unboundElement = document.createElement('type');
 	return global.unboundElement;
 }
+global.Notification = {
+    permission: 'granted'
+}
+global.window.Notification = true;

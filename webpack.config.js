@@ -77,13 +77,13 @@ module.exports = {
             SCRIPTS:    path.resolve('./client/components/scripts'),
             PAGES:      path.resolve('./client/components/pages'),
             ROOT:       path.resolve('./client/components/root'),
+            SW:         path.resolve('./node_modules/serviceworker-webpack-plugin/lib'),
             ACTIONS$:   path.resolve('./client/components/actions.js')
         }
     },
     plugins: [
         new ExtractTextPlugin({
-            filename: "styles.css",
-            disable: true
+            filename: "styles.css"
         }),
         new ServiceWorkerWebpackPlugin({
             entry: './client/sw.js',

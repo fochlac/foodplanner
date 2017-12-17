@@ -68,8 +68,8 @@ export default class UserFrame extends React.Component {
                     <button onClick={this.submit.bind(this)}>{ this.state.register ? 'Registrieren' : 'Anmelden' }</button>
                     {
                         this.state.register
-                        ? <span className="fakeLink signinLink" onClick={this.setState.bind(this, {register: false}, null)}>Anmelden</span>
-                        : <span className="fakeLink registerLink" onClick={this.setState.bind(this, {register: true}, null)}>Registrieren</span>
+                        ? <span className="fakeLink signinLink" onClick={this.setState.bind(this, {register: false}, null)}>Anmelden <span className="fa fa-angle-double-right"></span></span>
+                        : <span className="fakeLink registerLink" onClick={this.setState.bind(this, {register: true}, null)}>Registrieren <span className="fa fa-angle-double-right"></span></span>
                     }
                 </div>
             );
