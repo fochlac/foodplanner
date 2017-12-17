@@ -6,15 +6,9 @@ Enzyme.configure({ adapter: new Adapter() });
 var jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const { document } = (new JSDOM('', {
-<<<<<<< HEAD
 	  url: "https://example.org/",
 	})).window;
 global.document = Object.assign({}, document);
-=======
-	  url: "https://example.org/"
-	})).window;
-global.document = document;
->>>>>>> send money & create meal dialog tests
 
 var exposedProperties = ['window', 'navigator', 'document', 'location'];
 global.window = document.defaultView;
