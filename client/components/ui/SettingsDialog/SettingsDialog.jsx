@@ -23,7 +23,7 @@ export default class SettingsDialog extends React.Component {
 
     this.mySetState = function (data, cb) {
       this.setState(data, () => {
-        const app = history.state.app ? history.state.app : {};
+        const app = (history && history.state && history.state.app) ? history.state.app : {};
         if (cb) {
           cb();
         }

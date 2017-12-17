@@ -17,7 +17,8 @@ module.exports = {
     externals: [nodeExternals({
         whitelist: [
             /.*(shallow-equals).*/,
-            /.*(deep-equals).*/
+            /.*(deep-equals).*/,
+            /.*(react-day-picker).*/
         ]
     })],
     module: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import CreateMealDialog from 'UI/CreateMealDialog/CreateMealDialog.jsx';
-import {meal_signup, create_meal, edit_meal, close_dialog} from 'ACTIONS';
+import { create_meal, edit_meal, close_dialog } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     const edit = ownProps.type === 'edit';
@@ -13,8 +13,6 @@ const mapStateToProps = (state, ownProps) => {
         meals: state.meals,
         edit
     };
-
-
 };
 
-export default connect(mapStateToProps, {meal_signup, create_meal, edit_meal, close_dialog})(CreateMealDialog);
+export default connect(mapStateToProps, { create_meal, edit_meal, close_dialog })(CreateMealDialog);

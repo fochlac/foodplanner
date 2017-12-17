@@ -5,7 +5,9 @@ Enzyme.configure({ adapter: new Adapter() });
 
 var jsdom = require('jsdom');
 const { JSDOM } = jsdom;
-const { document } = (new JSDOM('')).window;
+const { document } = (new JSDOM('', {
+	  url: "https://example.org/"
+	})).window;
 global.document = document;
 
 var exposedProperties = ['window', 'navigator', 'document', 'location'];
@@ -21,6 +23,15 @@ global.navigator = {
     userAgent: 'node.js'
 };
 global.location = {
-    origin: 'testsite',
-    href: 'testsite'
+    origin: 'http://testsite.de/',
+    href: 'http://testsite.de/'
 };
+global.FormData = function() {
+	this.obj = {};
+
+	this.append = (key, val) => {
+		this.obj[key] = val;
+	}
+
+	this.get = () => this.obj;
+}
