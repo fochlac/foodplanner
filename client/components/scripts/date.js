@@ -66,6 +66,6 @@ export const formatTimeShort = (date) => {
 }
 
 export const round = (date, duration) => {
-    return moment(Math.ceil((+date) / (+duration * 1000)) * (+duration * 1000));
+    return new Date(Math.round((+date) / (+duration * 1000)) * (+duration * 1000));
 }
 
