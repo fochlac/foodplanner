@@ -11,7 +11,7 @@ const second = 1000,
         offset = (new Date()).getTimezoneOffset()/60;
 
     return str.replace(hour[0], ('00' + (+hour[1] - offset)).slice(-2) + ':' + hour[2]);
-  }
+  };
 
 describe('formatDate', () => {
   it('should format date objects as 01.01.12', () => {
