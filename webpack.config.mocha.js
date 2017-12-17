@@ -69,6 +69,7 @@ module.exports = {
             PAGES:      path.resolve('./client/components/pages'),
             ROOT:       path.resolve('./client/components/root'),
             ACTIONS:    path.resolve('./client/components/actions.js'),
+            T_RES:       path.resolve('./test/client/resources'),
             T_UI:       path.resolve('./test/client/uitests'),
             T_UNIT:    path.resolve('./test/client/unittests')
         }

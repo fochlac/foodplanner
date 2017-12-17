@@ -233,7 +233,7 @@ export default class CreateMealDialog extends React.Component {
               </div>
             </div>
             <div className="col">
-              <ImageUploader callback={this.handleImage} opts={{imageUrl: s.image}}/>
+              <ImageUploader callback={this.handleImage} opts={{imageUrl: ''}}/>
             </div>
           </div>
           <div>

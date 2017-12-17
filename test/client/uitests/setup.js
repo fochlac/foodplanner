@@ -81,6 +81,7 @@ before(function() {
         this.username = 'testuser';
         this.usermail = 'test@fochlac.com';
         this.path = process.env.FOOD_TESTS + '/client/uitests';
+        this.resourcePath = process.env.FOOD_TESTS + '/client/resources';
     }
 
     this.driver.get(`https://${process.env.FOOD_EXTERNAL}${(process.env.FOOD_EXTERNAL === 'localhost') ? (':' + process.env.FOOD_PORT) : ''}/`);

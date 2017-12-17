@@ -84,7 +84,7 @@ const setDay = async function(day) {
             signup = elems[3];
         name.clear();
         name.sendKeys(meal.name);
-        imageInput.sendKeys(this.path + meal.image);
+        imageInput.sendKeys(this.resourcePath + meal.image);
         description.clear();
         description.sendKeys(meal.description);
         signup.clear();
