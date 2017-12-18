@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 const second = 1000,
 	minute = 60 * second,
 	hour = 60 * minute,

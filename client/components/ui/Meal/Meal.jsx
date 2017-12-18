@@ -67,7 +67,9 @@ export default class Meal extends React.Component {
 
     const p = this.props,
         s = this.state,
-        signups = p.meal.signups.map(id => p.signups[id]),
+        signups = p.meal.signups.map(id => {
+          return p.signups[id];
+        }),
         summary = Object.values(signups.reduce((acc, signup) => {
           signup.options.forEach(option => {
             const mealOption = p.meal.options.find(opt => opt.id == option.id),
@@ -140,7 +142,7 @@ export default class Meal extends React.Component {
                 signups.map(signup => (
                   <li key={signup.id}>
                     <p className="user">
-                      <span>{signup.name}</span>
+                      <span className="name">{signup.name}</span>
                       {
                         signup.price
                         ? <span className="moneyFrame"><span className="money">{signup.price.toFixed(2)}</span><span className="moneySymbol">€</span></span>
@@ -169,12 +171,12 @@ export default class Meal extends React.Component {
                               }
                               {
                                 (mealOption.type !== 'toggle')
-                                ? <span>{option.value}</span>
+                                ? <span className="optionValue">{option.value}</span>
                                 : null
                               }
                               {
                                 (mealOption.type === 'toggle')
-                                ? <span>{mealOption.name}</span>
+                                ? <span className="optionShow">{mealOption.name}</span>
                                 : null
                               }
                             </li>

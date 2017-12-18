@@ -48,7 +48,7 @@ describe('CreateMealDialog', () => {
         TEST_APP = {dialog: {}},
         TEST_MEALS = [{options: ['', ''], name: 'test', id: 0}, {options: ['', '', '', ''], name: 'test2', id: 1}],
         wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS}/>);
-    
+
 
     expect(wrapper.find('.templateSelector'), 'template selector not found').to.have.lengthOf(1);
     expect(wrapper.find('.templateSelector option'), 'template selector options not found').to.have.lengthOf(3);
@@ -57,7 +57,7 @@ describe('CreateMealDialog', () => {
 
     wrapper.find('.templateSelector').simulate('change', {target: {value: 0}});
 
-    expect(wrapper.find(MealOption), 'meal option not found').to.have.lengthOf(2); 
+    expect(wrapper.find(MealOption), 'meal option not found').to.have.lengthOf(2);
   });
 
   it('should close on cancel button click', () => {
