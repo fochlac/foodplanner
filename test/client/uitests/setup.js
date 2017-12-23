@@ -73,7 +73,7 @@ driver
     }
 
 
-before(function() {
+before(async function() {
     this.timeout(10000);
 
     if (!this.driver) {
@@ -85,7 +85,6 @@ before(function() {
     }
 
     this.driver.get(`https://${process.env.FOOD_EXTERNAL}${(process.env.FOOD_EXTERNAL === 'localhost') ? (':' + process.env.FOOD_PORT) : ''}/`);
-
     return this.driver.wait(until.titleIs('Mittagsplaner'), 10000);
 });
 

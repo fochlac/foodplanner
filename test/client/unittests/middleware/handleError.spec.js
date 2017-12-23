@@ -19,11 +19,6 @@ describe('handleErrors', () => {
             status: 'failure',
             data: {type: 'Bad_Request', reason: 'offer_full'},
             actionId: 2
-        },
-        act4 = {
-            status: 'failure',
-            data: {type: 'asdawd', reason: 'offer_full'},
-            actionId: 3
         };
 
     handleErrors({dispatch: action => {
@@ -43,13 +38,5 @@ describe('handleErrors', () => {
     }})((action) => {
         expect(action).to.deep.equal(act3);
     })(act3);
-
-    handleErrors({dispatch: action => {
-        expect(action).to.deep.equal(create_error(act4.actionId, "Ein unbekannter Fehler ist aufgetreten."));
-    }})((action) => {
-        expect(action).to.deep.equal(act4);
-    })(act4);
-
-
   });
 });
