@@ -3,19 +3,18 @@ import Dialog from 'UI/Dialog.js';
 import SignUpOption from './SignUpOption.jsx';
 import './SignUp.less';
 
-export default class CreateMealDialog extends React.Component {
+export default class SignUpDialog extends React.Component {
   constructor(props) {
     super();
 
     this.state = props.edit ? props.signup : {
       name: props.user.name ? props.user.name : '',
       userId: props.user.id ? props.user.id : 0,
-      paid: 0,
       signedUp: props.signedUp,
       options: props.meal.options.map(option => ({
           id: option.id,
           value: option.values[0] ? option.values[0].name : null,
-          show: (option.type === 'toggle') ? 0 : undefined
+          show: undefined
         })),
       comment: ''
     }
@@ -31,7 +30,7 @@ export default class CreateMealDialog extends React.Component {
         }
         history.replaceState({app: {...app, dialog: {...(app.dialog ? app.dialog : {}), state: this.state}}}, document.title, document.location.pathname);
       });
-    }    
+    }
   }
 
   handleInput(field) {
@@ -103,14 +102,14 @@ export default class CreateMealDialog extends React.Component {
         <div className="body">
           {
             !s.userId
-            ? <div className="warning row title" title="Als anonymer Nutzer kann nur der Organisator dieses Termins deine Anmeldung verändern. Bitte logge dich mit deiner E-Mail ein um deine Anmeldungen verwalten zu können.">
+            ? <div className="warning row title anon" title="Als anonymer Nutzer kann nur der Organisator dieses Termins deine Anmeldung verändern. Bitte logge dich mit deiner E-Mail ein um deine Anmeldungen verwalten zu können.">
               <p>Du meldest dich als anonymer Nutzer an.</p>
             </div>
             : null
           }
           {
             s.signedUp && s.userId
-            ? <div className="warning row" >
+            ? <div className="warning row signedUp" >
               <p>Du bist für dieses Angebot bereits angemeldet!</p>
             </div>
             : null
@@ -123,7 +122,7 @@ export default class CreateMealDialog extends React.Component {
                 <span className="signupName">{s.name}</span>
                 {
                   !p.edit
-                  ? <span className="fakeLink push-right editName" onClick={this.setState.bind(this, {name: undefined, userId: undefined}, null)}><span className="fa fa-pencil"></span>Anonymen Nutzer anmelden</span>
+                  ? <span className="fakeLink push-right editName edit" onClick={this.setState.bind(this, {name: undefined, userId: undefined}, null)}><span className="fa fa-pencil"></span>Anonymen Nutzer anmelden</span>
                   : null
                 }
               </div>
@@ -133,7 +132,7 @@ export default class CreateMealDialog extends React.Component {
                 <label htmlFor="SignUpDialog_name" className="inlineBlock">Name</label>
                 {
                   (!p.edit && p.user.name && !s.userId)
-                  ? <span className="fakeLink push-right editName inlineBlock" onClick={this.setState.bind(this, {name: p.user.name, userId: p.user.id}, null)}><span className="fa fa-times"></span> Abbrechen</span>
+                  ? <span className="fakeLink push-right editName cancel inlineBlock" onClick={this.setState.bind(this, {name: p.user.name, userId: p.user.id}, null)}><span className="fa fa-times"></span> Abbrechen</span>
                   : null
                 }
               </div>

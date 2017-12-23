@@ -40,7 +40,7 @@ export default class SignUpOption extends React.Component {
             </div>
             <div className="row">
               <label className="radioLabel" htmlFor={'SignUpDialog_Option_yes_' + opt.id}>Nein</label>
-              <input type="radio" name={'SignUpDialog_Option_' + opt.id} id={'SignUpDialog_Option_no_' + opt.id} onChange={this.setOption('show')} value={0} defaultChecked={!val.show}/>
+              <input type="radio" name={'SignUpDialog_Option_' + opt.id} id={'SignUpDialog_Option_no_' + opt.id} onChange={this.setOption('show')} value={0} defaultChecked={!val.show && val.show !== undefined}/>
             </div>
           </div>
         }

@@ -10,7 +10,7 @@ const { document } = (new JSDOM('', {
 	})).window;
 global.document = Object.assign({}, document);
 
-var exposedProperties = ['window', 'navigator', 'document', 'location'];
+var exposedProperties = ['window', 'navigator', 'document', 'location', 'Notification'];
 global.window = document.defaultView;
 Object.keys(document.defaultView).forEach((property) => {
     if (typeof global[property] === 'undefined') {
@@ -42,3 +42,7 @@ global.document.createElement = (type, preventLoop) => {
 	global.unboundElement = document.createElement('type');
 	return global.unboundElement;
 }
+global.Notification = {
+    permission: 'granted'
+}
+global.window.Notification = true;

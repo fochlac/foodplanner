@@ -6,7 +6,7 @@ import {
       Switch
     } from 'react-router-dom';
 
-import DefaultPage              from 'ROOT/DefaultPage.js';
+import DefaultPage              from 'ROOT/DefaultPage.jsx';
 import { initServiceWorker }    from 'SCRIPTS/serviceWorker.js';
 import { initDb }               from 'SCRIPTS/indexedDb.js';
 import Dashboard                from 'PAGES/Dashboard.js';
@@ -29,7 +29,7 @@ class App extends React.Component {
             .then(user => {
                 if (user.id) {
                     this.props.initial_user(user.id, {
-                        creationNotice_notification: user.creationNotice_notification, 
+                        creationNotice_notification: user.creationNotice_notification,
                         deadlineReminder_notification: user.deadlineReminder_notification
                     });
                 }

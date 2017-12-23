@@ -19,7 +19,7 @@ export const formatDate = (date) => {
 export const formatDayNameDate = (date) => {
     const src = new Date((date.toString().length === 10) ? (date * 1000) : date);
 
-    return `${tage[src.getDay()]}, ${src.getDate()}.${src.getMonth() + 1}.${src.getFullYear().toString().slice(2,4)}`;
+    return `${tage[src.getDay()]}, ${fill(src.getDate(), 2)}.${fill(src.getMonth() + 1, 2)}.${fill(src.getFullYear(),2)}`;
 }
 
 export const formatTime = (date) => {
@@ -31,18 +31,18 @@ export const formatTime = (date) => {
 export const formatDateTime = (date) => {
     const src = new Date((date.toString().length === 10) ? (date * 1000) : date);
 
-    return `${src.getDate()}.${src.getMonth() + 1}.${src.getFullYear().toString().slice(2,4)} - ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
+    return `${fill(src.getDate(), 2)}.${fill(src.getMonth() + 1, 2)}.${fill(src.getFullYear(),2)} - ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
 }
 export const formatTimeShort = (date) => {
     const src = new Date((date.toString().length === 10) ? (date * 1000) : date),
     	diff = Date.now() - ((date.toString().length === 10) ? (date * 1000) : date);
 
     if (diff < -week) {
-        `${src.getDate()}.${src.getMonth() + 1}${(diff < year) ? '' : ('.' + src.getFullYear())} ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
+        return `${fill(src.getDate(), 2)}.${fill(src.getMonth() + 1, 2)}${(diff > -year) ? '' : ('.' + src.getFullYear())} ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
     } else if (diff < -day) {
         return `${tage[src.getDay()]}, ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
-    } else if (diff < -2 * hour) {
-    	return `in ${-Math.floor(diff / hour)} Stunden`;
+    } else if (diff < -1.5 * hour) {
+    	return `in ${-Math.round(diff / hour)} Stunden`;
     } else if (diff < -hour) {
         return `in 1 Stunde`;
     } else if (diff < -minute) {
@@ -56,11 +56,11 @@ export const formatTimeShort = (date) => {
     } else if (diff < 2 * hour) {
         return `vor 1 Stunde`;
     } else if (diff < day) {
-        return `vor ${Math.floor(diff / hour)} Stunden`;
+        return `vor ${Math.round(diff / hour)} Stunden`;
     } else if (diff < week) {
     	return `letzten ${tage[src.getDay()]}, ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
     }
-    return `${src.getDate()}.${src.getMonth() + 1}${(diff < year) ? '' : ('.' + src.getFullYear())} ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
+    return `${fill(src.getDate(), 2)}.${fill(src.getMonth() + 1, 2)}${(diff < year) ? '' : ('.' + src.getFullYear())} ${fill(src.getHours(), 2)}:${fill(src.getMinutes(), 2)}`;
 }
 
 export const round = (date, duration) => {

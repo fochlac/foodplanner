@@ -33,10 +33,7 @@ export default class SettingsDialog extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.app.mailSuggestion && !this.props.app.mailSuggestion && nextProps.app.mailSuggestion === this.state.mail) {
-      return false;
-    }
-    return true;
+
   }
 
   submit() {
@@ -46,7 +43,7 @@ export default class SettingsDialog extends React.Component {
         .then(() => {
           this.props.save_settings(s);
         })
-        .catch(() => {
+        .catch((err) => {
           // add error message
           this.mySetState({
             deadlineReminder_notification: 0,
@@ -118,34 +115,34 @@ export default class SettingsDialog extends React.Component {
                 <td>Neues Angebot</td>
                 {
                   !this.props.user.id
-                  ? <td><input type="checkbox" disabled="disabled" title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
-                  : <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice_mail}/></td>
+                  ? <td className="notification createdMail" ><input type="checkbox" disabled={true} title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
+                  : <td className="notification createdMail" ><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice_mail}/></td>
                 }
                 {
                   notificationsBlocked
-                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
-                  : <td><input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')}  checked={this.state.creationNotice_notification}/></td>
+                  ? <td className="notification createdNotification" ><input type="checkbox" disabled={true} title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                  : <td className="notification createdNotification" ><input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')}  checked={this.state.creationNotice_notification}/></td>
                 }
               </tr>
               <tr>
                 <td>Anmeldungs&shy;frist läuft ab</td>
                 {
                   !this.props.user.id
-                  ? <td><input type="checkbox" disabled="disabled" title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
-                  : <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder_mail}/></td>
+                  ? <td className="notification deadlineMail" ><input type="checkbox" disabled={true} title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
+                  : <td className="notification deadlineMail" ><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder_mail}/></td>
                 }
                 {
                   notificationsBlocked
-                  ? <td><input type="checkbox" disabled="disabled" title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
-                  : <td><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'notification')} checked={this.state.deadlineReminder_notification}/></td>
+                  ? <td className="notification deadlineNotification" ><input type="checkbox" disabled={true} title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                  : <td className="notification deadlineNotification" ><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'notification')} checked={this.state.deadlineReminder_notification}/></td>
                 }
               </tr>
             </tbody>
           </table>
         </div>
         <div className="foot">
-          <button type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
-          <button type="button" onClick={this.submit.bind(this)}>Bestätigen</button>
+          <button className="cancel" type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
+          <button className="submit" type="button" onClick={this.submit.bind(this)}>Bestätigen</button>
         </div>
       </Dialog>
     );

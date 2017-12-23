@@ -4,7 +4,7 @@ import UserFrame from 'UI/UserFrame.js';
 import './Dashboard.less';
 
 
-export default class Login extends React.Component {
+export default class Dashboard extends React.Component {
     constructor(props) {
         super();
 

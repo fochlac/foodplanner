@@ -1,4 +1,4 @@
-import runtime from 'serviceworker-webpack-plugin/lib/runtime';
+import runtime from 'SW/runtime';
 import {urlBase64ToUint8Array} from './crypto.js';
 
 export const getSubscription = () => {
