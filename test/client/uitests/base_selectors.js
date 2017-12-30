@@ -57,7 +57,13 @@ export const S = {
         count: By.className('count'),
         select: By.className('optionSelect'),
         selectOptions: By.css('.optionSelect option'),
-        yesno: By.css('input[type="radio"]')
+        yesno: By.css('input[type="radio"]'),
+        user: By.className('signupName'),
+        changeUser: By.className('editName'),
+        cancelChange: By.css('.editName.cancel'),
+        userInput: By.css('#SignUpDialog_name'),
+        commentInput: By.css('#SignUpDialog_comment'),
+        signupOptionByName: name => By.css(`option[value="${name}"]`)
     },
     dashboard: By.className('dashboard'),
     db: {
@@ -73,11 +79,20 @@ export const S = {
             image: By.css('.mealImage'),
             signup: By.css('.participate'),
             signups: By.css('.participantsList > li'),
-
+            signupByUser: name => By.xpath(`//ul[contains(@class, 'participantsList')]/li[contains(.//span[contains(@class, 'name')], '${name}')]`),
             timeHour: By.css('.date b'),
             creator: By.css('.creator span'),
             description: By.css('.description'),
             signupLimit: By.css('.participation .limit')
+        },
+        su: {
+            comment: By.css('.comment'),
+            optionCount: By.css('.optionCount'),
+            optionValue: By.css('.optionValue'),
+            optionShow: By.css('.optionShow'),
+            signupOptions: By.css('.signupOptions > li'),
+            edit: By.className('edit'),
+            cancel: By.className('cancel')
         }
     }
 }
