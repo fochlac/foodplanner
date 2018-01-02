@@ -45,9 +45,9 @@ export default class Dashboard extends React.Component {
                     <ul className="filterList">
                         {
                             filters.map(filter =>
-                            <li key={filter.type} className={'filter' + (this.state.filter.includes(filter.type) ? ' selected' : '')} onClick={() => this.setFilter(filter.type)}>
-                                {filter.name}
-                            </li>
+                                <li key={filter.type} className={'filter' + (this.state.filter.includes(filter.type) ? ' selected' : '')} onClick={() => this.setFilter(filter.type)}>
+                                    {filter.name}
+                                </li>
                             )
                         }
                     </ul>

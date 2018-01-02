@@ -53,6 +53,7 @@ export const apiMiddleware = store => next => action => {
             }
         })
         .catch(err => {
+            console.log(err);
             action.api = undefined;
             action.data = err;
             action.status = 'failure';
