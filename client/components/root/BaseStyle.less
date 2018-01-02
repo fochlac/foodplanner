@@ -44,6 +44,10 @@ button {
     padding: 5px;
     font-family: Raleway;
     font-size: 1em;
+
+    &:hover {
+       opacity: 0.85;
+    }
 }
 .inlineBlock {
     display: inline-block;
@@ -75,6 +79,7 @@ select {
     position: fixed;
     bottom: 0px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     left: 0;
     right: 0;
@@ -82,7 +87,7 @@ select {
     border-top: solid 1px @colorg1;
     font-weight: 600;
     background: @colorg5;
-    height: footerHeight;
+    height: @footerHeight;
     box-sizing: border-box;
 }
 .inlineBlock {

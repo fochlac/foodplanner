@@ -1,11 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Topbar from 'UI/Topbar.js';
 import BusyScreen from 'UI/BusyScreen/BusyScreen.jsx';
 import Error from 'UI/Error.js';
 import DialogController from 'ROOT/DialogController.jsx';
 import {resizeFocus, removeResizeFocus} from 'SCRIPTS/resizeFocus.js';
+import { show_impressum, initial_meals } from 'ACTIONS';
 
-export default class DefaultPage extends React.Component {
+export class DefaultPage extends React.Component {
     constructor(props) {
         super();
     }
@@ -37,3 +39,11 @@ export default class DefaultPage extends React.Component {
         </div>)
     }
 }
+
+const mapStateToProps = (state, ownProps) => ({
+  dialog: ownProps.dialog,
+  app: state.app,
+  errors: state.app.errors
+});
+
+export default connect(mapStateToProps, { show_impressum, initial_meals })(DefaultPage);

@@ -84,7 +84,7 @@ const setDay = async function(day) {
             signup = elems[3];
         name.clear();
         name.sendKeys(meal.name);
-        imageInput.sendKeys(this.path + meal.image);
+        imageInput.sendKeys(this.resourcePath + meal.image);
         description.clear();
         description.sendKeys(meal.description);
         signup.clear();
@@ -132,6 +132,58 @@ const setDay = async function(day) {
                         break;
                     case 'Ja-Nein':
                         expect((await optionElem.findElements(S.su.yesno)).length).to.equal(2);
+                        break;
+                }
+        }));
+    },
+    setSignupOptions = (elem, options, values) => {
+        return Promise.all(options.map(async (option, index) => {
+            const opts = values[index],
+                optionElem = await elem.findElement(S.su.optionByName(option.name));
+
+                switch(option.type) {
+                    case 'Anzahl':
+                        await optionElem.findElement(S.su.count).sendKeys(opts.count);
+                    case 'Auswahl':
+                        await optionElem.findElement(S.su.select).findElement(S.su.signupOptionByName(opts.value)).click();
+                        break;
+                    case 'Ja-Nein':
+                        await (await optionElem.findElements(S.su.yesno))[opts.show ? 0 : 1].click();
+                        break;
+                }
+        }));
+    },
+    validateEditSignup = (elem, options, values) => {
+        return Promise.all(options.map(async (option, index) => {
+            const opts = values[index],
+                optionElem = await elem.findElement(S.su.optionByName(option.name));
+
+                switch(option.type) {
+                    case 'Anzahl':
+                        expect(await optionElem.findElement(S.su.count).getAttribute('defaultValue')).to.equal(opts.count.toString());
+                    case 'Auswahl':
+                        expect(await optionElem.findElement(S.su.select).getAttribute('value')).to.equal(opts.value);
+                        break;
+                    case 'Ja-Nein':
+                        expect(await (await optionElem.findElements(S.su.yesno))[opts.show ? 0 : 1].getAttribute('selected')).to.equal('true');
+                        break;
+                }
+        }));
+    },
+    validateSignupOptions = async function(elem, options, values) {
+        const optionElems = await elem.findElements(S.db.su.signupOptions);
+        return Promise.all(options.filter(option => (option.type === "Ja-Nein" && option.show)).map(async (option, index) => {
+            const opts = values[index],
+                optionElem = optionElems[index];
+
+                switch(option.type) {
+                    case 'Anzahl':
+                        expect(+(await optionElem.findElement(S.db.su.optionCount).getText())).to.equal(+opts.count);
+                    case 'Auswahl':
+                        expect(await optionElem.findElement(S.db.su.optionValue).getText()).to.equal(opts.value);
+                        break;
+                    case 'Ja-Nein':
+                        expect(await optionElem.findElements(S.db.su.optionShow)).to.have.lengthOf(+opts.show);
                         break;
                 }
         }));
@@ -187,7 +239,27 @@ const meal = {
         description: 'asda asda asda',
         image: '/testimage.jpg',
         options: []
-    }
+    },
+    signupOptions = [
+        {
+            count: 3,
+            value: meal2.options[0].values[0],
+        }, {
+            value: meal2.options[1].values[0],
+        }, {
+            show: 1
+        }
+    ],
+    signupOptions2 = [
+        {
+            count: 3,
+            value: meal2.options[0].values[2],
+        }, {
+            value: meal2.options[1].values[1],
+        }, {
+            show: 0
+        }
+    ]
 
 
 describe('create meal', () => {
@@ -293,18 +365,83 @@ describe('edit meal', () => {
         this.timeout(5000);
         const dialog = await this.openSignupDialog();
         await this.checkSignupOptions(dialog, meal2.options);
-        dialog.findElement(S.dialog.cancel).click();
-        return this.driver.wait(until.elementIsNotPresent(S.dialog.signup));
     });
+});
 
-    after(async function() {
+describe('signup for meal', () => {
+    before(async function() {
+        this.setSignupOptions = setSignupOptions.bind(this);
+        this.validateSignupOptions = validateSignupOptions.bind(this);
+
+        const dialog = await this.driver.findElements(S.dialog.signup);
         this.timeout(5000);
-        const dialog = await this.driver.findElements(S.dialog.dialog);
-        if (dialog.length) {
-            dialog[0].findElement(S.dialog.cancel).click();
-            await this.driver.wait(until.elementIsNotPresent(S.dialog.dialog));
+        
+        if (!dialog.length) {
+            const dialog = await this.openSignupDialog();
         }
     });
+
+    it('should create a signup', async function() {
+        this.timeout(5000);
+        const COMMENT = "test123";
+        expect(await this.driver.findElement(S.su.user).getText()).to.include(this.username);
+        await this.driver.findElement(S.su.commentInput).sendKeys(COMMENT);
+        await this.setSignupOptions(await this.driver.findElement(S.dialog.signup), meal2.options, signupOptions);
+
+        await this.driver.findElement(S.dialog.submit).click();
+        await this.driver.wait(until.elementIsNotPresent(S.dialog.signup));
+        expect(await this.driver.findElements(S.db.m.signups)).to.have.lengthOf(1);
+
+        await this.validateSignupOptions(await this.driver.findElement(S.db.m.signupByUser(this.username)), meal2.options, signupOptions);
+        expect(await this.driver.findElement(S.db.m.signupByUser(this.username)).findElement(S.db.su.comment).getText()).to.include(COMMENT);
+    });   
+});
+
+describe('edit signup for meal', () => {
+    before(async function() {
+        this.timeout(5000);
+
+        this.setSignupOptions = setSignupOptions.bind(this);
+        this.validateSignupOptions = validateSignupOptions.bind(this);
+        this.validateEditSignup = validateEditSignup.bind(this);
+
+        const dialog = await this.driver.findElements(S.dialog.signup);
+        
+        if (dialog.length) {
+            await dialog.findElement(S.dialog.cancel).click();
+        }
+
+        await this.driver.findElement(S.db.m.signupByUser(this.username)).findElement(S.db.su.edit).click();
+        await this.driver.waitElementLocated(S.dialog.signup);
+    });
+
+    it('should show old settings', async function() {
+        this.timeout(5000);
+
+        const COMMENT = "test123",
+            dialog = await this.driver.findElement(S.dialog.signup);
+
+        await this.validateEditSignup(dialog, meal2.options, signupOptions)
+        await this.driver.findElement(S.su.commentInput).sendKeys(COMMENT);
+        await this.setSignupOptions(dialog, meal2.options, signupOptions2);
+        await dialog.findElement(S.dialog.submit).click();
+        await this.driver.wait(until.elementIsNotPresent(S.dialog.signup));
+
+        expect(await this.driver.findElements(S.db.m.signups)).to.have.lengthOf(1);
+
+        await this.validateSignupOptions(await this.driver.findElement(S.db.m.signupByUser(this.username)), meal2.options, signupOptions2);
+        expect(await this.driver.findElement(S.db.m.signupByUser(this.username)).findElement(S.db.su.comment).getText()).to.include(COMMENT);
+    });   
+});
+
+describe('delete signup for meal', () => {
+
+    it('should show old settings', async function() {
+        this.timeout(5000);
+        await this.driver.findElement(S.db.m.signupByUser(this.username)).findElement(S.db.su.cancel).click();
+
+        expect(await this.driver.findElements(S.db.m.signups)).to.have.lengthOf(0);        
+    });   
 });
 
 describe('delete meal', () => {
@@ -322,7 +459,6 @@ describe('delete meal', () => {
         return this.driver.wait(until.elementIsNotPresent(S.db.getMealByName(meal.name)), 2000);
     });
 });
-
 
 describe('create meal without options', () => {
     before(function() {

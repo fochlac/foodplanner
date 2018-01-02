@@ -73,7 +73,7 @@ driver
     }
 
 
-before(function() {
+before(async function() {
     this.timeout(10000);
 
     if (!this.driver) {
@@ -81,10 +81,10 @@ before(function() {
         this.username = 'testuser';
         this.usermail = 'test@fochlac.com';
         this.path = process.env.FOOD_TESTS + '/client/uitests';
+        this.resourcePath = process.env.FOOD_TESTS + '/client/resources';
     }
 
     this.driver.get(`https://${process.env.FOOD_EXTERNAL}${(process.env.FOOD_EXTERNAL === 'localhost') ? (':' + process.env.FOOD_PORT) : ''}/`);
-
     return this.driver.wait(until.titleIs('Mittagsplaner'), 10000);
 });
 

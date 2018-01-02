@@ -29,8 +29,8 @@ export default class CreateMealDialog extends React.Component {
         ...props.meal,
         options: props.meal.options ? props.meal.options : [] ,
         deadline: formatDate(deadline),
-        deadlineHour: round(deadline, 30).format('HH:mm'),
-        timeHour: round(time, 30).format('HH:mm'),
+        deadlineHour: formatTime(round(deadline, 30 * 60)),
+        timeHour: formatTime(round(time, 30 * 60)),
         time: formatDate(time),
         timeObject: time,
         deadlineObject: deadline,
@@ -68,7 +68,7 @@ export default class CreateMealDialog extends React.Component {
 
     this.mySetState = function (data, cb) {
       this.setState(data, () => {
-        const app = history.state.app ? history.state.app : {};
+        const app = (history && history.state && history.state.app) ? history.state.app : {};
         if (cb) {
           cb();
         }
@@ -233,7 +233,7 @@ export default class CreateMealDialog extends React.Component {
               </div>
             </div>
             <div className="col">
-              <ImageUploader callback={this.handleImage} opts={{imageUrl: s.image}}/>
+              <ImageUploader callback={this.handleImage} opts={{imageUrl: ''}}/>
             </div>
           </div>
           <div>

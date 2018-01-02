@@ -56,8 +56,8 @@ export default class SendMoneyDialog extends React.Component {
           </div>
         </div>
         <div className="foot">
-          <button type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
-          <button type="button" className="red" onClick={this.submit.bind(this)}>Senden</button>
+          <button className="cancel" type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>
+          <button type="button" className="red submit" onClick={this.submit.bind(this)}>Senden</button>
         </div>
       </Dialog>
     );

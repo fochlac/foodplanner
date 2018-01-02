@@ -5,7 +5,6 @@ import { save_settings, close_dialog } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        app: state.app,
         user: ownProps.predef ? ownProps.predef : state.user,
         redirectHome: (ownProps.predef !== undefined)
     }

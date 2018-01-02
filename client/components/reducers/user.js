@@ -1,7 +1,7 @@
 const users = (state = {}, action) => {
     switch (action.type) {
         case 'INITIAL_USER':
-            return Object.assign({}, state, action.data);
+            return Object.assign({}, state, action.data, action.localSettings);
 
         case 'SAVE_SETTINGS':
             if(action.status === "complete") {
