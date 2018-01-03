@@ -112,7 +112,7 @@ module.exports = {
             ON meals.id = signups.meal
             WHERE signups.id = ${mysql.escape(signupId)};`,
         querySetPaid = `UPDATE signups SET paid = 1 WHERE signups.id = ${mysql.escape(signupId)};`,
-        queryGetTotal = `SELECT SUM(users.balance) AS total FROM users;`;
+        queryGetTotal = `SELECT SUM(users.balance) AS total FROM users LOCK IN SHARE MODE;`;
 
         return getConnection()
         .then (myDb => {
@@ -149,7 +149,7 @@ module.exports = {
                 .then(() => executeQuery(myDb, queryGetTotal))
                 .then(result => {
                     if (+result[0].total !== 0) {
-                        log(1, 'Error in balance, stopping transaction!');
+                        log(1, 'Error in balance, stopping transaction! Total is ', +result[0].total);
                         return Promise.reject({type: 2, status: 500, message: 'Error in total balance. Stopping transaction.'});
                     }
                 })
