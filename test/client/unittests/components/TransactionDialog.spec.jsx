@@ -7,6 +7,7 @@ import TransactionDialog from 'UI/TransactionDialog/TransactionDialog.jsx';
 
 describe('TransactionDialog', () => {
   it('should render all elements', () => {
+    let get_transaction_history = false;
     const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} close_dialog={() => dialog_closed=true} get_transaction_history={() => get_transaction_history=true}/>);
 
     expect(wrapper.find('.titlebar').length).to.equal(1);
@@ -20,6 +21,7 @@ describe('TransactionDialog', () => {
   });
 
   it('should show transactions', () => {
+    let get_transaction_history = false;
     const TEST_TRANSACTION = {
         time: Date.now() - 2000000,
         reason: 'test1',
@@ -40,6 +42,7 @@ describe('TransactionDialog', () => {
   });
 
   it('should show negative transactions', () => {
+    let get_transaction_history = false;
     const TEST_TRANSACTION = {
         time: Date.now() - 2000000,
         reason: 'test1',
@@ -61,6 +64,7 @@ describe('TransactionDialog', () => {
 
   it('should close on cancel button click', () => {
     let dialog_closed = false;
+    let get_transaction_history = false;
 
     const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>);
 
@@ -71,6 +75,7 @@ describe('TransactionDialog', () => {
 
   it('should close on close button click', () => {
     let dialog_closed = false;
+    let get_transaction_history = false;
 
     const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>);
 
@@ -82,8 +87,8 @@ describe('TransactionDialog', () => {
   it('should call get_transaction_history on mount', () => {
     let get_transaction_history = false;
 
-    const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>);
+    const wrapper = shallow(<TransactionDialog transactions={[]} user={{id: 10}} get_transaction_history={(data) => get_transaction_history=data} close_dialog={() => dialog_closed=true}/>);
 
-    expect(get_transaction_history).to.true;
+    expect(get_transaction_history).to.equal(10);
   });
 });
