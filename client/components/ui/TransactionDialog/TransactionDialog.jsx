@@ -8,6 +8,10 @@ export default class TransactionDialog extends React.Component {
     super();
   }
 
+  componentDidMount() {
+    this.props.get_transaction_history(this.props.user.id);
+  }
+
   cancel() {
     this.props.close_dialog();
   }

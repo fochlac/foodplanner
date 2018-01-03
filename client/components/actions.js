@@ -32,7 +32,7 @@ export const initial_signups = (hidden) => ({
 
 export const connect_serviceworker = (data) => ({
   type: 'CONNECT_SERVICEWORKER',
-  status: 'initialized',
+  status: 'hidden',
   api: {
     url: '/api/notification',
     method: 'post',
@@ -81,6 +81,15 @@ export const show_transaction_history = (id) => ({
   status: 'initialized',
   url: '/konto',
   title: 'Mittagsplaner - Kontoübersicht',
+  api: {
+    url: `/api/user/${id}/history`,
+    method: 'get'
+  }
+});
+
+export const get_transaction_history = (id) => ({
+  type: 'TRANSACTIONS',
+  status: 'hidden',
   api: {
     url: `/api/user/${id}/history`,
     method: 'get'
