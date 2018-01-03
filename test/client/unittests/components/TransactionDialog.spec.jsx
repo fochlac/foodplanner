@@ -7,7 +7,7 @@ import TransactionDialog from 'UI/TransactionDialog/TransactionDialog.jsx';
 
 describe('TransactionDialog', () => {
   it('should render all elements', () => {
-    const wrapper = shallow(<TransactionDialog transactions={[]} close_dialog={() => dialog_closed=true}/>);
+    const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} close_dialog={() => dialog_closed=true}/>);
 
     expect(wrapper.find('.titlebar').length).to.equal(1);
     expect(wrapper.find('.titlebar span.fa-times').length).to.equal(1);
@@ -26,7 +26,7 @@ describe('TransactionDialog', () => {
         user: 'testusername',
         diff: 5
       },
-      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} close_dialog={() => dialog_closed=true}/>),
+      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} user={{}} close_dialog={() => dialog_closed=true}/>),
       row = wrapper.find('.body > .transactions tr > td');
 
     expect(wrapper.find('.body > .transactions')).to.have.lengthOf(1);
@@ -46,7 +46,7 @@ describe('TransactionDialog', () => {
         user: 'testusername',
         diff: -5
       },
-      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} close_dialog={() => dialog_closed=true}/>),
+      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} user={{}} close_dialog={() => dialog_closed=true}/>),
       row = wrapper.find('.body > .transactions tr > td');
 
     expect(wrapper.find('.body > .transactions')).to.have.lengthOf(1);
@@ -62,7 +62,7 @@ describe('TransactionDialog', () => {
   it('should close on cancel button click', () => {
     let dialog_closed = false;
 
-    const wrapper = shallow(<TransactionDialog transactions={[]} close_dialog={() => dialog_closed=true}/>);
+    const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} close_dialog={() => dialog_closed=true}/>);
 
     wrapper.find('button.cancel').simulate('click');
 
@@ -72,7 +72,7 @@ describe('TransactionDialog', () => {
   it('should close on close button click', () => {
     let dialog_closed = false;
 
-    const wrapper = shallow(<TransactionDialog transactions={[]} close_dialog={() => dialog_closed=true}/>);
+    const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} close_dialog={() => dialog_closed=true}/>);
 
     wrapper.find('.titlebar span.fa-times').simulate('click');
 
