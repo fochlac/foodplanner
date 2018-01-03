@@ -10,7 +10,7 @@ const   meals           = require('express').Router()
     ,   log             = require(process.env.FOOD_HOME + 'modules/log');
 
 meals.post('/:id/lock', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     prices: 'array'
 }), (req, res) => {
@@ -18,8 +18,8 @@ meals.post('/:id/lock', error.router.validate('params', {
         valid = !req.body.prices.some((price) => {
             if (!(
                 ['meals', 'mealOptions', 'mealOptionValues'].includes(price.db)
-                && /^[0-9]*$/.test(price.id)
-                && /^[0-9.]*$/.test(price.price)
+                && /^[0-9]{1,9}$/.test(price.id)
+                && /^[0-9.]{0,9}$/.test(price.price)
             )) {
                 errorElem = price;
                 return true;
@@ -57,8 +57,8 @@ meals.post('/prices', error.router.validate('body', {
         valid = !req.body.prices.some((price) => {
             if (!(
                 ['meals', 'mealOptions', 'mealOptionValues'].includes(price.db)
-                && /^[0-9]*$/.test(price.id)
-                && /^[0-9.]*$/.test(price.price)
+                && /^[0-9]{1,9}$/.test(price.id)
+                && /^[0-9.]{0,9}$/.test(price.price)
             )) {
                 errorElem = price;
                 return true;
@@ -79,7 +79,7 @@ meals.post('/prices', error.router.validate('body', {
 });
 
 meals.get('/:id', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     mealsDB.getMealById(req.params.id).then((meals) => {
         res.status(200).send(meals);
@@ -95,14 +95,14 @@ meals.get('/', (req, res) => {
 });
 
 meals.put('/:id', image.single('imageData'), error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
     creator: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,70}$/,
     description: /^[^"%;]*$/,
-    time: /^[0-9]{1,50}$/,
-    deadline: /^[0-9]{0,50}$/,
-    signupLimit: /^[0-9]{0,50}$/,
+    time: /^[0-9]{1,15}$/,
+    deadline: /^[0-9]{0,15}$/,
+    signupLimit: /^[0-9]{0,9}$/,
     options: 'jsonString'
 }), (req, res) => {
     let mealData = Object.assign({}, req.body, {options: JSON.parse(req.body.options)});
@@ -165,7 +165,7 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
 });
 
 meals.delete('/:id', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     mealsDB.deleteMealById(req.params.id).then((data) => {
         scheduler.cancelMeal(req.params.id);
@@ -251,7 +251,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
 
 
 meals.post('/:id/mail', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     mealsDB.getMealById(req.params.id).then((meals) => {
         mail.sendCreationNotice(meal);

@@ -7,7 +7,7 @@ const	signups	    = require('express').Router()
 
 
 signups.post('/:id/paid', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     signupsDB.setSignupPaymentStatusById(req.params.id, true)
     .then((signup) => {
@@ -17,7 +17,7 @@ signups.post('/:id/paid', error.router.validate('params', {
 });
 
 signups.delete('/:id/paid', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     signupsDB.setSignupPaymentStatusById(req.params.id, false)
     .then((signup) => {
@@ -27,7 +27,7 @@ signups.delete('/:id/paid', error.router.validate('params', {
 });
 
 signups.get('/:id', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     signupsDB.getSignupByProperty('id', req.params.id).then(() => {
         res.status(200).send({result: 'success'});
@@ -43,11 +43,11 @@ signups.get('/', (req, res) => {
 });
 
 signups.put('/:id', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     comment: /^[^"%;]{0,150}$/,
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
-    meal: /^[0-9]{1,50}$/
+    meal: /^[0-9]{1,9}$/
 }), (req, res) => {
     mealsDB.getMealById(req.body.meal)
     .then(meal => {
@@ -96,7 +96,7 @@ signups.put('/:id', error.router.validate('params', {
 });
 
 signups.delete('/:id', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     signupsDB.deleteSignupById(req.params.id).then(() => {
         res.status(200).send({success: true});
@@ -107,7 +107,7 @@ signups.delete('/:id', error.router.validate('params', {
 signups.post('/', error.router.validate('body', {
     comment: /^[^"%;]{0,250}$/,
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
-    meal: /^[0-9]{1,50}$/
+    meal: /^[0-9]{1,9}$/
 }), (req, res) => {
     Promise.all([
         mealsDB.getMealById(req.body.meal),
