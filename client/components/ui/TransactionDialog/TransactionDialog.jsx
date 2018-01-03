@@ -43,8 +43,8 @@ export default class TransactionDialog extends React.Component {
                       <tr key={index}>
                         <td>{formatDate(transaction.time)}</td>
                         <td>{transaction.reason}</td>
-                        <td>{transaction.user}</td>
-                        <td className={(+transaction.diff < 0 )? 'negative' : ''}>{transaction.diff.toFixed(2)}</td>
+                        <td data-type="Partner:" >{transaction.user}</td>
+                        <td data-type="Betrag:" className={(+transaction.diff < 0 )? 'negative' : ''}>{transaction.diff.toFixed(2)}</td>
                         <td className={(total < 0 )? 'negative' : ''}>{total.toFixed(2)}</td>
                       </tr>
                     )
