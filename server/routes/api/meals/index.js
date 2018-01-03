@@ -167,7 +167,9 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
 meals.delete('/:id', error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
-    mealsDB.deleteMealById(req.params.id).then((data) => {
+    mealsDB.deleteMealById(req.params.id)
+    .then(() => deleteSignupsByMeal(req.params.id))
+    .then((data) => {
         scheduler.cancelMeal(req.params.id);
 
         fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
