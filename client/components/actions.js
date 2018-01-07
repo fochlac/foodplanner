@@ -80,11 +80,7 @@ export const show_transaction_history = (id) => ({
   content: 'OPEN_TRANSACTIONS',
   status: 'initialized',
   url: '/konto',
-  title: 'Mittagsplaner - Kontoübersicht',
-  api: {
-    url: `/api/user/${id}/history`,
-    method: 'get'
-  }
+  title: 'Mittagsplaner - Kontoübersicht'
 });
 
 export const get_transaction_history = (id) => ({
