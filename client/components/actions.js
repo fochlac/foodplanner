@@ -78,7 +78,6 @@ export const set_hidden_busy  = state => ({
 export const show_transaction_history = (id) => ({
   type: 'DIALOG',
   content: 'OPEN_TRANSACTIONS',
-  status: 'initialized',
   url: '/konto',
   title: 'Mittagsplaner - Kontoübersicht'
 });
