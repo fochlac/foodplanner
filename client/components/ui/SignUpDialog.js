@@ -7,7 +7,14 @@ const mapStateToProps = (state, ownProps) => {
     const edit = ownProps.type === 'edit';
 
     if (edit) {
-        const signup = state.signups[ownProps.id];
+        const signup = state.signups[ownProps.id] ? state.signups[ownProps.id] : undefined;
+
+        if (!signup) {
+            return {
+                invalid: true
+            };
+        }
+
         return {
             edit: true,
             meal: state.meals.filter(meal => meal.id === signup.meal)[0],
@@ -16,6 +23,13 @@ const mapStateToProps = (state, ownProps) => {
         };
     } else {
         const meal = state.meals.filter(meal => meal.id === ownProps.id)[0];
+
+        if (!meal) {
+            return {
+                invalid: true
+            };
+        }
+
         return {
             edit: false,
             meal,

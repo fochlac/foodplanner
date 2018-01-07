@@ -1,57 +1,59 @@
 @import '../../root/variables.less';
+.SignUpDialog {
+    .optionSelect{
+      width: 100%;
+    }
 
-.optionSelect{
-  width: 100%;
-}
+    input.count {
+        flex-basis: 100px;
+        margin-right: 5px;
+    }
 
-input.count {
-    flex-basis: 100px;
-    margin-right: 5px;
-}
+    .yesNo div {
+        width: 60px;
+    }
 
-.yesNo div {
-    width: 60px;
-}
+    .warning {
+        padding: 5px 10px;
+        background: @colory1;
+        border-radius: 2px;
+        border: solid 1px @colory2;
+        text-align: left;
+        margin-bottom: 5px;
 
-.warning {
-    padding: 5px 10px;
-    background: @colory1;
-    border-radius: 2px;
-    border: solid 1px @colory2;
-    text-align: left;
-    margin-bottom: 5px;
+        &.title {
+            cursor: help;
+        }
+    }
+    .warning .fa-info-circle {
+        margin-left: 10px
+    }
 
-    &.title {
+    .warning:before {
+        content: "\f071";
+        font-family: FontAwesome;
+        font-size: 1.5em;
+        color: @colory2;
+        margin-right: 10px;
+    }
+
+    .editName {
+    	font-size: 0.9em;
+    }
+
+    .signupName {
+    	margin-left: 5px;
+    }
+    .estimated_price {
+        margin-top: 5px;
+        border-top: solid 1px #074d0e;
+        padding-top: 5px;
+        padding-left: 5px;
+        margin-bottom: 10px;
+        font-size: 0.9em;
+        font-weight: 600;
+        display: flex;
         cursor: help;
     }
-}
-.warning .fa-info-circle {
-    margin-left: 10px
-}
 
-.warning:before {
-    content: "\f071";
-    font-family: FontAwesome;
-    font-size: 1.5em;
-    color: @colory2;
-    margin-right: 10px;
-}
-
-.editName {
-	font-size: 0.9em;
-}
-
-.signupName {
-	margin-left: 5px;
-}
-.estimated_price {
-    margin-top: 5px;
-    border-top: solid 1px #074d0e;
-    padding-top: 5px;
-    padding-left: 5px;
-    margin-bottom: 10px;
-    font-size: 0.9em;
-    font-weight: 600;
-    display: flex;
-    cursor: help;
 }

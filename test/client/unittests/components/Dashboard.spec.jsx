@@ -7,8 +7,8 @@ import Meal from 'UI/Meal.js';
 let output;
 
 const options = {
-    meals: [''],
-	oldMeals: ['', ''],
+    meals: [{id: 1}],
+	oldMeals: [{id: 3}, {id: 2}],
     app: {offline: true}
 }
 

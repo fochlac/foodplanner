@@ -4,7 +4,7 @@ const   notification         = require('express').Router()
 
 
 notification.delete('/:id', error.router.validate('params', {
-    id: /^[0-9]{1,10}$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     notificationDB.deleteNotificationIdByProperty('id', req.body.id).then(() => {
         res.status(200).send();

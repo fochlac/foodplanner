@@ -210,6 +210,22 @@ export default class CreateMealDialog extends React.Component {
           edit = p.edit;
     let times = Array(48).fill(0).map((item, index) => ('00' + (Math.floor(index / 2)) + ':' + ((index % 2) ? '30' : '00')).slice(-5));
 
+    if (this.props.invalid) {
+      return (
+        <Dialog className="SignUpDialog">
+          <div className="titlebar">
+            <h3>Ungültige Mahlzeit!</h3>
+            <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
+          </div>
+          <div className="body">
+            <p>Diese Mahlzeit ist leider nicht verfügbar.</p>
+          </div>
+          <div className="foot">
+            <button type="button" className="cancel" onClick={this.cancel.bind(this)}>Schließen</button>
+          </div>
+        </Dialog>)
+    }
+
     return (
       <Dialog>
         <div className="titlebar">

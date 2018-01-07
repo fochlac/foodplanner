@@ -7,7 +7,8 @@ import TransactionDialog from 'UI/TransactionDialog/TransactionDialog.jsx';
 
 describe('TransactionDialog', () => {
   it('should render all elements', () => {
-    const wrapper = shallow(<TransactionDialog transactions={[]} close_dialog={() => dialog_closed=true}/>);
+    let get_transaction_history = false;
+    const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} close_dialog={() => dialog_closed=true} get_transaction_history={() => get_transaction_history=true}/>);
 
     expect(wrapper.find('.titlebar').length).to.equal(1);
     expect(wrapper.find('.titlebar span.fa-times').length).to.equal(1);
@@ -19,14 +20,15 @@ describe('TransactionDialog', () => {
     expect(wrapper.find('.body .transactions')).to.have.lengthOf(0);
   });
 
-  it('should transactions', () => {
+  it('should show transactions', () => {
+    let get_transaction_history = false;
     const TEST_TRANSACTION = {
         time: Date.now() - 2000000,
         reason: 'test1',
         user: 'testusername',
         diff: 5
       },
-      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} close_dialog={() => dialog_closed=true}/>),
+      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>),
       row = wrapper.find('.body > .transactions tr > td');
 
     expect(wrapper.find('.body > .transactions')).to.have.lengthOf(1);
@@ -39,14 +41,15 @@ describe('TransactionDialog', () => {
     expect(row.at(4).prop('className')).to.not.include('negative');
   });
 
-  it('should negative transactions', () => {
+  it('should show negative transactions', () => {
+    let get_transaction_history = false;
     const TEST_TRANSACTION = {
         time: Date.now() - 2000000,
         reason: 'test1',
         user: 'testusername',
         diff: -5
       },
-      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} close_dialog={() => dialog_closed=true}/>),
+      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>),
       row = wrapper.find('.body > .transactions tr > td');
 
     expect(wrapper.find('.body > .transactions')).to.have.lengthOf(1);
@@ -61,8 +64,9 @@ describe('TransactionDialog', () => {
 
   it('should close on cancel button click', () => {
     let dialog_closed = false;
+    let get_transaction_history = false;
 
-    const wrapper = shallow(<TransactionDialog transactions={[]} close_dialog={() => dialog_closed=true}/>);
+    const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>);
 
     wrapper.find('button.cancel').simulate('click');
 
@@ -71,11 +75,20 @@ describe('TransactionDialog', () => {
 
   it('should close on close button click', () => {
     let dialog_closed = false;
+    let get_transaction_history = false;
 
-    const wrapper = shallow(<TransactionDialog transactions={[]} close_dialog={() => dialog_closed=true}/>);
+    const wrapper = shallow(<TransactionDialog transactions={[]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>);
 
     wrapper.find('.titlebar span.fa-times').simulate('click');
 
     expect(dialog_closed).to.true;
+  });
+
+  it('should call get_transaction_history on mount', () => {
+    let get_transaction_history = false;
+
+    const wrapper = shallow(<TransactionDialog transactions={[]} user={{id: 10}} get_transaction_history={(data) => get_transaction_history=data} close_dialog={() => dialog_closed=true}/>);
+
+    expect(get_transaction_history).to.equal(10);
   });
 });

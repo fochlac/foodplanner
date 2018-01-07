@@ -168,7 +168,7 @@ module.exports = {
                 return err;
             }
 
-            return error.db.codeError('modules/db/signup.js:setSignupById.4', arguments);
+            return error.db.codeError('modules/db/signup.js:setSignupById.4', err);
         });
     },
 
@@ -204,7 +204,46 @@ module.exports = {
                 return err;
             }
 
-            return error.db.codeError('modules/db/signup.js:deleteSignupByProperty.2', arguments);
+            return error.db.codeError('modules/db/signup.js:deleteSignupByProperty.2', err);
+        });
+    },
+
+    deleteSignupsByMeal: (id) => {
+        const query = `
+            DELETE signupOptions
+            FROM signups
+            RIGHT JOIN signupOptions
+            ON signups.id = signupOptions.signupId
+            WHERE meal = ${mysql.escape(id)};`
+
+        return getConnection()
+        .then (myDb => {
+            return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
+                if (err) {
+                    log(2, 'modules/db/signup:deleteSignupByProperty', err);
+                    reject({status: 500, message: 'Unable to delete signupOptions.'});
+                } else {
+                    resolve(result[0]);
+                }
+            }))
+            .then(result => {
+                return new Promise((resolve, reject) => myDb.query(`DELETE FROM signups WHERE meal = ${mysql.escape(id)}`, (err, result) => {
+                    if (err) {
+                        log(2, 'modules/db/signup:deleteSignupByProperty', err);
+                        reject({status: 500, message: 'Unable to delete signup.'});
+                    } else {
+                        resolve(result[0]);
+                    }
+                }));
+            });
+        })
+        .catch(err => {
+            if (err && err.status) {
+                err.success = false;
+                return err;
+            }
+
+            return error.db.codeError('modules/db/signup.js:deleteSignupByProperty.2', err);
         });
     },
 

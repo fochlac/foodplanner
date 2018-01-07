@@ -4,12 +4,14 @@ import CreateMealDialog from 'UI/CreateMealDialog/CreateMealDialog.jsx';
 import { create_meal, edit_meal, close_dialog } from 'ACTIONS';
 
 const mapStateToProps = (state, ownProps) => {
-    const edit = ownProps.type === 'edit';
+    const edit = ownProps.type === 'edit',
+    	meal = (ownProps.id !== undefined) ? state.meals.filter(meal => meal.id === ownProps.id)[0] : {};
 
     return {
+    	invalid: !meal,
         app: state.app,
         user: state.user,
-        meal: (ownProps.id !== undefined) ? state.meals.filter(meal => meal.id === ownProps.id)[0] : {},
+        meal: meal ? meal : {},
         meals: state.meals,
         edit
     };
