@@ -10,15 +10,14 @@ export default class DefaultPage extends React.Component {
         return (
             this.props.show
             ? <div className="busyBackground">
-                  <div className="spinner sphere busyCenter" id="sphere">
-                    <div className="inner">
-                      <div className="disc">laden</div>
-                      <div className="disc">laden</div>
-                      <div className="disc">laden</div>
-                    </div>
-                  </div>
+              <div className="loadingCircle">
+              </div>
+              <div className="loadingCircleContent">
+                <span className="fa fa-2x fa-cutlery"></span>
+              </div>
             </div>
             : null
         );
     }
 }
+

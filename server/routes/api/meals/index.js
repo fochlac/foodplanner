@@ -1,5 +1,6 @@
 const   meals           = require('express').Router()
     ,   mealsDB         = require(process.env.FOOD_HOME + 'modules/db/meals')
+    ,   signupsDB         = require(process.env.FOOD_HOME + 'modules/db/signups')
     ,   paymentDB       = require(process.env.FOOD_HOME + 'modules/db/payment')
     ,   image           = require(process.env.FOOD_HOME + 'middleware/singleImage')
     ,   error           = require(process.env.FOOD_HOME + 'modules/error')
@@ -10,7 +11,7 @@ const   meals           = require('express').Router()
     ,   log             = require(process.env.FOOD_HOME + 'modules/log');
 
 meals.post('/:id/lock', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     prices: 'array'
 }), (req, res) => {
@@ -18,8 +19,8 @@ meals.post('/:id/lock', error.router.validate('params', {
         valid = !req.body.prices.some((price) => {
             if (!(
                 ['meals', 'mealOptions', 'mealOptionValues'].includes(price.db)
-                && /^[0-9]*$/.test(price.id)
-                && /^[0-9.]*$/.test(price.price)
+                && /^[0-9]{1,9}$/.test(price.id)
+                && /^[0-9.]{0,9}$/.test(price.price)
             )) {
                 errorElem = price;
                 return true;
@@ -57,8 +58,8 @@ meals.post('/prices', error.router.validate('body', {
         valid = !req.body.prices.some((price) => {
             if (!(
                 ['meals', 'mealOptions', 'mealOptionValues'].includes(price.db)
-                && /^[0-9]*$/.test(price.id)
-                && /^[0-9.]*$/.test(price.price)
+                && /^[0-9]{1,9}$/.test(price.id)
+                && /^[0-9.]{0,9}$/.test(price.price)
             )) {
                 errorElem = price;
                 return true;
@@ -79,7 +80,7 @@ meals.post('/prices', error.router.validate('body', {
 });
 
 meals.get('/:id', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     mealsDB.getMealById(req.params.id).then((meals) => {
         res.status(200).send(meals);
@@ -95,14 +96,14 @@ meals.get('/', (req, res) => {
 });
 
 meals.put('/:id', image.single('imageData'), error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
     creator: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,70}$/,
     description: /^[^"%;]*$/,
-    time: /^[0-9]{1,50}$/,
-    deadline: /^[0-9]{0,50}$/,
-    signupLimit: /^[0-9]{0,50}$/,
+    time: /^[0-9]{1,15}$/,
+    deadline: /^[0-9]{0,15}$/,
+    signupLimit: /^[0-9]{0,9}$/,
     options: 'jsonString'
 }), (req, res) => {
     let mealData = Object.assign({}, req.body, {options: JSON.parse(req.body.options)});
@@ -165,15 +166,17 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
 });
 
 meals.delete('/:id', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
-    mealsDB.deleteMealById(req.params.id).then((data) => {
+    mealsDB.deleteMealById(req.params.id)
+    .then(() => signupsDB.deleteSignupsByMeal(req.params.id))
+    .then((data) => {
         scheduler.cancelMeal(req.params.id);
 
         fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
             if (err) {
                 log(2, 'Cant find image for product ' + req.params.id, err);
-                return res.status(200).send(data);
+                return res.status(200).send({});
             }
             let path = process.env.FOOD_CLIENT + '/images/meals/' + files.find((file) => (-1 !== file.indexOf('meal_' + req.params.id)));
             fs.unlink(path,
@@ -181,7 +184,7 @@ meals.delete('/:id', error.router.validate('params', {
                 if (err) {
                     log(2, 'Cant find image for product ' + req.params.id, err);
                 }
-                res.status(200).send(data);
+                res.status(200).send({});
             });
         });
     })
@@ -220,6 +223,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
         log(4, 'Options not valid.');
         return res.status(400).send({msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
     }
+    log(6, 'Options valid');
 
     if (req.file) {
         let splitfile = req.file.filename.split('.');
@@ -251,7 +255,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
 
 
 meals.post('/:id/mail', error.router.validate('params', {
-    id: /^[0-9]*$/
+    id: /^[0-9]{1,9}$/
 }), (req, res) => {
     mealsDB.getMealById(req.params.id).then((meals) => {
         mail.sendCreationNotice(meal);

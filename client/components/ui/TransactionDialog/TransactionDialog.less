@@ -26,3 +26,65 @@
 .transactionDialog {
     flex-basis: 500px;
 }
+
+@media all and (max-width: 500px) {
+    .transactionDialog {
+        tr {
+            display: flex;
+            flex-wrap: wrap;
+            background: #ebf1e3 !important;
+            color: black !important;
+            margin-bottom: 5px;
+            padding: 3px 5px;
+        }
+        td {
+            background: #ebf1e3;
+
+            &:nth-child(1) {
+                border-bottom: 1px solid black;
+                padding-bottom: 0px !important;
+                margin-bottom: 3px;
+            }
+
+            &:nth-child(2) {
+                display: block;
+                margin-right:auto;
+                border-bottom: 1px solid black;
+                padding-bottom: 0px !important;
+                margin-bottom: 3px;
+
+                &:before {
+                    content: '-';
+                    margin-right: 4px;
+                }
+            }
+
+            &:nth-child(5) {
+                display: none;
+            }
+            &:nth-child(n + 3) {
+                width: 100%;
+                text-align: left;
+                padding: 0px 3px;
+
+                &:before {
+                    width: 10px;
+                    content: attr(data-type);
+                    margin-right: 4px;
+                    text-align: left;
+                    color: black;
+                }
+            }
+        }
+
+        thead {
+            display: none;
+        }
+
+        tbody {
+            display: flex;
+            flex-direction: column-reverse;
+        }
+    }
+}
+

@@ -9,8 +9,8 @@ const users = (state = {}, action) => {
             }
             return state;
 
-        case 'DIALOG':
-            if(action.content === "OPEN_TRANSACTIONS" && action.status === "complete") {
+        case 'TRANSACTIONS':
+            if(action.status === "complete") {
                 return Object.assign({}, state, {transactions: action.data});
             }
             return state;

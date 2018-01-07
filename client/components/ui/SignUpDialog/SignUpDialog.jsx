@@ -8,14 +8,14 @@ export default class SignUpDialog extends React.Component {
     super();
 
     this.state = props.edit ? props.signup : {
-      name: props.user.name ? props.user.name : '',
-      userId: props.user.id ? props.user.id : 0,
+      name: props.user && props.user.name ? props.user.name : '',
+      userId: props.user && props.user.id ? props.user.id : 0,
       signedUp: props.signedUp,
-      options: props.meal.options.map(option => ({
+      options: props.meal ? props.meal.options.map(option => ({
           id: option.id,
           value: option.values[0] ? option.values[0].name : null,
           show: undefined
-        })),
+        })) : [],
       comment: ''
     }
 
@@ -76,6 +76,22 @@ export default class SignUpDialog extends React.Component {
           s = this.state;
 
     let calculatedPrice = 0;
+
+    if (this.props.invalid) {
+      return (
+        <Dialog className="SignUpDialog">
+          <div className="titlebar">
+            <h3>Ungültige Anmeldung!</h3>
+            <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
+          </div>
+          <div className="body">
+            <p>Diese Anmeldung ist leider nicht verfügbar.</p>
+          </div>
+          <div className="foot">
+            <button type="button" className="cancel" onClick={this.cancel.bind(this)}>Schließen</button>
+          </div>
+        </Dialog>)
+    }
 
     calculatedPrice += +p.meal.price;
     s.options.forEach(option => {
