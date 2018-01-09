@@ -3,6 +3,7 @@ const users = (state = {}, action) => {
         case 'INITIAL_USER':
             return Object.assign({}, state, action.data, action.localSettings);
 
+        case 'SIGNIN':
         case 'SAVE_SETTINGS':
             if(action.status === "complete") {
                 return Object.assign({}, state, action.locally);

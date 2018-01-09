@@ -17,10 +17,10 @@ notification.post('/', error.router.validate('body', {
     subscription: 'validJSON'
 }), (req, res) => {
     if (req.body.subscription === undefined) {
-        res.status(200).send(notification);
+        res.status(200).send({});
     } else {
         notificationDB.createNotificationId(req.body).then((notification) => {
-            res.status(200).send(notification);
+            res.status(200).send({});
         })
         .catch(error.router.internalError(res));
     }

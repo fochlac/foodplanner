@@ -128,8 +128,7 @@ module.exports = {
                 ${mysql.escape(options.mail)},
                 ${mysql.escape(options.deadlineReminder)},
                 ${mysql.escape(options.creationNotice)}
-            )
-            ON DUPLICATE KEY UPDATE \`id\` = \`id\`;`;
+            );`;
 
         return getConnection()
         .then (myDb => {
@@ -138,8 +137,13 @@ module.exports = {
                 myDb.query(query, (err, result) => {
                     myDb.release();
                     if (err) {
-                        log(2, 'modules/db/user:createSignUp.2', err, query);
-                        reject({status: 500, message: 'Error creating user'});
+                        if (err.code === "ER_DUP_ENTRY") {
+                            log(5, 'modules/db/user:createSignUp.2', 'Error: duplicate user');
+                            reject({status: 422, type: 'Bad_Request', reason: 'user_exists'});
+                        } else {
+                            log(2, 'modules/db/user:createSignUp.2', err, query);
+                            reject({status: 500, type: 'Internal_Error', reason: 'Error creating user'});
+                        }
                     } else {
                         log(6, 'modules/db/user:createSignUp - user created');
                         resolve({
@@ -157,7 +161,7 @@ module.exports = {
         .catch(err => {
             if (err && err.status) {
                 err.success = false;
-                return err;
+                return Promise.reject(err);
             }
 
             return error.db.codeError('modules/db/user.js:createSignUp.4', arguments);

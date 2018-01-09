@@ -26,13 +26,19 @@ while read p; do
 done < .build_scripts/variables
 ```
 
-* FOOD_HOME=/home/food/server/
-* FOOD_CLIENT=/home/food/dist/
-* FOOD_DB_USERNAME=mydbuser
-* FOOD_DB_PASSWORD=mydbpass
-* FOOD_DB_NAME=myfooddb
-* FOOD_PORT=12345
-* FOOD_EXTERNAL=food-dev.fochlac.com
+* FOOD_HOME=/root/foodplanner/server/
+* FOOD_CLIENT=/root/foodplanner/dist/
+* FOOD_TESTS=/root/foodplanner/test/
+* FOOD_ROOT=/root/foodplanner/
+* FOOD_DB_USERNAME=food
+* FOOD_DB_PASSWORD=plan
+* FOOD_DB_NAME=food
+* FOOD_PORT=22222
+* FOOD_EXTERNAL=localhost
+* FOOD_MAILPW=none
+* FOOD_UUID=asdajsdlajiwdj1ij023j21oh9d8a98chao9fh8fjsd3b2fkjnöcou09djdibadj23hbsiu8szfhu2n23ud9s8fjs3rnun
+* SSLKEY=/root/keystore/key.pem
+* SSLCERT=/root/keystore/cert.pem
 * DEVELOP=true
 
 Also set up an external mysql database and provide the access data as global variable:

@@ -10,12 +10,18 @@ export const initial_meals = (hidden) => ({
   enqueue: initial_signups.bind(null, hidden)
 });
 
-export const initial_user = (id, localSettings) => ({
+export const initial_user = (id, localSettings, noToken) => ({
   type: 'INITIAL_USER',
-  api: {
-    url: '/api/user/' + id,
-    method: 'get'
-  },
+  status: noToken ? 'hidden' : undefined,
+  data: {},
+  api: (
+    noToken
+    ? {
+      url: '/api/user/' + id,
+      method: 'get'
+    }
+    : undefined
+  ),
   localSettings
 });
 
@@ -233,7 +239,7 @@ export const submit_prices = (prices, mealId) => ({
   prices,
   mealId,
   api: {
-    url: '/api/meals/prices',
+    url: `/api/meals/${mealId}/prices`,
     method: 'post',
     body: {prices}
   }
@@ -356,10 +362,25 @@ export const check_mail = (mail) => ({
   }
 });
 
-export const sign_out = () => ({
+export const sign_out = (id) => ({
   type: 'SIGNOUT',
-  status: 'complete',
+  status: 'initialized',
+  api: {
+    url: `/api/user/${id}/logout`,
+    method: 'POST'    
+  },
   localkey: 'user',
   locally: {}
+});
+
+export const sign_in = (data) => ({
+  type: 'SIGNIN',
+  status: 'initialized',
+  api: {
+    url: `/api/user/${data.id}`,
+    method: 'GET'    
+  },
+  localkey: 'user',
+  locally: data
 });
 
