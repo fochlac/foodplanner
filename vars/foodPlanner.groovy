@@ -59,20 +59,28 @@ def tests(String branch) {
   }
 
   stage("UI tests: ${branch}") {
-
-    sh '''
-        while read p; do
-          export $p
-        done < /root/variables
-        export FOOD_HOME=$(pwd)/server/
-        export FOOD_CLIENT=$(pwd)/dist/
-        export FOOD_TESTS=$(pwd)/test/
-        export FOOD_ROOT=$(pwd)/
-        node ./server/index.js &
-        touch test-log
-        npm run-script test-ui > test-log
-        cat test-log
-        pkill -f "node.*server/index.js"
-    '''
+    try {
+        sh '''
+            while read p; do
+              export $p
+            done < /root/variables
+            export FOOD_UUID=asdajsdlajiwdj1ij023j21oh9d8a98chao9fh8fjsd3b2fkjnöcou09djdibadj23hbsiu8szfhu2n23ud9s8fjs3rnun
+            export FOOD_HOME=$(pwd)/server/
+            export FOOD_CLIENT=$(pwd)/dist/
+            export FOOD_TESTS=$(pwd)/test/
+            export FOOD_ROOT=$(pwd)/
+            node ./server/index.js &
+            touch test-log
+            npm run-script test-ui > test-log
+            cat test-log
+            pkill -f "node.*server/index.js"
+        '''
+    } catch(err) {
+        sh '''
+            cat test-log
+            pkill -f "node.*server/index.js"
+        '''
+        throw(err)
+    }
   }
 }

@@ -1,14 +1,18 @@
 const   meals           = require('express').Router()
     ,   mealsDB         = require(process.env.FOOD_HOME + 'modules/db/meals')
-    ,   signupsDB         = require(process.env.FOOD_HOME + 'modules/db/signups')
+    ,   signupsDB       = require(process.env.FOOD_HOME + 'modules/db/signups')
     ,   paymentDB       = require(process.env.FOOD_HOME + 'modules/db/payment')
     ,   image           = require(process.env.FOOD_HOME + 'middleware/singleImage')
     ,   error           = require(process.env.FOOD_HOME + 'modules/error')
     ,   scheduler       = require(process.env.FOOD_HOME + 'modules/scheduler')
     ,   mail            = require(process.env.FOOD_HOME + 'modules/mailer')
+    ,   caches          = require(process.env.FOOD_HOME + 'modules/cache')
     ,   notification    = require(process.env.FOOD_HOME + 'modules/notification')
     ,   fs              = require('fs')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log');
+
+let cache = caches.getCache('meals'),
+    signupCache = caches.getCache('signups');
 
 meals.post('/:id/lock', error.router.validate('params', {
     id: /^[0-9]{1,9}$/
@@ -32,6 +36,9 @@ meals.post('/:id/lock', error.router.validate('params', {
         log(4, 'PriceArray not valid.');
         return res.status(400).send({msg: 'Options not valid.', type: 'Invalid_Request', data: [JSON.stringify(errorElem)]});
     }
+    cache.delete(req.params.id);
+    cache.delete('allMeals');
+    signupCache.deleteAll();
     paymentDB.setPrices(req.body.prices)
         .then(() => paymentDB.lockMealPrices(req.params.id))
         .then(() => paymentDB.getEligibleSignups(req.params.id))
@@ -51,7 +58,9 @@ meals.post('/:id/lock', error.router.validate('params', {
         .catch(error.router.internalError(res));
 });
 
-meals.post('/prices', error.router.validate('body', {
+meals.post('/:id/prices', error.router.validate('params', {
+    id: /^[0-9]{1,9}$/
+}), error.router.validate('body', {
     prices: 'array'
 }), (req, res) => {
     let errorElem,
@@ -72,6 +81,8 @@ meals.post('/prices', error.router.validate('body', {
         return res.status(400).send({msg: 'Options not valid.', type: 'Invalid_Request', data: [JSON.stringify(errorElem)]});
     }
 
+    cache.delete(req.params.id);
+    cache.delete('allMeals');
     paymentDB.setPrices(req.body.prices)
         .then(result => {
             res.status(200).send(result);
@@ -82,17 +93,29 @@ meals.post('/prices', error.router.validate('body', {
 meals.get('/:id', error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
-    mealsDB.getMealById(req.params.id).then((meals) => {
-        res.status(200).send(meals);
-    })
-    .catch(error.router.internalError(res));
+    let meal = cache.get(req.params.id);
+    if (meal) {
+        res.status(200).send(meal);
+    } else {
+        mealsDB.getMealById(req.params.id).then((meals) => {
+            cache.put(req.params.id, meals);
+            res.status(200).send(meals);
+        })
+        .catch(error.router.internalError(res));
+    }
 });
 
 meals.get('/', (req, res) => {
-    mealsDB.getAllMeals().then((meals) => {
-        res.status(200).send(meals);
-    })
-    .catch(error.router.internalError(res));
+    let meal = cache.get('allMeals');
+    if (meal) {
+        res.status(200).send(meal);
+    } else {
+        mealsDB.getAllMeals().then((meals) => {
+            cache.put('allMeals', meals);
+            res.status(200).send(meals);
+        })
+        .catch(error.router.internalError(res));
+    }
 });
 
 meals.put('/:id', image.single('imageData'), error.router.validate('params', {
@@ -138,6 +161,9 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
         delete mealData.image;
     }
 
+    cache.delete(req.params.id);
+    cache.delete('allMeals');
+
     mealsDB.setMealById(req.params.id, mealData)
         .then(id => mealsDB.getMealById(id))
         .then((meal) => {
@@ -168,6 +194,11 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
 meals.delete('/:id', error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
+
+    cache.delete(req.params.id);
+    cache.delete('allMeals');
+    signupCache.deleteAll();
+
     mealsDB.deleteMealById(req.params.id)
     .then(() => signupsDB.deleteSignupsByMeal(req.params.id))
     .then((data) => {

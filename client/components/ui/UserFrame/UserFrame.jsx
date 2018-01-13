@@ -33,7 +33,7 @@ export default class UserFrame extends React.Component {
                 mail: ''
             });
         } else if (!this.state.register && this.props.app.mailSuggestion) {
-            this.props.save_settings_locally(this.props.app.mailSuggestion);
+            this.props.sign_in(this.props.app.mailSuggestion);
             this.setState({
                 register: false,
                 name: '',

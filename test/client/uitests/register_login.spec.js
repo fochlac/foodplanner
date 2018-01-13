@@ -76,6 +76,8 @@ describe('login area', () => {
 
         this.driver.awaitBusyComplete();
 
+        this.driver.waitElementLocated(S.db.error).findElement(S.db.closeError).click();
+
         return this.checkLoggedOut();
     });
 

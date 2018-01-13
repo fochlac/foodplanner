@@ -3,12 +3,16 @@ const	signups	    = require('express').Router()
     ,   paymentDB   = require(process.env.FOOD_HOME + 'modules/db/payment')
 	,	mealsDB 	= require(process.env.FOOD_HOME + 'modules/db/meals')
 	,	error 		= require(process.env.FOOD_HOME + 'modules/error')
+    ,   caches       = require(process.env.FOOD_HOME + 'modules/cache')
     ,   log         = require(process.env.FOOD_HOME + 'modules/log');
 
+let cache = caches.getCache('signups');
 
 signups.post('/:id/paid', error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
+    cache.delete(req.params.id);
+    cache.delete('allSignups');
     signupsDB.setSignupPaymentStatusById(req.params.id, true)
     .then((signup) => {
         res.status(200).send({success: true});
@@ -19,6 +23,8 @@ signups.post('/:id/paid', error.router.validate('params', {
 signups.delete('/:id/paid', error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
+    cache.delete(req.params.id);
+    cache.delete('allSignups');
     signupsDB.setSignupPaymentStatusById(req.params.id, false)
     .then((signup) => {
         res.status(200).send({success: true});
@@ -29,17 +35,29 @@ signups.delete('/:id/paid', error.router.validate('params', {
 signups.get('/:id', error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
-    signupsDB.getSignupByProperty('id', req.params.id).then(() => {
-        res.status(200).send({result: 'success'});
-    })
-    .catch(error.router.internalError(res));
+    let signup = cache.get(req.params.id);
+    if (signup) {
+        res.status(200).send(signup);
+    } else {
+        signupsDB.getSignupByProperty('id', req.params.id).then(signups => {
+            cache.put(req.params.id, signups);
+            res.status(200).send(signups);
+        })
+        .catch(error.router.internalError(res));
+    }
 });
 
 signups.get('/', (req, res) => {
-    signupsDB.getAllSignups().then((signups) => {
-        res.status(200).send(signups);
-    })
-    .catch(error.router.internalError(res));
+    let signup = cache.get('allSignups');
+    if (signup) {
+        res.status(200).send(signup);
+    } else {
+        signupsDB.getAllSignups().then((signups) => {
+            cache.put('allSignups', signups);
+            res.status(200).send(signups);
+        })
+        .catch(error.router.internalError(res));
+    }
 });
 
 signups.put('/:id', error.router.validate('params', {
@@ -77,27 +95,26 @@ signups.put('/:id', error.router.validate('params', {
         });
 
         if (optionsInvalid) {
-            return Promise.reject({type: 2, msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
+            log(5, 'put - /signups/:id', 'invalid Options');
+            return Promise.reject({status: 422, type: 'Invalid_Request', data: ['options']});
         }
+
+        cache.delete(req.params.id);
+        cache.delete('allSignups');
 
         return signupsDB.setSignupById(req.params.id, req.body);
     })
     .then((signup) => {
         res.status(200).send(signup);
     })
-    .catch(err => {
-        if ([1, 2].includes(err.type)) {
-            log(4, err.msg)
-            res.status(400).send(err);
-        } else {
-            error.router.internalError(res)(err);
-        }
-    });
+    .catch(error.router.internalError(res));
 });
 
 signups.delete('/:id', error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
+    cache.delete(req.params.id);
+    cache.delete('allSignups');
     signupsDB.deleteSignupById(req.params.id).then(() => {
         res.status(200).send({success: true});
     })
@@ -118,7 +135,8 @@ signups.post('/', error.router.validate('body', {
             signups = result[1];
 
         if (result[0].signupLimit && result[0].signupLimit <= result[1].length) {
-            return Promise.reject({id: 1, msg: 'Bad_Request', reason: 'offer_full'});
+            log(5, 'post - /signups/', 'tried to sign up for full offer');
+            return Promise.reject({status: 409, type: 'Bad_Request', reason: 'offer_full'});
         }
 
         const optionsInvalid = meal.options.some(option => {
@@ -147,9 +165,11 @@ signups.post('/', error.router.validate('body', {
         });
 
         if (optionsInvalid) {
-            return Promise.reject({id: 2, msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
+            log(5, 'post - /signups/', 'invalid options');
+            return Promise.reject({status: 422, type: 'Invalid_Request', data: ['options']});
         }
 
+        cache.delete('allSignups');
 
         return signupsDB.createSignUp(req.body);
     })
@@ -157,14 +177,7 @@ signups.post('/', error.router.validate('body', {
     .then((signup) => {
         res.status(200).send(signup);
     })
-    .catch(err => {
-        if ([1, 2].includes(err.id)) {
-            log(4, err.msg)
-            res.status(400).send(err);
-        } else {
-            error.router.internalError(res)(err);
-        }
-    });
+    .catch(error.router.internalError(res));
 });
 
 module.exports = signups;

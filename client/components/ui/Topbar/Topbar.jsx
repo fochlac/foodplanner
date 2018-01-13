@@ -34,7 +34,7 @@ export default class Topbar extends React.Component {
             {
               this.props.user.id
               ? <li>
-                  <span className="fa fa-sign-out fa-lg pointer" title="Abmelden" onClick={this.props.sign_out.bind(this)}></span>
+                  <span className="fa fa-sign-out fa-lg pointer" title="Abmelden" onClick={this.props.sign_out.bind(this, this.props.user.id)}></span>
               </li>
               : null
             }
