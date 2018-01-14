@@ -7,13 +7,15 @@ const	signups	    = require('express').Router()
     ,   caches       = require(process.env.FOOD_HOME + 'modules/cache')
     ,   log         = require(process.env.FOOD_HOME + 'modules/log');
 
-let cache = caches.getCache('signups');
+let cache = caches.getCache('signups'),
+    updateCache = caches.getCache('update');
 
 signups.post('/:id/paid', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
     cache.delete(req.params.id);
     cache.delete('allSignups');
+    updateCache.deleteAll();
 
     mealsDB.getMealCreatorBySignupId(req.params.id)
     .then(id => {
@@ -35,6 +37,7 @@ signups.delete('/:id/paid', jwt.requireAuthentication, error.router.validate('pa
 }), (req, res) => {
     cache.delete(req.params.id);
     cache.delete('allSignups');
+    updateCache.deleteAll();
 
     mealsDB.getMealCreatorBySignupId(req.params.id)
     .then(id => {
@@ -105,6 +108,7 @@ signups.put('/:id', jwt.requireAuthentication, error.router.validate('params', {
 
         cache.delete(req.params.id);
         cache.delete('allSignups');
+        updateCache.deleteAll();
 
         return Promise.all([signupsDB.getSignupByProperty('id', req.params.id), mealsDB.getMealCreatorBySignupId(req.params.id)]);
     })
@@ -127,6 +131,8 @@ signups.delete('/:id', jwt.requireAuthentication, error.router.validate('params'
 }), (req, res) => {
     cache.delete(req.params.id);
     cache.delete('allSignups');
+    updateCache.deleteAll();
+
     Promise.all([signupsDB.getSignupByProperty('id', req.params.id), mealsDB.getMealCreatorBySignupId(req.params.id)])
     .then((data) => {
         if (data[0].userId == req.user.id || data[1] == req.user.id) {
@@ -191,6 +197,7 @@ signups.post('/', error.router.validate('body', {
         }
 
         cache.delete('allSignups');
+        updateCache.deleteAll();
 
         return signupsDB.createSignUp(req.body);
     })

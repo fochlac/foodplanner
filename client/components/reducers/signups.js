@@ -32,6 +32,14 @@ const signups = (state = {}, action) => {
                 }, {});
             }
             return state;
+        case 'REFRESH':
+            if (action.status === 'complete' && action.data.signups) {
+                return action.data.signups.reduce((acc,signup) => {
+                    acc[signup.id] = signup;
+                    return acc;
+                }, {});
+            }
+            return state;
         case 'MEAL_CANCEL':
             if (action.status === 'complete') {
                 delete state[action.id];

@@ -13,7 +13,8 @@ const   meals           = require('express').Router()
     ,   log             = require(process.env.FOOD_HOME + 'modules/log');
 
 let cache = caches.getCache('meals'),
-    signupCache = caches.getCache('signups');
+    signupCache = caches.getCache('signups'),
+    updateCache = caches.getCache('update');
 
 meals.post('/:id/lock', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
@@ -40,6 +41,8 @@ meals.post('/:id/lock', jwt.requireAuthentication, error.router.validate('params
     cache.delete(req.params.id);
     cache.delete('allMeals');
     signupCache.deleteAll();
+    updateCache.deleteAll();
+
     mealsDB.getMealById(req.params.id)
         .then(meal => {
             if (meal.creatorId == req.user.id) {
@@ -92,6 +95,7 @@ meals.post('/:id/prices', jwt.requireAuthentication, error.router.validate('para
 
     cache.delete(req.params.id);
     cache.delete('allMeals');
+    updateCache.deleteAll();
 
     mealsDB.getMealById(req.params.id)
         .then(meal => {
@@ -165,6 +169,7 @@ meals.put('/:id', image.single('imageData'), jwt.requireAuthentication, error.ro
 
     cache.delete(req.params.id);
     cache.delete('allMeals');
+    updateCache.deleteAll();
 
     mealsDB.getMealById(req.params.id)
     .then(meal => {
@@ -208,6 +213,7 @@ meals.delete('/:id', jwt.requireAuthentication, error.router.validate('params', 
     cache.delete(req.params.id);
     cache.delete('allMeals');
     signupCache.deleteAll();
+    updateCache.deleteAll();
 
     mealsDB.getMealById(req.params.id)
     .then(meal => {
@@ -285,6 +291,8 @@ meals.post('/', image.single('imageData'), jwt.requireAuthentication, error.rout
     mealsDB.createMeal(mealData)
         .then(id => mealsDB.getMealById(id))
         .then(meal => {
+            cache.delete('allMeals');
+            updateCache.deleteAll();
             mail.sendCreationNotice(meal);
             scheduler.scheduleMeal(meal);
             notification.sendCreationNotice(meal);

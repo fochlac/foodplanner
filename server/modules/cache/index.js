@@ -1,10 +1,14 @@
-let cache = {};
+let cache = {},
+    version = Date.now();
 
 
 module.exports = {
     invalidateAll: () => {
+        version++;
         Object.keys(cache).forEach(key => cache[key] = {});
     },
+
+    getVersion: () => version,
 
     getCache: name => {
         if (!cache[name]) {
@@ -14,11 +18,20 @@ module.exports = {
         return {
             get: id => cache[name][id],
 
-            put: (id, content) => cache[name][id] = content,
+            put: (id, content) => {
+                version++;
+                cache[name][id] = content;
+            },
 
-            delete: id => cache[name][id] = undefined,
+            delete: id => {
+                version++;
+                cache[name][id] = undefined;
+            },
 
-            deleteAll: id => cache[name] = {},
+            deleteAll: id => {
+                version++;
+                cache[name] = {};
+            },
         }
     }
 }

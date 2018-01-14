@@ -93,6 +93,24 @@ const meals = (state = [], action) => {
             }
             return state;
 
+        case 'REFRESH':
+            if (action.status === 'complete' && action.data.meals) {
+                let helper = action.data.signups.reduce((acc, signup) => {
+                    if (!acc[signup.meal]) {
+                        acc[signup.meal] = [];
+                    }
+                    acc[signup.meal] = acc[signup.meal].concat([signup.id]);
+                    return acc;
+                }, {});
+
+                action.data.meals.forEach(meal => {                    
+                    meal.signups = helper[meal.id] ? helper[meal.id] : [];   
+                });
+
+                return action.data.meals;
+            }
+            return state;
+
         case 'INITIAL_SIGNUPS':
             if (action.status === 'complete') {
                 let helper = action.data.reduce((acc, signup) => {
