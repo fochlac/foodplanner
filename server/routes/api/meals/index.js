@@ -7,14 +7,16 @@ const   meals           = require('express').Router()
     ,   scheduler       = require(process.env.FOOD_HOME + 'modules/scheduler')
     ,   mail            = require(process.env.FOOD_HOME + 'modules/mailer')
     ,   caches          = require(process.env.FOOD_HOME + 'modules/cache')
+    ,   jwt             = require(process.env.FOOD_HOME + 'modules/auth/jwt')
     ,   notification    = require(process.env.FOOD_HOME + 'modules/notification')
     ,   fs              = require('fs')
     ,   log             = require(process.env.FOOD_HOME + 'modules/log');
 
 let cache = caches.getCache('meals'),
-    signupCache = caches.getCache('signups');
+    signupCache = caches.getCache('signups'),
+    updateCache = caches.getCache('update');
 
-meals.post('/:id/lock', error.router.validate('params', {
+meals.post('/:id/lock', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     prices: 'array'
@@ -39,7 +41,17 @@ meals.post('/:id/lock', error.router.validate('params', {
     cache.delete(req.params.id);
     cache.delete('allMeals');
     signupCache.deleteAll();
-    paymentDB.setPrices(req.body.prices)
+    updateCache.deleteAll();
+
+    mealsDB.getMealById(req.params.id)
+        .then(meal => {
+            if (meal.creatorId == req.user.id) {
+                return paymentDB.setPrices(req.body.prices);
+            } else {
+                log(4, `User ${req.user.id} tried to lock meal ${req.params.id} without being the creator.`);
+                return Promise.reject({status: 403, type: 'FORBIDDEN'});
+            }
+        })
         .then(() => paymentDB.lockMealPrices(req.params.id))
         .then(() => paymentDB.getEligibleSignups(req.params.id))
         .then((eligibleSignups) => Promise.all(
@@ -58,7 +70,7 @@ meals.post('/:id/lock', error.router.validate('params', {
         .catch(error.router.internalError(res));
 });
 
-meals.post('/:id/prices', error.router.validate('params', {
+meals.post('/:id/prices', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     prices: 'array'
@@ -83,26 +95,21 @@ meals.post('/:id/prices', error.router.validate('params', {
 
     cache.delete(req.params.id);
     cache.delete('allMeals');
-    paymentDB.setPrices(req.body.prices)
+    updateCache.deleteAll();
+
+    mealsDB.getMealById(req.params.id)
+        .then(meal => {
+            if (meal.creatorId == req.user.id) {
+                return paymentDB.setPrices(req.body.prices);
+            } else {
+                log(4, `User ${req.user.id} tried to set prices for meal ${req.params.id} without being the creator.`);
+                return Promise.reject({status: 403, type: 'FORBIDDEN'});
+            }
+        })
         .then(result => {
             res.status(200).send(result);
         })
         .catch(error.router.internalError(res));
-});
-
-meals.get('/:id', error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
-}), (req, res) => {
-    let meal = cache.get(req.params.id);
-    if (meal) {
-        res.status(200).send(meal);
-    } else {
-        mealsDB.getMealById(req.params.id).then((meals) => {
-            cache.put(req.params.id, meals);
-            res.status(200).send(meals);
-        })
-        .catch(error.router.internalError(res));
-    }
 });
 
 meals.get('/', (req, res) => {
@@ -118,11 +125,10 @@ meals.get('/', (req, res) => {
     }
 });
 
-meals.put('/:id', image.single('imageData'), error.router.validate('params', {
+meals.put('/:id', image.single('imageData'), jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
-    creator: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,70}$/,
     description: /^[^"%;]*$/,
     time: /^[0-9]{1,15}$/,
     deadline: /^[0-9]{0,15}$/,
@@ -163,10 +169,19 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
 
     cache.delete(req.params.id);
     cache.delete('allMeals');
+    updateCache.deleteAll();
 
-    mealsDB.setMealById(req.params.id, mealData)
-        .then(id => mealsDB.getMealById(id))
-        .then((meal) => {
+    mealsDB.getMealById(req.params.id)
+    .then(meal => {
+        if (meal.creatorId == req.user.id) {
+            return mealsDB.setMealById(req.params.id, mealData);
+        } else {
+            log(4, `User ${req.user.id} tried to update meal ${req.params.id} without being the creator.`);
+            return Promise.reject({status: 403, type: 'FORBIDDEN'});
+        }
+    })
+    .then(id => mealsDB.getMealById(id))
+    .then((meal) => {
         scheduler.rescheduleMeal(meal);
         if (req.file) {
             fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function (err, files) {
@@ -191,15 +206,24 @@ meals.put('/:id', image.single('imageData'), error.router.validate('params', {
     .catch(error.router.internalError(res));
 });
 
-meals.delete('/:id', error.router.validate('params', {
+meals.delete('/:id', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
 
     cache.delete(req.params.id);
     cache.delete('allMeals');
     signupCache.deleteAll();
+    updateCache.deleteAll();
 
-    mealsDB.deleteMealById(req.params.id)
+    mealsDB.getMealById(req.params.id)
+    .then(meal => {
+        if (meal.creatorId == req.user.id) {
+            return mealsDB.deleteMealById(req.params.id);
+        } else {
+            log(4, `User ${req.user.id} tried to delete meal ${req.params.id} without being the creator.`);
+            return Promise.reject({status: 403, type: 'FORBIDDEN'});
+        }
+    })
     .then(() => signupsDB.deleteSignupsByMeal(req.params.id))
     .then((data) => {
         scheduler.cancelMeal(req.params.id);
@@ -222,7 +246,7 @@ meals.delete('/:id', error.router.validate('params', {
     .catch(error.router.internalError(res));
 });
 
-meals.post('/', image.single('imageData'), error.router.validate('body', {
+meals.post('/', image.single('imageData'), jwt.requireAuthentication, error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
     creator: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,70}$/,
     description: /^[^"%;]*$/,
@@ -267,6 +291,8 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
     mealsDB.createMeal(mealData)
         .then(id => mealsDB.getMealById(id))
         .then(meal => {
+            cache.delete('allMeals');
+            updateCache.deleteAll();
             mail.sendCreationNotice(meal);
             scheduler.scheduleMeal(meal);
             notification.sendCreationNotice(meal);
@@ -285,7 +311,7 @@ meals.post('/', image.single('imageData'), error.router.validate('body', {
 });
 
 
-meals.post('/:id/mail', error.router.validate('params', {
+meals.post('/:id/mail', jwt.requireAdmin, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
     mealsDB.getMealById(req.params.id).then((meals) => {

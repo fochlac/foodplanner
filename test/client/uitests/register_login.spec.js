@@ -100,6 +100,7 @@ describe('login area', () => {
         this.driver.wait(until.elementValueIs(email, this.usermail));
         this.driver.findElement(S.uf.submit).click();
 
+        await this.driver.awaitBusyComplete();
         return this.checkLoggedin();
     });
 

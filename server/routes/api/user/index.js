@@ -23,7 +23,8 @@ user.put('/:id/money', jwt.requireAuthentication, error.router.validate('params'
     amount: /^[0-9]{1,6}[.0-9]{0,3}$/
 }), (req, res) => {
 
-    if (req.params.source !== req.user.id) {
+    if (+req.params.source !== +req.user.id) {
+        log(4, `User ${req.user.id} tried to access user ${req.params.id}'s money`);
         return res.status(403).send({type: 'FORBIDDEN'});
     }
 
@@ -44,7 +45,8 @@ user.put('/:id', jwt.requireAuthentication, error.router.validate('params', {
     creationNotice: /^(0|1)$/
 }), (req, res) => {
 
-    if (req.params.id !== req.user.id) {
+    if (+req.params.id !== +req.user.id) {
+        log(4, `User ${req.user.id} tried to access user ${req.params.id}'s settings`);
         return res.status(403).send({type: 'FORBIDDEN'});
     }
 
@@ -62,7 +64,8 @@ user.get('/:id/history', jwt.requireAuthentication, error.router.validate('param
 }), (req, res) => {
     let history = cache.get('history_' + req.params.id);
 
-    if (req.params.id !== req.user.id) {
+    if (+req.params.id !== +req.user.id) {
+        log(4, `User ${req.user.id} tried to access user ${req.params.id}'s history`);
         return res.status(403).send({type: 'FORBIDDEN'});
     }
 

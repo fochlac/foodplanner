@@ -12,6 +12,7 @@ const   express             = require('express')
     ,   mealsDB             = require(process.env.FOOD_HOME + 'modules/db/meals')
     ,   signupsDB           = require(process.env.FOOD_HOME + 'modules/db/signups')
     ,   jwt                 = require(process.env.FOOD_HOME + 'modules/auth/jwt')
+    ,   version             = require(process.env.FOOD_HOME + 'modules/cache').getVersion
     ,   server_port         = process.env.FOOD_PORT
     ,   server_ip_address   = 'localhost'
 
@@ -75,7 +76,7 @@ app.get('*', (req, res) => {
                 `<script>
                     window.defaultStore = {
                         user:${req.auth ? JSON.stringify(req.user) : "{name:''}"},
-                        app:{dialog:'',errors:{}},
+                        app:{dialog:'', errors:{}, dataversion: ${version()}},
                         meals:${JSON.stringify(meals)},
                         signups:${JSON.stringify(signups)}
                     }

@@ -34,6 +34,15 @@ export const initial_signups = (hidden) => ({
   }
 });
 
+export const refresh = (version) => ({
+  type: 'REFRESH',
+  status: 'hidden',
+  api: {
+    url: `/api/update?version=${version}`,
+    method: 'get'
+  }
+});
+
 // service worker
 
 export const connect_serviceworker = (data) => ({
