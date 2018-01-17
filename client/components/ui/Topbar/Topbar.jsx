@@ -21,20 +21,23 @@ export default class Topbar extends React.Component {
               </li>
               : null
             }
-            <li>
-                <span className="fa fa-cog fa-lg pointer" title="Einstellungen" onClick={this.props.create_settings_dialog.bind(this)}></span>
+            <li onClick={this.props.create_settings_dialog.bind(this)}>
+                <span className="symbolExplanation">Einstellungen</span>
+                <span className="fa fa-cog fa-lg" title="Einstellungen"></span>
             </li>
             {
               this.props.user.id
-              ? <li>
-                  <span className="fa fa-plus fa-lg pointer" title="Mahlzeit anlegen" onClick={this.props.create_meal_dialog.bind(this)}></span>
+              ? <li onClick={this.props.create_meal_dialog.bind(this)}>
+                  <span className="symbolExplanation">Mahlzeit anlegen</span>
+                  <span className="fa fa-plus fa-lg" title="Mahlzeit anlegen"></span>
               </li>
               : null
             }
             {
               this.props.user.id
-              ? <li>
-                  <span className="fa fa-sign-out fa-lg pointer" title="Abmelden" onClick={this.props.sign_out.bind(this, this.props.user.id)}></span>
+              ? <li onClick={this.props.sign_out.bind(this, this.props.user.id)}>
+                  <span className="symbolExplanation">Abmelden</span>
+                  <span className="fa fa-sign-out fa-lg" title="Abmelden"></span>
               </li>
               : null
             }
