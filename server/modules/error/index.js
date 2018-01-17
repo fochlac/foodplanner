@@ -41,10 +41,14 @@ module.exports = {
 
 		internalError: (res) => {
 			return (err) => {
-				log(2, 'Internal Error: ', err);
-				log(10, 'Internal Error: ', res);
+		        if (err.status) {
+		            res.status(err.status).send(err);
+		        } else {
+					log(2, 'Internal Error: ', err);
+					log(10, 'Internal Error: ', res);
 
-				res.status(500).send({success: false, type: 'Internal_Error'});
+					res.status(500).send({success: false, type: 'Internal_Error'});
+		        }
 			}
 		},
 

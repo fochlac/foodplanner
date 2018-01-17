@@ -51,6 +51,11 @@ const app = (state = {}, action) => {
             let errors = {...state.errors};
             delete errors[action.id];
             return {...state, errors: errors};
+        case 'REFRESH':
+            if (action.status === "complete" && action.data.version) {
+                return {...state, dataversion: action.data.version};
+            }
+            return state;
 
         default:
             return state;

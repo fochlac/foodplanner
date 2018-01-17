@@ -14,7 +14,7 @@ const user = {
 
 	},
 	actions = {
-		save_settings_locally: (data) => output = {data, type: 'save_settings_locally'},
+		sign_in: (data) => output = {data, type: 'sign_in'},
 		save_settings: (data) => output = {data, type: 'save_settings'},
 		show_transaction_history: () => output = 'show_transaction_history',
 		start_send_money: () => output = 'start_send_money'
@@ -64,7 +64,7 @@ describe('UserFrame', () => {
     wrapper.find('.userFrame.register button').simulate('click');
 
     expect(output.data).to.equal('test123');
-    expect(output.type).to.equal('save_settings_locally');
+    expect(output.type).to.equal('sign_in');
 
     wrapper.find('.registerLink').simulate('click');
     wrapper.find('.userFrame .name').simulate('change', {target: {value: TESTNAME}})

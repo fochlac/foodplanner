@@ -92,6 +92,28 @@ module.exports = {
         });
     },
 
+    getMealCreatorBySignupId: (id) => {
+        const query = `SELECT
+                meals.creatorId
+            FROM meals
+            RIGHT JOIN signups
+            ON meals.id = signups.meal
+            WHERE signups.id = ${mysql.escape(id)}`;
+
+        return getConnection()
+        .then (myDb => {
+            return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
+                myDb.release();
+                if (err) {
+                    log(2, 'modules/db/meal:getMealBySignupId', err, query);
+                    reject({status: 500, message: 'Unable to get meallist.'});
+                } else {
+                    resolve(result[0].creatorId);
+                }
+            }));
+        });
+    },
+
     setMealById: (id, options) => {
         const query = `UPDATE meals SET
             name        = ${mysql.escape(options.name)},

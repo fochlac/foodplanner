@@ -50,12 +50,13 @@ describe('Topbar', () => {
 
   it('should call correct actions', () => {
     const wrapper = shallow(<Topbar user={{id: 1}} app={{hiddenBusy: false, dialog: ''}} {...actions} />);
+    const quicklinks = wrapper.find('.quicklinks');
 
-    wrapper.find('.quicklinks .fa-cog').simulate('click');
+    quicklinks.childAt(0).simulate('click');
     expect(output).to.equal('create_settings_dialog');
-    wrapper.find('.quicklinks .fa-plus').simulate('click');
+    quicklinks.childAt(1).simulate('click');
     expect(output).to.equal('create_meal_dialog');
-    wrapper.find('.quicklinks .fa-sign-out').simulate('click');
+    quicklinks.childAt(2).simulate('click');
     expect(output).to.equal('sign_out');
   });
 });

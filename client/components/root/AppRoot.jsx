@@ -31,7 +31,7 @@ class App extends React.Component {
                     this.props.initial_user(user.id, {
                         creationNotice_notification: user.creationNotice_notification,
                         deadlineReminder_notification: user.deadlineReminder_notification
-                    });
+                    }, (window.defaultStore && !window.defaultStore.user.id));
                 }
             })
             .catch(console.log);

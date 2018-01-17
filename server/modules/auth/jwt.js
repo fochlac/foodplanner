@@ -1,30 +1,41 @@
 const   userDB  = require(process.env.FOOD_HOME  + 'modules/db/user')
-    ,   uuid    = require('uuid')
     ,   jwt     = require('jsonwebtoken')
     ,   error   = require(process.env.FOOD_HOME + 'modules/error')
+    ,   caches  = require(process.env.FOOD_HOME + 'modules/cache')
     ,   log     = require(process.env.FOOD_HOME + 'modules/log');
 
-const   secretKey = uuid.v4()
+const   secretKey = process.env.FOOD_UUID
     ,   jwtOptions = {
             issuer: 'food.fochlac.com'
         };
 
-let userList;
+let userList,
+    userMap,
+    cache = caches.getCache('userList');
 
 function getUserList() {
-    userDB.getAllUserSettings()
-    .then((ULResp) => {
-        userList = ULResp;
-        return ULResp;
-    });
+    let UL = cache.get('userList');
+    if (UL) {
+        userList = UL.UL;
+        userMap = UL.ULMap;
+        return Promise.resolve(UL);
+    } else {
+        return userDB.getAllUsers()
+        .then((UL) => {
+            userList = UL;
+            userMap = UL.reduce((acc, user) => Object.assign(acc, {[user.id]: user}), {});
+            cache.put('userList', {UL, ULMap: userMap});
+            return UL;
+        });
+    }
 }
 
 function createJWT(userObject) {
     return new Promise( (resolve, reject) => {
         log(6, 'createJWT: Creating JWT for User: ', userObject.name);
-        jwt.sign({id: userObject.id, role: userObject.role}, secretKey, jwtOptions, (err, token) => {
+        jwt.sign({id: userObject.id, admin: userObject.admin}, secretKey, jwtOptions, (err, token) => {
             if (err) {
-                log(4, 'createJWT: Error creating JWT.' , err);
+                log(5, 'createJWT: Error creating JWT.' , err);
                 reject(err);
             } else {
                 resolve(token);
@@ -35,8 +46,8 @@ function createJWT(userObject) {
 
 function jwtVerify(request) {
     return new Promise( (resolve, reject) => {
-        if (request.headers.jwt === undefined && request.headers.cookie.indexOf('jwt=') === -1) {
-            log(4, 'jwtVerify: Call without JWT');
+        if ((!request.cookies || request.cookies.jwt === undefined) && request.headers.cookie.indexOf('jwt=') === -1) {
+            log(5, 'jwtVerify: Call without JWT');
             reject('no token provided');
             return;
         }
@@ -50,51 +61,35 @@ function jwtVerify(request) {
         }
         token = request.headers.jwt || cookie.jwt;
 
-        log(6, 'jwtVerify: decoding JWT-Token');
+        log(7, 'jwtVerify: decoding JWT-Token');
         jwt.verify(token, secretKey, (err, token) => {
             if (err) {
-                log(4, 'jwtVerify: No valid Token provided.', err);
+                log(5, 'jwtVerify: No valid Token provided.', err);
                 reject(err);
             } else {
-                log(6, 'jwtVerify: JWT-Token is valid');
+                log(7, 'jwtVerify: JWT-Token is valid');
                 resolve(token);
             }
         });
     });
 }
 
-function jwtGetUser(token, retest) {
-    log(6, 'jwtGetUser: Checking userlist for ' + token.id);
-    return new Promise( (resolve, reject) => {
-        let userObject = userList.filter((dbUser) => {
-                return dbUser.id === token.id;
-            });
+function jwtGetUser(token) {
+    log(7, 'jwtGetUser: Checking userlist for ' + token.id);
 
-        if (userObject.length > 0) {
-            log(6, 'jwtGetUser: got user');
-            resolve(userObject[0]);
-        } else {
-            log(6, 'jwtGetUser: user not found. Token: ' + JSON.stringify(token) + '. List: ' + JSON.stringify(userList));
-            if (retest === true) {
-                log(6, 'jwtGetUser: refetched user list, didnt find user in refreshed list.');
-                return reject();
+    return getUserList()
+        .then(() => new Promise( (resolve, reject) => {
+            let userObject = userMap[token.id.toString()];
+
+            if (userObject) {
+                log(7, 'jwtGetUser: got user');
+                resolve(userObject);
+            } else {
+                log(5, 'jwtGetUser: user not found. Token: ' + JSON.stringify(token) + '. List: ' + JSON.stringify(userMap));
+                reject();
             }
-
-            log(6, 'jwtGetUser: refreshing user list.');
-            return getUserList()
-                .then(() => {
-                    return jwtGetUser(token, true);
-                });
-        }
-    });
+        }));
 }
-
-function promiseErrorAuth(err) {
-    res.status(500).send();
-}
-
-getUserList();
-
 
 module.exports = {
     createToken: (userObject) => {
@@ -111,21 +106,18 @@ module.exports = {
         })
         .catch(err => {
             req.auth = false;
+            req.user = undefined;
             next();
         })
     },
 
-    requireRole:(role) => {
-        if (typeof role === 'string') {
-            role = [role];
-        }
-
+    requireAdmin:() => {
         return (req, res, next) => {
-            if (role.contains(req.user.role)) {
+            if (req.user.admin) {
                 next();
             } else {
-                log(4, `User ${req.user.id} tried to access call restricted to role "${role}"`);
-                res.status(403).send();
+                log(4, `User ${req.user.id} tried to access call restricted to role "admin"`);
+                res.status(403).send({type: 'FORBIDDEN'});
             }
         }
     },
@@ -135,7 +127,7 @@ module.exports = {
             next();
         } else {
             log(4, `Anonymous user tried to access restricted call.`);
-            res.status(401).send();
+            res.status(401).send({type: 'UNAUTHORIZED'});
         }
     }
 }

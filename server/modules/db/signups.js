@@ -156,7 +156,7 @@ module.exports = {
                             reject({status: 500, message: 'Error updating signup'});
                         } else {
                             resolve(signup);
-                            log(6, 'modules/db/signup:setSignupById - option values inserted - signup updated', optionsQuery);
+                            log(6, 'modules/db/signup:setSignupById - option values inserted - signup updated');
                         }
                     });
                 });

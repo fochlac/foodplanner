@@ -10,6 +10,7 @@ FOOD_DB_NAME=food
 FOOD_PORT=22222
 FOOD_EXTERNAL=localhost
 FOOD_MAILPW=none
+FOOD_UUID=asdajsdlajiwdj1ij023j21oh9d8a98chao9fh8fjsd3b2fkjnöcou09djdibadj23hbsiu8szfhu2n23ud9s8fjs3rnun
 ADMIN_DB_USERNAME=root
 ADMIN_DB_PASSWORD=qwert6
 ADMIN_DB_PORT=33333

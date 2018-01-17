@@ -32,10 +32,6 @@ export default class SettingsDialog extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-
-  }
-
   submit() {
     const s = this.state;
     if (s.deadlineReminder_notification || s.creationNotice_notification) {
@@ -70,6 +66,7 @@ export default class SettingsDialog extends React.Component {
 
   handleCheck(event, type) {
     return (evt) => {
+      console.log(evt);
       this.mySetState({
         [event + '_' + type]: +evt.target.checked
       });

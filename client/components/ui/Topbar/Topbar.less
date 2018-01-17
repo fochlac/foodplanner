@@ -43,8 +43,20 @@
         & > li {
             padding: 5px;
             position: relative;
-            width: 20px;
+            min-width: 20px;
             text-align: center;
+            cursor: pointer;
+            margin-left: 5px;
+
+            .symbolExplanation {
+                margin-right: 5px;
+            }
+
+            @media all and (max-width: 800px) {
+                .symbolExplanation {
+                    display: none;
+                }
+            }
         }
     }
 }

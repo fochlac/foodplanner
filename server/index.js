@@ -1,18 +1,21 @@
 #!/usr/bin/env node
 
-const   express = require('express')
-    ,   app = express()
-    ,   bodyparser = require('body-parser')
-    ,   compression = require('compression')
-    ,   xssFilter = require('x-xss-protection')
-    ,   https = require('https')
-    ,   fs = require('fs')
-    ,   routes = require(process.env.FOOD_HOME + 'routes')
-    ,   scheduler = require(process.env.FOOD_HOME + 'modules/scheduler')
-    ,   mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals')
-    ,   signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups')
-    ,   server_port = process.env.FOOD_PORT
-    ,   server_ip_address = 'localhost'
+const   express             = require('express')
+    ,   app                 = express()
+    ,   bodyparser          = require('body-parser')
+    ,   compression         = require('compression')
+    ,   xssFilter           = require('x-xss-protection')
+    ,   https               = require('https')
+    ,   fs                  = require('fs')
+    ,   routes              = require(process.env.FOOD_HOME + 'routes')
+    ,   scheduler           = require(process.env.FOOD_HOME + 'modules/scheduler')
+    ,   mealsDB             = require(process.env.FOOD_HOME + 'modules/db/meals')
+    ,   signupsDB           = require(process.env.FOOD_HOME + 'modules/db/signups')
+    ,   jwt                 = require(process.env.FOOD_HOME + 'modules/auth/jwt')
+    ,   version             = require(process.env.FOOD_HOME + 'modules/cache').getVersion
+    ,   server_port         = process.env.FOOD_PORT
+    ,   server_ip_address   = 'localhost'
+
     ,   sslServer = https.createServer({
             key: fs.readFileSync(process.env.SSLKEY),
             cert: fs.readFileSync(process.env.SSLCERT)
@@ -38,6 +41,7 @@ app.use('/static/', express.static(process.env.FOOD_CLIENT + ''));
 app.use('/sw.js', express.static(process.env.FOOD_CLIENT + 'sw.js'));
 app.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.json'));
 
+app.use(jwt.checkToken);
 // if no route and no static content, redirect to index
 app.get('*', (req, res) => {
     let meals = mealsDB.getAllMeals(),
@@ -50,6 +54,7 @@ app.get('*', (req, res) => {
                     resolve(data);
                 });
             });
+
     Promise.all([file, meals, signups])
         .then(data => {
             let file = data[0],
@@ -70,8 +75,8 @@ app.get('*', (req, res) => {
                 '<script>/**DEFAULTSTORE**/</script>',
                 `<script>
                     window.defaultStore = {
-                        user:{name:''},
-                        app:{dialog:'',errors:{}},
+                        user:${req.auth ? JSON.stringify(req.user) : "{name:''}"},
+                        app:{dialog:'', errors:{}, dataversion: ${version()}},
                         meals:${JSON.stringify(meals)},
                         signups:${JSON.stringify(signups)}
                     }

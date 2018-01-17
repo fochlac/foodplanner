@@ -3,46 +3,71 @@ const	signups	    = require('express').Router()
     ,   paymentDB   = require(process.env.FOOD_HOME + 'modules/db/payment')
 	,	mealsDB 	= require(process.env.FOOD_HOME + 'modules/db/meals')
 	,	error 		= require(process.env.FOOD_HOME + 'modules/error')
+    ,   jwt             = require(process.env.FOOD_HOME + 'modules/auth/jwt')
+    ,   caches       = require(process.env.FOOD_HOME + 'modules/cache')
     ,   log         = require(process.env.FOOD_HOME + 'modules/log');
 
+let cache = caches.getCache('signups'),
+    updateCache = caches.getCache('update');
 
-signups.post('/:id/paid', error.router.validate('params', {
+signups.post('/:id/paid', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
-    signupsDB.setSignupPaymentStatusById(req.params.id, true)
+    cache.delete(req.params.id);
+    cache.delete('allSignups');
+    updateCache.deleteAll();
+
+    mealsDB.getMealCreatorBySignupId(req.params.id)
+    .then(id => {
+        if (id == req.user.id) {
+            return signupsDB.setSignupPaymentStatusById(req.params.id, true);
+        } else {
+            log(4, `User ${req.user.id} tried to update signup ${req.params.id} without being the creator.`);
+            return Promise.reject({status: 403, type: 'FORBIDDEN'});
+        }
+    })
     .then((signup) => {
         res.status(200).send({success: true});
     })
     .catch(error.router.internalError(res));
 });
 
-signups.delete('/:id/paid', error.router.validate('params', {
+signups.delete('/:id/paid', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
-    signupsDB.setSignupPaymentStatusById(req.params.id, false)
+    cache.delete(req.params.id);
+    cache.delete('allSignups');
+    updateCache.deleteAll();
+
+    mealsDB.getMealCreatorBySignupId(req.params.id)
+    .then(id => {
+        if (id == req.user.id) {
+            return signupsDB.setSignupPaymentStatusById(req.params.id, false);
+        } else {
+            log(4, `User ${req.user.id} tried to update signup ${req.params.id} without being the creator.`);
+            return Promise.reject({status: 403, type: 'FORBIDDEN'});
+        }
+    })
     .then((signup) => {
         res.status(200).send({success: true});
-    })
-    .catch(error.router.internalError(res));
-});
-
-signups.get('/:id', error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
-}), (req, res) => {
-    signupsDB.getSignupByProperty('id', req.params.id).then(() => {
-        res.status(200).send({result: 'success'});
     })
     .catch(error.router.internalError(res));
 });
 
 signups.get('/', (req, res) => {
-    signupsDB.getAllSignups().then((signups) => {
-        res.status(200).send(signups);
-    })
-    .catch(error.router.internalError(res));
+    let signup = cache.get('allSignups');
+    if (signup) {
+        res.status(200).send(signup);
+    } else {
+        signupsDB.getAllSignups().then((signups) => {
+            cache.put('allSignups', signups);
+            res.status(200).send(signups);
+        })
+        .catch(error.router.internalError(res));
+    }
 });
 
-signups.put('/:id', error.router.validate('params', {
+signups.put('/:id', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), error.router.validate('body', {
     comment: /^[^"%;]{0,150}$/,
@@ -77,28 +102,47 @@ signups.put('/:id', error.router.validate('params', {
         });
 
         if (optionsInvalid) {
-            return Promise.reject({type: 2, msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
+            log(5, 'put - /signups/:id', 'invalid Options');
+            return Promise.reject({status: 422, type: 'Invalid_Request', data: ['options']});
         }
 
-        return signupsDB.setSignupById(req.params.id, req.body);
+        cache.delete(req.params.id);
+        cache.delete('allSignups');
+        updateCache.deleteAll();
+
+        return Promise.all([signupsDB.getSignupByProperty('id', req.params.id), mealsDB.getMealCreatorBySignupId(req.params.id)]);
+    })
+    .then((data) => {
+        if (data[0].userId == req.user.id || data[1] == req.user.id) {
+            return signupsDB.setSignupById(req.params.id, req.body);
+        } else {
+            log(4, `User ${req.user.id} tried to update signup ${req.params.id} without being the creator.`);
+            return Promise.reject({status: 403, type: 'FORBIDDEN'});
+        }
     })
     .then((signup) => {
         res.status(200).send(signup);
     })
-    .catch(err => {
-        if ([1, 2].includes(err.type)) {
-            log(4, err.msg)
-            res.status(400).send(err);
-        } else {
-            error.router.internalError(res)(err);
-        }
-    });
+    .catch(error.router.internalError(res));
 });
 
-signups.delete('/:id', error.router.validate('params', {
+signups.delete('/:id', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
 }), (req, res) => {
-    signupsDB.deleteSignupById(req.params.id).then(() => {
+    cache.delete(req.params.id);
+    cache.delete('allSignups');
+    updateCache.deleteAll();
+
+    Promise.all([signupsDB.getSignupByProperty('id', req.params.id), mealsDB.getMealCreatorBySignupId(req.params.id)])
+    .then((data) => {
+        if (data[0].userId == req.user.id || data[1] == req.user.id) {
+            return signupsDB.deleteSignupById(req.params.id);
+        } else {
+            log(4, `User ${req.user.id} tried to delete signup ${req.params.id} without being the creator.`);
+            return Promise.reject({status: 403, type: 'FORBIDDEN'});
+        }
+    })
+    .then(() => {
         res.status(200).send({success: true});
     })
     .catch(error.router.internalError(res));
@@ -118,7 +162,8 @@ signups.post('/', error.router.validate('body', {
             signups = result[1];
 
         if (result[0].signupLimit && result[0].signupLimit <= result[1].length) {
-            return Promise.reject({id: 1, msg: 'Bad_Request', reason: 'offer_full'});
+            log(5, 'post - /signups/', 'tried to sign up for full offer');
+            return Promise.reject({status: 409, type: 'Bad_Request', reason: 'offer_full'});
         }
 
         const optionsInvalid = meal.options.some(option => {
@@ -147,9 +192,12 @@ signups.post('/', error.router.validate('body', {
         });
 
         if (optionsInvalid) {
-            return Promise.reject({id: 2, msg: 'Options not valid.', type: 'Invalid_Request', data: ['options']});
+            log(5, 'post - /signups/', 'invalid options');
+            return Promise.reject({status: 422, type: 'Invalid_Request', data: ['options']});
         }
 
+        cache.delete('allSignups');
+        updateCache.deleteAll();
 
         return signupsDB.createSignUp(req.body);
     })
@@ -157,14 +205,7 @@ signups.post('/', error.router.validate('body', {
     .then((signup) => {
         res.status(200).send(signup);
     })
-    .catch(err => {
-        if ([1, 2].includes(err.id)) {
-            log(4, err.msg)
-            res.status(400).send(err);
-        } else {
-            error.router.internalError(res)(err);
-        }
-    });
+    .catch(error.router.internalError(res));
 });
 
 module.exports = signups;

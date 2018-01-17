@@ -440,6 +440,7 @@ describe('delete signup for meal', () => {
         this.timeout(5000);
         await this.driver.findElement(S.db.m.signupByUser(this.username)).findElement(S.db.su.cancel).click();
 
+        await this.driver.awaitBusyComplete();
         expect(await this.driver.findElements(S.db.m.signups)).to.have.lengthOf(0);        
     });   
 });

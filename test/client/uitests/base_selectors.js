@@ -69,6 +69,8 @@ export const S = {
     db: {
         meal: By.className('meal'),
         getMealByName: name => By.xpath(`//div[contains(@class, 'meal') and contains(.//span[contains(@class, 'name')], '${name}')]`),
+        error: By.className('error'),
+        closeError: By.css('.error .fa-times'),
         m: {
             titlebar: By.className('titlebar'),
             delete: By.css('.menuIcon.fa-trash'),

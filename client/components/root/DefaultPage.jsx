@@ -5,22 +5,27 @@ import BusyScreen from 'UI/BusyScreen/BusyScreen.jsx';
 import Error from 'UI/Error.js';
 import DialogController from 'ROOT/DialogController.jsx';
 import {resizeFocus, removeResizeFocus} from 'SCRIPTS/resizeFocus.js';
-import { show_impressum, initial_meals } from 'ACTIONS';
+import { show_impressum, refresh } from 'ACTIONS';
 
 export class DefaultPage extends React.Component {
     constructor(props) {
         super();
+
+        this.refreshContent = this.refreshContent.bind(this);
+    }
+
+    refreshContent() {
+        this.props.refresh(this.props.app.dataversion);
     }
 
     componentDidMount() {
-        this.initial_meals = this.props.initial_meals.bind(this, true);
         resizeFocus();
-        window.addEventListener('focus', this.initial_meals);
+        window.addEventListener('focus', this.refreshContent);
     }
 
     componentWillUnmount() {
         removeResizeFocus();
-        window.removeEventListener('focus', this.initial_meals);
+        window.removeEventListener('focus', this.refreshContent);
     }
 
     render() {
@@ -46,4 +51,4 @@ const mapStateToProps = (state, ownProps) => ({
   errors: state.app.errors
 });
 
-export default connect(mapStateToProps, { show_impressum, initial_meals })(DefaultPage);
+export default connect(mapStateToProps, { show_impressum, refresh })(DefaultPage);
