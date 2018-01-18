@@ -7,6 +7,7 @@ def checkout() {
 
     // checkout current branch
     checkout scm
+    sh 'git reset --hard'
 
     // repair rebases
     sh "rm -rf ${pwd()}/.git/rebase-apply"

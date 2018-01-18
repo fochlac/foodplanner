@@ -23,8 +23,8 @@ user.put('/:id/money', jwt.requireAuthentication, error.router.validate('params'
     amount: /^[0-9]{1,6}[.0-9]{0,3}$/
 }), (req, res) => {
 
-    if (+req.params.source !== +req.user.id) {
-        log(4, `User ${req.user.id} tried to access user ${req.params.id}'s money`);
+    if (+req.body.source !== +req.user.id) {
+        log(4, `User ${req.user.id} tried to access user ${req.body.source}'s money`);
         return res.status(403).send({type: 'FORBIDDEN'});
     }
 

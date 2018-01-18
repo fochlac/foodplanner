@@ -10,7 +10,7 @@ executeQuery = (db, query, final) => {
             db.release();
         }
         if (err) {
-            log(2, 'modules/db/payment:executeQuery - failed executing query', query);
+            log(2, 'modules/db/payment:executeQuery - failed executing query', query, err);
             reject({status: 500, message: 'Unable to execute query.'});
         } else {
             resolve(result);
@@ -28,7 +28,8 @@ module.exports = {
             ON meals.id = ${mysql.escape(mealId)}
             WHERE signups.userId IS NOT NULL
             AND signups.meal = ${mysql.escape(mealId)}
-            AND meals.deadline < ${Date.now()}`;
+            AND meals.deadline < ${Date.now()}
+            AND signups.paid = 0;`;
 
         return getConnection()
             .then (myDb => executeQuery(myDb, query, true)
@@ -63,7 +64,7 @@ module.exports = {
             );
     },
 
-    payForSignup: (signupId) => {
+    payForSignup: async function(signupId) {
         const queryGetPrice = `
             SELECT
                 price,
@@ -76,6 +77,20 @@ module.exports = {
             LEFT JOIN users
             ON signups.userId = users.id
             WHERE signups.id = ${mysql.escape(signupId)};`,
+        queryLockUsers = `
+        SELECT * FROM users
+        WHERE users.id IN (
+            SELECT signups.userId as ID
+            FROM signups
+            WHERE signups.id = ${mysql.escape(signupId)}
+            UNION ALL
+            SELECT meals.creatorId as ID
+            FROM signups
+            LEFT JOIN meals
+            ON meals.id = signups.meal
+            WHERE signups.id = ${mysql.escape(signupId)}
+            ORDER BY ID
+        ) FOR UPDATE;`,
         queryRemoveBalance = (price) => `
             UPDATE users
             SET users.balance = (users.balance - CASE WHEN ${mysql.escape(price)} IS NULL THEN 0 ELSE ${mysql.escape(price)} END)
@@ -110,71 +125,70 @@ module.exports = {
             FROM signups
             LEFT JOIN meals
             ON meals.id = signups.meal
-            WHERE signups.id = ${mysql.escape(signupId)};`,
-        querySetPaid = `UPDATE signups SET paid = 1 WHERE signups.id = ${mysql.escape(signupId)};`,
-        queryGetTotal = `SELECT SUM(users.balance) AS total FROM users LOCK IN SHARE MODE;`;
+            WHERE signups.id = ${signupId};`,
+        querySetPaid = 'UPDATE signups SET paid = 1 WHERE signups.id = ' + mysql.escape(signupId) + ';',
+        queryGetTotal = `SELECT SUM(users.balance) AS total FROM users FOR UPDATE;`;
 
-        return getConnection()
-        .then (myDb => {
-            return new Promise((resolve, reject) => myDb.beginTransaction(err => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve();
-                    }
-                }))
-                .then(() => Promise.all([executeQuery(myDb, queryGetPrice), executeQuery(myDb, queryGetBalance)]))
-                .then((priceBalance) => {
-                    const price = priceBalance[0][0].price,
-                        paid = priceBalance[0][0].paid,
-                        balance = priceBalance[1][0].balance;
+        const myDb = await getConnection();
 
-                    if (+price > +balance) {
-                        log(2, 'modules/db/payment:payForSignup', 'stopped transaction - insufficient balance. signup: ' + signupId);
-                        return Promise.reject({type: 1, status: 400, message: 'Insufficient balance.'});
-                    }
-                    if (paid) {
-                        log(2, 'modules/db/payment:payForSignup', 'stopped transaction - already paid. signup: ' + signupId);
-                        return Promise.reject({type: 1, status: 400, message: 'Already paid.'});
-                    }
+        await new Promise((resolve, reject) => myDb.beginTransaction(err => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        }))
+        .then(() => Promise.all([executeQuery(myDb, queryGetPrice), executeQuery(myDb, queryGetBalance), executeQuery(myDb, queryLockUsers)]))
+        .then((priceBalance) => {
+            const price = priceBalance[0][0].price,
+                paid = priceBalance[0][0].paid,
+                balance = priceBalance[1][0].balance;
+
+            if (+price > +balance) {
+                log(2, 'modules/db/payment:payForSignup', 'stopped transaction - insufficient balance. signup: ' + signupId);
+                return Promise.reject({type: 1, status: 400, message: 'Insufficient balance.'});
+            }
+            if (paid) {
+                log(2, 'modules/db/payment:payForSignup', 'stopped transaction - already paid. signup: ' + signupId);
+                return Promise.reject({type: 1, status: 400, message: 'Already paid.'});
+            }
 
 
-                    return Promise.all([
-                        executeQuery(myDb, queryRemoveBalance(price)),
-                        executeQuery(myDb, queryAddBalance(price)),
-                        executeQuery(myDb, queryCreateTransaction(price)),
-                        executeQuery(myDb, querySetPaid)
-                    ]);
-                })
-                .then(() => executeQuery(myDb, queryGetTotal))
-                .then(result => {
-                    if (+result[0].total !== 0) {
-                        log(1, 'Error in balance, stopping transaction! Total is ', +result[0].total);
-                        return Promise.reject({type: 2, status: 500, message: 'Error in total balance. Stopping transaction.'});
-                    }
-                })
-                .then(() => new Promise((resolve, reject) => myDb.commit(err => {
-                    if (err) {
-                        log(2, 'modules/db/payment:payForSignup', 'error commiting transaction');
-                        reject({status: 500, message: 'Unable to commit transaction.'});
-                    } else {
-                        log(6, 'modules/db/payment:payForSignup', 'commited transaction')
-                        myDb.release();
-                        resolve();
-                    }
-                })))
-                .catch(err => new Promise((resolve, reject) =>  myDb.rollback(rbErr => {
-                    if (rbErr) {
-                        log(2, 'rollback failed for errors: ', err, rbErr);
-                    }
-                    myDb.release();
-                    if (err.type === 1) {
-                        return resolve(err);
-                    } else {
-                        return reject(err);
-                    }
-                })));
-        });
+            return Promise.all([
+                executeQuery(myDb, queryRemoveBalance(price)),
+                executeQuery(myDb, queryAddBalance(price)),
+                executeQuery(myDb, queryCreateTransaction(price)),
+                executeQuery(myDb, querySetPaid)
+            ]);
+        })
+        .then(() => executeQuery(myDb, queryGetTotal))
+        .then(result => {
+            if (+result[0].total !== 0) {
+                log(1, 'Error in balance, stopping transaction! Total is ', +result[0].total);
+                return Promise.reject({type: 2, status: 500, message: 'Error in total balance. Stopping transaction.'});
+            }
+        })
+        .then(() => new Promise((resolve, reject) => myDb.commit(err => {
+            if (err) {
+                log(2, 'modules/db/payment:payForSignup', 'error commiting transaction');
+                reject({status: 500, message: 'Unable to commit transaction.'});
+            } else {
+                log(6, 'modules/db/payment:payForSignup', 'commited transaction')
+                myDb.release();
+                resolve();
+            }
+        })))
+        .catch(err => new Promise((resolve, reject) => myDb.rollback(rbErr => {
+            if (rbErr) {
+                log(2, 'rollback failed for errors: ', err, rbErr);
+            }
+            myDb.release();
+            if (err.type === 1) {
+                return resolve(err);
+            } else {
+                return reject(err);
+            }
+        })));
     },
 
     lockMealPrices: (mealId) => {
