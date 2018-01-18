@@ -56,7 +56,7 @@ meals.post('/:id/lock', jwt.requireAuthentication, error.router.validate('params
         .then(() => paymentDB.getEligibleSignups(req.params.id))
         .then((eligibleSignups) => Promise.all(
             eligibleSignups.map(
-                result => paymentDB.payForSignup(result.id)
+                signup => paymentDB.payForSignup(signup.id)
                     .then(res => Promise.resolve({error: false, data: res}),
                         err => Promise.resolve({error: true, data: err})
                     )
