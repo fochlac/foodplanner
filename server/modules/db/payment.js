@@ -145,7 +145,7 @@ module.exports = {
                 balance = priceBalance[1][0].balance;
 
             if (+price > +balance) {
-                log(2, 'modules/db/payment:payForSignup', 'stopped transaction - insufficient balance. signup: ' + signupId);
+                log(2, 'modules/db/payment:payForSignup', `stopped transaction - insufficient balance. signup: ${signupId}, balance: ${balance}, price: ${price}`);
                 return Promise.reject({type: 1, status: 400, message: 'Insufficient balance.'});
             }
             if (paid) {

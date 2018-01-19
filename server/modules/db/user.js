@@ -40,6 +40,30 @@ module.exports = {
         });
     },
 
+    getUnsignedUsersByProperty: (mealId, prop, val) => {
+        const query = `
+            SELECT users.*
+            FROM users
+            LEFT OUTER JOIN signups
+            ON signups.userId = users.id
+            AND signups.meal = ${mealId}
+            WHERE signups.userId IS NULL
+            AND users.${prop} = ${mysql.escape(val)};`;
+
+        return getConnection()
+        .then (myDb => {
+            return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
+                myDb.release();
+                if (err) {
+                    log(2, 'modules/db/user:getUserByProperty', err);
+                    reject({status: 500, message: 'Unable to find user.'});
+                } else {
+                    resolve(result);
+                }
+            }));
+        });
+    },
+
     searchUsersByProperty: (prop, val) => {
         return getConnection()
         .then (myDb => {

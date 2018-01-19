@@ -30,6 +30,7 @@ const mealPayment = (meal) => () => {
     			signupCache.deleteAll();
 				return meal.id;
 			} else {
+				log(6, 'unable to trigger payments, meal is not yet locked');
 				return Promise.reject('meal not locked yet')
 			}
 		})
