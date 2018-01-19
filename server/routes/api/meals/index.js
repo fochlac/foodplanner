@@ -14,7 +14,8 @@ const   meals           = require('express').Router()
 
 let cache = caches.getCache('meals'),
     signupCache = caches.getCache('signups'),
-    updateCache = caches.getCache('update');
+    updateCache = caches.getCache('update'),
+    userListCache = caches.getCache('userList');
 
 meals.post('/:id/lock', jwt.requireAuthentication, error.router.validate('params', {
     id: /^[0-9]{1,9}$/
@@ -42,6 +43,7 @@ meals.post('/:id/lock', jwt.requireAuthentication, error.router.validate('params
     cache.delete('allMeals');
     signupCache.deleteAll();
     updateCache.deleteAll();
+    userListCache.deleteAll();
 
     mealsDB.getMealById(req.params.id)
         .then(meal => {
