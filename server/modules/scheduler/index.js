@@ -3,7 +3,7 @@ const 	scheduler 	= require('node-schedule')
 	,	mealDb 		= require(process.env.FOOD_HOME + 'modules/db/meals')
 	,	paymentDb 	= require(process.env.FOOD_HOME + 'modules/db/payment')
     ,   log         = require(process.env.FOOD_HOME + 'modules/log')
-    ,   cache       = require(process.env.FOOD_HOME + 'modules/cache')
+    ,   caches      = require(process.env.FOOD_HOME + 'modules/cache')
     ,   error       = require(process.env.FOOD_HOME + 'modules/error');
 
 const second = 1000,
@@ -13,7 +13,8 @@ const second = 1000,
 	week = 7 * day;
 
 let schedule = {},
-	signupCache = cache.getCache('signups');
+	signupCache = caches.getCache('signups'),
+    userListCache = caches.getCache('userList');
 
 const mealDeadline = (meal) => () => {
 	log(5, 'deadline reminder for meal ' + meal.name + ' triggered.');
@@ -22,6 +23,7 @@ const mealDeadline = (meal) => () => {
 
 
 const mealPayment = (meal) => () => {
+	userListCache.deleteAll();
 	mealDb.getMealById(meal.id)
 		.then(meal => {
 			if (meal.locked) {
