@@ -10,7 +10,7 @@ const	user	     = require('express').Router()
 
 let cache = caches.getCache('users'),
     mailCache = caches.getCache('mail'),
-    userList = caches.getCache('userList');
+    userListCache = caches.getCache('userList');
 
 user.post('/:id/logout', error.router.validate('params', {
     id: /^[0-9]*$/
@@ -30,6 +30,9 @@ user.put('/:id/money', jwt.requireAuthentication, error.router.validate('params'
 
     cache.delete('user_' + req.params.id);
     cache.delete('history_' + req.params.id);
+    cache.delete('user_' + req.body.source);
+    cache.delete('history_' + req.body.source);
+    userListCache.deleteAll();
     paymentDB.sendMoney(req.body.source, req.params.id, req.body.amount).then(() => {
         res.status(200).send({success: true});
     })
@@ -52,7 +55,7 @@ user.put('/:id', jwt.requireAuthentication, error.router.validate('params', {
 
     cache.delete('user_' + req.params.id);
     mailCache.deleteAll();
-    userList.deleteAll();
+    userListCache.deleteAll();
     userDB.setUserByProperty('id', req.params.id, req.body).then((mail) => {
         res.status(200).send(mail);
     })
@@ -113,7 +116,7 @@ user.post('/', error.router.validate('body', {
     creationNotice: /^(0|1)$/
 }), (req, res) => {
     mailCache.deleteAll();
-    userList.deleteAll();
+    userListCache.deleteAll();
     userDB.createUser(req.body).then((user) => {
         return jwt.createToken(user).then(token => {
                 res.cookie('jwt', token, {secure: true, httpOnly: true, expires: new Date(Date.now() + 1000 * 3600 * 24 * 365)});
