@@ -12,8 +12,36 @@
     }
     th, td {
         padding: 0 5px 5px;
+
+        @media all and (max-width: 600px) {
+            white-space: initial;
+        }
+
         &:nth-child(n + 2) {
             text-align: center;
+        }
+    }
+
+    @media all and (max-width: 400px) {
+        th {
+            display: none;
+        }
+        tr {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            font-weight: 600;
+
+            td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                &:nth-child(n + 2)::before {
+                    content: attr(data-fieldtype);
+                    font-weight: 400;
+                }
+            }
         }
     }
 
@@ -51,12 +79,6 @@
         }
     }
     .mailFrame {
-        position: relative;
-    }
-    .fa-info-circle {
-        font-size: 16px;
-        width: 0px;
-        margin-left: 5px;
         position: relative;
     }
 }
