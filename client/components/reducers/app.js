@@ -8,6 +8,7 @@ const app = (state = {}, action) => {
             if (action.status === 'complete' && history.state && history.state.app) {
                 return history.state.app;
             }
+            return state;
         case 'CHECK_MAIL':
             if (action.status === 'complete' && !action.data.error) {
                 return {...state, mailSuggestion: action.data};
@@ -17,14 +18,12 @@ const app = (state = {}, action) => {
             return state;
 
         case 'SEND_MONEY':
-            if (action.status === 'complete' && !action.data.error) {
+        case 'SIGNOUT':
+        case 'SAVE_SETTINGS':
+            if (action.type !== 'SEND_MONEY' || (action.status === 'complete' && !action.data.error)) {
                 return {...state, mailSuggestion: undefined, dialog: {type: ""}};
             }
             return state;
-
-        case 'SIGNOUT':
-        case 'SAVE_SETTINGS':
-            return {...state, mailSuggestion: undefined, dialog: {type: ""}};
 
         case 'MEAL_SIGNUP':
         case 'MEAL_EDIT':

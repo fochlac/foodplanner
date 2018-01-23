@@ -45,11 +45,6 @@ const signups = (state = {}, action) => {
                 delete state[action.id];
             }
             return state;
-        case 'SIGNUP_PAID':
-            if (action.status === 'complete') {
-                state[action.id].paid = action.state;
-            }
-            return state;
         default:
             return state;
     }

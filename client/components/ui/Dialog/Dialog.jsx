@@ -3,7 +3,7 @@ import './Dialog.less';
 
 
 export default class Dialog extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
 
         this.handleKeyUp = this.handleKeyUp.bind(this);
@@ -22,7 +22,6 @@ export default class Dialog extends React.Component {
     componentWillUnmount() {
         window.removeEventListener('keyup', this.handleKeyUp);
     }
-
 
     closeDialog(evt) {
         if (evt.target.classList.contains('dialogBackground') && this.props.closeOnBackdrop) {
