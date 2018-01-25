@@ -7,9 +7,9 @@ export const S = {
     uf: {
         registerLink: By.className('registerLink'),
         submit: By.css('.userFrame button'),
-        loginMail: By.css('.userFrame > .mailFrame input'),
-        registerMail: By.css('.userFrame > .register .mail'),
-        registerName: By.css('.userFrame > .register .name'),
+        loginMail: By.css('.userFrame .mailFrame input'),
+        registerMail: By.css('.userFrame .register .mail'),
+        registerName: By.css('.userFrame .register .name'),
 
         username: By.className('userName')
     },
