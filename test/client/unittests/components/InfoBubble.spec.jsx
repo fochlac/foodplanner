@@ -14,7 +14,7 @@ describe('InfoBubble', () => {
   });
 
   it('should add correct styling and class', () => {
-    const wrapper = shallow(<InfoBubble arrow="right" symbol="test" position={{top: '10px', left: '10px'}} ></InfoBubble>);
+    const wrapper = shallow(<InfoBubble arrow="right" symbol="test" style={{top: '10px', left: '10px'}} ></InfoBubble>);
     const bubbleContainer = wrapper.find('.InfoBubbleContent').get(0).props.style;
 
     expect(wrapper.find('.InfoBubbleTriangle.right')).to.have.lengthOf(1);
