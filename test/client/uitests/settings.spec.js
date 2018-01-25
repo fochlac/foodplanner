@@ -75,17 +75,19 @@ describe('settings dialog', () => {
 
     it('should be able to login with changed email by typing first 5 letters', async function() {
         this.timeout(5000);
+        const submit = await this.driver.waitElementLocated(S.uf.submit);
         const email = await this.driver.waitElementLocated(S.uf.loginMail);
         email.clear();
         email.sendKeys( 2 + this.usermail.slice(0,5));
         this.driver.wait(until.elementValueIs(email, 2 + this.usermail));
-        this.driver.findElement(S.uf.submit).click();
+        submit.click();
 
         await this.driver.awaitBusyComplete();
         return this.checkLoggedin(2 + this.username);
     });
 
     after(async function() {
+        this.timeout(5000);
         await this.openSettingsDialog();
 
         const nameInput = await this.driver.findElement(S.sd.name);
