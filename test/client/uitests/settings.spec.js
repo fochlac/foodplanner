@@ -81,7 +81,7 @@ describe('settings dialog', () => {
         email.clear();
         email.sendKeys( 2 + this.usermail.slice(0,5));
         this.driver.wait(until.elementValueIs(email, 2 + this.usermail));
-        submit.click();
+        this.driver.waitElementLocated(S.uf.submit).click();
 
         await this.driver.awaitBusyComplete();
         return this.checkLoggedin(2 + this.username);
