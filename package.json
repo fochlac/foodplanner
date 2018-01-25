@@ -77,11 +77,8 @@
     "mocha": "^4.0.1",
     "mocha-webpack": "^1.0.1",
     "null-loader": "^0.1.1",
-<<<<<<< Updated upstream
-=======
     "nyc": "^11.4.1",
     "postcss-loader": "^2.0.10",
->>>>>>> Stashed changes
     "react-addons-test-utils": "^15.6.2",
     "selenium-webdriver": "^3.6.0",
     "serviceworker-webpack-plugin": "^0.2.3",
