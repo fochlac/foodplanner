@@ -75,7 +75,7 @@ describe('settings dialog', () => {
 
     it('should be able to login with changed email by typing first 5 letters', async function() {
         this.timeout(5000);
-        const email = await this.driver.findElement(S.uf.loginMail);
+        const email = await this.driver.waitElementLocated(S.uf.loginMail);
         email.clear();
         email.sendKeys( 2 + this.usermail.slice(0,5));
         this.driver.wait(until.elementValueIs(email, 2 + this.usermail));
