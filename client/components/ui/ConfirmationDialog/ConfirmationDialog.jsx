@@ -2,10 +2,6 @@ import React from 'react';
 import Dialog from 'UI/Dialog.js';
 
 export default class ConfirmationDialog extends React.Component {
-  constructor(props) {
-    super();
-  }
-
   submit() {
     this.props[this.props.action](...this.props.parameter);
   }

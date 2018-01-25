@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { until, Key } from 'selenium-webdriver';
 import { S } from 'T_UI/base_selectors.js';
 
-require('./register_login.spec.js');
+require('./settings.spec.js');
 
 const setDay = async function(day) {
         const DayPicker = await this.driver.findElement(S.cm.daypicker),
@@ -375,7 +375,7 @@ describe('signup for meal', () => {
 
         const dialog = await this.driver.findElements(S.dialog.signup);
         this.timeout(5000);
-        
+
         if (!dialog.length) {
             const dialog = await this.openSignupDialog();
         }
@@ -394,7 +394,7 @@ describe('signup for meal', () => {
 
         await this.validateSignupOptions(await this.driver.findElement(S.db.m.signupByUser(this.username)), meal2.options, signupOptions);
         expect(await this.driver.findElement(S.db.m.signupByUser(this.username)).findElement(S.db.su.comment).getText()).to.include(COMMENT);
-    });   
+    });
 });
 
 describe('edit signup for meal', () => {
@@ -406,7 +406,7 @@ describe('edit signup for meal', () => {
         this.validateEditSignup = validateEditSignup.bind(this);
 
         const dialog = await this.driver.findElements(S.dialog.signup);
-        
+
         if (dialog.length) {
             await dialog.findElement(S.dialog.cancel).click();
         }
@@ -431,7 +431,7 @@ describe('edit signup for meal', () => {
 
         await this.validateSignupOptions(await this.driver.findElement(S.db.m.signupByUser(this.username)), meal2.options, signupOptions2);
         expect(await this.driver.findElement(S.db.m.signupByUser(this.username)).findElement(S.db.su.comment).getText()).to.include(COMMENT);
-    });   
+    });
 });
 
 describe('delete signup for meal', () => {
@@ -441,8 +441,8 @@ describe('delete signup for meal', () => {
         await this.driver.findElement(S.db.m.signupByUser(this.username)).findElement(S.db.su.cancel).click();
 
         await this.driver.awaitBusyComplete();
-        expect(await this.driver.findElements(S.db.m.signups)).to.have.lengthOf(0);        
-    });   
+        expect(await this.driver.findElements(S.db.m.signups)).to.have.lengthOf(0);
+    });
 });
 
 describe('delete meal', () => {

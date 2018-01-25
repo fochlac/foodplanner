@@ -43,6 +43,37 @@ describe('Dialog', () => {
     expect(dialog_closed).to.true;
   });
 
+  it('should close on ESC-press', () => {
+    let dialog_closed = false,
+        eventListener,
+        tmp = window.addEventListener;
+
+
+    window.addEventListener = (evt, fn) => eventListener = fn;
+
+    const wrapper = shallow(<Dialog closeOnBackdrop={true} close_dialog={() => dialog_closed=true}></Dialog>);
+
+    eventListener({keyCode: 27});
+    expect(dialog_closed).to.be.true;
+
+    dialog_closed = false;
+    document.activeElement = {
+      tagName: {
+        toLowerCase: () => 'input'
+      }
+    }
+    eventListener({keyCode: 27});
+    expect(dialog_closed).to.be.false;
+
+    window.addEventListener = tmp;
+
+    tmp = window.removeEventListener;
+    window.removeEventListener = (evt, fn) => eventListener = evt;
+    wrapper.unmount();
+    expect(eventListener).to.equal('keyup');
+    window.removeEventListener = tmp;
+  });
+
   it('should stay open on backdrop click with option disabled', () => {
     let dialog_closed = false;
 

@@ -2,10 +2,6 @@ import React from 'react';
 import './BusyScreen.less';
 
 export default class DefaultPage extends React.Component {
-    constructor(props) {
-        super();
-    }
-
     render() {
         return (
             this.props.show

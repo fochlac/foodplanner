@@ -7,9 +7,9 @@ export const S = {
     uf: {
         registerLink: By.className('registerLink'),
         submit: By.css('.userFrame button'),
-        loginMail: By.css('.userFrame > .mailFrame input'),
-        registerMail: By.css('.userFrame > .register .mail'),
-        registerName: By.css('.userFrame > .register .name'),
+        loginMail: By.css('.userFrame .mailFrame input'),
+        registerMail: By.css('.userFrame .register .mail'),
+        registerName: By.css('.userFrame .register .name'),
 
         username: By.className('userName')
     },
@@ -22,6 +22,7 @@ export const S = {
     },
     dialog: {
         meal: By.className('createMeal'),
+        settings: By.className('settingsDialog'),
         dialog: By.className('dialog'),
         signup: By.className('SignUpDialog'),
         submit: By.className('submit'),
@@ -50,6 +51,10 @@ export const S = {
             deleteValue: (name) => By.xpath(`//ul[contains(@class, 'valueCloud')]/li[normalize-space(text())='${name}']/span`),
             deleteAllValues: By.css('.valueCloud .fa-times')
         }
+    },
+    sd: {
+        name: By.id('SettingsDialog_name'),
+        mail: By.id('SettingsDialog_mail')
     },
     su: {
         option: By.className('SignUpOption'),

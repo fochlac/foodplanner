@@ -40,11 +40,12 @@ class App extends React.Component {
             .then(subscription => {
                 this.props.connect_serviceworker(subscription);
             })
+            .catch(console.log);
 
-        navigator.serviceWorker.addEventListener('message', this.props.convert_postmessage.bind(this));
+        navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', this.props.convert_postmessage.bind(this));
 
         window.addEventListener('popstate', (evt) => {
-            this.props.apply_history(evt.state);
+            evt.state && this.props.apply_history(evt.state);
         });
     }
 

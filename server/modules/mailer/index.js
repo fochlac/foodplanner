@@ -5,6 +5,7 @@ const   gmail               = require('gmail-send')({ user: 'ep.mittagsplaner@gm
     ,   error               = require(process.env.FOOD_HOME + 'modules/error')
     ,   log                 = require(process.env.FOOD_HOME + 'modules/log')
     ,   userDb              = require(process.env.FOOD_HOME + 'modules/db/user')
+    ,   signupsDb           = require(process.env.FOOD_HOME + 'modules/db/signups')
     ,   deadlineReminder    = require(process.env.FOOD_HOME + 'modules/mailer/deadlineReminder.tmpl.js')
     ,   creationNotice      = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice.tmpl.js')
     ,   invitation          = require(process.env.FOOD_HOME + 'modules/mailer/invitation.tmpl.js')

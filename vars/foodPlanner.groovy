@@ -6,8 +6,8 @@ def checkout() {
   stage("Checkout: ${env.BRANCH_NAME}") {
 
     // checkout current branch
-    checkout scm
     sh 'git reset --hard'
+    checkout scm
 
     // repair rebases
     sh "rm -rf ${pwd()}/.git/rebase-apply"

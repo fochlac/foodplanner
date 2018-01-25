@@ -23,6 +23,7 @@ const mealDeadline = (meal) => () => {
 
 
 const mealPayment = (meal) => () => {
+	log(6, 'starting meal payment for meal ' + meal.name);
 	userListCache.deleteAll();
 	mealDb.getMealById(meal.id)
 		.then(meal => {
