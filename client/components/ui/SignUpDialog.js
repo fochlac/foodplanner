@@ -37,8 +37,6 @@ const mapStateToProps = (state, ownProps) => {
             signedUp: !!meal.signups.map(id => state.signups[id]).find(signup => signup.userId === state.user.id)
         };
     }
-
-
 };
 
 export default connect(mapStateToProps, {meal_signup, meal_edit, close_dialog })(SignUpDialog);

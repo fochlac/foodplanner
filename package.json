@@ -6,11 +6,20 @@
   "scripts": {
     "start": "webpack-dev-server --public dev.fochlac.com --hot --inline",
     "test": "mocha-webpack --webpack-config webpack.config.mocha.js --include \"test/client/unittests/setup.js\" \"test/client/unittests/**/*.spec.js*\"",
+    "coverage": "nyc --reporter=text npm test",
     "test-ui": "mocha-webpack --webpack-config webpack.config.mocha.js --include \"test/client/uitests/setup.js\" \"test/client/uitests/**/*.spec.js\"",
     "build": "webpack -p",
     "build-dev": "webpack -d",
     "watch": "webpack -w"
   },
+  "nyc": {
+    "sourceMap": true,
+    "instrument": true
+  },
+  "browserslist": [
+    "last 3 versions",
+    "> 1%"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -41,6 +50,7 @@
     "x-xss-protection": "^1.0.0"
   },
   "devDependencies": {
+    "autoprefixer": "^7.2.5",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-js-to-jsx": "^2.0.3",
@@ -68,6 +78,8 @@
     "mocha": "^4.0.1",
     "mocha-webpack": "^1.0.1",
     "null-loader": "^0.1.1",
+    "nyc": "^11.4.1",
+    "postcss-loader": "^2.0.10",
     "react-addons-test-utils": "^15.6.2",
     "selenium-webdriver": "^3.6.0",
     "serviceworker-webpack-plugin": "^0.2.3",

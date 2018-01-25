@@ -9,7 +9,7 @@ export default class InfoBubble extends React.Component {
   render() {
     return (
       <span className={'fa InfoBubble ' + (this.props.symbol ? this.props.symbol : 'fa-info-circle')}>
-        <span className="InfoBubbleContent" style={this.props.position}>
+        <span className="InfoBubbleContent" style={this.props.style}>
           {this.props.children ? this.props.children : null}
         </span>
         <span className={'InfoBubbleTriangle ' + this.props.arrow}></span>
