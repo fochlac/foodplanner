@@ -70,27 +70,17 @@ describe('settings dialog', () => {
 
         this.driver.findElement(S.ql.logout).click();
 
+        await this.driver.awaitBusyComplete();
+
         await this.driver.refresh();
     });
 
     it('should be able to login with changed email by typing first 5 letters', async function() {
-        console.log('1')
         this.timeout(5000);
-        const submit1 = await this.driver.waitElementLocated(S.userframe);
-        console.log(await submit1.getText())
-        console.log('2a')
-        this.checkLoggedin(2 + this.username);
-
-        const submi2t = await this.driver.waitElementLocated(By.css('.userFrame .mailFrame'));
-        console.log('2b')
-        const sub3mit = await this.driver.waitElementLocated(S.uf.submit);
-        console.log('2c')
         const email = await this.driver.waitElementLocated(S.uf.loginMail);
-        console.log('3')
         email.clear();
         email.sendKeys( 2 + this.usermail.slice(0,5));
         this.driver.wait(until.elementValueIs(email, 2 + this.usermail));
-        console.log('4')
         submit.click();
 
         await this.driver.awaitBusyComplete();
