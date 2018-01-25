@@ -77,7 +77,10 @@ describe('settings dialog', () => {
         console.log('1')
         this.timeout(5000);
         const submit1 = await this.driver.waitElementLocated(S.userframe);
+        console.log(await submit1.getText())
         console.log('2a')
+        this.checkLoggedin(2 + this.username);
+
         const submi2t = await this.driver.waitElementLocated(By.css('.userFrame .mailFrame'));
         console.log('2b')
         const sub3mit = await this.driver.waitElementLocated(S.uf.submit);
