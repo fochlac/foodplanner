@@ -33,6 +33,8 @@ export const initServiceWorker = () => {
                 });
             })
             .catch(err => console.warn('serviceWorker error', err));
+    } else {
+        return Promise.reject();
     }
 };
 
