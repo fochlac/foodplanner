@@ -1,6 +1,7 @@
 import React from 'react';
 import Meal from 'UI/Meal.js';
 import UserFrame from 'UI/UserFrame.js';
+import Pager from 'UI/Pager/Pager.jsx';
 import './Dashboard.less';
 
 
@@ -58,9 +59,11 @@ export default class Dashboard extends React.Component {
                                 ? <h3 className="mealListHeader">{filters[index].name}</h3>
                                 : null
                             }
-                            {
-                                mealList.map((meal) => <Meal id={meal.id} key={meal.id} />)
-                            }
+                            <Pager size={5} top={true} bottom={true} inactive={!this.state.filter.includes('oldMeals')}>
+                                {
+                                    mealList.map((meal) => <Meal id={meal.id} key={meal.id} />)
+                                }
+                            </Pager>
                         </div>
                     )
                 }

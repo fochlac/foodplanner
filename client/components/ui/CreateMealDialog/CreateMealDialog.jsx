@@ -1,5 +1,6 @@
 import React from 'react';
 import sEqual from 'shallow-equals';
+import dEqual from 'fast-deep-equal';
 import Dialog from 'UI/Dialog.js';
 import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx';
 import MealOption from './MealOption.jsx';
@@ -292,7 +293,19 @@ export default class CreateMealDialog extends React.Component {
                 ? <select className="push-right templateSelector" onChange={this.selectOptions.bind(this)}>
                   <option value="-1">Optionen laden</option>
                   {
-                    p.meals.filter(meal => meal.options.length).map((meal) => <option value={meal.id} key={meal.id}>{meal.name}</option>)
+                    p.meals
+                      .filter(meal => meal.options.length)
+                      .sort((a,b) => b.time - a.time)
+                      .reduce((uniqueMeals, meal) => {
+                        // clean unneccesary ids to allow comparing options
+                        const cleanedMealOptions = JSON.parse(JSON.stringify(meal.options).replace(/("id":[0-9]*,)|(,"id":[0-9]*)/g, ''))
+                        // if no equivalent mealoptions is in unique mealoptions list, add meal with cleaned options
+                        if (!uniqueMeals.some(uniqueMeal => dEqual(uniqueMeal.options, cleanedMealOptions))) {
+                          uniqueMeals.push({...meal, options: cleanedMealOptions});
+                        }
+                        return uniqueMeals;
+                      }, [])
+                      .map((meal) => <option value={meal.id} key={meal.id}>{meal.name}</option>)
                   }
                 </select>
                 : null
