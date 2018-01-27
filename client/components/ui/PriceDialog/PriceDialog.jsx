@@ -43,7 +43,7 @@ export default class PriceDialog extends React.Component {
   render() {
     const m = this.props.meal;
     return (
-      <Dialog>
+      <Dialog className="PriceDialog">
         <div className="titlebar">
           <h3>Preise für Angebot: {m.name}</h3>
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
