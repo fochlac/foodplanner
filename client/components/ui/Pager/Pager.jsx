@@ -13,10 +13,11 @@ export default class Pager extends React.Component {
   }
 
   renderPagerLinks() {
-    const { size, children } = this.props;
-    const { page } = this.state;
-    const pageCount = Math.ceil(children.length / size);
-    let pages = []
+    const { size, children } = this.props,
+      { page } = this.state,
+      pageCount = Math.ceil(children.length / size);
+
+    let pages = [];
 
     if (pageCount > 9) {
       if (page < 3) {
@@ -32,7 +33,7 @@ export default class Pager extends React.Component {
           {(page > 1) && <span className="fa fa-angle-double-left" onClick={() => this.setPage(1)}></span>}
           {(page > 1) && <span className="fa fa-angle-left" onClick={() => this.setPage(page - 1)}></span>}
           {
-            pages.map(pageNumber => <span onClick={() => this.setPage(pageNumber)} className={'page' + (pageNumber === this.state.page ? ' activePage' : '')}>{pageNumber}</span>)
+            pages.map(pageNumber => <span key={pageNumber} onClick={() => this.setPage(pageNumber)} className={'page' + (pageNumber === this.state.page ? ' activePage' : '')}>{pageNumber}</span>)
           }
           {(page < pageCount) && <span className="fa fa-angle-right" onClick={() => this.setPage(page + 1)}></span>}
           {(page < pageCount) && <span className="fa fa-angle-double-right" onClick={() => this.setPage(pageCount)}></span>}
@@ -82,7 +83,7 @@ export default class Pager extends React.Component {
     const wrapper = this.props.wrapper ? this.props.wrapper : children => children;
 
     if (inactive) {
-      return <span>{children}</span>
+      return <span>{wrapper(children)}</span>
     }
 
     return (
