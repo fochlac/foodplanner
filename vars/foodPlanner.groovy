@@ -5,8 +5,13 @@ def checkout() {
 
   stage("Checkout: ${env.BRANCH_NAME}") {
 
+    // try to reset if already a repo
+    try {
+      sh 'git reset --hard'
+    }
+    catch(e) { }
+
     // checkout current branch
-    sh 'git reset --hard'
     checkout scm
 
     // repair rebases

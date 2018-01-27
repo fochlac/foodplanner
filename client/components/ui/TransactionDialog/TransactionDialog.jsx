@@ -1,5 +1,6 @@
 import React from 'react';
 import Dialog from 'UI/Dialog.js';
+import Pager from 'UI/Pager/Pager.jsx';
 import { formatDate } from 'SCRIPTS/date.js';
 import './TransactionDialog.less';
 
@@ -16,6 +17,27 @@ export default class TransactionDialog extends React.Component {
     this.props.close_dialog();
   }
 
+  renderWrapper(children) {
+    return (
+      <table className="textAlignCenter transactions">
+        <thead>
+          <tr>
+            <th>Datum</th>
+            <th>Mahlzeit</th>
+            <th>Partner</th>
+            <th>Betrag</th>
+            <th>Summe</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            children
+          }
+        </tbody>
+      </table>
+    );
+  }
+
   render() {
     let total = 0;
 
@@ -28,34 +50,23 @@ export default class TransactionDialog extends React.Component {
         <div className="body">
           {
             this.props.transactions.length
-            ? <table className="textAlignCenter transactions">
-              <thead>
-                <tr>
-                  <th>Datum</th>
-                  <th>Mahlzeit</th>
-                  <th>Partner</th>
-                  <th>Betrag</th>
-                  <th>Summe</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  this.props.transactions.sort((a,b) => a.time - b.time).map((transaction, index) => {
-                    total += transaction.diff;
+            ? <Pager wrapper={this.renderWrapper} size={10} bottom={true} >
+              {
+                this.props.transactions.sort((a,b) => a.time - b.time).map((transaction, index) => {
+                  total += transaction.diff;
 
-                    return (
-                      <tr key={index}>
-                        <td>{formatDate(transaction.time)}</td>
-                        <td>{transaction.reason}</td>
-                        <td data-type="Partner:" >{transaction.user}</td>
-                        <td data-type="Betrag:" className={(+transaction.diff < 0 )? 'negative' : ''}>{transaction.diff.toFixed(2)}</td>
-                        <td className={(total < 0 )? 'negative' : ''}>{total.toFixed(2)}</td>
-                      </tr>
-                    )
-                  })
-                }
-              </tbody>
-            </table>
+                  return (
+                    <tr key={index}>
+                      <td>{formatDate(transaction.time)}</td>
+                      <td>{transaction.reason}</td>
+                      <td data-type="Partner:" >{transaction.user}</td>
+                      <td data-type="Betrag:" className={(+transaction.diff < 0 )? 'negative' : ''}>{transaction.diff.toFixed(2)}</td>
+                      <td className={(total < 0 )? 'negative' : ''}>{total.toFixed(2)}</td>
+                    </tr>
+                  )
+                })
+              }
+            </Pager>
             : <p>Noch keine Transaktionen vorhanden.</p>
           }
         </div>

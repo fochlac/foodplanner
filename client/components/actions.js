@@ -1,5 +1,11 @@
 import {createHash} from './scripts/crypto.js';
 
+const closeDialogOptions = {
+  content: '',
+  url: '/',
+  title: 'Mittagsplaner'
+}
+
 export const initial_meals = (hidden) => ({
   type: 'INITIAL_MEALS',
   status: hidden ? 'hidden' : 'initialized',
@@ -43,6 +49,21 @@ export const refresh = (version) => ({
   }
 });
 
+export const apply_history = opt => ({
+  type: 'HISTORY',
+  app: opt.app
+});
+
+export const set_busy  = state => ({
+  type: 'BUSY',
+  state
+});
+
+export const set_hidden_busy  = state => ({
+  type: 'HIDDEN_BUSY',
+  state
+});
+
 // service worker
 
 export const connect_serviceworker = (data) => ({
@@ -68,24 +89,7 @@ export const convert_postmessage = (evt) => ({
 
 export const close_dialog = id => ({
   type: 'DIALOG',
-  content: '',
-  url: '/',
-  title: 'Mittagsplaner'
-});
-
-export const apply_history = opt => ({
-  type: 'HISTORY',
-  app: opt.app
-});
-
-export const set_busy  = state => ({
-  type: 'BUSY',
-  state
-});
-
-export const set_hidden_busy  = state => ({
-  type: 'HIDDEN_BUSY',
-  state
+  ...closeDialogOptions,
 });
 
 // transactions
@@ -118,6 +122,7 @@ export const send_money = (data) => ({
   type: 'SEND_MONEY',
   status: 'initialized',
   ...data,
+  ...closeDialogOptions,
   api: {
     url: `/api/user/${data.target}/money`,
     method: 'put',
@@ -174,6 +179,7 @@ export const start_meal_signup = id => ({
 export const meal_signup = (data) => ({
   type: 'MEAL_SIGNUP',
   status: 'initialized',
+  ...closeDialogOptions,
   api: {
     url: '/api/signups',
     method: 'post',
@@ -199,6 +205,7 @@ export const start_meal_edit = id => ({
 export const meal_edit = (data) => ({
   type: 'MEAL_EDIT',
   status: 'initialized',
+  ...closeDialogOptions,
   api: {
     url: '/api/signups/' + data.signup,
     method: 'put',
@@ -234,6 +241,7 @@ export const create_meal_dialog = () => ({
 export const create_meal = (data) => ({
   type: 'CREATE_MEAL',
   status: 'initialized',
+  ...closeDialogOptions,
   api: {
     url: '/api/meals',
     method: 'post',
@@ -245,6 +253,7 @@ export const create_meal = (data) => ({
 export const submit_prices = (prices, mealId) => ({
   type: 'SUBMIT_PRICES',
   status: 'initialized',
+  ...closeDialogOptions,
   prices,
   mealId,
   api: {
@@ -287,21 +296,12 @@ export const start_edit_price = (id) => ({
 export const edit_meal = (id, data) => ({
   type: 'EDIT_MEAL',
   status: 'initialized',
+  ...closeDialogOptions,
   api: {
     url: '/api/meals/' + id,
     method: 'put',
     headers: 'formdata',
     body: data
-  }
-});
-
-export const meal_new_image = (data) => ({
-  type: 'CHECK_MAIL',
-  status: 'initialized',
-  api: {
-    url: '/api/meals/' + encodeURL(data.id) + '/image',
-    method: 'post',
-    body: data.image
   }
 });
 
@@ -317,6 +317,7 @@ export const start_cancel_meal = (id) => ({
 export const cancel_meal = (id) => ({
   type: 'CANCEL_MEAL',
   status: 'initialized',
+  ...closeDialogOptions,
   id: id,
   api: {
     url: '/api/meals/' + id,
@@ -338,6 +339,7 @@ export const create_settings_dialog = () => ({
 export const save_settings = (data) => ({
   type: 'SAVE_SETTINGS',
   status: 'initialized',
+  ...closeDialogOptions,
   api: {
     url: '/api/user' + ((data.id !== undefined) ? ('/' + data.id) : ''),
     method: ((data.id !== undefined) ? 'put' : 'post'),
@@ -358,6 +360,7 @@ export const save_settings = (data) => ({
 export const save_settings_locally = (data) => ({
   type: 'SAVE_SETTINGS',
   status: 'complete',
+  ...closeDialogOptions,
   localkey: 'user',
   locally: data
 });
@@ -376,7 +379,7 @@ export const sign_out = (id) => ({
   status: 'initialized',
   api: {
     url: `/api/user/${id}/logout`,
-    method: 'POST'    
+    method: 'POST'
   },
   localkey: 'user',
   locally: {}
@@ -387,7 +390,7 @@ export const sign_in = (data) => ({
   status: 'initialized',
   api: {
     url: `/api/user/${data.id}`,
-    method: 'GET'    
+    method: 'GET'
   },
   localkey: 'user',
   locally: data
