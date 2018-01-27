@@ -18,7 +18,7 @@ routes.use('/github', github);
 routes.get('/update', error.router.validate('query', {
     version: /^[0-9]{0,100}$/
 }), (req, res) => {
-	if (caches.getVersion() > +req.query.version)  {
+	if (+caches.getVersion() > +req.query.version) {
 		if (updateCache.get('update')) {
 			res.status(200).send(updateCache.get('update'));
 		} else {
@@ -27,7 +27,7 @@ routes.get('/update', error.router.validate('query', {
 				let response = {
 						signups: data[1],
 						meals: data[0],
-						version: caches.getVersion()
+						version: caches.getVersion() + 1
 					};
 
 				updateCache.put('update', response);

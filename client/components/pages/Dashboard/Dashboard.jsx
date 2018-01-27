@@ -53,7 +53,7 @@ export default class Dashboard extends React.Component {
                 </div>
                 {
                     mealLists.map((mealList, index) =>
-                        <div key={index}>
+                        <div key={index} className="meals">
                             {
                                 (mealLists.length > 1 && mealList.length > 0)
                                 ? <h3 className="mealListHeader">{filters[index].name}</h3>

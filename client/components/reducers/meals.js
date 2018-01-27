@@ -17,6 +17,14 @@ const meals = (state = [], action) => {
                 return newArr;
             }
             return state;
+        case 'DIALOG':
+            if (action.content === 'PRINT_MEAL') {
+                return state.map(meal => ({...meal, print: false}));
+            }
+            return state;
+
+        case 'PRINT_MEAL':
+            return state.map(meal => ({...meal, print: action.ids.includes(meal.id)}));
 
         case 'CREATE_MEAL':
             if (action.status === 'complete') {
@@ -103,8 +111,8 @@ const meals = (state = [], action) => {
                     return acc;
                 }, {});
 
-                action.data.meals.forEach(meal => {                    
-                    meal.signups = helper[meal.id] ? helper[meal.id] : [];   
+                action.data.meals.forEach(meal => {
+                    meal.signups = helper[meal.id] ? helper[meal.id] : [];
                 });
 
                 return action.data.meals;

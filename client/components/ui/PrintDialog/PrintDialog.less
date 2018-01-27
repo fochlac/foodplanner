@@ -1,0 +1,48 @@
+.PrintDialog table {
+  text-align: center;
+}
+
+@media print {
+  .dashboard .meals {
+    position:absolute;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+
+    & .meal {
+      display: none;
+
+      &.print {
+        display: block;
+        color: black;
+        page-break-inside: avoid;
+
+        .deadline,
+        .user .icons,
+        .participate {
+          display: none;
+        }
+
+
+
+        .titlebar {
+          background: white;
+          border-bottom: solid 1px black;
+          .title {
+            color: black;
+          }
+
+          .menuIcon {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .dialog {
+    display: none;
+  }
+}

@@ -100,7 +100,7 @@ export default class Meal extends React.Component {
         }, {}));
 
     return (
-      <div className="meal">
+      <div className={'meal' + (p.meal.print ? ' print' : '')}>
         <div className="titlebar">
           <h4 className="title">{formatDayNameDate(p.meal.time)}: <span className="name">{p.meal.name}</span></h4>
           {
