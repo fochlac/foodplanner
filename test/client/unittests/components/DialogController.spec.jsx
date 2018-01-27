@@ -11,6 +11,7 @@ import PriceDialog from 'UI/PriceDialog.js';
 import TransactionDialog from 'UI/TransactionDialog.js';
 import ImpressumDialog from 'UI/ImpressumDialog.js';
 import SendMoneyDialog from 'UI/SendMoneyDialog.js';
+import PrintDialog from 'UI/PrintDialog.js';
 
 
 describe('DialogController', () => {
@@ -53,5 +54,8 @@ describe('DialogController', () => {
 
     wrapper.setProps({dialog: {type: 'CANCEL_MEAL', option: {}}});
     expect(wrapper.find(ConfirmationDialog), 'CANCEL_MEAL').to.have.lengthOf(1);
+
+    wrapper.setProps({dialog: {type: 'PRINT_MEAL', option: {}}});
+    expect(wrapper.find(PrintDialog), 'PRINT_MEAL').to.have.lengthOf(1);
   });
 });
