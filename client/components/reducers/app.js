@@ -4,11 +4,6 @@ const app = (state = {}, action) => {
             return {...state, dialog: {type: action.content, option: action.option}};
         case 'HISTORY':
             return action.app;
-        case 'INITIAL_USER':
-            if (action.status === 'complete' && history.state && history.state.app) {
-                return history.state.app;
-            }
-            return state;
         case 'CHECK_MAIL':
             if (action.status === 'complete' && !action.data.error) {
                 return {...state, mailSuggestion: action.data};

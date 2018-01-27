@@ -47,6 +47,12 @@ class App extends React.Component {
         window.addEventListener('popstate', (evt) => {
             evt.state && this.props.apply_history(evt.state);
         });
+
+        if (history.state && history.state.app) {
+            this.props.apply_history(history.state);
+        } else {
+            history.replaceState({app: {...this.props.app}}, document.title, document.location.pathname);
+        }
     }
 
     render() {

@@ -53,11 +53,14 @@ module.exports = {
                 use: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: [{
-                        loader: "css-loader"
-                    }, {
-                        loader: "less-loader"
+                        loader: "css-loader",
+                        options: {
+                            importLoaders: 1,
+                        }
                     }, {
                         loader: 'postcss-loader'
+                    }, {
+                        loader: "less-loader"
                     }]
                 })
             },

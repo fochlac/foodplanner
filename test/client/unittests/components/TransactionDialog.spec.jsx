@@ -4,6 +4,7 @@ import { shallow, mount } from 'enzyme';
 
 import { formatDate } from 'SCRIPTS/date.js';
 import TransactionDialog from 'UI/TransactionDialog/TransactionDialog.jsx';
+import Pager from 'UI/Pager/Pager.jsx';
 
 describe('TransactionDialog', () => {
   it('should render all elements', () => {
@@ -17,7 +18,7 @@ describe('TransactionDialog', () => {
     expect(wrapper.find('.foot .cancel').length).to.equal(1);
 
     expect(wrapper.find('.body p')).to.have.lengthOf(1);
-    expect(wrapper.find('.body .transactions')).to.have.lengthOf(0);
+    expect(wrapper.find('.body').find(Pager)).to.have.lengthOf(0);
   });
 
   it('should show transactions', () => {
@@ -29,9 +30,9 @@ describe('TransactionDialog', () => {
         diff: 5
       },
       wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>),
-      row = wrapper.find('.body > .transactions tr > td');
+      row = wrapper.find('.body').find(Pager).find('tr > td');
 
-    expect(wrapper.find('.body > .transactions')).to.have.lengthOf(1);
+    expect(wrapper.find('.body').find(Pager)).to.have.lengthOf(1);
     expect(row).to.have.lengthOf(5);
     expect(row.at(0).text()).to.include(formatDate(TEST_TRANSACTION.time));
     expect(row.at(1).text()).to.include(TEST_TRANSACTION.reason);
@@ -50,9 +51,9 @@ describe('TransactionDialog', () => {
         diff: -5
       },
       wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>),
-      row = wrapper.find('.body > .transactions tr > td');
+      row = wrapper.find('.body').find(Pager).find('tr > td');
 
-    expect(wrapper.find('.body > .transactions')).to.have.lengthOf(1);
+    expect(wrapper.find('.body').find(Pager)).to.have.lengthOf(1);
     expect(row).to.have.lengthOf(5);
     expect(row.at(0).text()).to.include(formatDate(TEST_TRANSACTION.time));
     expect(row.at(1).text()).to.include(TEST_TRANSACTION.reason);

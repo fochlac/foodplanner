@@ -51,44 +51,6 @@ describe('app-reducer', () => {
         )).to.equal(action.app);
     });
 
-    it('INITIAL_USER', () => {
-        const action = {
-              type: 'INITIAL_USER',
-              status: 'complete'
-            },
-        intialState =
-            {
-                test4: '12312534'
-            };
-
-        global.history = {};
-
-        expect(app(
-            intialState,
-            action
-        )).to.deep.equal( intialState );
-
-        global.history = {
-            state: {
-                app: 'test'
-            }
-        }
-
-        expect(app(
-            intialState,
-            action
-        )).to.equal('test');
-
-        action.status = 'asdas';
-
-        expect(app(
-            intialState,
-            action
-        )).to.deep.equal( intialState );
-
-        global.history = {};
-    });
-
     it('CHECK_MAIL', () => {
         const action = {
             type: 'CHECK_MAIL',
