@@ -52,7 +52,7 @@ export default class TransactionDialog extends React.Component {
             this.props.transactions.length
             ? <Pager wrapper={this.renderWrapper} size={10} bottom={true} >
               {
-                this.props.transactions.sort((a,b) => a.time - b.time).map((transaction, index) => {
+                this.props.transactions.sort((a,b) => b.time - a.time).map((transaction, index) => {
                   total += transaction.diff;
 
                   return (

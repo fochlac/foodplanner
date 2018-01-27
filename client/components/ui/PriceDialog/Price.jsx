@@ -69,7 +69,13 @@ export default class Prices extends React.Component {
     }, []);
 
     return (
-      <div className="body PriceDialog">
+      <div className="body">
+        <div className="warning row">
+          <div>
+            <p>Preise bitte pro Person angeben!</p>
+            <i>15€ bei 5 Teilnehmern -> Basispreis: 3€</i>
+          </div>
+        </div>
         <table>
           <tbody>
             <tr className="base">
