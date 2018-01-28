@@ -67,10 +67,12 @@ driver
 
     driver.refresh = async function() {
         await driver.executeScript('window.location.reload()');
-
         await driver.sleep(2000);
 
-        await driver.wait(until.elementLocated(S.userframe));
+        console.log(await driver.find(body).getAttribute('innerHTML'));
+        await driver.manage().logs().get('browser').then(v => v && v.length && console.log(v)).catch(console.log);
+
+        await driver.find(S.userFrame);
     }
 
 
