@@ -1,5 +1,4 @@
 import React from 'react';
-import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 import { DefaultPage } from 'ROOT/DefaultPage.jsx';
 
@@ -18,17 +17,17 @@ const options = {
 }
 
 describe('DefaultPage', () => {
-  it('should render all elements', () => {
+  test('should render all elements', () => {
     const wrapper = shallow(<DefaultPage {...options} ><div className="test"></div></DefaultPage>);
 
-    expect(wrapper.find(Topbar)).to.have.lengthOf(1);
-    expect(wrapper.find(BusyScreen)).to.have.lengthOf(1);
-    expect(wrapper.find(Error)).to.have.lengthOf(1);
-    expect(wrapper.find(DialogController)).to.have.lengthOf(1);
-    expect(wrapper.find('.footer')).to.have.lengthOf(1);
-    expect(wrapper.find('.impressum')).to.have.lengthOf(1);
-    expect(wrapper.find('.test')).to.have.lengthOf(1);
+    expect(wrapper.find(Topbar)).toHaveLength(1);
+    expect(wrapper.find(BusyScreen)).toHaveLength(1);
+    expect(wrapper.find(Error)).toHaveLength(1);
+    expect(wrapper.find(DialogController)).toHaveLength(1);
+    expect(wrapper.find('.footer')).toHaveLength(1);
+    expect(wrapper.find('.impressum')).toHaveLength(1);
+    expect(wrapper.find('.test')).toHaveLength(1);
     wrapper.find('.impressum').simulate('click');
-    expect(output).to.equal('show_impressum');
+    expect(output).toBe('show_impressum');
   });
 });

@@ -126,7 +126,7 @@ module.exports = {
             LEFT JOIN meals
             ON meals.id = signups.meal
             WHERE signups.id = ${signupId};`,
-        querySetPaid = 'UPDATE signups SET paid = 1 WHERE signups.id = ' + mysql.escape(signupId) + ';',
+        querySetPaid = 'UPDATE signups SET paid = 2 WHERE signups.id = ' + mysql.escape(signupId) + ';',
         queryGetTotal = `SELECT SUM(users.balance) AS total FROM users FOR UPDATE;`;
 
         const myDb = await getConnection();

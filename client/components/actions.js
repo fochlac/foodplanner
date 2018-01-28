@@ -325,6 +325,18 @@ export const cancel_meal = (id) => ({
   }
 });
 
+export const meal_set_print = (ids) => ({
+  type: 'PRINT_MEAL',
+  ids,
+});
+
+export const start_print = () => ({
+  type: 'DIALOG',
+  content: 'PRINT_MEAL',
+  url: '/print',
+});
+
+
 
 // settings dialog
 

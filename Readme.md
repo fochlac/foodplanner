@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/ep-friedel/foodplanner/branch/develop/graph/badge.svg)](https://codecov.io/gh/ep-friedel/foodplanner)
 # Foodplanner
 
 Small food planning tool

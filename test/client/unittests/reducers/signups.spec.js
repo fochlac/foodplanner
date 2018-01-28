@@ -1,8 +1,7 @@
 import signups from 'COMPONENTS/reducers/signups.js';
-import { expect } from 'chai';
 
 describe('signups-reducer', () => {
-    it('MEAL_EDIT', () => {
+    test('MEAL_EDIT', () => {
         const action = {
           type: 'MEAL_EDIT',
           status: 'complete',
@@ -16,7 +15,7 @@ describe('signups-reducer', () => {
         expect(signups(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: action.data,
         });
 
@@ -25,7 +24,7 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: action.data,
             test4: '12312534',
         });
@@ -39,7 +38,7 @@ describe('signups-reducer', () => {
                 }
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 ...action.data,
                 test3: 345
@@ -54,12 +53,12 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('SIGNUP_PAID', () => {
+    test('SIGNUP_PAID', () => {
         const action = {
           type: 'SIGNUP_PAID',
           status: 'complete',
@@ -70,7 +69,7 @@ describe('signups-reducer', () => {
         expect(signups(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 paid: true
             },
@@ -81,7 +80,7 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 paid: true
             },
@@ -96,7 +95,7 @@ describe('signups-reducer', () => {
                 }
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 paid: true,
                 test3: 345
@@ -111,12 +110,12 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('MEAL_SIGNUP', () => {
+    test('MEAL_SIGNUP', () => {
         const action = {
           type: 'MEAL_SIGNUP',
           status: 'complete',
@@ -130,7 +129,7 @@ describe('signups-reducer', () => {
         expect(signups(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: action.data,
         });
 
@@ -139,7 +138,7 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: action.data,
             test4: '12312534',
         });
@@ -153,7 +152,7 @@ describe('signups-reducer', () => {
                 }
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: action.data,
             test4: '12312534',
         });
@@ -165,12 +164,12 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('INITIAL_SIGNUPS', () => {
+    test('INITIAL_SIGNUPS', () => {
         const action = {
             type: 'INITIAL_SIGNUPS',
             status: 'complete',
@@ -188,7 +187,7 @@ describe('signups-reducer', () => {
         expect(signups(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 id: 1,
                 test: 'test123',
@@ -206,7 +205,7 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 id: 1,
                 test: 'test123',
@@ -226,12 +225,12 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('REFRESH', () => {
+    test('REFRESH', () => {
         const action = {
             type: 'REFRESH',
             status: 'complete',
@@ -249,7 +248,7 @@ describe('signups-reducer', () => {
         expect(signups(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 id: 1,
                 test: 'test123',
@@ -267,7 +266,7 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 id: 1,
                 test: 'test123',
@@ -287,12 +286,12 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('FINALIZE_PRICES', () => {
+    test('FINALIZE_PRICES', () => {
         const action = {
             type: 'FINALIZE_PRICES',
             status: 'complete',
@@ -328,7 +327,7 @@ describe('signups-reducer', () => {
                 }
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             [1]: {
                 id: 1,
                 test: 'test123',
@@ -357,12 +356,12 @@ describe('signups-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('MEAL_CANCEL', () => {
+    test('MEAL_CANCEL', () => {
         const action = {
             type: 'MEAL_CANCEL',
             status: 'complete',
@@ -372,14 +371,14 @@ describe('signups-reducer', () => {
         expect(signups(
             {},
             action
-        )).to.deep.equal({});
+        )).toEqual({});
 
         expect(signups(
             {
                 1: '12312534'
             },
             action
-        )).to.deep.equal({});
+        )).toEqual({});
 
         expect(signups(
             {
@@ -388,7 +387,7 @@ describe('signups-reducer', () => {
                 3: '12312534',
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             2: '12312534',
             3: '12312534',
         });
@@ -400,7 +399,7 @@ describe('signups-reducer', () => {
                 1: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             1: '12312534',
         });
     });

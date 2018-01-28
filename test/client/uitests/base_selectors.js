@@ -16,6 +16,7 @@ export const S = {
     dashboard: By.className('dashboard'),
     quicklinks: By.className('quicklinks'),
     ql: {
+        print: By.css('.quicklinks .fa-print'),
         settings: By.css('.quicklinks .fa-cog'),
         logout: By.css('.quicklinks .fa-sign-out'),
         meal: By.css('.quicklinks .fa-plus')

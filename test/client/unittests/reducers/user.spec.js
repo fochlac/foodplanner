@@ -1,8 +1,7 @@
 import user from 'COMPONENTS/reducers/user.js';
-import { expect } from 'chai';
 
 describe('user-reducer', () => {
-    it('INITIAL_USER', () => {
+    test('INITIAL_USER', () => {
         const action = {
           type: 'INITIAL_USER',
           status: 'complete',
@@ -18,7 +17,7 @@ describe('user-reducer', () => {
         expect(user(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             ...action.data,
             ...action.localSettings
         });
@@ -28,14 +27,14 @@ describe('user-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             ...action.data,
             ...action.localSettings,
             test4: '12312534',
         });
     });
 
-    it('SAVE_SETTINGS, SIGNIN', () => {
+    test('SAVE_SETTINGS, SIGNIN', () => {
         const action = {
           type: 'SAVE_SETTINGS',
           status: 'complete',
@@ -51,7 +50,7 @@ describe('user-reducer', () => {
         expect(user(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             ...action.locally
         });
 
@@ -60,7 +59,7 @@ describe('user-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             ...action.locally,
             test4: '12312534',
         });
@@ -72,12 +71,12 @@ describe('user-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('TRANSACTIONS', () => {
+    test('TRANSACTIONS', () => {
         const action = {
           type: 'TRANSACTIONS',
           status: 'complete',
@@ -90,7 +89,7 @@ describe('user-reducer', () => {
         expect(user(
             {},
             action
-        ).transactions).to.deep.equal({
+        ).transactions).toEqual({
             ...action.data
         });
 
@@ -99,7 +98,7 @@ describe('user-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             transactions: action.data,
             test4: '12312534',
         });
@@ -111,12 +110,12 @@ describe('user-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('SIGNOUT', () => {
+    test('SIGNOUT', () => {
         const action = {
           type: 'SIGNOUT',
         }
@@ -124,10 +123,10 @@ describe('user-reducer', () => {
         expect(user(
             {},
             action
-        )).to.deep.equal({});
+        )).toEqual({});
     });
 
-    it('SEND_MONEY', () => {
+    test('SEND_MONEY', () => {
         const action = {
           type: 'SEND_MONEY',
           status: 'complete',
@@ -139,7 +138,7 @@ describe('user-reducer', () => {
                 balance: 20
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             balance: 10
         });
 
@@ -149,7 +148,7 @@ describe('user-reducer', () => {
                 balance: 20
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             balance: 10,
             test4: '12312534',
         });
@@ -162,7 +161,7 @@ describe('user-reducer', () => {
                 balance: 20
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
             balance: 20
         });

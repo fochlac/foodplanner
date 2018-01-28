@@ -1,20 +1,19 @@
 import { urlHandler } from 'COMPONENTS/middleware/urlHandler.js';
-import { expect } from 'chai';
 
 
 describe('urlHandler', () => {
-  it('should set the history correctly', () => {
+  test('should set the history correctly', () => {
     let act = {content: 'test', option: 'test2', title: 'title', url: 'test3'};
     
     global.history.pushState = (data, title, url) => {
-        expect(data.app.dialog.type).to.equal(act.content);
-        expect(data.app.dialog.option).to.equal(act.option);
-        expect(title).to.equal(act.title);
-        expect(url).to.equal(act.url);
+        expect(data.app.dialog.type).toBe(act.content);
+        expect(data.app.dialog.option).toBe(act.option);
+        expect(title).toBe(act.title);
+        expect(url).toBe(act.url);
     }
 
     urlHandler({getState: () => ({})})((action) => {
-    	expect(action).to.deep.equal(act);
+    	expect(action).toEqual(act);
     })(act);
 
     global.history.pushState = undefined;
