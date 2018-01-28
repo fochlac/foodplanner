@@ -71,6 +71,7 @@ app.get('*', (req, res) => {
                 return acc;
             }, {});
 
+            log(6, 'server/index.js - sending enriched index.html');
             res.status(200).send(file.replace(
                 '<script>/**DEFAULTSTORE**/</script>',
                 `<script>
@@ -84,7 +85,7 @@ app.get('*', (req, res) => {
             ));
         })
         .catch(err => {
-            console.log(err);
+            log(2, 'server/index.js - error adding data to index.html');
             res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html');
         })
 });
