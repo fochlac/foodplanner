@@ -1,4 +1,5 @@
 import { S } from 'T_UI/base_selectors.js';
+import { By } from 'selenium-webdriver';
 require("babel-polyfill");
 require("./custom_wait_conditions.js");
 
@@ -69,7 +70,7 @@ driver
         await driver.executeScript('window.location.reload()');
         await driver.sleep(2000);
 
-        console.log(await driver.findElement('body').getAttribute('innerHTML'));
+        console.log(await driver.findElement(By.tagName('body')).getAttribute('innerHTML'));
         await driver.manage().logs().get('browser').then(v => v && v.length && console.log(v)).catch(console.log);
 
         await driver.findElement(S.userFrame);
