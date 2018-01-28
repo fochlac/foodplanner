@@ -65,10 +65,10 @@ driver
         return driver.wait(until.elementIsNotPresent(S.busy));
     }
 
-    driver.refresh = function() {
-        driver.executeScript('window.location.reload()');
+    driver.refresh = async function() {
+        await driver.executeScript('window.location.reload()');
 
-        return driver.wait(until.elementLocated(S.userframe));
+        await driver.wait(until.elementLocated(S.userframe));
     }
 
 
