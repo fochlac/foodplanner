@@ -68,6 +68,8 @@ driver
     driver.refresh = async function() {
         await driver.executeScript('window.location.reload()');
 
+        await driverr.sleep(2000);
+
         await driver.wait(until.elementLocated(S.userframe));
     }
 
