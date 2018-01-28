@@ -72,6 +72,18 @@ describe('CreateMealDialog', () => {
     expect(dialog_closed).toBe(true);
   });
 
+  test('should render invalid text when invalid', () => {
+    let dialog_closed = false;
+
+    const TEST_USER = {id: 1, name: 'test'},
+        TEST_APP = {dialog: {}},
+        TEST_MEALS = [],
+        wrapper = shallow(<CreateMealDialog user={TEST_USER} invalid={true} app={TEST_APP} meals={TEST_MEALS} meal={{}} close_dialog={() => dialog_closed=true}/>);
+
+    expect(wrapper.find('.addOption')).toHaveLength(0);
+    expect(wrapper.find('.body p')).toHaveLength(1);
+  });
+
   test('should close on close button click', () => {
     let dialog_closed = false;
 

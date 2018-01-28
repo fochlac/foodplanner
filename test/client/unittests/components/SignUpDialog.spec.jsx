@@ -1,8 +1,9 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import SignUpDialog from 'UI/SignUpDialog/SignUpDialog.jsx';
+import SignUpOption from 'UI/SignUpDialog/SignUpOption.jsx';
 
-const setup = ({stub = () => () => undefined, edit = false, signedUp = false, userId = 1, name = 'testname', signup}) => {
+const setup = ({stub = () => () => undefined, edit = false, signedUp = false, userId = 1, name = 'testname', signup, mealOne = true, invalid = false}) => {
       const user = {
         id: userId,
         mail: 'test@test.de',
@@ -13,15 +14,36 @@ const setup = ({stub = () => () => undefined, edit = false, signedUp = false, us
         price: 3,
         options: []
       },
+      meal2 = {
+        name: 'testmeal',
+        price: 3,
+        options: [{
+          id: 1,
+          name: 'testoption',
+          type: 'toggle',
+          values: []
+        }, {
+          id: 2,
+          name: 'testoption',
+          type: 'count',
+          values: [{id: 1, name: 'test'}, {id: 2, name: 'test2'}]
+        }, {
+          id: 3,
+          name: 'testoption',
+          type: 'select',
+          values: [{id: 3, name: 'test'}, {id: 4, name: 'test2'}]
+        }]
+      },
       OPTS = {
         user,
         edit,
         signedUp,
-        meal,
+        meal: mealOne ? meal : meal2,
         signup: edit ? signup : undefined,
         meal_signup: stub('meal_signup'),
         meal_edit: stub('meal_edit'),
-        close_dialog: stub('close_dialog')
+        close_dialog: stub('close_dialog'),
+        invalid
       },
       wrapper = shallow(<SignUpDialog {...OPTS} />);
 
@@ -51,6 +73,18 @@ describe('SignUpDialog', () => {
     expect(wrapper.find('.warning.title.anon')).toHaveLength(1);
     expect(wrapper.find('.warning.signedUp')).toHaveLength(0);
     expect(wrapper.find('#SignUpDialog_name').length).toBe(1);
+  });
+
+  test('should render all options', () => {
+    const wrapper = setup({mealOne: false}).wrapper;
+    expect(wrapper.find(SignUpOption)).toHaveLength(3);
+  });
+
+  test('should render invalid dialog', () => {
+    const wrapper = setup({invalid: true}).wrapper;
+
+      expect(wrapper.find('.signupName')).toHaveLength(0);
+      expect(wrapper.find('.body p')).toHaveLength(1);
   });
 
   test('should render all warnings if neccessary', () => {

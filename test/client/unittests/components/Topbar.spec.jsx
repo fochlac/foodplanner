@@ -66,4 +66,17 @@ describe('Topbar', () => {
     quicklinks.childAt(3).simulate('click');
     expect(output).toBe('sign_out');
   });
+
+
+  test('should call correct actions', (done) => {
+    window.location.assign = (url) => {
+      expect(url).toBe(window.location.origin);
+      done();
+    }
+
+    const wrapper = shallow(<Topbar user={{id: 1}} app={{hiddenBusy: false, dialog: ''}} {...actions} />);
+    const reload = wrapper.find('.pointer');
+
+    reload.simulate('click');
+  });
 });
