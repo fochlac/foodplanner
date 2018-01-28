@@ -1,4 +1,5 @@
 import { S } from 'T_UI/base_selectors.js';
+import { By } from 'selenium-webdriver';
 require("babel-polyfill");
 require("./custom_wait_conditions.js");
 
@@ -65,11 +66,15 @@ driver
         return driver.wait(until.elementIsNotPresent(S.busy));
     }
 
-    driver.refresh = function() {
-        driver.executeScript('window.location.reload()');
-        driver.wait(until.elementLocated(S.userframe));
+    driver.refresh = async function() {
+        await driver.executeScript('window.location.reload()');
+        await driver.waitElementLocated('body');
+        await driver.sleep(1000);
 
-        return driver.wait(until.elementIsVisible(driver.findElement(S.userframe)));
+        if ((await driver.findElements(S.userframe)).length === 0) {
+            await driver.refresh();
+        }
+        await driver.findElement(S.userframe);
     }
 
 

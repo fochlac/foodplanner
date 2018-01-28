@@ -21,4 +21,17 @@ describe('ImpressumDialog', () => {
 
     expect(dialog_closed).toBe(true);
   });
+
+  test('should output correct email', () => {
+    let dialog_closed = false;
+
+    const wrapper = shallow(<ImpressumDialog action="test" test={() => action_called=true} message="" noCancel={false} close_dialog={() => dialog_closed=true}/>);
+
+    let email = wrapper.find('a').get(0).props,
+      evt = {target: {}};
+
+    email.onClick(evt);
+
+    expect(evt.target.href).toBe('mailto:fochlac@gmail.de');
+  });
 });

@@ -7,10 +7,6 @@ export default class ImpressumDialog extends React.Component {
     super();
   }
 
-  submit() {
-    this.props[this.props.action](...this.props.parameter);
-  }
-
   cancel() {
     this.props.close_dialog();
   }
