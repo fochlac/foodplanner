@@ -66,9 +66,16 @@ driver
     }
 
     driver.refresh = function() {
+
+        console.log('refresh 0');
         driver.executeScript('window.location.reload()');
+
+
+        console.log('refresh 1');
         driver.wait(until.elementLocated(S.userframe));
 
+
+        console.log('refresh 2');
         return driver.wait(until.elementIsVisible(driver.findElement(S.userframe)));
     }
 
