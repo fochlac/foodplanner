@@ -9,7 +9,7 @@ export const generateHash = (source) => {
             return window.crypto.subtle.deriveKey(
                     {
                         "name": "PBKDF2",
-                        "salt": new TextEncoder().encode(salt),
+                        "salt": new TextEncoder().encode('mySecret123'),
                         "iterations": 100,
                         "hash": "SHA-256"
                     },

@@ -12,7 +12,7 @@ export default class Topbar extends React.Component {
       <div className="topbar">
         <div className="spacer">
           <span className="fa fa-cutlery fa-lg"></span>
-          <h3 className="pointer" onClick={() => window.location.href = window.location.origin}>Mittagsplaner</h3>
+          <h3 className="pointer" onClick={() => window.location.assign(window.location.origin)}>Mittagsplaner</h3>
           <ul className="quicklinks">
             {
               (this.props.app.hiddenBusy && this.props.app.dialog === '')

@@ -62,6 +62,34 @@ describe('TransactionDialog', () => {
     expect(row.at(4).prop('className')).toContain('negative');
   });
 
+  test('should sort transactions by date', () => {
+    let get_transaction_history = false;
+    const TEST_TRANSACTION = {
+        time: Date.now() - 3000000,
+        reason: 'test1',
+        user: 'testusername',
+        diff: -5
+      }, TEST_TRANSACTION2 = {
+        time: Date.now() - 2000000,
+        reason: 'test2',
+        user: 'testusername',
+        diff: -5
+      }, TEST_TRANSACTION3 = {
+        time: Date.now() - 1000000,
+        reason: 'test3',
+        user: 'testusername',
+        diff: -5
+      },
+      wrapper = shallow(<TransactionDialog transactions={[TEST_TRANSACTION, TEST_TRANSACTION2, TEST_TRANSACTION3]} user={{}} get_transaction_history={() => get_transaction_history=true} close_dialog={() => dialog_closed=true}/>),
+      row = wrapper.find('.body').find(Pager).find('tr');
+
+    expect(wrapper.find('.body').find(Pager)).toHaveLength(1);
+    expect(row).toHaveLength(3);
+    expect(row.at(0).text()).toContain(TEST_TRANSACTION3.reason);
+    expect(row.at(1).text()).toContain(TEST_TRANSACTION2.reason);
+    expect(row.at(2).text()).toContain(TEST_TRANSACTION.reason);
+  });
+
   test('should close on cancel button click', () => {
     let dialog_closed = false;
     let get_transaction_history = false;

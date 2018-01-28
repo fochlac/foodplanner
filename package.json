@@ -44,7 +44,7 @@
     "roots": [
       "./test/client/unittests"
     ],
-    "testURL": "https://food.fochlac.com/"
+    "testURL": "https://food.fochlac.com/test123"
   },
   "browserslist": [
     "last 3 versions",
