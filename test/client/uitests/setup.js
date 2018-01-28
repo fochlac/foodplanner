@@ -70,10 +70,10 @@ driver
         await driver.executeScript('window.location.reload()');
         await driver.sleep(2000);
 
-        console.log(await driver.findElement(By.tagName('body')).getAttribute('innerHTML'));
+        console.log(await driver.findElement(By.css('body')).getAttribute('innerHTML'));
         await driver.manage().logs().get('browser').then(v => v && v.length && console.log(v)).catch(console.log);
 
-        await driver.findElement(S.userFrame);
+        await driver.findElement(S.userframe);
     }
 
 
