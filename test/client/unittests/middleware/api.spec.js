@@ -1,9 +1,8 @@
 import { apiMiddleware } from 'COMPONENTS/middleware/api.js';
-import { expect } from 'chai';
 const myfetch = global.fetch;
 
 describe('api', () => {
-  it('should set the history correctly', async function() {
+  test('should set the history correctly', async () => {
     let act = {
             type: 'test',
             status: 'initialized',
@@ -27,11 +26,11 @@ describe('api', () => {
 
 
     global.fetch = (url, options) => {
-        expect(url).to.equal(act.api.url);
-        expect(options.method).to.equal(act.api.method);
-        expect(options.headers.Accept).to.equal('application/json');
-        expect(options.headers['Content-Type']).to.equal('application/json');
-        expect(options.body).to.equal(JSON.stringify(act.api.body));
+        expect(url).toBe(act.api.url);
+        expect(options.method).toBe(act.api.method);
+        expect(options.headers.Accept).toBe('application/json');
+        expect(options.headers['Content-Type']).toBe('application/json');
+        expect(options.body).toBe(JSON.stringify(act.api.body));
 
         return Promise.resolve({
             status: 200, 
@@ -43,23 +42,23 @@ describe('api', () => {
     await new Promise((resolve) => {
         apiMiddleware({dispatch: action => {
             if (action.type === act.type) {
-                expect(action.status).to.equal('complete');
-                expect(action.data).to.equal('test1');
+                expect(action.status).toBe('complete');
+                expect(action.data).toBe('test1');
             } else {
-                expect(action).to.equal('test123');
+                expect(action).toBe('test123');
                 resolve();
             }
         }})((action) => {
-            expect(action).to.deep.equal(act);
+            expect(action).toEqual(act);
         })(act);
     });
 
     global.fetch = (url, options) => {
-        expect(url).to.equal(act2.api.url);
-        expect(options.method).to.equal(act2.api.method);
-        expect(options.body).to.deep.equal(act2.api.body);
-        expect(options.headers.Accept).to.equal('application/json');
-        expect(options.headers['Content-Type']).to.equal(undefined);
+        expect(url).toBe(act2.api.url);
+        expect(options.method).toBe(act2.api.method);
+        expect(options.body).toEqual(act2.api.body);
+        expect(options.headers.Accept).toBe('application/json');
+        expect(options.headers['Content-Type']).toBe(undefined);
 
         return Promise.resolve({
             status: 200, 
@@ -71,11 +70,11 @@ describe('api', () => {
     await new Promise((resolve) => {
 
         apiMiddleware({dispatch: action => {
-            expect(action.status).to.equal('complete');
-            expect(action.data).to.equal('test1');
+            expect(action.status).toBe('complete');
+            expect(action.data).toBe('test1');
             resolve();
         }})((action) => {
-            expect(action).to.deep.equal(act2);
+            expect(action).toEqual(act2);
         })(act2);
     });
 

@@ -1,10 +1,9 @@
 import React from 'react';
-import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 import SettingsDialog from 'UI/SettingsDialog/SettingsDialog.jsx';
 
 describe('SettingsDialog', () => {
-  it('should render all elements containing default values', () => {
+  test('should render all elements containing default values', () => {
     const user = {
         id: 1,
         mail: 'test@test.de',
@@ -16,40 +15,47 @@ describe('SettingsDialog', () => {
       },
       wrapper = shallow(<SettingsDialog user={user} close_dialog={() => dialog_closed=true}/>);
 
-    expect(wrapper.find('.mailFrame input').length).to.equal(1);
-    expect(wrapper.find('.mailFrame input').prop('value')).to.equal(user.mail);
-    expect(wrapper.find('#SettingsDialog_name').length).to.equal(1);
-    expect(wrapper.find('#SettingsDialog_name').prop('value')).to.equal(user.name);
-    expect(wrapper.find('.notificationMatrix').length).to.equal(1);
-    expect(wrapper.find('.notificationMatrix .notification').length).to.equal(4);
+    expect(wrapper.find('.mailFrame input').length).toBe(1);
+    expect(wrapper.find('.mailFrame input').prop('value')).toBe(user.mail);
+    expect(wrapper.find('#SettingsDialog_name').length).toBe(1);
+    expect(wrapper.find('#SettingsDialog_name').prop('value')).toBe(user.name);
+    expect(wrapper.find('.notificationMatrix').length).toBe(1);
+    expect(wrapper.find('.notificationMatrix .notification').length).toBe(4);
     wrapper.find('.notificationMatrix .notification input').forEach(elem => {
-      expect(elem.prop('disabled')).to.equal(undefined);
-      expect(elem.prop('checked')).to.equal(1);
+      expect(elem.prop('disabled')).toBe(undefined);
+      expect(elem.prop('checked')).toBe(1);
     });
   });
 
-  it('should hide mailframe and disable mail notifications without user', () => {
-    const user = {},
-      wrapper = shallow(<SettingsDialog user={user} close_dialog={() => dialog_closed=true}/>);
+  test(
+    'should hide mailframe and disable mail notifications without user',
+    () => {
+      const user = {},
+        wrapper = shallow(<SettingsDialog user={user} close_dialog={() => dialog_closed=true}/>);
 
-    expect(wrapper.find('.mailFrame input').length).to.equal(0);
-    expect(wrapper.find('#SettingsDialog_name').prop('value')).to.equal('');
-    expect(wrapper.find('.notificationMatrix .notification').length).to.equal(4);
-    expect(wrapper.find('.notificationMatrix .notification.createdMail input').prop('disabled')).to.be.true;
-    expect(wrapper.find('.notificationMatrix .notification.deadlineMail input').prop('disabled')).to.be.true;
-  });
+      expect(wrapper.find('.mailFrame input').length).toBe(0);
+      expect(wrapper.find('#SettingsDialog_name').prop('value')).toBe('');
+      expect(wrapper.find('.notificationMatrix .notification').length).toBe(4);
+      expect(wrapper.find('.notificationMatrix .notification.createdMail input').prop('disabled')).toBe(true);
+      expect(wrapper.find('.notificationMatrix .notification.deadlineMail input').prop('disabled')).toBe(true);
+    }
+  );
 
-  it('should disable notification checkboxes without notification permission', () => {
-    global.Notification.permission = 'denied';
-    const user = {},
-      wrapper = shallow(<SettingsDialog user={user} close_dialog={() => dialog_closed=true}/>);
+  test(
+    'should disable notification checkboxes without notification permission',
+    () => {
+      global.Notification = {};
+      global.Notification.permission = 'denied';
+      const user = {},
+        wrapper = shallow(<SettingsDialog user={user} close_dialog={() => dialog_closed=true}/>);
 
-    expect(wrapper.find('.notificationMatrix .notification.createdNotification input').prop('disabled')).to.be.true;
-    expect(wrapper.find('.notificationMatrix .notification.deadlineNotification input').prop('disabled')).to.be.true;
-    global.Notification.permission = 'granted';
-  });
+      expect(wrapper.find('.notificationMatrix .notification.createdNotification input').prop('disabled')).toBe(true);
+      expect(wrapper.find('.notificationMatrix .notification.deadlineNotification input').prop('disabled')).toBe(true);
+      global.Notification.permission = 'granted';
+    }
+  );
 
-  it('should render all elements containing default values', (done) => {
+  test('should send changed values on submit', (done) => {
     let save_settings = false;
     const user = {
         id: 1,
@@ -78,13 +84,13 @@ describe('SettingsDialog', () => {
     });
     wrapper.find('button.submit').simulate('click');
     setTimeout(() => {
-      expect(save_settings).to.deep.equal(user);
+      expect(save_settings).toEqual(user);
       done();
-    }, 10);
+    }, 100);
   });
 
 
-  it('should close on cancel button click', () => {
+  test('should close on cancel button click', () => {
     let dialog_closed = false;
 
     const TEST_USER = {id: 1},
@@ -92,10 +98,10 @@ describe('SettingsDialog', () => {
 
     wrapper.find('button.cancel').simulate('click');
 
-    expect(dialog_closed).to.true;
+    expect(dialog_closed).toBe(true);
   });
 
-  it('should close on close button click', () => {
+  test('should close on close button click', () => {
     let dialog_closed = false;
 
     const TEST_USER = {id: 1},
@@ -103,7 +109,7 @@ describe('SettingsDialog', () => {
 
     wrapper.find('.titlebar span.fa-times').simulate('click');
 
-    expect(dialog_closed).to.true;
+    expect(dialog_closed).toBe(true);
   });
 
 });

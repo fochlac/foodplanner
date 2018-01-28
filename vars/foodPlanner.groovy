@@ -59,12 +59,12 @@ def build(String branch) {
  */
 def tests(String branch) {
 
-  stage("Unit tests: ${branch}") {
+  stage("Unit Tests: ${branch}") {
 
     sh 'npm test'
   }
 
-  stage("UI tests: ${branch}") {
+  stage("UI Tests: ${branch}") {
     try {
         sh '''
             while read p; do
@@ -88,5 +88,10 @@ def tests(String branch) {
         '''
         throw(err)
     }
+  }
+
+  stage("Code Coverage: ${branch}") {
+
+    sh 'npm run coverage'
   }
 }

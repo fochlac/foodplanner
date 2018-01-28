@@ -1,5 +1,4 @@
 import React from 'react';
-import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 import Meal from 'UI/Meal/Meal.jsx';
 
@@ -16,15 +15,15 @@ function validateOptions(wrapper, mgOpt) {
 
       switch (opt.type) {
         case 'count':
-          expect(elem.find('.optionCount'), `option ${opt.name} has no count elem`).to.have.lengthOf(1);
-          expect(elem.find('.optionCount').text(), `option ${opt.name} text does not include correct count`).to.include(opt.count);
+          expect(elem.find('.optionCount')).toHaveLength(1);
+          expect(elem.find('.optionCount').text()).toContain(opt.count);
         case 'select':
-          expect(elem.find('.optionValue'), `option ${opt.name} has no select elem`).to.have.lengthOf(1);
-          expect(elem.find('.optionValue').text(), `option ${opt.name} text does not include correct value`).to.include(opt.value);
+          expect(elem.find('.optionValue')).toHaveLength(1);
+          expect(elem.find('.optionValue').text()).toContain(opt.value);
           break;
         case 'toggle':
-          expect(elem.find('.optionShow'), `option ${opt.name} has no name elem`).to.have.lengthOf(1);
-          expect(elem.find('.optionShow').text(), `option ${opt.name} text does not include correct option name`).to.include(opt.name);
+          expect(elem.find('.optionShow')).toHaveLength(1);
+          expect(elem.find('.optionShow').text()).toContain(opt.name);
           break;
       }
     } else {
@@ -119,7 +118,7 @@ const TU1 = {
 
 
 describe('Meal', () => {
-  it('should render all elements with correct input data', () => {
+  test('should render all elements with correct input data', () => {
     const user = TU1,
       signups = {
         1: TS({id: 1, price: 3, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
@@ -131,65 +130,68 @@ describe('Meal', () => {
     const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />),
           signupElems = wrapper.find('.participantsList > li');
 
-    expect(wrapper.find('.meal'), 'meal frame not found').to.have.lengthOf(1);
-    expect(wrapper.find('.titlebar'), 'meal titlebar not found').to.have.lengthOf(1);
-    expect(wrapper.find('.titlebar .name'), 'meal titlebar name not found').to.have.lengthOf(1);
-    expect(wrapper.find('.titlebar .name').text(), 'meal titlebar name does not include name').to.include(meal.name);
-    expect(wrapper.find('.titlebar .menuIcon'), 'meal titlebar actions not found').to.have.lengthOf(3);
-    expect(wrapper.find('.details'), 'meal details not found').to.have.lengthOf(1);
-    expect(wrapper.find('.mealImage'), 'meal image not found').to.have.lengthOf(1);
-    expect(wrapper.find('.mealImage').prop('src'), 'meal image src wrong').to.equal(meal.image);
-    expect(wrapper.find('.date'), 'meal date not found').to.have.lengthOf(1);
-    expect(wrapper.find('.creator'), 'meal creator not found').to.have.lengthOf(1);
-    expect(wrapper.find('.description'), 'meal description not found').to.have.lengthOf(1);
-    expect(wrapper.find('.description').text(), 'meal description text not found').to.include(meal.description);
-    expect(wrapper.find('.participants'), 'meal participants not found').to.have.lengthOf(1);
-    expect(wrapper.find('.participation'), 'meal participation area not found').to.have.lengthOf(1);
-    expect(wrapper.find('.count'), 'meal participation count not found').to.have.lengthOf(1);
-    expect(wrapper.find('.count').text(), 'meal participation count does not include count of signups').to.include(meal.signups.length);
-    expect(wrapper.find('.limit'), 'meal participation limit not found').to.have.lengthOf(1);
-    expect(wrapper.find('.limit').text(), 'meal participation limit does not include limit').to.include(meal.signupLimit);
-    expect(wrapper.find('.deadline'), 'meal deadline not found').to.have.lengthOf(1);
-    expect(wrapper.find('.participate'), 'meal participate link not found').to.have.lengthOf(1);
-    expect(wrapper.find('.participantsList'), 'meal participantsList not found').to.have.lengthOf(1);
+    expect(wrapper.find('.meal')).toHaveLength(1);
+    expect(wrapper.find('.titlebar')).toHaveLength(1);
+    expect(wrapper.find('.titlebar .name')).toHaveLength(1);
+    expect(wrapper.find('.titlebar .name').text()).toContain(meal.name);
+    expect(wrapper.find('.titlebar .menuIcon')).toHaveLength(3);
+    expect(wrapper.find('.details')).toHaveLength(1);
+    expect(wrapper.find('.mealImage')).toHaveLength(1);
+    expect(wrapper.find('.mealImage').prop('src')).toBe(meal.image);
+    expect(wrapper.find('.date')).toHaveLength(1);
+    expect(wrapper.find('.creator')).toHaveLength(1);
+    expect(wrapper.find('.description')).toHaveLength(1);
+    expect(wrapper.find('.description').text()).toContain(meal.description);
+    expect(wrapper.find('.participants')).toHaveLength(1);
+    expect(wrapper.find('.participation')).toHaveLength(1);
+    expect(wrapper.find('.count')).toHaveLength(1);
+    expect(wrapper.find('.count').text()).toContain(meal.signups.length);
+    expect(wrapper.find('.limit')).toHaveLength(1);
+    expect(wrapper.find('.limit').text()).toContain(meal.signupLimit);
+    expect(wrapper.find('.deadline')).toHaveLength(1);
+    expect(wrapper.find('.participate')).toHaveLength(1);
+    expect(wrapper.find('.participantsList')).toHaveLength(1);
 
-    expect(signupElems, 'meal signups not found').to.have.lengthOf(2);
+    expect(signupElems).toHaveLength(2);
 
     signupElems.forEach((signup, index) => {
-      expect(signup.find('.user .name'), 'signup user name not found').to.have.lengthOf(1);
-      expect(signup.find('.money'), 'signup price not found').to.have.lengthOf(1);
-      expect(signup.find('.money').text(), 'signup price does not include price').to.include(signups[signupArray[index]].price);
-      expect(signup.find('.icons'), 'signup edit options not found').to.have.lengthOf(1);
-      expect(signup.find('.icons > span'), 'signup edit actions not found').to.have.lengthOf(2);
-      expect(signup.find('.comment'), 'signup comment not found').to.have.lengthOf(1);
+      expect(signup.find('.user .name')).toHaveLength(1);
+      expect(signup.find('.money')).toHaveLength(1);
+      expect(signup.find('.money').text()).toContain(signups[signupArray[index]].price);
+      expect(signup.find('.icons')).toHaveLength(1);
+      expect(signup.find('.icons > span')).toHaveLength(2);
+      expect(signup.find('.comment')).toHaveLength(1);
 
-      expect(signup.find('.signupOptions'), 'signup options not found').to.have.lengthOf(1);
-      expect(signup.find('.signupOptions > li'), 'signup options wrong count').to.have.lengthOf(signups[signupArray[index]].options[2].show ? 3 : 2);
+      expect(signup.find('.signupOptions')).toHaveLength(1);
+      expect(signup.find('.signupOptions > li')).toHaveLength(signups[signupArray[index]].options[2].show ? 3 : 2);
       validateOptions(signup, mergeById(signups[signupArray[index]].options, meal.options));
     });
   });
 
-  it('should not show price when not locked, should not render signup link when full', () => {
-    const user = TU1,
-      signups = {
-        1: TS({id: 1, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
-        2: TS({id: 2, options: [TSO({id: 1, value: 'Rind'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 0})]})
-      },
-      signupArray = Object.values(signups).map(signup => signup.id),
-      meal = TM({image: 'testimage.jpg', locked: 0, signups: signupArray, options: TO, signupLimit: 2});
+  test(
+    'should not show price when not locked, should not render signup link when full',
+    () => {
+      const user = TU1,
+        signups = {
+          1: TS({id: 1, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
+          2: TS({id: 2, options: [TSO({id: 1, value: 'Rind'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 0})]})
+        },
+        signupArray = Object.values(signups).map(signup => signup.id),
+        meal = TM({image: 'testimage.jpg', locked: 0, signups: signupArray, options: TO, signupLimit: 2});
 
-    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />),
-          signupElems = wrapper.find('.participantsList > li');
+      const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />),
+            signupElems = wrapper.find('.participantsList > li');
 
-    expect(wrapper.find('.participate'), 'meal participate link found').to.have.lengthOf(0);
+      expect(wrapper.find('.participate')).toHaveLength(0);
 
 
-    signupElems.forEach((signup, index) => {
-      expect(signup.find('.money'), 'signup price not found').to.have.lengthOf(0);
-    });
-  });
+      signupElems.forEach((signup, index) => {
+        expect(signup.find('.money')).toHaveLength(0);
+      });
+    }
+  );
 
-  it('should not show edit options if past deadline', () => {
+  test('should not show edit options if past deadline', () => {
     const user = TU1,
       signups = {
         1: TS({id: 1, price: 3, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
@@ -201,15 +203,15 @@ describe('Meal', () => {
     const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />),
           signupElems = wrapper.find('.participantsList > li');
 
-    expect(wrapper.find('.participate'), 'meal participate link  found').to.have.lengthOf(0);
+    expect(wrapper.find('.participate')).toHaveLength(0);
 
     signupElems.forEach((signup, index) => {
-      expect(signup.find('.icons'), 'signup edit options found').to.have.lengthOf(0);
-      expect(signup.find('.icons > span'), 'signup edit actions found').to.have.lengthOf(0);
+      expect(signup.find('.icons')).toHaveLength(0);
+      expect(signup.find('.icons > span')).toHaveLength(0);
     });
   });
 
-  it('should not show edit options if not creator', () => {
+  test('should not show edit options if not creator', () => {
     const user = TU2,
       signups = {
         1: TS({id: 1, price: 3, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
@@ -221,16 +223,16 @@ describe('Meal', () => {
     const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />),
           signupElems = wrapper.find('.participantsList > li');
 
-    expect(wrapper.find('.participate'), 'meal participate link found').to.have.lengthOf(1);
-    expect(wrapper.find('.titlebar .menuIcon'), 'meal titlebar actions found').to.have.lengthOf(0);
+    expect(wrapper.find('.participate')).toHaveLength(1);
+    expect(wrapper.find('.titlebar .menuIcon')).toHaveLength(0);
 
     signupElems.forEach((signup, index) => {
-      expect(signup.find('.icons'), 'signup edit options found').to.have.lengthOf(0);
-      expect(signup.find('.icons > span'), 'signup edit actions found').to.have.lengthOf(0);
+      expect(signup.find('.icons')).toHaveLength(0);
+      expect(signup.find('.icons > span')).toHaveLength(0);
     });
   });
 
-  it('should show edit options if not signup user', () => {
+  test('should show edit options if not signup user', () => {
     const user = TU2,
       signups = {
         1: TS({id: 1, price: 3, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
@@ -242,16 +244,16 @@ describe('Meal', () => {
     const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />),
           signupElems = wrapper.find('.participantsList > li');
 
-    expect(wrapper.find('.titlebar .menuIcon'), 'meal titlebar actions found').to.have.lengthOf(0);
+    expect(wrapper.find('.titlebar .menuIcon')).toHaveLength(0);
 
-    expect(signupElems.at(0).find('.icons'), 'signup edit options found').to.have.lengthOf(0);
-    expect(signupElems.at(0).find('.icons > span'), 'signup edit actions found').to.have.lengthOf(0);
+    expect(signupElems.at(0).find('.icons')).toHaveLength(0);
+    expect(signupElems.at(0).find('.icons > span')).toHaveLength(0);
 
-    expect(signupElems.at(1).find('.icons'), 'signup edit options found').to.have.lengthOf(1);
-    expect(signupElems.at(1).find('.icons > span'), 'signup edit actions found').to.have.lengthOf(2);
+    expect(signupElems.at(1).find('.icons')).toHaveLength(1);
+    expect(signupElems.at(1).find('.icons > span')).toHaveLength(2);
   });
 
-  it('actions should be called', () => {
+  test('actions should be called', () => {
     const user = TU1,
       signups = {
         1: TS({id: 1, price: 3, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
@@ -264,20 +266,20 @@ describe('Meal', () => {
           signupElems = wrapper.find('.participantsList > li');
 
     wrapper.find('.titlebar .menuIcon').at(0).simulate('click');
-    expect(output).to.equal('edit_price');
+    expect(output).toBe('edit_price');
     wrapper.find('.titlebar .menuIcon').at(1).simulate('click');
-    expect(output).to.equal('edit');
+    expect(output).toBe('edit');
     wrapper.find('.titlebar .menuIcon').at(2).simulate('click');
-    expect(output).to.equal('cancel');
+    expect(output).toBe('cancel');
     signupElems.at(0).find('.icons > span').at(0).simulate('click');
-    expect(output).to.equal('signup_edit');
+    expect(output).toBe('signup_edit');
     signupElems.at(0).find('.icons > span').at(1).simulate('click');
-    expect(output).to.equal('signup_cancel');
+    expect(output).toBe('signup_cancel');
     signupElems.at(1).find('.icons > span').at(0).simulate('click');
-    expect(output).to.equal('signup_edit');
+    expect(output).toBe('signup_edit');
     signupElems.at(1).find('.icons > span').at(1).simulate('click');
-    expect(output).to.equal('signup_cancel');
+    expect(output).toBe('signup_cancel');
     wrapper.find('.participate').simulate('click');
-    expect(output).to.equal('signup');
+    expect(output).toBe('signup');
   });
 });

@@ -1,5 +1,4 @@
 import { localDb } from 'COMPONENTS/middleware/localDb.js';
-import { expect } from 'chai';
 
 let output;
 
@@ -18,7 +17,7 @@ global.indexedDB = {
                             return {
                                 put: ({key, data}) => {
                                     let obj = {};
-                                    expect(key).to.equal('user');
+                                    expect(key).toBe('user');
                                     output = data;
 
                                     setTimeout(() => {
@@ -27,9 +26,9 @@ global.indexedDB = {
 
                                     return obj;
                                 }
-                            }
+                            };
                         }
-                    }
+                    };
                 } 
             }})();
         }, 1);
@@ -40,19 +39,19 @@ global.indexedDB = {
 }
 
 describe('localDb', () => {
-  it('should store locally output to local storage as user', (done) => {
+  test('should store locally output to local storage as user', (done) => {
     let act1 = {locally: 'test1', actionId: 1},
         act2 = {locally: 'test2', status: 'complete', api: '', actionId: 2};
     
 
     localDb({})((action) => {
-        expect(action).to.deep.equal(act1);
-        expect(output).to.equal(act1.locally);
+        expect(action).toEqual(act1);
+        expect(output).toBe(act1.locally);
         
 
         localDb({})((action) => {
-            expect(action).to.deep.equal(act2);
-            expect(output).to.equal(act2.locally);
+            expect(action).toEqual(act2);
+            expect(output).toBe(act2.locally);
             done();
         })(act2);
     })(act1);

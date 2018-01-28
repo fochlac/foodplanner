@@ -96,6 +96,7 @@ describe('login area', () => {
         this.timeout(5000);
         const submit = await this.driver.waitElementLocated(S.uf.submit);
         const email = await this.driver.waitElementLocated(S.uf.loginMail);
+        email.clear();
         email.sendKeys(this.usermail.slice(0,5));
         this.driver.wait(until.elementValueIs(email, this.usermail));
         submit.click();
@@ -108,8 +109,6 @@ describe('login area', () => {
         this.timeout(5000);
 
         await this.driver.refresh();
-
-        await this.driver.awaitBusyComplete();
 
         await this.checkLoggedin();
     });

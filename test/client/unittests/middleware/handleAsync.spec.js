@@ -1,10 +1,9 @@
 import { handleAssync } from 'COMPONENTS/middleware/handleAssync.js';
 import { set_busy, set_hidden_busy } from 'COMPONENTS/actions.js';
-import { expect } from 'chai';
 
 
 describe('handleAssync', () => {
-  it('should set busy state correctly', () => {
+  test('should set busy state correctly', () => {
     let act1 = {status: 'initialized', actionId: 1},
         act1c = {status: 'complete', actionId: 1},
         act2 = {status: 'initialized', actionId: 2},
@@ -13,66 +12,66 @@ describe('handleAssync', () => {
         act3c = {status: 'complete', actionId: 3},
         act4 = {status: 'hidden', actionId: 4},
         act4c = {status: 'complete', actionId: 4};
-    
+
 
     handleAssync({dispatch: action => {
-        expect(action).to.deep.equal(set_busy(true));
+        expect(action).toEqual(set_busy(true));
     }})((action) => {
-        expect(action).to.deep.equal(act1);
+        expect(action).toEqual(act1);
     })(act1);
 
     handleAssync({dispatch: action => {
-        expect(action).to.deep.equal(set_busy(false));
+        expect(action).toEqual(set_busy(false));
     }})((action) => {
-    	expect(action).to.deep.equal(act1c);
+    	expect(action).toEqual(act1c);
     })(act1c);
 
     handleAssync({dispatch: action => {
-        expect(action).to.deep.equal(set_busy(true));
+        expect(action).toEqual(set_busy(true));
     }})((action) => {
-        expect(action).to.deep.equal(act1);
+        expect(action).toEqual(act1);
     })(act1);
 
     handleAssync({dispatch: action => {
-        expect(0, 'should not be called!').to.deep.equal(1);
+        expect(0).toEqual(1);
     }})((action) => {
-        expect(action).to.deep.equal(act2);
+        expect(action).toEqual(act2);
     })(act2);
 
     handleAssync({dispatch: action => {
-        expect(0, 'should not be called!').to.deep.equal(1);
+        expect(0).toEqual(1);
     }})((action) => {
-        expect(action).to.deep.equal(act1c);
+        expect(action).toEqual(act1c);
     })(act1c);
 
     handleAssync({dispatch: action => {
-        expect(action).to.deep.equal(set_busy(false));
+        expect(action).toEqual(set_busy(false));
     }})((action) => {
-        expect(action).to.deep.equal(act2c);
+        expect(action).toEqual(act2c);
     })(act2c);
 
     handleAssync({dispatch: action => {
-        expect(action).to.deep.equal(set_hidden_busy(true));
+        expect(action).toEqual(set_hidden_busy(true));
     }})((action) => {
-        expect(action).to.deep.equal(act3);
+        expect(action).toEqual(act3);
     })(act3);
 
     handleAssync({dispatch: action => {
-        expect(0, 'should not be called!').to.deep.equal(1);
+        expect(0).toEqual(1);
     }})((action) => {
-        expect(action).to.deep.equal(act4);
+        expect(action).toEqual(act4);
     })(act4);
 
     handleAssync({dispatch: action => {
-        expect(0, 'should not be called!').to.deep.equal(1);
+        expect(0).toEqual(1);
     }})((action) => {
-        expect(action).to.deep.equal(act3c);
+        expect(action).toEqual(act3c);
     })(act3c);
 
     handleAssync({dispatch: action => {
-        expect(action).to.deep.equal(set_hidden_busy(false));
+        expect(action).toEqual(set_hidden_busy(false));
     }})((action) => {
-        expect(action).to.deep.equal(act4c);
+        expect(action).toEqual(act4c);
     })(act4c);
 
   });

@@ -1,5 +1,4 @@
 import {formatDate, formatDayNameDate, formatTime, formatDateTime, formatTimeShort, round } from 'SCRIPTS/date.js';
-import { expect } from 'chai';
 
 const second = 1000,
 	minute = 60 * second,
@@ -14,51 +13,51 @@ const second = 1000,
   };
 
 describe('formatDate', () => {
-  it('should format date objects as 01.01.12', () => {
+  test('should format date objects as 01.01.12', () => {
 
-    expect(formatDate(new Date(1231231241000))).to.equal('06.01.09');
-    expect(formatDate(new Date(1513978469000))).to.equal('22.12.17');
-    expect(formatDate(new Date(1235231241000))).to.equal('21.02.09');
-    expect(formatDate(new Date(2235231241000))).to.equal('30.10.40');
-    expect(formatDate(new Date(5235231241000))).to.equal('24.11.35');
+    expect(formatDate(new Date(1231231241000))).toBe('06.01.09');
+    expect(formatDate(new Date(1513978469000))).toBe('22.12.17');
+    expect(formatDate(new Date(1235231241000))).toBe('21.02.09');
+    expect(formatDate(new Date(2235231241000))).toBe('30.10.40');
+    expect(formatDate(new Date(5235231241000))).toBe('24.11.35');
   });
 });
 
 describe('formatDayNameDate', () => {
-  it('should format date objects as Freitag, 01.01.12', () => {
+  test('should format date objects as Freitag, 01.01.12', () => {
 
-    expect(formatDayNameDate(new Date(1231231241000))).to.equal('Dienstag, 06.01.09');
-    expect(formatDayNameDate(new Date(1513978469000))).to.equal('Freitag, 22.12.17');
-    expect(formatDayNameDate(new Date(1235231241000))).to.equal('Samstag, 21.02.09');
-    expect(formatDayNameDate(new Date(2235231241000))).to.equal('Dienstag, 30.10.40');
-    expect(formatDayNameDate(new Date(5235231241000))).to.equal('Donnerstag, 24.11.35');
+    expect(formatDayNameDate(new Date(1231231241000))).toBe('Dienstag, 06.01.09');
+    expect(formatDayNameDate(new Date(1513978469000))).toBe('Freitag, 22.12.17');
+    expect(formatDayNameDate(new Date(1235231241000))).toBe('Samstag, 21.02.09');
+    expect(formatDayNameDate(new Date(2235231241000))).toBe('Dienstag, 30.10.40');
+    expect(formatDayNameDate(new Date(5235231241000))).toBe('Donnerstag, 24.11.35');
   });
 });
 
 describe('formatTime', () => {
-  it('should format date objects as 09:40', () => {
+  test('should format date objects as 09:40', () => {
 
-    expect(formatTime(new Date(1231231241000))).to.equal(handleTimeOffset('08:40'));
-    expect(formatTime(new Date(1513978469000))).to.equal(handleTimeOffset('21:34'));
-    expect(formatTime(new Date(1235231241000))).to.equal(handleTimeOffset('15:47'));
-    expect(formatTime(new Date(2235231241000))).to.equal(handleTimeOffset('17:34'));
-    expect(formatTime(new Date(5235231241000))).to.equal(handleTimeOffset('22:54'));
+    expect(formatTime(new Date(1231231241000))).toBe(handleTimeOffset('08:40'));
+    expect(formatTime(new Date(1513978469000))).toBe(handleTimeOffset('21:34'));
+    expect(formatTime(new Date(1235231241000))).toBe(handleTimeOffset('15:47'));
+    expect(formatTime(new Date(2235231241000))).toBe(handleTimeOffset('17:34'));
+    expect(formatTime(new Date(5235231241000))).toBe(handleTimeOffset('22:54'));
   });
 });
 
 describe('formatDateTime', () => {
-  it('should format date objects as 01.01.12 - 09:40', () => {
+  test('should format date objects as 01.01.12 - 09:40', () => {
 
-    expect(formatDateTime(new Date(1231231241000))).to.equal(handleTimeOffset('06.01.09 - 08:40'));
-    expect(formatDateTime(new Date(1513978469000))).to.equal(handleTimeOffset('22.12.17 - 21:34'));
-    expect(formatDateTime(new Date(1235231241000))).to.equal(handleTimeOffset('21.02.09 - 15:47'));
-    expect(formatDateTime(new Date(2235231241000))).to.equal(handleTimeOffset('30.10.40 - 17:34'));
-    expect(formatDateTime(new Date(5235231241000))).to.equal(handleTimeOffset('24.11.35 - 22:54'));
+    expect(formatDateTime(new Date(1231231241000))).toBe(handleTimeOffset('06.01.09 - 08:40'));
+    expect(formatDateTime(new Date(1513978469000))).toBe(handleTimeOffset('22.12.17 - 21:34'));
+    expect(formatDateTime(new Date(1235231241000))).toBe(handleTimeOffset('21.02.09 - 15:47'));
+    expect(formatDateTime(new Date(2235231241000))).toBe(handleTimeOffset('30.10.40 - 17:34'));
+    expect(formatDateTime(new Date(5235231241000))).toBe(handleTimeOffset('24.11.35 - 22:54'));
   });
 });
 
 describe('formatTimeShort', () => {
-  it('should format date objects depending on time distance', () => {
+  test('should format date objects depending on time distance', () => {
 
   	let src1 = new Date(Date.now() - 5 * day),
   		src2 = new Date(Date.now() + 5 * day);
@@ -67,31 +66,31 @@ describe('formatTimeShort', () => {
   	src2.setHours(0);
   	src2.setMinutes(0);
 
-    expect(formatTimeShort(new Date(1231231241000))).to.equal(handleTimeOffset('06.01.2009 08:40'));
+    expect(formatTimeShort(new Date(1231231241000))).toBe(handleTimeOffset('06.01.2009 08:40'));
 
-    expect(formatTimeShort(src1)).to.equal('letzten ' + tage[src1.getDay()] + ', 00:00' );
-    expect(formatTimeShort(new Date(Date.now() - 13 * hour - 10 * minute))).to.equal('vor 13 Stunden');
-    expect(formatTimeShort(new Date(Date.now() - 1 * hour - 10 * minute))).to.equal('vor 1 Stunde');
-    expect(formatTimeShort(new Date(Date.now() - 10 * minute - 30 * second))).to.equal('vor 10 Minuten');
-    expect(formatTimeShort(new Date(Date.now() - 1 * minute - 30 * second))).to.equal('vor 1 Minute');
+    expect(formatTimeShort(src1)).toBe('letzten ' + tage[src1.getDay()] + ', 00:00');
+    expect(formatTimeShort(new Date(Date.now() - 13 * hour - 10 * minute))).toBe('vor 13 Stunden');
+    expect(formatTimeShort(new Date(Date.now() - 1 * hour - 10 * minute))).toBe('vor 1 Stunde');
+    expect(formatTimeShort(new Date(Date.now() - 10 * minute - 30 * second))).toBe('vor 10 Minuten');
+    expect(formatTimeShort(new Date(Date.now() - 1 * minute - 30 * second))).toBe('vor 1 Minute');
 
-    expect(formatTimeShort(new Date(Date.now() + 13 * hour - 10 * minute))).to.equal('in 13 Stunden');
-    expect(formatTimeShort(new Date(Date.now() + 1 * hour + 10 * minute))).to.equal('in 1 Stunde');
-    expect(formatTimeShort(new Date(Date.now() + 10 * minute - 30 * second))).to.equal('in 10 Minuten');
-    expect(formatTimeShort(new Date(Date.now() + 1 * minute - 30 * second))).to.equal('in 1 Minute');
-    expect(formatTimeShort(src2)).to.equal(tage[src2.getDay()] + ', 00:00' );
+    expect(formatTimeShort(new Date(Date.now() + 13 * hour - 10 * minute))).toBe('in 13 Stunden');
+    expect(formatTimeShort(new Date(Date.now() + 1 * hour + 10 * minute))).toBe('in 1 Stunde');
+    expect(formatTimeShort(new Date(Date.now() + 10 * minute - 30 * second))).toBe('in 10 Minuten');
+    expect(formatTimeShort(new Date(Date.now() + 1 * minute - 30 * second))).toBe('in 1 Minute');
+    expect(formatTimeShort(src2)).toBe(tage[src2.getDay()] + ', 00:00');
 
-    expect(formatTimeShort(new Date(5235231241000))).to.equal(handleTimeOffset('24.11.2135 22:54'));
+    expect(formatTimeShort(new Date(5235231241000))).toBe(handleTimeOffset('24.11.2135 22:54'));
   });
 });
 
 describe('round', () => {
-  it('should format date objects depending on time distance', () => {
+  test('should format date objects depending on time distance', () => {
 
-    expect(round(1231231241000, 100).getTime()).to.equal(1231231200000);
-    expect(round(1513978469000, 100).getTime()).to.equal(1513978500000);
-    expect(round(1235231241000, 100).getTime()).to.equal(1235231200000);
-    expect(round(2235231241000, 100).getTime()).to.equal(2235231200000);
-    expect(round(5235231241000, 100).getTime()).to.equal(5235231200000);
+    expect(round(1231231241000, 100).getTime()).toBe(1231231200000);
+    expect(round(1513978469000, 100).getTime()).toBe(1513978500000);
+    expect(round(1235231241000, 100).getTime()).toBe(1235231200000);
+    expect(round(2235231241000, 100).getTime()).toBe(2235231200000);
+    expect(round(5235231241000, 100).getTime()).toBe(5235231200000);
   });
 });

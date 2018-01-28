@@ -1,5 +1,4 @@
 import React from 'react';
-import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 import DialogController from 'ROOT/DialogController.jsx';
 
@@ -15,47 +14,47 @@ import PrintDialog from 'UI/PrintDialog.js';
 
 
 describe('DialogController', () => {
-  it('should render correct dialog', () => {
+  test('should render correct dialog', () => {
     const wrapper = shallow(<DialogController dialog={{}} />);
-    expect(wrapper.type(), 'no dialog').to.equal(null);
+    expect(wrapper.type()).toBe(null);
 
     wrapper.setProps({dialog: {type: 'MEAL_EDIT', option: {}}});
-    expect(wrapper.find(SignUpDialog), 'MEAL_EDIT').to.have.lengthOf(1);
+    expect(wrapper.find(SignUpDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'MEAL_SIGNUP', option: {}}});
-    expect(wrapper.find(SignUpDialog), 'MEAL_SIGNUP').to.have.lengthOf(1);
+    expect(wrapper.find(SignUpDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'CREATE_MEAL', option: {}}});
-    expect(wrapper.find(CreateMealDialog), 'CREATE_MEAL').to.have.lengthOf(1);
+    expect(wrapper.find(CreateMealDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'EDIT_MEAL', option: {}}});
-    expect(wrapper.find(CreateMealDialog), 'EDIT_MEAL').to.have.lengthOf(1);
+    expect(wrapper.find(CreateMealDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'SEND_MONEY', option: {}}});
-    expect(wrapper.find(SendMoneyDialog), 'SEND_MONEY').to.have.lengthOf(1);
+    expect(wrapper.find(SendMoneyDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'EDIT_PRICE', option: {}}});
-    expect(wrapper.find(PriceDialog), 'EDIT_PRICE').to.have.lengthOf(1);
+    expect(wrapper.find(PriceDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'SUBSCRIBE', option: {}}});
-    expect(wrapper.find(SettingsDialog), 'SUBSCRIBE').to.have.lengthOf(1);
+    expect(wrapper.find(SettingsDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'OPEN_TRANSACTIONS', option: {}}});
-    expect(wrapper.find(TransactionDialog), 'OPEN_TRANSACTIONS').to.have.lengthOf(1);
+    expect(wrapper.find(TransactionDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'UNSUBSCRIBE', option: {}, location: {search: '?list=deadlineReminder'}, user: {} }});
-    expect(wrapper.find(ConfirmationDialog), 'UNSUBSCRIBE').to.have.lengthOf(1);
+    expect(wrapper.find(ConfirmationDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'OPEN_SETTINGS', option: {}}});
-    expect(wrapper.find(SettingsDialog), 'OPEN_SETTINGS').to.have.lengthOf(1);
+    expect(wrapper.find(SettingsDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'OPEN_IMPRESSUM', option: {}}});
-    expect(wrapper.find(ImpressumDialog), 'OPEN_IMPRESSUM').to.have.lengthOf(1);
+    expect(wrapper.find(ImpressumDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'CANCEL_MEAL', option: {}}});
-    expect(wrapper.find(ConfirmationDialog), 'CANCEL_MEAL').to.have.lengthOf(1);
+    expect(wrapper.find(ConfirmationDialog)).toHaveLength(1);
 
     wrapper.setProps({dialog: {type: 'PRINT_MEAL', option: {}}});
-    expect(wrapper.find(PrintDialog), 'PRINT_MEAL').to.have.lengthOf(1);
+    expect(wrapper.find(PrintDialog)).toHaveLength(1);
   });
 });
