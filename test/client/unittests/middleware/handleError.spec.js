@@ -14,6 +14,11 @@ describe('handleErrors', () => {
             data: {type: 'Invalid_Request', reason: '', data: ['test']},
             actionId: 1
         },
+        act2a = {
+            status: 'failure',
+            data: {type: 'Invalid_Request', reason: '', data: ['test','test','test']},
+            actionId: 1
+        },
         act3 = {
             status: 'failure',
             data: {type: 'Bad_Request', reason: 'offer_full'},
@@ -38,6 +43,9 @@ describe('handleErrors', () => {
             status: 'failure',
             data: {type: 'Bad_Request', reason: 'userfault', message: 'test123'},
             actionId: 2
+        },
+        act8 = {
+            actionId: 2
         };
 
     handleErrors({dispatch: action => {
@@ -55,6 +63,14 @@ describe('handleErrors', () => {
     }})((action) => {
         expect(action).toEqual(act2);
     })(act2);
+
+    handleErrors({dispatch: action => {
+        expect(action).toEqual(
+            create_error(act2a.actionId, `Der Server hat ihre Anfrage abgelehnt, bitte überprüfen Sie Ihre Eingaben für die Felder: 'test', 'test', 'test'.`)
+        );
+    }})((action) => {
+        expect(action).toEqual(act2a);
+    })(act2a);
 
     handleErrors({dispatch: action => {
         expect(action).toEqual(create_error(act3.actionId, "Das Angebot ist bereits voll belegt."));
@@ -85,5 +101,11 @@ describe('handleErrors', () => {
     }})((action) => {
         expect(action).toEqual(act7);
     })(act7);
+
+    handleErrors({dispatch: action => {
+        expect(1).toEqual(2);
+    }})((action) => {
+        expect(action).toEqual(act8);
+    })(act8);
   });
 });

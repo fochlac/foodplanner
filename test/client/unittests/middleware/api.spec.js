@@ -2,7 +2,7 @@ import { apiMiddleware } from 'COMPONENTS/middleware/api.js';
 const myfetch = global.fetch;
 
 describe('api', () => {
-  test('should set the history correctly', async () => {
+  test('should call the api correctly', async () => {
     let act = {
             type: 'test',
             status: 'initialized',
@@ -22,6 +22,10 @@ describe('api', () => {
                 url: 'testurl2',
                 body: {test: 'test1232'}
             }
+        },
+        act3 = {
+            type: 'test2',
+            status: 'hidden'
         };
 
 
@@ -33,7 +37,7 @@ describe('api', () => {
         expect(options.body).toBe(JSON.stringify(act.api.body));
 
         return Promise.resolve({
-            status: 200, 
+            status: 200,
             headers: {get: () => (Date.now() - 1500)},
             json: () => Promise.resolve('test1')
         });
@@ -61,14 +65,13 @@ describe('api', () => {
         expect(options.headers['Content-Type']).toBe(undefined);
 
         return Promise.resolve({
-            status: 200, 
+            status: 200,
             headers: {get: () => (Date.now() - 1500)},
             json: () => Promise.resolve('test1')
         });
     }
 
     await new Promise((resolve) => {
-
         apiMiddleware({dispatch: action => {
             expect(action.status).toBe('complete');
             expect(action.data).toBe('test1');
@@ -78,6 +81,27 @@ describe('api', () => {
         })(act2);
     });
 
+    act2.status = 'hidden';
+    global.fetch = (url, options) => {
+        return Promise.reject('error');
+    }
+
+    await new Promise((resolve) => {
+        apiMiddleware({dispatch: action => {
+            expect(action.status).toBe('failure');
+            expect(action.data).toBe('error');
+            resolve();
+        }})((action) => {
+            expect(action).toEqual(act2);
+        })(act2);
+    });
+
+    await new Promise((resolve) => {
+        apiMiddleware({})((action) => {
+            expect(action).toEqual(act3);
+            resolve();
+        })(act3);
+    });
     global.fetch = myfetch;
   });
 });

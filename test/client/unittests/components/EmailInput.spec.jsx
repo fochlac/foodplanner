@@ -32,4 +32,33 @@ describe('EmailInput', () => {
 
     expect(check_mail_value).toBe(7);
   });
+
+  test('should render mail in input', (done) => {
+    let check_mail_value = 0;
+    const wrapper = shallow(<EmailInput app={{hiddenBusy: false}} check_mail={(value) => {check_mail_value = value.length}} />);
+
+    wrapper.find('input').simulate('change', {target: {value: 'test'}});
+
+    expect(check_mail_value).toBe(0);
+    wrapper.find('input').simulate('change', {target: {value: 'test12'}});
+    expect(check_mail_value).toBe(6);
+
+    wrapper.find('input').simulate('change', {target: {value: 'test123'}});
+    expect(check_mail_value).toBe(6);
+
+    setTimeout(() => {
+      expect(check_mail_value).toBe(7);
+
+      setTimeout(() => {
+        wrapper.setProps({app: {hiddenBusy: false, mailSuggestion: {mail: 'test@test.de'}}});
+        setTimeout(() => {
+          wrapper.update();
+          expect(wrapper.find('input').prop('value')).toBe('test@test.de');
+          done();
+        }, 200);
+      }, 400);
+    }, 400);
+
+
+  });
 });
