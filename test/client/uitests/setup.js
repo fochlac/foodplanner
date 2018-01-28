@@ -67,19 +67,15 @@ driver
     }
 
     driver.refresh = async function() {
-        console.log('refresh-1')
         await driver.executeScript('window.location.reload()');
-        console.log('refresh-2')
         await driver.waitElementLocated('body');
-        console.log('refresh-3')
         await driver.sleep(1000);
-        console.log('refresh-4')
 
-        console.log(await driver.waitElementLocated('html').getAttribute('innerHTML'));
+        console.log(await driver.waitElementLocated('body').getAttribute('innerHTML'));
         console.log('refresh-5')
         await driver.manage().logs().get('browser').then(v => v && v.length && console.log(v)).catch(console.log);
         console.log('refresh-6')
-        if (await driver.findElements(S.userframe).length === 0) {
+        if ((await driver.findElements(S.userframe)).length === 0) {
         console.log('refresh-7')
             await driver.refresh();
         }
