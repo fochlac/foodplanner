@@ -72,6 +72,7 @@ driver
         await driver.sleep(1000);
 
         console.log(await driver.waitElementLocated('document').getAttribute('innerHTML'));
+        await driver.manage().logs().get('browser').then(v => v && v.length && console.log(v)).catch(console.log);
         if (await driver.findElements(S.userframe).length === 0) {
             await driver.refresh();
         }
