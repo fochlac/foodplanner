@@ -12,6 +12,7 @@ const   express             = require('express')
     ,   mealsDB             = require(process.env.FOOD_HOME + 'modules/db/meals')
     ,   signupsDB           = require(process.env.FOOD_HOME + 'modules/db/signups')
     ,   jwt                 = require(process.env.FOOD_HOME + 'modules/auth/jwt')
+    ,   log                 = require(process.env.FOOD_HOME + 'modules/log')
     ,   version             = require(process.env.FOOD_HOME + 'modules/cache').getVersion
     ,   server_port         = process.env.FOOD_PORT
     ,   server_ip_address   = 'localhost'
