@@ -75,7 +75,7 @@ driver
         await driver.sleep(1000);
         console.log('refresh-4')
 
-        console.log(await driver.waitElementLocated('document').getAttribute('innerHTML'));
+        console.log(await driver.waitElementLocated('html').getAttribute('innerHTML'));
         console.log('refresh-5')
         await driver.manage().logs().get('browser').then(v => v && v.length && console.log(v)).catch(console.log);
         console.log('refresh-6')
