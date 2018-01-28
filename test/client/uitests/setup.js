@@ -71,10 +71,10 @@ driver
         await driver.waitElementLocated('body');
         await driver.sleep(1000);
 
+        console.log(await driver.waitElementLocated('document').getAttribute('innerHTML'));
         if (await driver.findElements(S.userframe).length === 0) {
             await driver.refresh();
         }
-        console.log(await driver.waitElementLocated('document').getAttribute('innerHTML'));
         await driver.findElement(S.userframe);
     }
 
