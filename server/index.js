@@ -31,6 +31,7 @@ app.use(bodyparser.urlencoded({extended: true}));
 app.use(compression());
 app.use(xssFilter());
 app.set('x-powered-by', false);
+app.use(jwt.checkToken);
 
 // connect router
 app.use('/', routes);
@@ -42,7 +43,6 @@ app.use('/static/', express.static(process.env.FOOD_CLIENT + ''));
 app.use('/sw.js', express.static(process.env.FOOD_CLIENT + 'sw.js'));
 app.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.json'));
 
-app.use(jwt.checkToken);
 // if no route and no static content, redirect to index
 app.get('*', (req, res) => {
     let meals = mealsDB.getAllMeals(),
@@ -72,7 +72,7 @@ app.get('*', (req, res) => {
                 return acc;
             }, {});
 
-            log(6, 'server/index.js - sending enriched index.html');
+            log(6, 'server/index.js - sending enriched index.html to user ' + (req.auth ? req.user.id : 'unknown'));
             res.status(200).send(file.replace(
                 '<script>/**DEFAULTSTORE**/</script>',
                 `<script>
