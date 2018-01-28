@@ -89,8 +89,9 @@ describe('login area', () => {
         this.driver.findElement(S.uf.submit).click();
         this.checkLoggedOut();
 
-        email.clear();
-        return this.driver.wait(until.elementValueIs(email, ''));
+        this.driver.sleep(500);
+
+        return email.clear();
     });
 
     it('should be able to login with registerd email by typing first 5 letters', async function() {
