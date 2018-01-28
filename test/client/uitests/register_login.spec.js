@@ -112,6 +112,8 @@ describe('login area', () => {
 
         await this.driver.refresh();
 
+        console.log('refresh complete');
+
         await this.checkLoggedin();
     });
 });
