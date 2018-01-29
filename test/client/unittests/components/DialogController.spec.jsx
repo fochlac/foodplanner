@@ -45,6 +45,9 @@ describe('DialogController', () => {
     wrapper.setProps({dialog: {type: 'UNSUBSCRIBE', option: {}, location: {search: '?list=deadlineReminder'}, user: {} }});
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1);
 
+    wrapper.setProps({dialog: {type: 'UNSUBSCRIBE', option: {}, location: {search: '?'}, user: {} }});
+    expect(wrapper.find(ConfirmationDialog)).toHaveLength(1);
+
     wrapper.setProps({dialog: {type: 'OPEN_SETTINGS', option: {}}});
     expect(wrapper.find(SettingsDialog)).toHaveLength(1);
 

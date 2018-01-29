@@ -16,7 +16,8 @@
     "coverageDirectory": "./coverage/",
     "coveragePathIgnorePatterns": [
       "<rootDir>/test/",
-      "<rootDir>/node_modules/"
+      "<rootDir>/node_modules/",
+      "components/ui/[^/]*.js$"
     ],
     "setupFiles": [
       "./test/client/unittests/setup.js"
