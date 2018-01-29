@@ -166,4 +166,25 @@ describe('user-reducer', () => {
             balance: 20
         });
     });
+
+    test('default', () => {
+        const action = {
+            type: 'asdawd',
+            status: 'complete',
+            id: 1,
+        }
+
+        expect(user(
+            {
+                1: '12312534',
+                2: '12312534',
+                3: '12312534',
+            },
+            action
+        )).toEqual({
+            1: '12312534',
+            2: '12312534',
+            3: '12312534',
+        });
+    });
 });

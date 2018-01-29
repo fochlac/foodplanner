@@ -26,6 +26,25 @@ describe('Pager', () => {
     expect(wrapper.find('.pagerList').at(1).find('span > span')).toHaveLength(7);
   });
 
+  test('should not pager but render an element and child elements while inactive', () => {
+    const wrapper = shallow(<Pager top={true} bottom={true} size={3} wrapper={content => <div className="contentWrapper">{content}</div>}>{generateChildren(10)}</Pager>);
+
+    expect(wrapper.find('.pagedList')).toHaveLength(1);
+    expect(wrapper.find('.pagedContent')).toHaveLength(1);
+    expect(wrapper.find('.pager')).toHaveLength(2);
+    expect(wrapper.find('.sizeArea')).toHaveLength(2);
+    expect(wrapper.find('.sizeArea').at(0).text()).toBe('Anzahl: 3');
+    expect(wrapper.find('.sizeArea').at(1).text()).toBe('Anzahl: 3');
+    expect(wrapper.find('.contentWrapper')).toHaveLength(1);
+    expect(wrapper.find('.child')).toHaveLength(3);
+    expect(wrapper.find('.child-0')).toHaveLength(1);
+    expect(wrapper.find('.child-1')).toHaveLength(1);
+    expect(wrapper.find('.child-2')).toHaveLength(1);
+    expect(wrapper.find('.pagerList')).toHaveLength(2);
+    expect(wrapper.find('.pagerList').at(0).find('span > span')).toHaveLength(4);
+    expect(wrapper.find('.pagerList').at(1).find('span > span')).toHaveLength(4);
+  });
+
   test('should change page on page click', () => {
     const wrapper = shallow(<Pager top={true} bottom={true} size={3} wrapper={content => <div className="contentWrapper">{content}</div>}>{generateChildren(30)}</Pager>);
 

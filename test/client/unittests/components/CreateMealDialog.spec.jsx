@@ -130,6 +130,33 @@ describe('CreateMealDialog', () => {
     expect(create_meal.get()).toEqual(TEST_MEAL);
   });
 
+  test('should output correct data on submit button click', () => {
+    let create_meal = false;
+
+    const TEST_USER = {id: 1, name: 'test'},
+        TEST_APP = {dialog: {}},
+        TEST_MEALS = [],
+        TEST_MEAL = {
+          name: 'testmeal',
+          creator: TEST_USER.name,
+          creatorId: TEST_USER.id,
+          image: '',
+          description: 'testdescription',
+          signupLimit: 3,
+          deadline: Date.now() + 10000000,
+          time: Date.now() + 20000000,
+          options: [],
+          signups: []
+        },
+        wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={TEST_MEAL} edit={true} edit_meal={(id, output) => create_meal=output}/>);
+
+    wrapper.find('button.submit').simulate('click');
+
+    TEST_MEAL.options = JSON.stringify(TEST_MEAL.options);
+    delete TEST_MEAL.signups;
+    expect(create_meal.get()).toEqual(TEST_MEAL);
+  });
+
   test('should render all elements with preset values', () => {
     const TEST_USER = {id: 1, name: 'test'},
         TEST_APP = {dialog: {}},

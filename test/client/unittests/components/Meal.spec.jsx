@@ -62,7 +62,8 @@ const TU1 = {
     deadline,
     time,
     options,
-    locked
+    locked,
+    print
   }),
   TO = [{
     "id": 1,
@@ -232,7 +233,7 @@ describe('Meal', () => {
     });
   });
 
-  test('should show edit options if not signup user', () => {
+  test('should not show edit options if not signup user', () => {
     const user = TU2,
       signups = {
         1: TS({id: 1, price: 3, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
@@ -251,6 +252,99 @@ describe('Meal', () => {
 
     expect(signupElems.at(1).find('.icons')).toHaveLength(1);
     expect(signupElems.at(1).find('.icons > span')).toHaveLength(2);
+  });
+
+  test('should not show signup link if full', () => {
+    const user = TU2,
+      signups = {
+        1: TS({id: 1, price: 3, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
+        2: TS({id: 2, userId: 5, price: 5, options: [TSO({id: 1, value: 'Rind'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 0})]})
+      },
+      signupArray = Object.values(signups).map(signup => signup.id),
+      meal = TM({locked: 1, signups: signupArray, signupLimit: 2, options: TO});
+
+    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />);
+
+    expect(wrapper.find('.participate')).toHaveLength(0);
+
+  });
+
+  test('should call addEventListener/removeEventlistener', () => {
+    const user = TU2,
+      signups = {
+        1: TS({id: 1, price: 3, options: [TSO({id: 1, value: 'Schwein'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 1})]}),
+        2: TS({id: 2, userId: 5, price: 5, options: [TSO({id: 1, value: 'Rind'}), TSO({id: 2, value: 'Kürbiskern', count: 2}), TSO({id: 3, show: 0})]})
+      },
+      signupArray = Object.values(signups).map(signup => signup.id),
+      meal = TM({locked: 1, signups: signupArray, signupLimit: 2, options: TO});
+
+    let tmp = window.addEventListener,
+        tmp2 = window.removeEventListener,
+        output;
+
+    window.addEventListener = () => output = 'addListener';
+    window.removeEventListener = () => output = 'removeListener';
+
+    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />);
+
+    expect(wrapper.find('.participate')).toHaveLength(0);
+    expect(output).toBe('addListener');
+
+    wrapper.unmount();
+    expect(output).toBe('removeListener');
+    window.addEventListener = tmp;
+    window.removeEventListener = tmp2;
+  });
+
+  test('should only change props if editable or meal changes', () => {
+    const user = TU2,
+      signups = {},
+      signupArray = Object.values(signups).map(signup => signup.id),
+      meal = TM({image: 'testimage2.jpg', locked: 1, signups: signupArray, options: TO});
+
+    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />);
+
+    wrapper.setProps({meal: TM({image: 'testimage.jpg', signups: signupArray, options: TO})});
+    wrapper.update();
+    expect(wrapper.find('.mealImage').prop('src')).toBe('testimage.jpg');
+
+    wrapper.setProps({meal: TM({image: 'testimage.jpg', signups: signupArray, options: TO, deadline: (Date.now() - 10000000)})});
+    wrapper.update();
+
+
+    const signupElems = wrapper.find('.participantsList > li');
+
+    expect(wrapper.find('.participate')).toHaveLength(0);
+
+    signupElems.forEach((signup, index) => {
+      expect(signup.find('.icons')).toHaveLength(0);
+      expect(signup.find('.icons > span')).toHaveLength(0);
+    });
+
+    wrapper.setState({test: 'test'});
+    wrapper.update();
+  });
+
+  test('should render nothing without meal props', () => {
+    const user = TU2,
+      signups = {},
+      signupArray = Object.values(signups).map(signup => signup.id),
+      meal = undefined;
+
+    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />);
+
+    expect(wrapper.find('.meal')).toHaveLength(0);
+  });
+
+  test('should add print class if print is true', () => {
+    const user = TU2,
+      signups = {},
+      signupArray = Object.values(signups).map(signup => signup.id),
+      meal = TM({image: 'testimage.jpg', locked: 1, signups: signupArray, options: TO});
+
+    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />);
+
+    expect(wrapper.find('.meal.print')).toHaveLength(1);
   });
 
   test('actions should be called', () => {

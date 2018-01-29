@@ -34,8 +34,12 @@ describe('EmailInput', () => {
   });
 
   test('should render mail in input', (done) => {
-    let check_mail_value = 0;
-    const wrapper = shallow(<EmailInput app={{hiddenBusy: false}} check_mail={(value) => {check_mail_value = value.length}} />);
+    let check_mail_value = 0,
+        output;
+
+    document.body.innerHTML = '<div><input type="text" id="test" /></div>';
+    document.getElementById('test').focus = () => output = 'focus_called'
+    const wrapper = shallow(<EmailInput app={{hiddenBusy: false}} selector="#test" check_mail={(value) => {check_mail_value = value.length}} />);
 
     wrapper.find('input').simulate('change', {target: {value: 'test'}});
 
@@ -54,6 +58,7 @@ describe('EmailInput', () => {
         setTimeout(() => {
           wrapper.update();
           expect(wrapper.find('input').prop('value')).toBe('test@test.de');
+          expect(output).toBe('focus_called');
           done();
         }, 200);
       }, 400);

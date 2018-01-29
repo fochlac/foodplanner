@@ -403,4 +403,25 @@ describe('signups-reducer', () => {
             1: '12312534',
         });
     });
+
+    test('default', () => {
+        const action = {
+            type: 'asdawd',
+            status: 'complete',
+            id: 1,
+        }
+
+        expect(signups(
+            {
+                1: '12312534',
+                2: '12312534',
+                3: '12312534',
+            },
+            action
+        )).toEqual({
+            1: '12312534',
+            2: '12312534',
+            3: '12312534',
+        });
+    });
 });

@@ -23,6 +23,16 @@ describe('api', () => {
                 body: {test: 'test1232'}
             }
         },
+        act4 = {
+            type: 'test2',
+            status: 'hidden',
+            api: {
+                headers: 'formdata',
+                method: 'get',
+                url: 'testurl2',
+                body: {test: 'test1232'}
+            }
+        },
         act3 = {
             type: 'test2',
             status: 'hidden'
@@ -94,6 +104,23 @@ describe('api', () => {
         }})((action) => {
             expect(action).toEqual(act2);
         })(act2);
+    });
+
+    global.fetch = (url, options) => {
+        return Promise.resolve({status: 500,
+            headers: {get: () => (Date.now() - 1500)},
+            json: () => {return Promise.resolve('testerror')}
+        });
+    }
+
+    await new Promise((resolve) => {
+        apiMiddleware({dispatch: action => {
+            expect(action.status).toBe('failure');
+            expect(action.data).toBe('testerror');
+            resolve();
+        }})((action) => {
+            expect(action).toEqual(act4);
+        })(act4);
     });
 
     await new Promise((resolve) => {
