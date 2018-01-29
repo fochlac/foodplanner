@@ -61,10 +61,10 @@ export default class PriceDialog extends React.Component {
             ? <span>
               {
                 (Date.now() > m.deadline)
-                ? <button type="button" className="red" onClick={this.finalize.bind(this)}>Zahlungen anfordern</button>
+                ? <button type="button" className="red finalize" onClick={this.finalize.bind(this)}>Zahlungen anfordern</button>
                 : null
               }
-              <button type="button" onClick={this.cancel.bind(this)}>Schließen</button>
+              <button className="cancel"type="button" onClick={this.cancel.bind(this)}>Schließen</button>
             </span>
             : <span>
               <button className="cancel" type="button" onClick={this.cancel.bind(this)}>Abbrechen</button>

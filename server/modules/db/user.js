@@ -146,13 +146,17 @@ module.exports = {
                 name,
                 mail,
                 deadlineReminder,
-                creationNotice
-            ) VALUES (
+                creationNotice,
+                admin
+            ) SELECT
                 ${mysql.escape(options.name)},
                 ${mysql.escape(options.mail)},
                 ${mysql.escape(options.deadlineReminder)},
-                ${mysql.escape(options.creationNotice)}
-            );`;
+                ${mysql.escape(options.creationNotice)},
+                (CASE WHEN AUTO_INCREMENT = 1 THEN 1 ELSE 0 END)
+            FROM INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_SCHEMA = '${process.env.FOOD_DB_NAME}'
+            AND TABLE_NAME = 'users';`;
 
         return getConnection()
         .then (myDb => {

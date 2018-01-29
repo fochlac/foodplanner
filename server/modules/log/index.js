@@ -82,7 +82,7 @@ module.exports = (level, ...message) => {
     if (currentDate !== getDate().day) {
         currentDate = getDate().day;
         logStream.end();
-        logStream = fs.createWriteStream(process.env.EVENT_HOME + 'log/output' + getDate().day + '.txt', {
+        logStream = fs.createWriteStream(process.env.FOOD_HOME + 'log/output' + getDate().day + '.txt', {
             flags: 'a',
             defaultEncoding: 'utf8',
             autoClose: true

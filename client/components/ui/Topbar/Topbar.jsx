@@ -22,6 +22,7 @@ export default class Topbar extends React.Component {
               : null
             }
             <li onClick={this.props.start_print.bind(this)}>
+                <span className="symbolExplanation">Drucken</span>
               <span className="fa fa-print fa-lg"></span>
             </li>
             <li onClick={this.props.create_settings_dialog.bind(this)}>
