@@ -1,15 +1,19 @@
 import runtime from 'SW/runtime';
 import {urlBase64ToUint8Array} from './crypto.js';
 
+// get GCM subscription details
 export const getSubscription = () => {
     let swRegistration;
 
+    // if service worker installed
     navigator.serviceWorker.ready
         .then((registration) => {
             swRegistration = registration;
+            // try to get subscription
             return registration.pushManager.getSubscription();
         })
         .then((subscription) => {
+            // if no subscription was provided yet, try to get registration with public VAPID-key
             return (subscription) ? subscription : swRegistration.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: urlBase64ToUint8Array('BLaOlvhqet3tC5e6oIliQr5NF2Sqn8VHq9VjzR9ItF9AnHFgYaB3dN38rTuYC6tKSRxzzTFmMia6kJ_J2auGLCU')

@@ -17,12 +17,15 @@ let version = '24',
     pushTimeout,
     staticRegex = staticContent.length ?  new RegExp(staticContent.map(str => str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')).join('$|') + '$') : undefined;
 
+// handle push messages
 function handle_push(event) {
     let msg = event.data.json();
 
+    // wait use waitUntil to prevent service worker from unloading while it processes the message
     event.waitUntil(initDb('food', 'userData').then(db => {
         return db.get('user');
     }).then((user) => {
+        // show notification, send post-message for refresh, do whatever
         if (msg.type === "creationNotice" && user.creationNotice_notification === 1) {
             return self.registration.showNotification('Neues Mittagsangebot vorhanden!', {
                 body: formatDateTime(msg.data.time) + ': ' + msg.data.name,
@@ -237,6 +240,7 @@ function initDb(DBName, storageName) {
 }
 
 self.addEventListener('notificationclick', handle_click);
+// register event listener for web-push / gcm
 self.addEventListener('push', handle_push);
 self.addEventListener('fetch', handle_fetch);
 self.addEventListener('install', (event) => {
