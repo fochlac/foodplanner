@@ -112,15 +112,7 @@ const meals = (state = [], action) => {
 
     case "INITIAL_MEALS":
       if (action.status === "complete") {
-        return action.data.map(newMeal => {
-          let oldMeal = state.find(meal => meal.id === newMeal.id);
-          if (oldMeal) {
-            newMeal = Object.assign({}, oldMeal, newMeal);
-          } else {
-            newMeal.signups = [];
-          }
-          return newMeal;
-        });
+        return action.data;
       }
       return state;
 
@@ -152,34 +144,25 @@ const meals = (state = [], action) => {
           return acc;
         }, {});
 
-        return state.map(meal => {
-          if (helper[meal.id]) {
-            return Object.assign({}, meal, {
-              signups: helper[meal.id].map(signup => signup.id)
-            });
-          } else {
-            return meal;
-          }
-        });
+        return state.map(meal => ({
+          ...meal,
+          signups: helper[meal.id]
+            ? helper[meal.id].map(signup => signup.id)
+            : []
+        }));
       }
       return state;
 
     case "MEAL_CANCEL":
       if (action.status === "complete") {
         let newArr = state.concat([]),
-          correctIndex,
-          oldObj = state.filter((meal, index) => {
-            if (meal.signups.includes(action.id)) {
-              correctIndex = index;
-              return true;
-            }
-            return false;
-          })[0],
-          signups = oldObj.signups.concat([]);
+          correctIndex = state.findIndex(meal =>
+            meal.signups.includes(action.id)
+          ),
+          oldObj = state[correctIndex],
+          signups = oldObj.signups.filter(signupId => signupId !== action.id);
 
-        signups.splice(oldObj.signups.indexOf(action.id), 1);
-
-        newArr[correctIndex] = Object.assign({}, oldObj, { signups });
+        newArr[correctIndex] = { ...oldObj, signups };
         return newArr;
       }
       return state;

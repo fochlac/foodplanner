@@ -1,4 +1,4 @@
-import meal from "COMPONENTS/reducers/meal.js";
+import meal from "COMPONENTS/reducers/meals.js";
 
 describe("meal-reducer", () => {
   test("MEAL_SIGNUP", () => {
@@ -124,6 +124,7 @@ describe("meal-reducer", () => {
 
   test("CREATE_MEAL", () => {
     const action = {
+      status: "complete",
       type: "CREATE_MEAL",
       data: { test: "test" }
     };
@@ -169,8 +170,9 @@ describe("meal-reducer", () => {
     expect(meal("test", action)).toEqual("test");
   });
 
-  test("CREATE_MEAL", () => {
+  test("CANCEL_MEAL", () => {
     const action = {
+      status: "complete",
       type: "CANCEL_MEAL",
       id: 3
     };
@@ -216,6 +218,306 @@ describe("meal-reducer", () => {
     ).toEqual({
       id: 3,
       signups: [1, 2, 3]
+    });
+  });
+
+  test("EDIT_MEAL", () => {
+    const action = {
+      status: "complete",
+      type: "EDIT_MEAL",
+      data: { test: "test", id: 2 }
+    };
+
+    expect(
+      meal(
+        [
+          {
+            id: 1,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 2,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 3,
+            signups: [1, 2, 3]
+          }
+        ],
+        action
+      )
+    ).toEqual([
+      {
+        id: 1,
+        signups: [1, 2, 3]
+      },
+      {
+        id: 2,
+        test: "test",
+        signups: [1, 2, 3]
+      },
+      {
+        id: 3,
+        signups: [1, 2, 3]
+      }
+    ]);
+
+    action.status = "incomplete";
+    expect(meal("test", action)).toEqual("test");
+  });
+
+  test("FINALIZE_PRICES, SUBMIT_PRICES", () => {
+    const action = {
+      status: "complete",
+      type: "FINALIZE_PRICES",
+      mealId: 2,
+      prices: [
+        { id: 2, price: 5, db: "meals" },
+        { id: 5, price: 5, db: "mealOptions" },
+        { id: 2, price: 5, db: "mealOptions" },
+        { id: 4, price: 5, db: "mealOptionValues" },
+        { id: 3, price: 5, db: "mealOptionValues" }
+      ]
+    };
+
+    expect(
+      meal(
+        [
+          {
+            id: 1,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 2,
+            price: 0,
+            options: [
+              { id: 2, values: [{ id: 4, price: 2 }, { id: 1 }] },
+              { id: 4, price: 2, values: [{ id: 5, price: 2 }, { id: 3 }] },
+              { id: 5, price: 2, values: [] },
+              { id: 1, values: [] }
+            ]
+          },
+          {
+            id: 3,
+            signups: [1, 2, 3]
+          }
+        ],
+        action
+      )
+    ).toEqual([
+      {
+        id: 1,
+        signups: [1, 2, 3]
+      },
+      {
+        id: 2,
+        price: 5,
+        locked: true,
+        options: [
+          { id: 2, price: 5, values: [{ id: 4, price: 5 }, { id: 1 }] },
+          {
+            id: 4,
+            price: 2,
+            values: [{ id: 5, price: 2 }, { id: 3, price: 5 }]
+          },
+          { id: 5, price: 5, values: [] },
+          { id: 1, values: [] }
+        ]
+      },
+      {
+        id: 3,
+        signups: [1, 2, 3]
+      }
+    ]);
+
+    action.status = "incomplete";
+    expect(meal("test", action)).toEqual("test");
+  });
+
+  test("INITIAL_MEALS", () => {
+    const action = {
+      status: "complete",
+      type: "INITIAL_MEALS",
+      data: [{ test: "test" }]
+    };
+
+    expect(
+      meal(
+        [
+          {
+            id: 1,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 2,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 3,
+            signups: [1, 2, 3]
+          }
+        ],
+        action
+      )
+    ).toEqual([{ test: "test" }]);
+
+    action.status = "incomplete";
+    expect(meal("test", action)).toEqual("test");
+  });
+
+  test("REFRESH", () => {
+    const action = {
+      status: "complete",
+      type: "REFRESH",
+      data: {
+        meals: [
+          { test: "test", id: 2 },
+          { test: "test", id: 3 },
+          { test: "test", id: 4 }
+        ],
+        signups: [
+          { meal: 2, id: 1 },
+          { meal: 2, id: 2 },
+          { meal: 2, id: 3 },
+          { meal: 4, id: 1 },
+          { meal: 4, id: 2 }
+        ]
+      }
+    };
+
+    expect(
+      meal(
+        [
+          {
+            id: 1,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 2,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 3,
+            signups: [1, 2, 3]
+          }
+        ],
+        action
+      )
+    ).toEqual([
+      { test: "test", id: 2, signups: [1, 2, 3] },
+      { test: "test", id: 3, signups: [] },
+      { test: "test", id: 4, signups: [1, 2] }
+    ]);
+
+    action.status = "incomplete";
+    expect(meal("test", action)).toEqual("test");
+  });
+
+  test("INITIAL_SIGNUPS", () => {
+    const action = {
+      status: "complete",
+      type: "INITIAL_SIGNUPS",
+      data: [
+        { meal: 2, id: 1 },
+        { meal: 2, id: 2 },
+        { meal: 2, id: 3 },
+        { meal: 4, id: 1 },
+        { meal: 4, id: 2 }
+      ]
+    };
+
+    expect(
+      meal(
+        [
+          {
+            id: 2,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 3,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 4,
+            signups: [1, 2, 3]
+          }
+        ],
+        action
+      )
+    ).toEqual([
+      { id: 2, signups: [1, 2, 3] },
+      { id: 3, signups: [] },
+      { id: 4, signups: [1, 2] }
+    ]);
+
+    action.status = "incomplete";
+    expect(meal("test", action)).toEqual("test");
+  });
+
+  test("MEAL_CANCEL", () => {
+    const action = {
+      status: "complete",
+      type: "MEAL_CANCEL",
+      id: 3
+    };
+
+    expect(
+      meal(
+        [
+          {
+            id: 2,
+            signups: [1, 2, 3]
+          },
+          {
+            id: 3,
+            signups: [4, 5, 6]
+          },
+          {
+            id: 4,
+            signups: [7, 8, 9]
+          }
+        ],
+        action
+      )
+    ).toEqual([
+      {
+        id: 2,
+        signups: [1, 2]
+      },
+      {
+        id: 3,
+        signups: [4, 5, 6]
+      },
+      {
+        id: 4,
+        signups: [7, 8, 9]
+      }
+    ]);
+
+    action.status = "incomplete";
+    expect(meal("test", action)).toEqual("test");
+  });
+
+  test("default", () => {
+    const action = {
+      type: "asdawd",
+      status: "complete",
+      id: 1
+    };
+
+    expect(
+      meal(
+        {
+          1: "12312534",
+          2: "12312534",
+          3: "12312534"
+        },
+        action
+      )
+    ).toEqual({
+      1: "12312534",
+      2: "12312534",
+      3: "12312534"
     });
   });
 });

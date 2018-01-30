@@ -4,3 +4,4 @@ coverage/
 server/log/
 .idea/
 package-lock.json
+.vscode
