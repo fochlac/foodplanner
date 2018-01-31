@@ -71,7 +71,7 @@ export default class Pager extends React.Component {
           : null
         }
         <span className="sizeArea">
-          Anzahl: {((size === children.length || page < (children.length / size)) ? size : (children.length % size))}
+          Anzahl: {((children.length % size === 0 || page < (children.length / size)) ? size : (children.length % size))}
         </span>
       </div>
     );

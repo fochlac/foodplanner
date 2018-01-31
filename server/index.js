@@ -12,6 +12,7 @@ const   express             = require('express')
     ,   mealsDB             = require(process.env.FOOD_HOME + 'modules/db/meals')
     ,   signupsDB           = require(process.env.FOOD_HOME + 'modules/db/signups')
     ,   jwt                 = require(process.env.FOOD_HOME + 'modules/auth/jwt')
+    ,   log                 = require(process.env.FOOD_HOME + 'modules/log')
     ,   version             = require(process.env.FOOD_HOME + 'modules/cache').getVersion
     ,   server_port         = process.env.FOOD_PORT
     ,   server_ip_address   = 'localhost'
@@ -30,6 +31,7 @@ app.use(bodyparser.urlencoded({extended: true}));
 app.use(compression());
 app.use(xssFilter());
 app.set('x-powered-by', false);
+app.use(jwt.checkToken);
 
 // connect router
 app.use('/', routes);
@@ -41,7 +43,6 @@ app.use('/static/', express.static(process.env.FOOD_CLIENT + ''));
 app.use('/sw.js', express.static(process.env.FOOD_CLIENT + 'sw.js'));
 app.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.json'));
 
-app.use(jwt.checkToken);
 // if no route and no static content, redirect to index
 app.get('*', (req, res) => {
     let meals = mealsDB.getAllMeals(),
@@ -71,6 +72,7 @@ app.get('*', (req, res) => {
                 return acc;
             }, {});
 
+            log(6, 'server/index.js - sending enriched index.html to user ' + (req.auth ? req.user.id : 'unknown'));
             res.status(200).send(file.replace(
                 '<script>/**DEFAULTSTORE**/</script>',
                 `<script>
@@ -84,7 +86,7 @@ app.get('*', (req, res) => {
             ));
         })
         .catch(err => {
-            console.log(err);
+            log(2, 'server/index.js - error adding data to index.html');
             res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html');
         })
 });

@@ -86,13 +86,21 @@ module.exports = {
     },
 
     setSignupPaymentStatusById: (id, state) => {
+        const query = `UPDATE signups
+            SET paid = ${mysql.escape(state ? 1 : 0)}
+            WHERE id = ${mysql.escape(id)}
+            AND NOT paid = 2;`;
+
         return getConnection()
         .then (myDb => {
-            return new Promise((resolve, reject) => myDb.query(`UPDATE signups SET paid = ${mysql.escape(state ? 1 : 0)} where id = ${mysql.escape(id)}`, (err, result) => {
+            return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();
                 if (err) {
                     log(2, 'modules/db/signup:setSignupPaymentStatusById', err);
                     reject({status: 500, message: 'Unable to set signup ' + id + ' to paid.'});
+                } else if (!result.changedRows) {
+                    log(5, 'modules/db/signup:setSignupPaymentStatusById - payment locked', err);
+                    reject({status: 400, type: 'Bad_Request', reason: 'userfault', message: 'Dieser Zahlungsstatus kann nicht bearbeitet werden, da über das interne Bezahlungssystem abgerechnet wurde.'});
                 } else {
                     resolve(result);
                 }

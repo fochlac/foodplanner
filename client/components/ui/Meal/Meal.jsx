@@ -8,20 +8,23 @@ import './Meal.less';
 export default class Meal extends React.Component {
   constructor(props) {
     super();
-    let id = props.meal.id;
-
-    this.state = {
-      editable: (props.meal.deadline > Date.now())
-    }
+    let id = props.meal && props.meal.id;
 
     this.checkDeadline = this.checkDeadline.bind(this);
     this.editMeal = props.start_edit_meal.bind(this, id);
     this.signup = props.start_meal_signup.bind(this, id);
     this.cancelMeal = props.start_cancel_meal.bind(this, id);
     this.editPrices = props.start_edit_price.bind(this, id);
-
     this.edit = props.start_meal_edit.bind(this);
     this.cancel = props.meal_cancel.bind(this);
+
+    if (!props.meal) {
+      return;
+    }
+
+    this.state = {
+      editable: (props.meal.deadline > Date.now())
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -39,7 +42,7 @@ export default class Meal extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.meal.deadline !== prevProps.meal.deadline) {
+    if (prevProps.meal && this.props.meal && this.props.meal.deadline !==  prevProps.meal.deadline) {
       this.checkDeadline();
     }
   }
@@ -100,7 +103,7 @@ export default class Meal extends React.Component {
         }, {}));
 
     return (
-      <div className="meal">
+      <div className={'meal' + (p.meal.print ? ' print' : '')}>
         <div className="titlebar">
           <h4 className="title">{formatDayNameDate(p.meal.time)}: <span className="name">{p.meal.name}</span></h4>
           {

@@ -17,8 +17,11 @@ export const handleErrors = store => next => action => {
         } else if (action.data.type === "Bad_Request" && action.data.reason === 'offer_full') {
             store.dispatch(create_error(action.actionId, `Das Angebot ist bereits voll belegt.`));
             setTimeout(() => store.dispatch(delete_error(action.actionId)), 10000);
-        }else if (action.data.type === "Bad_Request" && action.data.reason === 'user_exists') {
+        } else if (action.data.type === "Bad_Request" && action.data.reason === 'user_exists') {
             store.dispatch(create_error(action.actionId, `Ein Nutzer mit dieser Emailadresse existiert bereits.`));
+            setTimeout(() => store.dispatch(delete_error(action.actionId)), 10000);
+        } else if (action.data.type === "Bad_Request" && action.data.reason === 'userfault') {
+            store.dispatch(create_error(action.actionId, action.data.message));
             setTimeout(() => store.dispatch(delete_error(action.actionId)), 10000);
         }
     }

@@ -1,8 +1,7 @@
 import app from 'COMPONENTS/reducers/app.js';
-import { expect } from 'chai';
 
 describe('app-reducer', () => {
-    it('DIALOG', () => {
+    test('DIALOG', () => {
         const action = {
           type: 'DIALOG',
           content: 'test1',
@@ -12,7 +11,7 @@ describe('app-reducer', () => {
         expect(app(
             {},
             action
-        )).to.deep.equal({dialog: {
+        )).toEqual({dialog: {
             type: action.content,
             option: action.option,
         }});
@@ -22,7 +21,7 @@ describe('app-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
             dialog: {
                 type: action.content,
@@ -31,7 +30,7 @@ describe('app-reducer', () => {
         });
     });
 
-    it('HISTORY', () => {
+    test('HISTORY', () => {
         const action = {
           type: 'HISTORY',
           app: 'test1',
@@ -41,17 +40,17 @@ describe('app-reducer', () => {
         expect(app(
             {},
             action
-        )).to.equal(action.app);
+        )).toBe(action.app);
 
         expect(app(
             {
                 test4: '12312534'
             },
             action
-        )).to.equal(action.app);
+        )).toBe(action.app);
     });
 
-    it('CHECK_MAIL', () => {
+    test('CHECK_MAIL', () => {
         const action = {
             type: 'CHECK_MAIL',
             status: 'complete',
@@ -63,7 +62,7 @@ describe('app-reducer', () => {
         expect(app(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             mailSuggestion: action.data
         });
 
@@ -72,7 +71,7 @@ describe('app-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             mailSuggestion: action.data,
             test4: '12312534',
         });
@@ -84,7 +83,7 @@ describe('app-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             mailSuggestion: undefined,
             test4: '12312534',
         });
@@ -95,7 +94,7 @@ describe('app-reducer', () => {
                 mailSuggestion: 'test123'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             mailSuggestion: undefined,
             test4: '12312534',
         });
@@ -107,12 +106,12 @@ describe('app-reducer', () => {
                 test4: '12312534'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test4: '12312534',
         });
     });
 
-    it('SEND_MONEY, SIGNOUT, SAVE_SETTINGS', () => {
+    test('SEND_MONEY, SIGNOUT, SAVE_SETTINGS', () => {
         const action = {
                 type: 'SIGNOUT',
             },
@@ -130,7 +129,7 @@ describe('app-reducer', () => {
         expect(app(
             initialState,
             action
-        )).to.deep.equal(cleanState);
+        )).toEqual(cleanState);
 
         action.type = 'asdaw';
         action.status = 'complete';
@@ -139,21 +138,21 @@ describe('app-reducer', () => {
         expect(app(
             initialState,
             action
-        )).to.deep.equal(initialState);
+        )).toEqual(initialState);
 
         action.type = 'SEND_MONEY';
 
         expect(app(
             initialState,
             action
-        )).to.deep.equal(cleanState);
+        )).toEqual(cleanState);
 
         action.data.error = true;
 
         expect(app(
             initialState,
             action
-        )).to.deep.equal(initialState);
+        )).toEqual(initialState);
 
         action.data.error = false;
         action.status = false;
@@ -161,48 +160,51 @@ describe('app-reducer', () => {
         expect(app(
             initialState,
             action
-        )).to.deep.equal(initialState);
+        )).toEqual(initialState);
 
         action.type = 'SIGNOUT';
 
         expect(app(
             initialState,
             action
-        )).to.deep.equal(cleanState);
+        )).toEqual(cleanState);
     });
 
-    it('MEAL_SIGNUP, MEAL_EDIT, CREATE_MEAL, CANCEL_MEAL, SUBMIT_PRICES, EDIT_MEAL', () => {
-        const action = {
-                type: 'MEAL_SIGNUP',
-                status: 'complete'
-            },
-            initialState = {
-                test: '1231',
-                mailSuggestion: '12312',
-                dialog: '12312',
-            },
-            cleanState = {
-                test: '1231',
-                mailSuggestion: '12312',
-                dialog: {type: ""}
-            };
+    test(
+        'MEAL_SIGNUP, MEAL_EDIT, CREATE_MEAL, CANCEL_MEAL, SUBMIT_PRICES, EDIT_MEAL',
+        () => {
+            const action = {
+                    type: 'MEAL_SIGNUP',
+                    status: 'complete'
+                },
+                initialState = {
+                    test: '1231',
+                    mailSuggestion: '12312',
+                    dialog: '12312',
+                },
+                cleanState = {
+                    test: '1231',
+                    mailSuggestion: '12312',
+                    dialog: {type: ""}
+                };
 
-        expect(app(
-            initialState,
-            action
-        )).to.deep.equal(cleanState);
+            expect(app(
+                initialState,
+                action
+            )).toEqual(cleanState);
 
-        action.status = 'complete';
+            action.status = 'complete';
 
-        action.status = false;
+            action.status = false;
 
-        expect(app(
-            initialState,
-            action
-        )).to.deep.equal(initialState);
-    });
+            expect(app(
+                initialState,
+                action
+            )).toEqual(initialState);
+        }
+    );
 
-    it('BUSY', () => {
+    test('BUSY', () => {
         const action = {
                 type: 'BUSY',
                 state: 'complete'
@@ -218,10 +220,10 @@ describe('app-reducer', () => {
         expect(app(
             initialState,
             action
-        )).to.deep.equal(cleanState);
+        )).toEqual(cleanState);
     });
 
-    it('HIDDEN_BUSY', () => {
+    test('HIDDEN_BUSY', () => {
         const action = {
                 type: 'HIDDEN_BUSY',
                 state: 'complete'
@@ -237,10 +239,10 @@ describe('app-reducer', () => {
         expect(app(
             initialState,
             action
-        )).to.deep.equal(cleanState);
+        )).toEqual(cleanState);
     });
 
-    it('POSTMESSAGE', () => {
+    test('POSTMESSAGE', () => {
         const action = {
                 type: 'POSTMESSAGE',
                 message: 'offline',
@@ -250,7 +252,7 @@ describe('app-reducer', () => {
         expect(app(
             {},
             action
-        )).to.deep.equal({offline: true});
+        )).toEqual({offline: true});
 
         action.payload.state = 'asdas';
 
@@ -260,7 +262,7 @@ describe('app-reducer', () => {
                 offline: true,
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test: '123',
             offline: 'asdas'
         });
@@ -272,12 +274,12 @@ describe('app-reducer', () => {
                 test: '123'
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test: '123'
         });
     });
 
-    it('SHOW_ERROR', () => {
+    test('SHOW_ERROR', () => {
         const action = {
                 type: 'SHOW_ERROR',
                 id: 10,
@@ -287,7 +289,7 @@ describe('app-reducer', () => {
         expect(app(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             errors: {
                 10: 'test',
             }
@@ -301,7 +303,7 @@ describe('app-reducer', () => {
                 }
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test: '123',
             errors: {
                 1: 'asd',
@@ -310,7 +312,7 @@ describe('app-reducer', () => {
         });
     });
 
-    it('DELETE_ERROR', () => {
+    test('DELETE_ERROR', () => {
         const action = {
                 type: 'DELETE_ERROR',
                 id: 10
@@ -323,7 +325,7 @@ describe('app-reducer', () => {
                 }
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             errors: {
             }
         });
@@ -337,7 +339,7 @@ describe('app-reducer', () => {
                 }
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test: '123',
             errors: {
                 1: 'asd',
@@ -345,7 +347,7 @@ describe('app-reducer', () => {
         });
     });
 
-    it('REFRESH', () => {
+    test('REFRESH', () => {
         const action = {
                 type: 'REFRESH',
                 status: 'complete',
@@ -357,7 +359,7 @@ describe('app-reducer', () => {
         expect(app(
             {},
             action
-        )).to.deep.equal({
+        )).toEqual({
             dataversion: 10
         });
 
@@ -366,7 +368,7 @@ describe('app-reducer', () => {
                 dataversion: 9
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             dataversion: 10
         });
 
@@ -380,7 +382,7 @@ describe('app-reducer', () => {
                 }
             },
             action
-        )).to.deep.equal({
+        )).toEqual({
             test: '123',
             errors: {
                 1: 'asd',

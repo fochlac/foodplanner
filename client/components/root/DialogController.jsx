@@ -7,6 +7,7 @@ import PriceDialog from 'UI/PriceDialog.js';
 import TransactionDialog from 'UI/TransactionDialog.js';
 import ImpressumDialog from 'UI/ImpressumDialog.js';
 import SendMoneyDialog from 'UI/SendMoneyDialog.js';
+import PrintDialog from 'UI/PrintDialog.js';
 
 export default class DialogController extends React.Component {
     constructor(props) {
@@ -72,6 +73,9 @@ export default class DialogController extends React.Component {
 
             case 'CANCEL_MEAL':
                 return <ConfirmationDialog message="Bist du dir sicher, dass du dieses Angebot löschen möchtest?" action="cancel_meal" parameter={[d.option.meal]} />;
+
+            case 'PRINT_MEAL':
+                return <PrintDialog />;
 
             default:
                 return null;

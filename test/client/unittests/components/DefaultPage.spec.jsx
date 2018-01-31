@@ -1,5 +1,4 @@
 import React from 'react';
-import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 import { DefaultPage } from 'ROOT/DefaultPage.jsx';
 
@@ -12,23 +11,40 @@ let output;
 const options = {
 	dialog: '',
 	errors: [''],
-	app: {},
+	app: {
+        dataversion: 'test'
+    },
 	show_impressum: () => output = 'show_impressum',
-	initial_meals: () => null
+	initial_meals: () => null,
+    refresh: (txt) => output = txt
 }
 
 describe('DefaultPage', () => {
-  it('should render all elements', () => {
-    const wrapper = shallow(<DefaultPage {...options} ><div className="test"></div></DefaultPage>);
+  test('should render all elements', () => {
+    let tmp = window.addEventListener,
+        tmp2 = window.removeEventListener;
 
-    expect(wrapper.find(Topbar)).to.have.lengthOf(1);
-    expect(wrapper.find(BusyScreen)).to.have.lengthOf(1);
-    expect(wrapper.find(Error)).to.have.lengthOf(1);
-    expect(wrapper.find(DialogController)).to.have.lengthOf(1);
-    expect(wrapper.find('.footer')).to.have.lengthOf(1);
-    expect(wrapper.find('.impressum')).to.have.lengthOf(1);
-    expect(wrapper.find('.test')).to.have.lengthOf(1);
+    window.addEventListener = (type, fn) => output = {type: 'addListener', func: fn};
+    window.removeEventListener = () => output = 'removeListener';
+
+    const wrapper = shallow(<DefaultPage {...options} ><div className="test"></div></DefaultPage>);
+    expect(output.type).toBe('addListener');
+    output.func();
+    expect(output).toBe('test');
+
+    expect(wrapper.find(Topbar)).toHaveLength(1);
+    expect(wrapper.find(BusyScreen)).toHaveLength(1);
+    expect(wrapper.find(Error)).toHaveLength(1);
+    expect(wrapper.find(DialogController)).toHaveLength(1);
+    expect(wrapper.find('.footer')).toHaveLength(1);
+    expect(wrapper.find('.impressum')).toHaveLength(1);
+    expect(wrapper.find('.test')).toHaveLength(1);
     wrapper.find('.impressum').simulate('click');
-    expect(output).to.equal('show_impressum');
+    expect(output).toBe('show_impressum');
+
+    wrapper.unmount();
+    expect(output).toBe('removeListener');
+    window.addEventListener = tmp;
+    window.removeEventListener = tmp2;
   });
 });

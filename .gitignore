@@ -1,5 +1,7 @@
 dist
 node_modules/
+coverage/
 server/log/
 .idea/
 package-lock.json
+.vscode
