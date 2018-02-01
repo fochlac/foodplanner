@@ -183,8 +183,8 @@ describe('CreateMealDialog', () => {
     expect(wrapper.find('#SignUpDialog_name').prop('defaultValue')).toBe(TEST_MEAL.name);
     expect(wrapper.find('#SignUpDialog_description').prop('defaultValue')).toBe(TEST_MEAL.description);
     expect(wrapper.find('#SignUpDialog_signupLimit').prop('defaultValue')).toBe(TEST_MEAL.signupLimit);
-    expect(wrapper.find('.deadline .timePicker').prop('defaultValue')).toBe(formatTime(round(deadline, 30 * 60)));
-    expect(wrapper.find('.time .timePicker').prop('defaultValue')).toBe(formatTime(round(time, 30 * 60)));
+    expect(wrapper.find('.deadline .timePicker').prop('value')).toBe(formatTime(round(deadline, 30 * 60)));
+    expect(wrapper.find('.time .timePicker').prop('value')).toBe(formatTime(round(time, 30 * 60)));
     expect(wrapper.find('.templateSelector')).toHaveLength(0);
     expect(wrapper.find('.addOption')).toHaveLength(1);
   });
