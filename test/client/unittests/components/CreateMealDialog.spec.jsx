@@ -42,6 +42,37 @@ describe('CreateMealDialog', () => {
     expect(wrapper.find(MealOption)).toHaveLength(1);
   });
 
+  test('should handle timechange', () => {
+    const TEST_USER = {id: 1, name: 'test'},
+        TEST_APP = {dialog: {}},
+        TEST_MEALS = [],
+        wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS}/>);
+    const changeDead = wrapper.find(DayPickerInput).at(0).prop('onDayChange');
+    const changeTime = wrapper.find(DayPickerInput).at(1).prop('onDayChange');
+    let output;
+
+    changeDead({toDate: () => {
+      output = new Date();
+      return output;
+    }});
+
+    expect(wrapper.instance().state.deadlineObject).toEqual(output);
+
+    changeTime({toDate: () => {
+      return output;
+    }});
+
+    expect(wrapper.instance().state.timeObject).toEqual(output);
+
+    wrapper.find('.timePicker').at(1).simulate('change', {target: {value: '12:00'}});
+    wrapper.find('.timePicker').at(0).simulate('change', {target: {value: '12:00'}});
+      output.setHours(12);
+      output.setMinutes(0);
+    expect(wrapper.instance().state.timeObject).toEqual(output);
+    expect(wrapper.instance().state.deadlineObject).toEqual(output);
+
+  });
+
   test('should display templates and render them on selection', () => {
     const TEST_USER = {id: 1, name: 'test'},
         TEST_APP = {dialog: {}},
