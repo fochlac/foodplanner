@@ -4,14 +4,17 @@ export const S = {
     busy: By.className('busyBackground'),
     topbar: By.className('topbar'),
     userframe: By.className('userFrame'),
+    optionByName: name => By.css(`option[value="${name}"]`),
     uf: {
         registerLink: By.className('registerLink'),
+        signinLink: By.className('signinLink'),
         submit: By.css('.userFrame button'),
         loginMail: By.css('.userFrame .mailFrame input'),
         registerMail: By.css('.userFrame .register .mail'),
         registerName: By.css('.userFrame .register .name'),
-
-        username: By.className('userName')
+        username: By.className('userName'),
+        sendMoney: By.className('userManagementLink'),
+        balance: By.css('.balance > b')
     },
     dashboard: By.className('dashboard'),
     quicklinks: By.className('quicklinks'),
@@ -24,11 +27,26 @@ export const S = {
     dialog: {
         meal: By.className('createMeal'),
         settings: By.className('settingsDialog'),
+        price: By.className('PriceDialog'),
         dialog: By.className('dialog'),
         signup: By.className('SignUpDialog'),
         submit: By.className('submit'),
         confirm: By.className('confirmationDialog'),
+        sendMoney: By.className('sendMoneyDialog'),
         cancel: By.className('cancel')
+    },
+    pd: {
+        priceInputs: By.css('.PriceDialog input'),
+        finalize: By.className('finalize'),
+        price: By.css('.paymentList .price'),
+        state: By.css('.paymentList .state'),
+        unpaid: By.className('fa-times'),
+        paid: By.className('fa-check'),
+        signups: By.css('.paymentList tr'),
+    },
+    sMd: {
+        money: By.id('SendMoneyDialog_amount'),
+        mail: By.id('SendMoneyDialog_mail')
     },
     cm: {
         name: By.id('SignUpDialog_name'),
@@ -37,9 +55,11 @@ export const S = {
         imageInput: By.css('.createMeal input[type="file"]'),
         image: By.css('.createMeal .imageContainer img'),
         time: By.css('.createMeal .time input'),
-        deadline: By.id('SignUpDialog_description'),
+        deadline: By.css('.createMeal .deadline input'),
+        deadlineTime: By.css('.createMeal .deadline .timePicker'),
         daypicker: By.className('DayPicker'),
         day: (id) => By.xpath(`//div[contains(@class, 'DayPicker-Day') and contains(normalize-space(string(self::div)), '${id}')]`),
+        today: By.className('DayPicker-Day--today'),
         option: By.className('additionalOption'),
         addOpt: By.className('addOption'),
         opt: {

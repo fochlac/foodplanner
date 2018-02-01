@@ -29,6 +29,16 @@ export const initDb = (DBName, storageName) => {
                 });
             };
 
+            db.get = (id) => {
+                return new Promise( (resolve, reject) => {
+                    var store = db.transaction([storageName], 'readonly').objectStore(storageName),
+                        request = store.get(id);
+
+                    request.onsuccess = evt => resolve(evt.target.result ? evt.target.result.data : {});
+                    request.onerror = evt => reject(evt);
+                });
+            };
+
             if (db.objectStoreNames.contains(storageName)) {
                 resolve(db);
             } else {

@@ -42,6 +42,37 @@ describe('CreateMealDialog', () => {
     expect(wrapper.find(MealOption)).toHaveLength(1);
   });
 
+  test('should handle timechange', () => {
+    const TEST_USER = {id: 1, name: 'test'},
+        TEST_APP = {dialog: {}},
+        TEST_MEALS = [],
+        wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS}/>);
+    const changeDead = wrapper.find(DayPickerInput).at(0).prop('onDayChange');
+    const changeTime = wrapper.find(DayPickerInput).at(1).prop('onDayChange');
+    let output;
+
+    changeDead({toDate: () => {
+      output = new Date();
+      return output;
+    }});
+
+    expect(wrapper.instance().state.deadlineObject).toEqual(output);
+
+    changeTime({toDate: () => {
+      return output;
+    }});
+
+    expect(wrapper.instance().state.timeObject).toEqual(output);
+
+    wrapper.find('.timePicker').at(1).simulate('change', {target: {value: '12:00'}});
+    wrapper.find('.timePicker').at(0).simulate('change', {target: {value: '12:00'}});
+      output.setHours(12);
+      output.setMinutes(0);
+    expect(wrapper.instance().state.timeObject).toEqual(output);
+    expect(wrapper.instance().state.deadlineObject).toEqual(output);
+
+  });
+
   test('should display templates and render them on selection', () => {
     const TEST_USER = {id: 1, name: 'test'},
         TEST_APP = {dialog: {}},
@@ -183,8 +214,8 @@ describe('CreateMealDialog', () => {
     expect(wrapper.find('#SignUpDialog_name').prop('defaultValue')).toBe(TEST_MEAL.name);
     expect(wrapper.find('#SignUpDialog_description').prop('defaultValue')).toBe(TEST_MEAL.description);
     expect(wrapper.find('#SignUpDialog_signupLimit').prop('defaultValue')).toBe(TEST_MEAL.signupLimit);
-    expect(wrapper.find('.deadline .timePicker').prop('defaultValue')).toBe(formatTime(round(deadline, 30 * 60)));
-    expect(wrapper.find('.time .timePicker').prop('defaultValue')).toBe(formatTime(round(time, 30 * 60)));
+    expect(wrapper.find('.deadline .timePicker').prop('value')).toBe(formatTime(round(deadline, 30 * 60)));
+    expect(wrapper.find('.time .timePicker').prop('value')).toBe(formatTime(round(time, 30 * 60)));
     expect(wrapper.find('.templateSelector')).toHaveLength(0);
     expect(wrapper.find('.addOption')).toHaveLength(1);
   });

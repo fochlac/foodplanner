@@ -88,7 +88,6 @@ user.get('/:id', error.router.validate('params', {
 }), (req, res) => {
     let user = cache.get('user_' + req.params.id);
     if (user) {
-        console.log(user);
         res.cookie('jwt', user.token, {secure: true, httpOnly: true, expires: new Date(Date.now() + 1000 * 3600 * 24 * 365)});
         res.status(200).send(user);
     } else {
