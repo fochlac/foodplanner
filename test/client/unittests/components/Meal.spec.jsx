@@ -51,7 +51,7 @@ const TU1 = {
     name: 'testuser2',
     id: 5
   },
-  TM = ({locked = 0, options = [], time = (Date.now() + 20000000), deadline = (Date.now() + 10000000), signups = [], signupLimit = 3, image}) => ({
+  TM = ({locked = 0, options = [], time = (Date.now() + 20000000), deadline = (Date.now() + 10000000), signups = [], signupLimit = 3, image, print = false}) => ({
     id: 1,
     name: 'testmeal',
     creator: TU1.name,
@@ -341,11 +341,22 @@ describe('Meal', () => {
     const user = TU2,
       signups = {},
       signupArray = Object.values(signups).map(signup => signup.id),
-      meal = TM({image: 'testimage.jpg', locked: 1, signups: signupArray, options: TO});
+      meal = TM({image: 'testimage.jpg', locked: 1, signups: signupArray, options: TO, print: true});
 
     const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />);
 
     expect(wrapper.find('.meal.print')).toHaveLength(1);
+  });
+
+  test('should show no signupLimit if no signupLimit exists', () => {
+    const user = TU2,
+      signups = {},
+      signupArray = Object.values(signups).map(signup => signup.id),
+      meal = TM({image: 'testimage.jpg', locked: 1, signups: signupArray, options: TO, print: true, signupLimit: 0});
+
+    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />);
+
+    expect(wrapper.find('.meal .limit')).toHaveLength(0);
   });
 
   test('actions should be called', () => {
