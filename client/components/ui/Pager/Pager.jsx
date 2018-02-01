@@ -82,7 +82,7 @@ export default class Pager extends React.Component {
     const { page } = this.state;
     const wrapper = this.props.wrapper ? this.props.wrapper : children => children;
 
-    if (inactive) {
+    if (inactive || children.length < size) {
       return <span>{wrapper(children)}</span>
     }
 

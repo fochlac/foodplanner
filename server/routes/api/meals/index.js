@@ -15,6 +15,7 @@ const   meals           = require('express').Router()
 let cache = caches.getCache('meals'),
     signupCache = caches.getCache('signups'),
     updateCache = caches.getCache('update'),
+    users = caches.getCache('users'),
     userListCache = caches.getCache('userList');
 
 meals.post('/:id/lock', jwt.requireAuthentication, error.router.validate('params', {
@@ -39,11 +40,13 @@ meals.post('/:id/lock', jwt.requireAuthentication, error.router.validate('params
         log(4, 'PriceArray not valid.');
         return res.status(400).send({msg: 'Options not valid.', type: 'Invalid_Request', data: [JSON.stringify(errorElem)]});
     }
+
     cache.delete(req.params.id);
     cache.delete('allMeals');
     signupCache.deleteAll();
     updateCache.deleteAll();
     userListCache.deleteAll();
+    users.deleteAll();
 
     mealsDB.getMealById(req.params.id)
         .then(meal => {

@@ -1,117 +1,119 @@
-import { expect } from 'chai';
-import { until } from 'selenium-webdriver';
-import { S } from 'T_UI/base_selectors.js';
+import { S } from "T_UI/base_selectors.js";
+import { expect } from "chai";
+import { until } from "selenium-webdriver";
 
-require('./page_basic.spec.js');
+require("./page_basic.spec.js");
 
 const checkLoggedin = async function() {
-        const userframe = await this.driver.findElement(S.userframe);
+    const userframe = await this.driver.findElement(S.userframe);
 
-        userframe.getAttribute('class')
-            .then(className => expect(className.indexOf('register')).to.equal(-1));
+    userframe
+      .getAttribute("class")
+      .then(className => expect(className.indexOf("register")).to.equal(-1));
 
-        return this.driver.findElement(S.uf.username)
-            .then(elem => elem.getText())
-            .then(text => expect(text).to.equal(this.username));
-    },
-    checkLoggedOut = async function() {
-        const userframe = await this.driver.findElement(S.userframe);
+    return this.driver
+      .findElement(S.uf.username)
+      .then(elem => elem.getText())
+      .then(text => expect(text).to.equal(this.username));
+  },
+  checkLoggedOut = async function() {
+    const userframe = await this.driver.findElement(S.userframe);
 
-        return userframe.getAttribute('class')
-            .then(className => expect(className.indexOf('register')).to.not.equal(-1));
-    };
+    return userframe
+      .getAttribute("class")
+      .then(className =>
+        expect(className.indexOf("register")).to.not.equal(-1)
+      );
+  };
 
+describe("login area", () => {
+  before(function() {
+    this.checkLoggedin = checkLoggedin.bind(this);
+    this.checkLoggedOut = checkLoggedOut.bind(this);
+  });
 
-describe('login area', () => {
+  it("should not be logged in", async function() {
+    const userframe = await this.driver.findElement(S.userframe);
 
-    before(function() {
-        this.checkLoggedin = checkLoggedin.bind(this);
-        this.checkLoggedOut = checkLoggedOut.bind(this);
-    });
+    userframe.isDisplayed().then(visibile => expect(visibile).to.be.true);
 
-    it('should not be logged in', async function() {
-        const userframe = await this.driver.findElement(S.userframe)
+    return userframe
+      .getAttribute("class")
+      .then(className =>
+        expect(className.indexOf("register")).to.not.equal(-1)
+      );
+  });
 
-        userframe.isDisplayed()
-            .then(visibile => expect(visibile).to.be.true);
+  it("should be logged in after registering", async function() {
+    this.timeout(5000);
 
-        return userframe.getAttribute('class')
-            .then(className => expect(className.indexOf('register')).to.not.equal(-1));
-    });
+    await this.driver.createUser({ name: this.username, mail: this.usermail });
 
-    it('should be logged in after registering', async function() {
-        this.timeout(5000);
+    const userframe = await this.driver.findElement(S.userframe);
 
-        this.driver.findElement(S.uf.registerLink).click();
+    return this.checkLoggedin();
+  });
 
-        this.driver.findElement(S.uf.registerName).sendKeys(this.username);
-        this.driver.findElement(S.uf.registerMail).sendKeys(this.usermail);
-        this.driver.findElement(S.uf.submit).click();
+  it("should be logged out after logging out", async function() {
+    this.timeout(5000);
 
-        this.driver.awaitBusyComplete();
+    this.driver.findElement(S.ql.logout).click();
 
-        const userframe = await this.driver.findElement(S.userframe);
+    this.driver.awaitBusyComplete();
 
-        return this.checkLoggedin();
-    });
+    return this.checkLoggedOut();
+  });
 
-    it('should be logged out after logging out', async function() {
-        this.timeout(5000);
+  it("should be unable to register with same email", async function() {
+    this.timeout(5000);
 
-        this.driver.findElement(S.ql.logout).click();
+    this.driver.findElement(S.uf.registerLink).click();
 
-        this.driver.awaitBusyComplete();
+    this.driver.findElement(S.uf.registerName).sendKeys(this.username);
+    this.driver.findElement(S.uf.registerMail).sendKeys(this.usermail);
+    this.driver.findElement(S.uf.submit).click();
 
-        return this.checkLoggedOut();
-    });
+    this.driver.awaitBusyComplete();
 
-    it('should be unable to register with same email', async function() {
-        this.timeout(5000);
+    this.driver
+      .waitElementLocated(S.db.error)
+      .findElement(S.db.closeError)
+      .click();
 
-        this.driver.findElement(S.uf.registerLink).click();
+    return this.checkLoggedOut();
+  });
 
-        this.driver.findElement(S.uf.registerName).sendKeys(this.username);
-        this.driver.findElement(S.uf.registerMail).sendKeys(this.usermail);
-        this.driver.findElement(S.uf.submit).click();
+  it("should be unable to login with wrong mail", async function() {
+    this.timeout(5000);
+    const email = await this.driver.findElement(S.uf.loginMail);
 
-        this.driver.awaitBusyComplete();
+    email.sendKeys("2test@web.de");
+    this.driver.findElement(S.uf.submit).click();
+    this.checkLoggedOut();
 
-        this.driver.waitElementLocated(S.db.error).findElement(S.db.closeError).click();
+    this.driver.sleep(500);
 
-        return this.checkLoggedOut();
-    });
+    return email.clear();
+  });
 
-    it('should be unable to login with wrong mail', async function() {
-        this.timeout(5000);
-        const email = await this.driver.findElement(S.uf.loginMail);
+  it("should be able to login with registerd email by typing first 5 letters", async function() {
+    this.timeout(5000);
+    const submit = await this.driver.waitElementLocated(S.uf.submit);
+    const email = await this.driver.waitElementLocated(S.uf.loginMail);
+    email.clear();
+    email.sendKeys(this.usermail.slice(0, 5));
+    this.driver.wait(until.elementValueIs(email, this.usermail));
+    submit.click();
 
-        email.sendKeys('2test@web.de');
-        this.driver.findElement(S.uf.submit).click();
-        this.checkLoggedOut();
+    await this.driver.awaitBusyComplete();
+    return this.checkLoggedin();
+  });
 
-        this.driver.sleep(500);
+  it("should remain logged in on page refresh", async function() {
+    this.timeout(10000);
 
-        return email.clear();
-    });
+    await this.driver.refresh();
 
-    it('should be able to login with registerd email by typing first 5 letters', async function() {
-        this.timeout(5000);
-        const submit = await this.driver.waitElementLocated(S.uf.submit);
-        const email = await this.driver.waitElementLocated(S.uf.loginMail);
-        email.clear();
-        email.sendKeys(this.usermail.slice(0,5));
-        this.driver.wait(until.elementValueIs(email, this.usermail));
-        submit.click();
-
-        await this.driver.awaitBusyComplete();
-        return this.checkLoggedin();
-    });
-
-    it('should remain logged in on page refresh', async function() {
-        this.timeout(10000);
-
-        await this.driver.refresh();
-
-        await this.checkLoggedin();
-    });
+    await this.checkLoggedin();
+  });
 });

@@ -108,7 +108,7 @@ const setDay = async function(day) {
             description = await elem.findElement(S.db.m.description).getText(),
             creator = await elem.findElement(S.db.m.creator).getText();
 
-        expect(titleIcons.length).to.equal(3);
+        expect(titleIcons.length).to.equal(4);
         expect(image.length).to.equal(meal.image ? 1 : 0);
         expect(creator).to.equal(this.username);
         expect(name).to.equal(meal.name);
