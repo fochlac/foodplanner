@@ -27,6 +27,17 @@ describe('PriceDialog', () => {
     expect(wrapper.find('.foot').length).toBe(1);
   });
 
+  test('should properly output invalid info', () => {
+    const wrapper = shallow(<PriceDialog invalid={true} />);
+
+    expect(wrapper.find('.titlebar').length).toBe(1);
+    expect(wrapper.find('.titlebar span.fa-times').length).toBe(1);
+    expect(wrapper.find('.body').length).toBe(1);
+    expect(wrapper.find('.body p')).toHaveLength(1);
+    expect(wrapper.find('.foot button').length).toBe(1);
+    expect(wrapper.find('.foot').length).toBe(1);
+  });
+
   test('should close on close button click', () => {
     let dialog_closed = false;
 

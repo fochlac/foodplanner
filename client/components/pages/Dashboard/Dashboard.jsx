@@ -10,16 +10,16 @@ export default class Dashboard extends React.Component {
         super();
 
         this.state = {
-            filter: ['meals']
+            filter: 'meals',
         }
     }
 
     setFilter(filter) {
-        this.setState({filter: [filter]});
+        this.setState({filter: filter});
     }
 
     render() {
-        const mealLists = this.state.filter.map(filter => this.props[filter]),
+        const mealList = this.props[this.state.filter],
             filters = [{
                 name: 'Aktuelle Termine',
                 type: 'meals'
@@ -51,22 +51,13 @@ export default class Dashboard extends React.Component {
                         }
                     </ul>
                 </div>
-                {
-                    mealLists.map((mealList, index) =>
-                        <div key={index} className="meals">
-                            {
-                                (mealLists.length > 1 && mealList.length > 0)
-                                ? <h3 className="mealListHeader">{filters[index].name}</h3>
-                                : null
-                            }
-                            <Pager size={5} top={true} bottom={true} inactive={!this.state.filter.includes('oldMeals')}>
-                                {
-                                    mealList.map((meal) => <Meal id={meal.id} key={meal.id} />)
-                                }
-                            </Pager>
-                        </div>
-                    )
-                }
+                <div className="meals">
+                    <Pager size={5} top={true} bottom={true} inactive={this.state.filter === 'meals'}>
+                        {
+                            mealList.map((meal) => <Meal id={meal.id} key={meal.id} showPrint={this.state.filter === 'meals'} />)
+                        }
+                    </Pager>
+                </div>
             </div>
         );
     }

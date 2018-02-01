@@ -42,6 +42,23 @@ export default class PriceDialog extends React.Component {
 
   render() {
     const m = this.props.meal;
+
+    if (this.props.invalid) {
+      return (
+        <Dialog className="SignUpDialog">
+          <div className="titlebar">
+            <h3>Ungültige Mahlzeit!</h3>
+            <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
+          </div>
+          <div className="body">
+            <p>Diese Mahlzeit ist leider nicht verfügbar.</p>
+          </div>
+          <div className="foot">
+            <button type="button" className="cancel" onClick={this.cancel.bind(this)}>Schließen</button>
+          </div>
+        </Dialog>)
+    }
+
     return (
       <Dialog className="PriceDialog">
         <div className="titlebar">

@@ -107,6 +107,9 @@ export default class Meal extends React.Component {
         <div className="titlebar">
           <h4 className="title">{formatDayNameDate(p.meal.time)}: <span className="name">{p.meal.name}</span></h4>
           {
+            p.showPrint && <span onClick={this.props.start_print.bind(this, p.meal.id)} className="fa fa-print fa-lg menuIcon pointer"></span>
+          }
+          {
             (p.user.id === p.meal.creatorId)
             ? <span className="noWrap">
               <span className="fa fa-lg menuIcon fa-euro pointer" onClick={this.editPrices}></span>

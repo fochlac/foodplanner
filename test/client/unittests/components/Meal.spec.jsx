@@ -40,6 +40,7 @@ const actions = {
   start_meal_signup: () => output = 'signup',
   start_meal_edit: () => output = 'signup_edit',
   meal_cancel: () => output = 'signup_cancel',
+  start_print: () => output = 'start_print',
 }
 
 const TU1 = {
@@ -356,14 +357,16 @@ describe('Meal', () => {
       signupArray = Object.values(signups).map(signup => signup.id),
       meal = TM({image: 'testimage.jpg', locked: 1, signups: signupArray, options: TO});
 
-    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} {...actions} />),
+    const wrapper = shallow(<Meal meal={meal} user={user} signups={signups} showPrint={true}  {...actions} />),
           signupElems = wrapper.find('.participantsList > li');
 
     wrapper.find('.titlebar .menuIcon').at(0).simulate('click');
-    expect(output).toBe('edit_price');
+    expect(output).toBe('start_print');
     wrapper.find('.titlebar .menuIcon').at(1).simulate('click');
-    expect(output).toBe('edit');
+    expect(output).toBe('edit_price');
     wrapper.find('.titlebar .menuIcon').at(2).simulate('click');
+    expect(output).toBe('edit');
+    wrapper.find('.titlebar .menuIcon').at(3).simulate('click');
     expect(output).toBe('cancel');
     signupElems.at(0).find('.icons > span').at(0).simulate('click');
     expect(output).toBe('signup_edit');
