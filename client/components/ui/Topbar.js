@@ -1,11 +1,12 @@
+import { create_meal_dialog, create_settings_dialog, sign_out, start_sign_in } from 'ACTIONS';
+
 import React from 'react';
-import { connect } from 'react-redux';
 import Topbar from 'UI/Topbar/Topbar.jsx';
-import {create_settings_dialog, create_meal_dialog, sign_out } from 'ACTIONS';
+import { connect } from 'react-redux';
 
 const mapStateToProps = (state, ownProps) => ({
 	app: state.app,
 	user: state.user
 });
 
-export default connect(mapStateToProps, {create_settings_dialog, create_meal_dialog, sign_out })(Topbar);
+export default connect(mapStateToProps, { create_settings_dialog, create_meal_dialog, sign_out, start_sign_in })(Topbar);

@@ -1,8 +1,9 @@
-import React from 'react';
+import './SettingsDialog.less';
+
 import Dialog from 'UI/Dialog.js';
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx';
+import React from 'react';
 import { getNotificationPermission } from 'SCRIPTS/serviceWorker.js';
-import './SettingsDialog.less';
 
 export default class SettingsDialog extends React.Component {
   constructor(props) {
@@ -38,7 +39,11 @@ export default class SettingsDialog extends React.Component {
     if (s.deadlineReminder_notification || s.creationNotice_notification) {
       getNotificationPermission()
         .then(() => {
-          this.props.save_settings(s);
+          if (this.props.user.id) {
+            this.props.save_settings(s);
+          } else {
+            this.props.save_settings_locally(s);
+          }
         })
         .catch((err) => {
           // add error message
@@ -47,7 +52,7 @@ export default class SettingsDialog extends React.Component {
             creationNotice_notification: 0
           });
         })
-    } else {
+    } else if (!this.props.user.id) {
       this.props.save_settings(s);
     }
 
@@ -91,13 +96,13 @@ export default class SettingsDialog extends React.Component {
               <div className="row">
                 <input type="text" id="SettingsDialog_mail" value={s.mail} onChange={this.mailInput} autoComplete="off" />
               </div>
+              <div>
+                <label htmlFor="SettingsDialog_name">Name</label>
+                <input type="text" id="SettingsDialog_name" value={s.name} onChange={this.nameInput}/>
+              </div>
             </div>
             : null
           }
-          <div>
-            <label htmlFor="SettingsDialog_name">Name</label>
-            <input type="text" id="SettingsDialog_name" value={s.name} onChange={this.nameInput}/>
-          </div>
           <h4>Benachrichtigungen:</h4>
           <table className="notificationMatrix">
             <thead>
@@ -122,7 +127,7 @@ export default class SettingsDialog extends React.Component {
                 }
                 {
                   notificationsBlocked
-                  ? <td className="notification createdNotification" data-fieldtype="Push-Notification"><input type="checkbox" disabled={true} title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                    ? <td className="notification createdNotification" data-fieldtype="Push-Notification"><input type="checkbox" disabled={true} checked={this.state.creationNotice_notification} title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
                   : <td className="notification createdNotification" data-fieldtype="Push-Notification"><input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')}  checked={this.state.creationNotice_notification}/></td>
                 }
               </tr>
@@ -135,7 +140,7 @@ export default class SettingsDialog extends React.Component {
                 }
                 {
                   notificationsBlocked
-                  ? <td className="notification deadlineNotification" data-fieldtype="Push-Notification"><input type="checkbox" disabled={true} title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
+                    ? <td className="notification deadlineNotification" data-fieldtype="Push-Notification"><input type="checkbox" disabled={true} checked={this.state.deadlineReminder_notification} title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können." /></td>
                   : <td className="notification deadlineNotification" data-fieldtype="Push-Notification"><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'notification')} checked={this.state.deadlineReminder_notification}/></td>
                 }
               </tr>

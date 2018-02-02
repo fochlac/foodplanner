@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import './Topbar.less';
+
+import { Link } from 'react-router-dom';
+import React from 'react';
 
 export default class Topbar extends React.Component {
   constructor(props) {
@@ -39,7 +40,10 @@ export default class Topbar extends React.Component {
                   <span className="symbolExplanation">Abmelden</span>
                   <span className="fa fa-sign-out fa-lg" title="Abmelden"></span>
               </li>
-              : null
+                : <li onClick={this.props.start_sign_in.bind(this)}>
+                <span className="symbolExplanation">Anmelden</span>
+                  <span className="fa fa-sign-in fa-lg" title="Anmelden"></span>
+              </li>
             }
           </ul>
         </div>

@@ -1,7 +1,8 @@
-import React from 'react';
-import Dialog from 'UI/Dialog.js';
-import SignUpOption from './SignUpOption.jsx';
 import './SignUp.less';
+
+import Dialog from 'UI/Dialog.js';
+import React from 'react';
+import SignUpOption from './SignUpOption.jsx';
 
 export default class SignUpDialog extends React.Component {
   constructor(props) {
@@ -120,6 +121,7 @@ export default class SignUpDialog extends React.Component {
             !s.userId
             ? <div className="warning row title anon" title="Als anonymer Nutzer kann nur der Organisator dieses Termins deine Anmeldung verändern. Bitte logge dich mit deiner E-Mail ein um deine Anmeldungen verwalten zu können.">
               <p>Du meldest dich als anonymer Nutzer an.</p>
+                <p className="fakeLink pointer" onClick={p.start_sign_in}>Jetzt einloggen oder Accout anlegen!</p>
             </div>
             : null
           }
