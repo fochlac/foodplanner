@@ -130,6 +130,15 @@ let setup = [
         \`time\`                bigint          NOT NULL,
 
         PRIMARY KEY (id)
+    );`,
+    `CREATE TABLE IF NOT EXISTS \`authentication\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`user\`                int             NOT NULL,
+        \`hash\`                varchar(150)    NOT NULL,
+        \`salt\`                varchar(150)    NOT NULL,
+
+        PRIMARY KEY (id),
+        UNIQUE KEY \`user\` (\`user\`)
     );`
 ];
 

@@ -95,12 +95,12 @@ export default class LoginDialog extends React.Component {
               <input id="LoginDialog_mail" data-info={userInterfaceText.mail} className={"mail" + (!mailValid ? ' invalid' : '')} type="text" placeholder="E-Mail" onChange={this.mailInput} value={mail} />
 
               <label htmlFor="LoginDialog_pass">Passwort</label>
-              <input id="LoginDialog_pass" data-info={userInterfaceText.pass} className={"pass" + (!passwordValid ? ' invalid' : '')} type="password" placeholder="Passwort (optional)" onChange={this.passInput} />
+              <input id="LoginDialog_pass" data-info={userInterfaceText.pass} className={"pass" + (!passwordValid ? ' invalid' : '')} type="password" placeholder="Passwort (optional)" onChange={this.passInput} value={pass} />
 
               {pass.length ? (
                 <span>
                   <label htmlFor="LoginDialog_pass2">Passwort wiederholen:</label>
-                  <input id="LoginDialog_pass2" data-info={userInterfaceText.pass} className={"pass" + (!passwordValid ? ' invalid' : '')} type="password" placeholder="Passwort wiederholen" onChange={this.pass2Input} />
+                  <input id="LoginDialog_pass2" data-info={userInterfaceText.pass} className={"pass" + (!passwordValid ? ' invalid' : '')} type="password" placeholder="Passwort wiederholen" onChange={this.pass2Input} value={pass2} />
                 </span>
               ) : null}
               <p className="fakeLink signinLink toggleRegister" onClick={this.toggleRegister.bind(this, false)}>

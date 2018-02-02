@@ -411,12 +411,12 @@ export const sign_in = ({ mail, hash }) => ({
   }
 });
 
-export const register = ({ mail, hash }) => ({
+export const register = ({ mail, hash, name }) => ({
   type: 'REGISTER',
   status: 'initialized',
   ...closeDialogOptions,
   api: {
-    url: `/api/user/register`,
+    url: `/api/user/`,
     method: 'POST',
     body: {
       name,

@@ -129,5 +129,7 @@ module.exports = {
             log(4, `Anonymous user tried to access restricted call.`);
             res.status(401).send({type: 'UNAUTHORIZED'});
         }
-    }
+    },
+
+    clear: (req, res) => res.status(200).cookie('jwt', '', { secure: true, httpOnly: true, expires: 0 }).send({})
 }

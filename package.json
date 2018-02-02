@@ -56,7 +56,6 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "compression": "^1.6.2",
-    "crypto": "^1.0.1",
     "express": "^4.15.3",
     "gmail-send": "^1.2.11",
     "jsdom": "^11.5.1",
