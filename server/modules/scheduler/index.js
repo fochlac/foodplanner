@@ -50,7 +50,6 @@ const mealPayment = (meal) => () => {
 
 module.exports = {
 	init: () => {
-		console.log(Date.now())
 		mealDb.getAllMeals()
 			.then((meals) => {
 				meals.forEach(meal => {

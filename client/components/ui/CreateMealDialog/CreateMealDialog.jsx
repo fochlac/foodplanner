@@ -228,7 +228,7 @@ export default class CreateMealDialog extends React.Component {
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>
         <div className="body createMeal">
-          <div className="row">
+          <div className="row responsive">
             <div className="col">
               <div>
                 <label htmlFor="SignUpDialog_name">Name</label>
@@ -276,7 +276,7 @@ export default class CreateMealDialog extends React.Component {
           {s.options.map((option, index) => <MealOption key={index} option={option} index={index} setOption={this.setOption(index)} deleteOption={() => this.deleteOption(index)} editable={!edit || !p.meal.signups.length}/>)}
           {
             (!edit || !p.meal.signups.length)
-            ? <div className="row">
+            ? <div className="row responsive">
               <p className="fakeLink addOption" onClick={this.addOption.bind(this)}><span className="fa fa-plus fa-lg"></span> Option hinzufügen</p>
               {
                 (!s.options.length)

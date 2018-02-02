@@ -23,7 +23,7 @@ const   express             = require('express')
         }, app);
 
 sslServer.listen(server_port, server_ip_address, () => {
-    console.log('listening on port '+ server_port);
+    console.log("listening on https://" + server_ip_address + ':' + server_port);
 });
 
 app.use(bodyparser.json());

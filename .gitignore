@@ -5,3 +5,4 @@ server/log/
 .idea/
 package-lock.json
 .vscode
+food_dev_variables.txt
