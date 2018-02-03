@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --public dev.fochlac.com --hot --inline",
     "test": "jest",
-    "test-ui": "mocha-webpack --webpack-config webpack.config.mocha.js --include \"test/client/uitests/setup.js\" \"test/client/uitests/**/*.spec.js\"",
+    "test-ui": "mocha-webpack -b --webpack-config webpack.config.mocha.js --include \"test/client/uitests/setup.js\" \"test/client/uitests/**/*.spec.js\"",
     "coverage": "jest --coverage && codecov --token=ba929a70-e33e-4f56-a89b-95a78037060e",
     "build": "webpack -p",
     "build-dev": "webpack -d",

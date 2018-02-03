@@ -126,7 +126,7 @@ export default class LoginDialog extends React.Component {
             )}
         </div>
         <div className="foot">
-          <button disabled={!valid} onClick={this.submit.bind(this)}>{register ? 'Registrieren' : 'Anmelden'}</button>
+          <button className="submit" disabled={!valid} onClick={this.submit.bind(this)}>{register ? 'Registrieren' : 'Anmelden'}</button>
         </div>
       </Dialog >
     )

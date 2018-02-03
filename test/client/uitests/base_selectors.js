@@ -6,26 +6,29 @@ export const S = {
     userframe: By.className('userFrame'),
     optionByName: name => By.css(`option[value="${name}"]`),
     uf: {
-        registerLink: By.className('registerLink'),
-        signinLink: By.className('signinLink'),
-        submit: By.css('.userFrame button'),
-        loginMail: By.css('.userFrame .mailFrame input'),
-        registerMail: By.css('.userFrame .register .mail'),
-        registerName: By.css('.userFrame .register .name'),
-        username: By.className('userName'),
-        sendMoney: By.className('userManagementLink'),
-        balance: By.css('.balance > b')
+      username: By.className('userName'),
+      sendMoney: By.className('userManagementLink'),
+      balance: By.css('.balance > b')
+    },
+    ld: {
+      registerLink: By.className('registerLink'),
+      signinLink: By.className('signinLink'),
+      name: By.css('.loginDialog #LoginDialog_name'),
+      mail: By.css('.loginDialog #LoginDialog_mail'),
+      pass: By.css('.loginDialog #LoginDialog_pass'),
+      pass2: By.css('.loginDialog #LoginDialog_pass2')
     },
     dashboard: By.className('dashboard'),
     quicklinks: By.className('quicklinks'),
     ql: {
-        print: By.css('.quicklinks .fa-print'),
+        login: By.css('.quicklinks .fa-sign-in'),
         settings: By.css('.quicklinks .fa-cog'),
         logout: By.css('.quicklinks .fa-sign-out'),
         meal: By.css('.quicklinks .fa-plus')
     },
     dialog: {
         meal: By.className('createMeal'),
+        login: By.className('loginDialog'),
         settings: By.className('settingsDialog'),
         price: By.className('PriceDialog'),
         dialog: By.className('dialog'),
@@ -33,7 +36,8 @@ export const S = {
         submit: By.className('submit'),
         confirm: By.className('confirmationDialog'),
         sendMoney: By.className('sendMoneyDialog'),
-        cancel: By.className('cancel')
+        cancel: By.className('cancel'),
+        close: By.css('.dialog .fa-times')
     },
     pd: {
         priceInputs: By.css('.PriceDialog input'),

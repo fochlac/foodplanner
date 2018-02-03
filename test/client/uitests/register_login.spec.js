@@ -5,25 +5,19 @@ import { until } from "selenium-webdriver";
 require("./page_basic.spec.js");
 
 const checkLoggedin = async function() {
-    const userframe = await this.driver.findElement(S.userframe);
+  const userframe = await this.driver.findElements(S.userframe);
 
-    userframe
-      .getAttribute("class")
-      .then(className => expect(className.indexOf("register")).to.equal(-1));
+  expect(userframe).to.have.lengthOf(1);
 
-    return this.driver
-      .findElement(S.uf.username)
+  return this.driver
+  .findElement(S.uf.username)
       .then(elem => elem.getText())
       .then(text => expect(text).to.equal(this.username));
-  },
-  checkLoggedOut = async function() {
-    const userframe = await this.driver.findElement(S.userframe);
+    },
+    checkLoggedOut = async function() {
+      const userframe = await this.driver.findElements(S.userframe);
 
-    return userframe
-      .getAttribute("class")
-      .then(className =>
-        expect(className.indexOf("register")).to.not.equal(-1)
-      );
+      expect(userframe).to.have.lengthOf(0);
   };
 
 describe("login area", () => {
@@ -33,15 +27,7 @@ describe("login area", () => {
   });
 
   it("should not be logged in", async function() {
-    const userframe = await this.driver.findElement(S.userframe);
-
-    userframe.isDisplayed().then(visibile => expect(visibile).to.be.true);
-
-    return userframe
-      .getAttribute("class")
-      .then(className =>
-        expect(className.indexOf("register")).to.not.equal(-1)
-      );
+    return this.checkLoggedOut();
   });
 
   it("should be logged in after registering", async function() {
@@ -65,47 +51,49 @@ describe("login area", () => {
   });
 
   it("should be unable to register with same email", async function() {
-    this.timeout(5000);
+    this.timeout(10000);
 
-    this.driver.findElement(S.uf.registerLink).click();
+    await this.driver.findElement(S.ql.login).click();
+    await this.driver.waitElementLocated(S.dialog.login);
+    await this.driver.findElement(S.ld.registerLink).click()
 
-    this.driver.findElement(S.uf.registerName).sendKeys(this.username);
-    this.driver.findElement(S.uf.registerMail).sendKeys(this.usermail);
-    this.driver.findElement(S.uf.submit).click();
+    await this.driver.findElement(S.ld.name).sendKeys(this.username);
+    await this.driver.findElement(S.ld.mail).sendKeys(this.usermail);
+    await this.driver.findElement(S.dialog.submit).click();
+    await this.driver.awaitBusyComplete();
 
-    this.driver.awaitBusyComplete();
+    await this.driver.waitElementLocated(S.db.error);
+    await this.driver.findElement(S.db.closeError).click();
+    await this.driver.wait(until.elementIsNotPresent(S.db.error));
 
-    this.driver
-      .waitElementLocated(S.db.error)
-      .findElement(S.db.closeError)
-      .click();
+    await this.driver.findElement(S.dialog.close).click();
+    await this.driver.wait(until.elementIsNotPresent(S.dialog.login));
 
     return this.checkLoggedOut();
   });
 
   it("should be unable to login with wrong mail", async function() {
     this.timeout(5000);
-    const email = await this.driver.findElement(S.uf.loginMail);
 
-    email.sendKeys("2test@web.de");
-    this.driver.findElement(S.uf.submit).click();
+    this.driver.findElement(S.ql.login).click()
+    this.driver.waitElementLocated(S.dialog.login)
+
+    await this.driver.findElement(S.ld.mail).sendKeys("2test@web.de");
+
+    await this.driver.findElement(S.dialog.submit).click();
+    await this.driver.awaitBusyComplete();
+
     this.checkLoggedOut();
 
-    this.driver.sleep(500);
-
-    return email.clear();
+    await this.driver.findElement(S.dialog.close).click();
+    await this.driver.wait(until.elementIsNotPresent(S.dialog.login));
   });
 
-  it("should be able to login with registerd email by typing first 5 letters", async function() {
+  it("should be able to login with registerd email", async function() {
     this.timeout(5000);
-    const submit = await this.driver.waitElementLocated(S.uf.submit);
-    const email = await this.driver.waitElementLocated(S.uf.loginMail);
-    email.clear();
-    email.sendKeys(this.usermail.slice(0, 5));
-    this.driver.wait(until.elementValueIs(email, this.usermail));
-    submit.click();
 
-    await this.driver.awaitBusyComplete();
+    await this.driver.loginUser(this.usermail);
+
     return this.checkLoggedin();
   });
 
