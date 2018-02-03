@@ -134,8 +134,8 @@ let setup = [
     `CREATE TABLE IF NOT EXISTS \`authentication\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`user\`                int             NOT NULL,
-        \`hash\`                varchar(150)    NOT NULL,
-        \`salt\`                varchar(150)    NOT NULL,
+        \`hash\`                varchar(150),
+        \`salt\`                varchar(150),
 
         PRIMARY KEY (id),
         UNIQUE KEY \`user\` (\`user\`)

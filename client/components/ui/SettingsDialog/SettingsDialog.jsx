@@ -107,7 +107,7 @@ export default class SettingsDialog extends React.Component {
                 <th>E-Mail</th>
                 <th>
                   Push-Nachricht
-                  <InfoBubble style={{ bottom: '-36px', right: '26px', width: '180px' }} arrow="left" >
+                  <InfoBubble style={{ bottom: '-60px', right: '26px', width: '180px' }} arrow="left" >
                     Die Einstellungen für Push-Nachrichten gelten jeweils&#13;&#10;nur für das Gerät, auf dem sie ausgewählt wurden.
                   </InfoBubble>
                 </th>

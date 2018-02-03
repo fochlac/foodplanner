@@ -42,7 +42,7 @@ export default class Topbar extends React.Component {
               </li>
                 : <li onClick={this.props.start_sign_in.bind(this)}>
                 <span className="symbolExplanation">Anmelden</span>
-                  <span className="fa fa-sign-in fa-lg" title="Anmelden"></span>
+                  <span className="fa fa-sign-in fa-flip-horizontal fa-lg" title="Anmelden"></span>
               </li>
             }
           </ul>

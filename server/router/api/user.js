@@ -36,12 +36,12 @@ user.get('/:id', jwt.requireAuthentication, error.router.validate('params', {
 user.post('/', error.router.validate('body', {
   name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/,
   mail: /^[\_A-Za-z0-9.\-]{1,50}@[\_A-Za-z0-9.\-]{1,50}\.[A-Za-z]{1,100}$/,
-  hash: /^[A-Za-z0-9+\/]{22,22}/
+  hash: /^([A-Za-z0-9+\/]{22,22}|undefined)$/
 }), createUser);
 
 user.post('/login', error.router.validate('body', {
   mail: /^[\_A-Za-z0-9.\-]{1,50}@[\_A-Za-z0-9.\-]{1,50}\.[A-Za-z]{1,100}$/,
-  hash: /^[A-Za-z0-9+\/]{22,22}/
+  hash: /^([A-Za-z0-9+\/]{22,22}|undefined)$/
 }), login);
 
 module.exports = user;

@@ -25,6 +25,9 @@ function generateSalt() {
 }
 
 function generateHash(value, salt) {
+  if (!value || !value.length) {
+    return Promise.resolve({});
+  }
   return new Promise((resolve, reject) => {
     crypto.pbkdf2(value, salt, conf.iterations, conf.hashBytes, conf.digest, (err, hash) => {
       if (err) {
@@ -51,7 +54,13 @@ module.exports = {
 
     if (!user) {
       user = await userDB.getUserAuthByMail(mail);
+      if (!user) {
+        return Promise.reject({ status: 400, type: 'BAD_USER' })
+      }
       cache.put(mail, user);
+    }
+    if (!user.salt || !user.salt.length) {
+      return Promise.resolve(user.id);
     }
     return generateHash(hash, user.salt)
       .then(newHash => user.hash === newHash.hash

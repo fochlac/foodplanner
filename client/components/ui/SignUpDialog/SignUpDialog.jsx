@@ -13,10 +13,10 @@ export default class SignUpDialog extends React.Component {
       userId: props.user && props.user.id ? props.user.id : 0,
       signedUp: props.signedUp,
       options: props.meal ? props.meal.options.map(option => ({
-          id: option.id,
-          value: option.values[0] ? option.values[0].name : null,
-          show: undefined
-        })) : [],
+        id: option.id,
+        value: option.values[0] ? option.values[0].name : null,
+        show: undefined
+      })) : [],
       comment: ''
     }
 
@@ -29,7 +29,7 @@ export default class SignUpDialog extends React.Component {
         if (cb) {
           cb();
         }
-        history.replaceState({app: {...app, dialog: {...(app.dialog ? app.dialog : {}), state: this.state}}}, document.title, document.location.pathname);
+        history.replaceState({ app: { ...app, dialog: { ...(app.dialog ? app.dialog : {}), state: this.state } } }, document.title, document.location.pathname);
       });
     }
   }
@@ -62,7 +62,7 @@ export default class SignUpDialog extends React.Component {
   setOption(id) {
     return (newOption) => {
       let newArr = this.state.options.concat([]),
-          pos = newArr.findIndex(opt => opt.id === id);
+        pos = newArr.findIndex(opt => opt.id === id);
 
       newArr[pos] = newOption;
 
@@ -74,7 +74,7 @@ export default class SignUpDialog extends React.Component {
 
   render() {
     const p = this.props,
-          s = this.state;
+      s = this.state;
 
     let calculatedPrice = 0;
 
@@ -97,7 +97,7 @@ export default class SignUpDialog extends React.Component {
     calculatedPrice += +p.meal.price;
     s.options.forEach(option => {
       let opt = p.meal.options.find(opt => opt.id === option.id);
-      switch(opt.type) {
+      switch (opt.type) {
         case 'select':
           calculatedPrice += +opt.values.find(val => val.name === option.value).price;
           break;
@@ -119,48 +119,52 @@ export default class SignUpDialog extends React.Component {
         <div className="body">
           {
             !s.userId
-            ? <div className="warning row title anon" title="Als anonymer Nutzer kann nur der Organisator dieses Termins deine Anmeldung verändern. Bitte logge dich mit deiner E-Mail ein um deine Anmeldungen verwalten zu können.">
-              <p>Du meldest dich als anonymer Nutzer an.</p>
-                <p className="fakeLink pointer" onClick={p.start_sign_in}>Jetzt einloggen oder Accout anlegen!</p>
-            </div>
-            : null
+              ? <div className="warning row title anon" title="Als anonymer Nutzer kann nur der Organisator dieses Termins deine Anmeldung verändern. Bitte logge dich mit deiner E-Mail ein um deine Anmeldungen verwalten zu können.">
+                <span>
+                  <p>Du meldest dich als anonymer Nutzer an.</p>
+                  {
+                    !(p.user && p.user.id) && <p className="fakeLink pointer" onClick={p.start_sign_in}>Jetzt einloggen oder Accout anlegen!</p>
+                  }
+                </span>
+              </div>
+              : null
           }
           {
             s.signedUp && s.userId
-            ? <div className="warning row signedUp" >
-              <p>Du bist für dieses Angebot bereits angemeldet!</p>
-            </div>
-            : null
+              ? <div className="warning row signedUp" >
+                <p>Du bist für dieses Angebot bereits angemeldet!</p>
+              </div>
+              : null
           }
           {
             (p.user.name && s.name === p.user.name) || p.edit
-            ? <div>
-              <label htmlFor="SignUpDialog_name">Name</label>
-              <div className="row">
-                <span className="signupName">{s.name}</span>
-                {
-                  !p.edit
-                  ? <span className="fakeLink push-right editName edit" onClick={this.setState.bind(this, {name: undefined, userId: undefined}, null)}><span className="fa fa-pencil"></span>Anonymen Nutzer anmelden</span>
-                  : null
-                }
+              ? <div>
+                <label htmlFor="SignUpDialog_name">Name</label>
+                <div className="row">
+                  <span className="signupName">{s.name}</span>
+                  {
+                    !p.edit
+                      ? <span className="fakeLink push-right editName edit" onClick={this.setState.bind(this, { name: undefined, userId: undefined }, null)}><span className="fa fa-pencil"></span>Anonymen Nutzer anmelden</span>
+                      : null
+                  }
+                </div>
               </div>
-            </div>
-            : <div>
-              <div className="row">
-                <label htmlFor="SignUpDialog_name" className="inlineBlock">Name</label>
-                {
-                  (!p.edit && p.user.name && !s.userId)
-                  ? <span className="fakeLink push-right editName cancel inlineBlock" onClick={this.setState.bind(this, {name: p.user.name, userId: p.user.id}, null)}><span className="fa fa-times"></span> Abbrechen</span>
-                  : null
-                }
+              : <div>
+                <div className="row">
+                  <label htmlFor="SignUpDialog_name" className="inlineBlock">Name</label>
+                  {
+                    (!p.edit && p.user.name && !s.userId)
+                      ? <span className="fakeLink push-right editName cancel inlineBlock" onClick={this.setState.bind(this, { name: p.user.name, userId: p.user.id }, null)}><span className="fa fa-times"></span> Abbrechen</span>
+                      : null
+                  }
+                </div>
+                <input type="text" id="SignUpDialog_name" defaultValue={s.name} onChange={this.nameInput} />
               </div>
-              <input type="text" id="SignUpDialog_name" defaultValue={s.name} onChange={this.nameInput} />
-            </div>
           }
           {p.meal.options.map((option, index) => {
             const valueObj = this.state.options.find(opt => opt.id === option.id);
             return <SignUpOption option={option} key={index} value={valueObj ? valueObj : {}
-          } setOption={this.setOption(option.id)} />
+            } setOption={this.setOption(option.id)} />
           })}
           <div className="estimated_price" title="Der Preis wurde noch nicht finalisiert und kann sich jederzeig ändern.">
             <span className="push-right">Vorläufiger Preis: {calculatedPrice ? calculatedPrice.toFixed(2) : 'unbekannt'} €</span>
