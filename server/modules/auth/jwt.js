@@ -6,7 +6,7 @@ const   userDB  = require(process.env.FOOD_HOME  + 'modules/db/user')
 
 const   secretKey = process.env.FOOD_UUID
     ,   jwtOptions = {
-            issuer: 'food.fochlac.com'
+            issuer: process.env.FOOD_EXTERNAL
         };
 
 let userList,

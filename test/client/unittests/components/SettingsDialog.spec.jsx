@@ -62,9 +62,9 @@ describe('SettingsDialog', () => {
       id: 1,
       mail: 'test@test.de',
       name: 'testname',
-      creationNotice_mail: 1,
+      creationNotice: 1,
       creationNotice_notification: 1,
-      deadlineReminder_mail: 1,
+      deadlineReminder: 1,
       deadlineReminder_notification: 1
     },
       user2 = {
@@ -92,6 +92,40 @@ describe('SettingsDialog', () => {
 
   test('should send changed values on submit', (done) => {
     let save_settings = false;
+    const user = {
+      id: 1,
+      mail: 'test@test.de',
+      name: 'testname',
+      creationNotice: 1,
+      creationNotice_notification: 1,
+      deadlineReminder: 1,
+      deadlineReminder_notification: 1
+    },
+      user2 = {
+        id: 1,
+        mail: 'test@test.com',
+        name: 'test2name',
+        creationNotice: 0,
+        creationNotice_notification: 0,
+        deadlineReminder: 0,
+        deadlineReminder_notification: 0
+      },
+      wrapper = shallow(<SettingsDialog user={user} save_settings={(state) => save_settings = state} />);
+
+    wrapper.find('.mailFrame input').simulate('change', { target: { value: user2.mail } });
+    wrapper.find('#SettingsDialog_name').simulate('change', { target: { value: user2.name } });
+    wrapper.find('.notificationMatrix .notification input').forEach(elem => {
+      elem.simulate('change', { target: { checked: false } });
+    });
+    wrapper.find('button.submit').simulate('click');
+    setTimeout(() => {
+      expect(save_settings).toEqual(user2);
+      done();
+    }, 100);
+  });
+
+  test('should send changed values on submit', (done) => {
+    let save_settings = false;
     const wrapper = shallow(<SettingsDialog user={{}} save_settings_locally={(state) => save_settings = state} />);
 
     wrapper.find('.notificationMatrix .notification input').forEach(elem => {
@@ -103,9 +137,9 @@ describe('SettingsDialog', () => {
         id: undefined,
         mail: '',
         name: '',
-        creationNotice_mail: 0,
+        creationNotice: 0,
         creationNotice_notification: 1,
-        deadlineReminder_mail: 0,
+        deadlineReminder: 0,
         deadlineReminder_notification: 1
       });
       done();

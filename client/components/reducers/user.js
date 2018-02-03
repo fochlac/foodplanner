@@ -11,7 +11,7 @@ const users = (state = {}, action) => {
       return state;
     case 'SAVE_SETTINGS':
       if (action.status === "complete") {
-        return Object.assign({}, state, action.locally);
+        return Object.assign({}, state, action.data, action.locally);
       }
       return state;
 

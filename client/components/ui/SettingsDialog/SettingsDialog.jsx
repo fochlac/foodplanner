@@ -13,9 +13,9 @@ export default class SettingsDialog extends React.Component {
       id: props.user.id,
       mail: props.user.mail ? props.user.mail : '',
       name: props.user.name ? props.user.name : '',
-      creationNotice_mail: props.user.creationNotice ? props.user.creationNotice : 0,
+      creationNotice: props.user.creationNotice ? props.user.creationNotice : 0,
       creationNotice_notification: props.user.creationNotice_notification ? props.user.creationNotice_notification : 0,
-      deadlineReminder_mail: props.user.deadlineReminder ? props.user.deadlineReminder : 0,
+      deadlineReminder: props.user.deadlineReminder ? props.user.deadlineReminder : 0,
       deadlineReminder_notification: props.user.deadlineReminder_notification ? props.user.deadlineReminder_notification : 0
     };
 
@@ -49,6 +49,8 @@ export default class SettingsDialog extends React.Component {
             creationNotice_notification: 0
           });
         });
+    } else if (this.props.user.id) {
+      this.props.save_settings(s);
     }
   }
 
@@ -119,7 +121,7 @@ export default class SettingsDialog extends React.Component {
                 {
                   !this.props.user.id
                     ? <td className="notification createdMail" data-fieldtype="E-Mail" ><input type="checkbox" disabled={true} title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
-                    : <td className="notification createdMail" data-fieldtype="E-Mail" ><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice_mail} /></td>
+                    : <td className="notification createdMail" data-fieldtype="E-Mail" ><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice} /></td>
                 }
                 {
                   notificationsBlocked
@@ -132,7 +134,7 @@ export default class SettingsDialog extends React.Component {
                 {
                   !this.props.user.id
                     ? <td className="notification deadlineMail" data-fieldtype="E-Mail" ><input type="checkbox" disabled={true} title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
-                    : <td className="notification deadlineMail" data-fieldtype="E-Mail" ><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder_mail} /></td>
+                    : <td className="notification deadlineMail" data-fieldtype="E-Mail" ><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder} /></td>
                 }
                 {
                   notificationsBlocked

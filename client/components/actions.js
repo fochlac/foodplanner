@@ -359,8 +359,8 @@ export const save_settings = (data) => ({
       id: data.id,
       mail: data.mail,
       name: data.name,
-      creationNotice: data.creationNotice_mail,
-      deadlineReminder: data.deadlineReminder_mail
+      creationNotice: data.creationNotice,
+      deadlineReminder: data.deadlineReminder
     }
   },
   enqueue: resData => save_settings_locally(data)
