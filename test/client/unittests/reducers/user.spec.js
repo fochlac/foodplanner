@@ -90,6 +90,7 @@ describe('user-reducer', () => {
             {},
             action
         )).toEqual({
+            ...action.data,
             ...action.locally
         });
 
@@ -99,6 +100,7 @@ describe('user-reducer', () => {
             },
             action
         )).toEqual({
+            ...action.data,
             ...action.locally,
             test4: '12312534',
         });

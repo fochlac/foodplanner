@@ -23,7 +23,7 @@ const handleGetUserById = (id, res) => {
     res.status(200).send(user);
   } else {
     userDB.getUserByProperty('id', id).then((result) => {
-      log(6, 'got user data');
+      log(6, 'got user data', id);
       if (!result) {
         return res.status(200).send({});
       }

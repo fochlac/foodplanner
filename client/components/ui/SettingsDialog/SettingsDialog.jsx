@@ -69,7 +69,7 @@ export default class SettingsDialog extends React.Component {
   handleCheck(event, type) {
     return (evt) => {
       this.mySetState({
-        [event + '_' + type]: +evt.target.checked
+        [event + (type ? ('_' + type) : '')]: +evt.target.checked
       });
     };
   }
@@ -121,7 +121,7 @@ export default class SettingsDialog extends React.Component {
                 {
                   !this.props.user.id
                     ? <td className="notification createdMail" data-fieldtype="E-Mail" ><input type="checkbox" disabled={true} title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
-                    : <td className="notification createdMail" data-fieldtype="E-Mail" ><input type="checkbox" onChange={this.handleCheck('creationNotice', 'mail')} checked={this.state.creationNotice} /></td>
+                    : <td className="notification createdMail" data-fieldtype="E-Mail" ><input type="checkbox" onChange={this.handleCheck('creationNotice')} checked={this.state.creationNotice} /></td>
                 }
                 {
                   notificationsBlocked
@@ -134,7 +134,7 @@ export default class SettingsDialog extends React.Component {
                 {
                   !this.props.user.id
                     ? <td className="notification deadlineMail" data-fieldtype="E-Mail" ><input type="checkbox" disabled={true} title="Bitte registrieren Sie sich, um diese Option wählen zu können." /></td>
-                    : <td className="notification deadlineMail" data-fieldtype="E-Mail" ><input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'mail')} checked={this.state.deadlineReminder} /></td>
+                    : <td className="notification deadlineMail" data-fieldtype="E-Mail" ><input type="checkbox" onChange={this.handleCheck('deadlineReminder')} checked={this.state.deadlineReminder} /></td>
                 }
                 {
                   notificationsBlocked

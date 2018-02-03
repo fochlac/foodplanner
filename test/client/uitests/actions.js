@@ -83,8 +83,6 @@ export const signupUser = async function({
   await this.driver.awaitBusyComplete();
 };
 
-
-
 export const createMeal = async function({
   name = "testmeal",
   description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum elementum mi a molestie aliquam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",

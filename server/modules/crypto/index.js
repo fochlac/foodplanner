@@ -60,7 +60,7 @@ module.exports = {
       cache.put(mail, user);
     }
     if (!user.salt || !user.salt.length) {
-      return Promise.resolve(user.id);
+      return Promise.resolve(user.user);
     }
     return generateHash(hash, user.salt)
       .then(newHash => user.hash === newHash.hash

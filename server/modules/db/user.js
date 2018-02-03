@@ -221,17 +221,10 @@ module.exports = {
                 myDb.release();
                 if (err) {
                   log(2, 'modules/db/user:createUser.3', err, queryAuth(user.id));
-                  reject({ status: 500, type: 'Internal_Error', reason: 'Error creating user' });
+                  reject({ status: 500, type: 'Internal_Error', reason: 'Error creating user password' });
                 } else {
-                  log(6, 'modules/db/user:createUser - user created');
-                  resolve({
-                    name: options.name,
-                    mail: options.mail,
-                    deadlineReminder: options.deadlineReminder,
-                    creationNotice: options.creationNotice,
-                    balance: 0,
-                    id: result.insertId
-                  });
+                  log(6, 'modules/db/user:createUser - password saved');
+                  resolve(user);
                 }
               });
             });
