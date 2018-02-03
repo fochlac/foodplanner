@@ -90,6 +90,28 @@ describe('SettingsDialog', () => {
     }, 100);
   });
 
+  test('should send changed values on submit', (done) => {
+    let save_settings = false;
+    const wrapper = shallow(<SettingsDialog user={{}} save_settings_locally={(state) => save_settings = state} />);
+
+    wrapper.find('.notificationMatrix .notification input').forEach(elem => {
+      elem.simulate('change', { target: { checked: true } });
+    });
+    wrapper.find('button.submit').simulate('click');
+    setTimeout(() => {
+      expect(save_settings).toEqual({
+        id: undefined,
+        mail: '',
+        name: '',
+        creationNotice_mail: 0,
+        creationNotice_notification: 1,
+        deadlineReminder_mail: 0,
+        deadlineReminder_notification: 1
+      });
+      done();
+    }, 100);
+  });
+
 
   test('should close on cancel button click', () => {
     let dialog_closed = false;

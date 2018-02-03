@@ -26,9 +26,6 @@ export default class SettingsDialog extends React.Component {
     this.mySetState = function (data, cb) {
       this.setState(data, () => {
         const app = (history && history.state && history.state.app) ? history.state.app : {};
-        if (cb) {
-          cb();
-        }
         history.replaceState({ app: { ...app, dialog: { ...(app.dialog ? app.dialog : {}), state: this.state } } }, document.title, document.location.pathname);
       });
     }
@@ -51,11 +48,8 @@ export default class SettingsDialog extends React.Component {
             deadlineReminder_notification: 0,
             creationNotice_notification: 0
           });
-        })
-    } else if (!this.props.user.id) {
-      this.props.save_settings(s);
+        });
     }
-
   }
 
   cancel() {
