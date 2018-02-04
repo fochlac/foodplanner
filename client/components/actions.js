@@ -348,7 +348,7 @@ export const create_settings_dialog = () => ({
   config: true
 });
 
-export const save_settings = (data) => ({
+export const save_settings = (data, hash) => ({
   type: 'SAVE_SETTINGS',
   status: 'initialized',
   ...closeDialogOptions,
@@ -359,6 +359,7 @@ export const save_settings = (data) => ({
       id: data.id,
       mail: data.mail,
       name: data.name,
+      hash,
       creationNotice: data.creationNotice,
       deadlineReminder: data.deadlineReminder
     }

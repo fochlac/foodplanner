@@ -205,11 +205,11 @@ export default class CreateMealDialog extends React.Component {
       return (
         <Dialog className="SignUpDialog">
           <div className="titlebar">
-            <h3>Ungültige Mahlzeit!</h3>
+            <h3>Ungültiger Termin!</h3>
             <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
           </div>
           <div className="body">
-            <p>Diese Mahlzeit ist leider nicht verfügbar.</p>
+            <p>Dieser Termin ist leider nicht mehr verfügbar.</p>
           </div>
           <div className="foot">
             <button type="button" className="cancel" onClick={this.cancel.bind(this)}>Schließen</button>
@@ -223,7 +223,7 @@ export default class CreateMealDialog extends React.Component {
           {
             edit
             ? <h3>{s.name} bearbeiten</h3>
-            : <h3>Neue Mahlzeit erstellen</h3>
+            : <h3>Neuen Termin erstellen</h3>
           }
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
         </div>

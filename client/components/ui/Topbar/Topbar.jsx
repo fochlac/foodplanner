@@ -29,8 +29,8 @@ export default class Topbar extends React.Component {
             {
               this.props.user.id
               ? <li onClick={this.props.create_meal_dialog.bind(this)}>
-                  <span className="symbolExplanation">Mahlzeit anlegen</span>
-                  <span className="fa fa-plus fa-lg" title="Mahlzeit anlegen"></span>
+                  <span className="symbolExplanation">Termin anlegen</span>
+                  <span className="fa fa-plus fa-lg" title="Termin anlegen"></span>
               </li>
               : null
             }
