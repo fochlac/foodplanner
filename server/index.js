@@ -7,7 +7,7 @@ const   express             = require('express')
     ,   xssFilter           = require('x-xss-protection')
     ,   https               = require('https')
     ,   fs                  = require('fs')
-    ,   routes              = require(process.env.FOOD_HOME + 'routes')
+    ,   router              = require(process.env.FOOD_HOME + 'router')
     ,   scheduler           = require(process.env.FOOD_HOME + 'modules/scheduler')
     ,   mealsDB             = require(process.env.FOOD_HOME + 'modules/db/meals')
     ,   signupsDB           = require(process.env.FOOD_HOME + 'modules/db/signups')
@@ -23,7 +23,7 @@ const   express             = require('express')
         }, app);
 
 sslServer.listen(server_port, server_ip_address, () => {
-    console.log('listening on port '+ server_port);
+    console.log("listening on https://" + server_ip_address + ':' + server_port);
 });
 
 app.use(bodyparser.json());
@@ -34,7 +34,7 @@ app.set('x-powered-by', false);
 app.use(jwt.checkToken);
 
 // connect router
-app.use('/', routes);
+app.use('/', router);
 
 // if not connected to a route, deliver static content
 app.use('/static/', express.static(process.env.FOOD_CLIENT + ''));

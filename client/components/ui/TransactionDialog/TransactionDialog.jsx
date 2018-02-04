@@ -23,7 +23,7 @@ export default class TransactionDialog extends React.Component {
         <thead>
           <tr>
             <th>Datum</th>
-            <th>Mahlzeit</th>
+            <th>Termin</th>
             <th>Partner</th>
             <th>Betrag</th>
             <th>Summe</th>

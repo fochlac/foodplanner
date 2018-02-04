@@ -34,6 +34,45 @@ describe('user-reducer', () => {
         });
     });
 
+    test('REGISTER, SIGNIN', () => {
+        const action = {
+          type: 'REGISTER',
+          status: 'complete',
+          data: {
+            test2: 'test1234',
+            test3: '123'
+          }
+        }
+
+        expect(user(
+            {},
+            action
+        )).toEqual({
+            ...action.data
+        });
+
+        expect(user(
+            {
+                test4: '12312534'
+            },
+            action
+        )).toEqual({
+            ...action.data,
+            test4: '12312534',
+        });
+
+        action.status = 'hidden';
+
+        expect(user(
+            {
+                test4: '12312534'
+            },
+            action
+        )).toEqual({
+            test4: '12312534',
+        });
+    });
+
     test('SAVE_SETTINGS, SIGNIN', () => {
         const action = {
           type: 'SAVE_SETTINGS',
@@ -51,6 +90,7 @@ describe('user-reducer', () => {
             {},
             action
         )).toEqual({
+            ...action.data,
             ...action.locally
         });
 
@@ -60,6 +100,7 @@ describe('user-reducer', () => {
             },
             action
         )).toEqual({
+            ...action.data,
             ...action.locally,
             test4: '12312534',
         });

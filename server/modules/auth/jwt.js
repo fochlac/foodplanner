@@ -6,7 +6,7 @@ const   userDB  = require(process.env.FOOD_HOME  + 'modules/db/user')
 
 const   secretKey = process.env.FOOD_UUID
     ,   jwtOptions = {
-            issuer: 'food.fochlac.com'
+            issuer: process.env.FOOD_EXTERNAL
         };
 
 let userList,
@@ -129,5 +129,7 @@ module.exports = {
             log(4, `Anonymous user tried to access restricted call.`);
             res.status(401).send({type: 'UNAUTHORIZED'});
         }
-    }
+    },
+
+    clear: (req, res) => res.status(200).cookie('jwt', '', { secure: true, httpOnly: true, expires: 0 }).send({})
 }

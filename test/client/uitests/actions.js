@@ -5,46 +5,51 @@ import { expect } from "chai";
 import { Key, until } from "selenium-webdriver";
 
 export const loginState = async function() {
-  const userframe = await this.driver.findElement(S.userframe);
+  const userframe = await this.driver.findElements(S.userframe);
 
-  return (await userframe.getAttribute("class")).indexOf("register") === -1;
+  return !!userframe.length;
 };
 
-export const createUser = async function({ mail, name = "testuser" }) {
+export const createUser = async function({ mail, name = "testuser", pass }) {
   if (await this.driver.loginState()) {
     await this.driver.findElement(S.ql.logout).click();
     await this.driver.awaitBusyComplete();
   }
 
-  if ((await this.driver.findElements(S.uf.registerLink)).length) {
-    this.driver.findElement(S.uf.registerLink).click();
-  }
+  this.driver.findElement(S.ql.login).click();
+  this.driver.waitElementLocated(S.dialog.login);
+  this.driver.findElement(S.ld.registerLink).click()
 
-  await this.driver.findElement(S.uf.registerName).sendKeys(name);
-  await this.driver.findElement(S.uf.registerMail).sendKeys(mail);
-  await this.driver.findElement(S.uf.submit).click();
+
+  await this.driver.findElement(S.ld.name).sendKeys(name);
+  await this.driver.findElement(S.ld.mail).sendKeys(mail);
+  if (pass) {
+    await this.driver.findElement(S.ld.pass).sendKeys(pass);
+    await this.driver.findElement(S.ld.pass2).sendKeys(pass);
+
+  }
+  await this.driver.findElement(S.dialog.submit).click();
   await this.driver.awaitBusyComplete();
 };
 
-export const loginUser = async function(mail) {
+export const loginUser = async function(mail, pass) {
   if (await this.driver.loginState()) {
     await this.driver.findElement(S.ql.logout).click();
     await this.driver.awaitBusyComplete();
   }
 
-  if ((await this.driver.findElements(S.uf.signinLink)).length) {
-    this.driver.findElement(S.uf.signinLink).click();
+  this.driver.findElement(S.ql.login).click();
+  this.driver.waitElementLocated(S.dialog.login);
+
+  await this.driver.findElement(S.ld.mail).sendKeys(mail);
+  if (pass && pass.length && typeof pass === 'string') {
+    await this.driver.findElement(S.ld.pass).sendKeys(pass);
+    await this.driver.findElement(S.ld.pass2).sendKeys(pass);
   }
-
-  const mailInput = await this.driver.findElement(S.uf.loginMail);
-
-  await mailInput.sendKeys(mail.slice(0, -2));
-  await this.driver.wait(until.elementValueIs(mailInput, mail));
-
-  await this.driver.findElement(S.uf.submit).click();
+  await this.driver.findElement(S.dialog.submit).click();
   await this.driver.awaitBusyComplete();
 
-  expect(await loginState.bind(this)()).to.be.true;
+  expect(await this.driver.loginState()).to.be.true;
 };
 
 export const signupUser = async function({
@@ -77,8 +82,6 @@ export const signupUser = async function({
   await this.driver.findElement(S.dialog.submit).click();
   await this.driver.awaitBusyComplete();
 };
-
-
 
 export const createMeal = async function({
   name = "testmeal",

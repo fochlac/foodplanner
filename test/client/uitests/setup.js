@@ -84,10 +84,10 @@ driver.refresh = async function() {
   await driver.waitElementLocated("body");
   await driver.sleep(1000);
 
-  if ((await driver.findElements(S.userframe)).length === 0) {
+  if ((await driver.findElements(S.topbar)).length === 0) {
     await driver.refresh();
   }
-  await driver.findElement(S.userframe);
+  await driver.findElement(S.topbar);
 };
 
 before(async function() {

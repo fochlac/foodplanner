@@ -254,6 +254,7 @@ meals.delete('/:id', jwt.requireAuthentication, error.router.validate('params', 
 meals.post('/', image.single('imageData'), jwt.requireAuthentication, error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
     creator: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,70}$/,
+    creatorId: /^[0-9]{1,14}$/,
     description: /^[^"%;]*$/,
     time: /^[0-9]{1,50}$/,
     deadline: /^[0-9]{0,50}$/,
