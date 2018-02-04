@@ -44,6 +44,16 @@ describe('handleErrors', () => {
             data: {type: 'Bad_Request', reason: 'userfault', message: 'test123'},
             actionId: 2
         },
+        act9 = {
+            status: 'failure',
+            data: {type: 'BAD_PASSWORD'},
+            actionId: 2
+        },
+        act10 = {
+            status: 'failure',
+            data: {type: 'BAD_USER'},
+            actionId: 2
+        },
         act8 = {
             actionId: 2
         };
@@ -85,22 +95,34 @@ describe('handleErrors', () => {
     })(act4);
 
     handleErrors({dispatch: action => {
-        expect(action).toEqual(create_error(act5.actionId, "Der Server hat Ihre Anfrage abgelehnt, da Sie nicht angemeldet sind."));
+      expect(action).toEqual(create_error(act5.actionId, "Der Server hat Ihre Anfrage abgelehnt, da Sie nicht angemeldet sind."));
     }})((action) => {
-        expect(action).toEqual(act5);
+      expect(action).toEqual(act5);
     })(act5);
 
     handleErrors({dispatch: action => {
-        expect(action).toEqual(create_error(act6.actionId, "Ein Nutzer mit dieser Email-Adresse existiert bereits."));
+      expect(action).toEqual(create_error(act6.actionId, "Ein Nutzer mit dieser Email-Adresse existiert bereits."));
     }})((action) => {
         expect(action).toEqual(act6);
-    })(act6);
+      })(act6);
 
     handleErrors({dispatch: action => {
         expect(action).toEqual(create_error(act7.actionId, act7.data.message));
     }})((action) => {
-        expect(action).toEqual(act7);
+      expect(action).toEqual(act7);
     })(act7);
+
+        handleErrors({dispatch: action => {
+            expect(action).toEqual(create_error(act9.actionId, "Fehlerhaftes Passwort. Bitte versuchen Sie es erneut."));
+        }})((action) => {
+            expect(action).toEqual(act9);
+        })(act9);
+
+        handleErrors({dispatch: action => {
+            expect(action).toEqual(create_error(act10.actionId, "Unbekannte Email-Addresse. Bitte versuchen Sie es erneut."));
+        }})((action) => {
+            expect(action).toEqual(act10);
+        })(act10);
 
     handleErrors({dispatch: action => {
         expect(1).toEqual(2);
