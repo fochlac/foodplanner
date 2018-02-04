@@ -11,6 +11,13 @@ const userInterface = {
   mail: mail => /^[\_A-Za-z0-9.\-]{1,70}@[\_A-Za-z0-9.\-]{1,70}\.[A-Za-z]{1,10}$/.test(mail),
   pass: pass => /^[ÄÜÖäöüA-Za-z0-9.\-,|;:_#'+*~?=\(/&%$§!\)]{0,100}$/.test(pass),
 }
+
+const userInterfaceText = {
+  name: 'Bitte geben Sie mindestens 2 Zeichen ein. Buchstaben, Zahlen, Bindestrich und Leerzeichen sind erlaubt.',
+  mail: 'Bitte geben Sie eine valide Email-Addresse ein. Buchstaben, Zahlen, Punkt, Bindestrich und Unterstrich sind erlaubt.',
+  pass: "Bitte geben Sie ein valides Passwort ein. Neben Buchstaben und Zahlen sind folgende Sonderzeichen erlaubt: .-,|;:_#'+*~?=(/&%$§!)",
+}
+
 export default class SettingsDialog extends React.Component {
   constructor(props) {
     super()
@@ -124,18 +131,33 @@ export default class SettingsDialog extends React.Component {
           {this.props.user.id ? (
             <div>
               <div className="mailFrame">
-                <label htmlFor="SettingsDialog_mail">E-Mail</label>
+                <label htmlFor="SettingsDialog_mail">
+                  E-Mail
+                  <InfoBubble style={{ top: '-4px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+                    {userInterfaceText.mail}
+                  </InfoBubble>
+                </label>
                 <div className="row">
                   <input type="text" id="SettingsDialog_mail" value={s.mail} className={!mailValid ? 'invalid' : ''} onChange={this.mailInput} />
                 </div>
               </div>
               <div>
                 <div>
-                  <label htmlFor="SettingsDialog_name">Name</label>
+                  <label htmlFor="SettingsDialog_name">
+                    Name
+                    <InfoBubble style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+                      {userInterfaceText.name}
+                    </InfoBubble>
+                  </label>
                   <input type="text" id="SettingsDialog_name" value={s.name} className={!nameValid ? 'invalid' : ''} onChange={this.nameInput} />
                 </div>
                 <div>
-                  <label htmlFor="SettingsDialog_pass">Passwort</label>
+                  <label htmlFor="SettingsDialog_pass">
+                    Passwort
+                    <InfoBubble style={{ bottom: '28px', left: '-80px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
+                      {userInterfaceText.pass}
+                    </InfoBubble>
+                  </label>
                   <input
                     id="SettingsDialog_pass"
                     className={!passwordValid ? 'invalid' : ''}
@@ -146,7 +168,12 @@ export default class SettingsDialog extends React.Component {
                 </div>
                 {s.pass.length ? (
                   <div>
-                    <label htmlFor="SettingsDialog_pass2">Passwort wiederholen:</label>
+                    <label htmlFor="SettingsDialog_pass2">
+                      Passwort wiederholen
+                      <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
+                        {userInterfaceText.pass}
+                      </InfoBubble>
+                    </label>
                     <input
                       id="SettingsDialog_pass2"
                       className={!passwordValid ? ' invalid' : ''}

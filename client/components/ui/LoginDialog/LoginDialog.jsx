@@ -1,6 +1,7 @@
 import './LoginDialog.less'
 
 import Dialog from 'UI/Dialog.js';
+import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import React from 'react'
 import { generateHash } from 'SCRIPTS/crypto.js'
 
@@ -79,56 +80,68 @@ export default class LoginDialog extends React.Component {
     const nameValid = userInterface.name(name) || !name.length;
     const mailValid = userInterface.mail(mail) || !mail.length;
 
-    return (
-      <Dialog className="loginDialog">
+    return <Dialog className="loginDialog">
         <div className="titlebar">
           <h3>{register ? 'Registrieren' : 'Anmelden'}</h3>
-          <span className="fa fa-times push-right pointer" onClick={this.props.close_dialog}></span>
+          <span className="fa fa-times push-right pointer" onClick={this.props.close_dialog} />
         </div>
         <div className="body">
-          {register ? (
-            <div>
-              <label htmlFor="LoginDialog_name">Name</label>
-              <input id="LoginDialog_name" data-info={userInterfaceText.name} className={"name" + (!nameValid ? ' invalid' : '')} type="text" placeholder="Name" value={name} onChange={this.nameInput} />
-
-              <label htmlFor="LoginDialog_mail">Email</label>
-              <input id="LoginDialog_mail" data-info={userInterfaceText.mail} className={"mail" + (!mailValid ? ' invalid' : '')} type="text" placeholder="E-Mail" onChange={this.mailInput} value={mail} />
-
-              <label htmlFor="LoginDialog_pass">Passwort</label>
-              <input id="LoginDialog_pass" data-info={userInterfaceText.pass} className={"pass" + (!passwordValid ? ' invalid' : '')} type="password" placeholder="Passwort (optional)" onChange={this.passInput} value={pass} />
-
-              {pass.length ? (
-                <span>
-                  <label htmlFor="LoginDialog_pass2">Passwort wiederholen:</label>
-                  <input id="LoginDialog_pass2" data-info={userInterfaceText.pass} className={"pass" + (!passwordValid ? ' invalid' : '')} type="password" placeholder="Passwort wiederholen" onChange={this.pass2Input} value={pass2} />
-                </span>
-              ) : null}
+          {register ? <div>
+              <label htmlFor="LoginDialog_name">
+                Name
+                <InfoBubble style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+                  {userInterfaceText.name}
+                </InfoBubble>
+              </label>
+              <input id="LoginDialog_name" className={'name' + (!nameValid ? ' invalid' : '')} type="text" placeholder="Name" value={name} onChange={this.nameInput} />
+              <label htmlFor="LoginDialog_mail">
+                Email
+                <InfoBubble style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+                  {userInterfaceText.mail}
+                </InfoBubble>
+              </label>
+              <input id="LoginDialog_mail" className={'mail' + (!mailValid ? ' invalid' : '')} type="text" placeholder="E-Mail" onChange={this.mailInput} value={mail} />
+              <label htmlFor="LoginDialog_pass">
+                Passwort
+                <InfoBubble style={{ top: '30px', left: '19px', width: '160px' }} symbol="fa-asterisk optional" arrow="right">
+                  {userInterfaceText.pass}
+                </InfoBubble>
+              </label>
+              <input id="LoginDialog_pass" className={'pass' + (!passwordValid ? ' invalid' : '')} type="password" placeholder="Passwort (optional)" onChange={this.passInput} value={pass} />
+              {pass.length ? <span>
+                  <label htmlFor="LoginDialog_pass2">
+                    Passwort wiederholen
+                    <InfoBubble style={{ bottom: '28px', left: '-80px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
+                      {userInterfaceText.pass}
+                    </InfoBubble>
+                  </label>
+                  <input id="LoginDialog_pass2" className={'pass' + (!passwordValid ? ' invalid' : '')} type="password" placeholder="Passwort wiederholen" onChange={this.pass2Input} value={pass2} />
+                </span> : null}
               <p className="fakeLink signinLink toggleRegister" onClick={this.toggleRegister.bind(this, false)}>
                 <span>
                   <span className="fa fa-angle-double-left" /> Zurück zur Anmeldung
                 </span>
               </p>
-            </div>
-          ) : (
-              <div className="login">
+            </div> : <div className="login">
+              <label htmlFor="LoginDialog_mail">
+                Email<span className="fa fa-asterisk required" />
+              </label>
+              <input id="LoginDialog_mail" className="mail" type="text" placeholder="E-Mail" value={mail} onChange={this.mailInput} />
 
-                <label htmlFor="LoginDialog_mail">Email</label>
-                <input id="LoginDialog_mail" className="mail" type="text" placeholder="E-Mail" value={mail} onChange={this.mailInput} />
-
-                <label htmlFor="LoginDialog_pass">Passwort</label>
-                <input id="LoginDialog_pass" className="pass" type="password" placeholder="Passwort (optional)" value={pass} onChange={this.passInput} />
-                <p className="fakeLink registerLink toggleRegister" onClick={this.toggleRegister.bind(this, true)}>
-                  <span>
-                    Ein neues Konto anlegen <span className="fa fa-angle-double-right" />
-                  </span>
-                </p>
-              </div>
-            )}
+              <label htmlFor="LoginDialog_pass">Passwort</label>
+              <input id="LoginDialog_pass" className="pass" type="password" placeholder="Passwort (optional)" value={pass} onChange={this.passInput} />
+              <p className="fakeLink registerLink toggleRegister" onClick={this.toggleRegister.bind(this, true)}>
+                <span>
+                  Ein neues Konto anlegen <span className="fa fa-angle-double-right" />
+                </span>
+              </p>
+            </div>}
         </div>
         <div className="foot">
-          <button className="submit" disabled={!valid} onClick={this.submit.bind(this)}>{register ? 'Registrieren' : 'Anmelden'}</button>
+          <button className="submit" disabled={!valid} onClick={this.submit.bind(this)}>
+            {register ? 'Registrieren' : 'Anmelden'}
+          </button>
         </div>
-      </Dialog >
-    )
+      </Dialog>
   }
 }
