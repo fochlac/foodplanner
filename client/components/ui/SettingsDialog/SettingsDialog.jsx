@@ -57,27 +57,29 @@ export default class SettingsDialog extends React.Component {
       getHash = generateHash(s.pass)
     }
 
-    getHash.then(hash => {
-      if (s.deadlineReminder_notification || s.creationNotice_notification) {
-        getNotificationPermission()
-          .then(() => {
-            if (this.props.user.id) {
-              this.props.save_settings(s, hash)
-            } else {
-              this.props.save_settings_locally(s)
-            }
-          })
-          .catch(err => {
-            // add error message
-            this.mySetState({
-              deadlineReminder_notification: 0,
-              creationNotice_notification: 0,
+    getHash
+      .then(hash => {
+        if (s.deadlineReminder_notification || s.creationNotice_notification) {
+          getNotificationPermission()
+            .then(() => {
+              if (this.props.user.id) {
+                this.props.save_settings(s, hash)
+              } else {
+                this.props.save_settings_locally(s)
+              }
             })
-          })
-      } else if (this.props.user.id) {
-        this.props.save_settings(s, hash)
-      }
-    }).catch(console.err);
+            .catch(err => {
+              // add error message
+              this.mySetState({
+                deadlineReminder_notification: 0,
+                creationNotice_notification: 0,
+              })
+            })
+        } else if (this.props.user.id) {
+          this.props.save_settings(s, hash)
+        }
+      })
+      .catch(console.err)
   }
 
   cancel() {
@@ -104,12 +106,13 @@ export default class SettingsDialog extends React.Component {
     const s = this.state,
       notificationsBlocked = Notification.permission === 'denied'
     const valid =
-      userInterface.mail(s.mail) &&
-      userInterface.name(s.name) &&
-      (!s.pass.length || (userInterface.pass(s.pass) && userInterface.pass(s.pass2) && s.pass2 === s.pass))
+      !this.props.user.id ||
+      (userInterface.mail(s.mail) &&
+        userInterface.name(s.name) &&
+        (!s.pass.length || (userInterface.pass(s.pass) && userInterface.pass(s.pass2) && s.pass2 === s.pass)))
     const passwordValid = s.pass.includes(s.pass2) || (s.pass === s.pass2 && userInterface.pass(s.pass))
-    const nameValid = userInterface.name(s.name) || !s.name.length
-    const mailValid = userInterface.mail(s.mail) || !s.mail.length
+    const nameValid = userInterface.name(s.name)
+    const mailValid = userInterface.mail(s.mail)
 
     return (
       <Dialog className="settingsDialog">

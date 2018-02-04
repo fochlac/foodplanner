@@ -51,6 +51,26 @@ describe('SettingsDialog', () => {
   })
 
   test('should send changed values on submit', done => {
+    window.crypto = {
+      subtle: {
+        importKey: () => ({
+          then: () => ({
+            then: () => ({
+              then: () => ({
+                then: cb => {
+                  cb('ALeLYLKK1Wtl/1TQlW/oEA')
+                  return { catch: () => null }
+                },
+              }),
+            }),
+          }),
+        }),
+      },
+    }
+    window.TextEncoder = function() {
+      return { encode: () => null }
+    }
+
     let save_settings = false
     const user = {
         id: 1,
@@ -60,8 +80,8 @@ describe('SettingsDialog', () => {
         creationNotice_notification: 1,
         deadlineReminder: 1,
         deadlineReminder_notification: 1,
-        pass: '',
-        pass2: '',
+        pass: 'asdasd',
+        pass2: 'asdasd',
       },
       user2 = {
         id: 1,
@@ -76,6 +96,8 @@ describe('SettingsDialog', () => {
 
     wrapper.find('.mailFrame input').simulate('change', { target: { value: user.mail } })
     wrapper.find('#SettingsDialog_name').simulate('change', { target: { value: user.name } })
+    wrapper.find('#SettingsDialog_pass').simulate('change', { target: { value: user.pass } })
+    wrapper.find('#SettingsDialog_pass2').simulate('change', { target: { value: user.pass } })
     wrapper.find('.notificationMatrix .notification input').forEach(elem => {
       elem.simulate('change', { target: { checked: true } })
     })
@@ -84,6 +106,57 @@ describe('SettingsDialog', () => {
       expect(save_settings).toEqual(user)
       done()
     }, 100)
+  })
+
+  test('error handling test', () => {
+    const user = {
+        id: 1,
+        mail: '',
+        name: '',
+        creationNotice: 0,
+        creationNotice_notification: 0,
+        deadlineReminder: 0,
+        deadlineReminder_notification: 0,
+      },
+      wrapper = shallow(<SettingsDialog user={user} save_settings={state => (save_settings = state)} />)
+
+    expect(wrapper.find('.submit').prop('disabled')).toBe(true)
+    expect(wrapper.find('.body #SettingsDialog_mail')).toHaveLength(1)
+    expect(wrapper.find('.body #SettingsDialog_pass')).toHaveLength(1)
+    expect(wrapper.find('.body #SettingsDialog_pass2')).toHaveLength(0)
+    expect(wrapper.find('.body #SettingsDialog_name')).toHaveLength(1)
+    expect(wrapper.find('.submit').prop('disabled')).toBe(true)
+    wrapper.find('.body #SettingsDialog_pass').simulate('change', { target: { value: 'test' } })
+    expect(wrapper.find('.body #SettingsDialog_pass2')).toHaveLength(1)
+    wrapper.find('.body #SettingsDialog_pass').simulate('change', { target: { value: '' } })
+    expect(wrapper.find('.body #SettingsDialog_pass2')).toHaveLength(0)
+    expect(wrapper.find('.body #SettingsDialog_mail.invalid')).toHaveLength(1)
+    wrapper.find('.body #SettingsDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
+    expect(wrapper.find('.body #SettingsDialog_mail.invalid')).toHaveLength(0)
+    wrapper.find('.body #SettingsDialog_mail').simulate('change', { target: { value: 'asd' } })
+    expect(wrapper.find('.body #SettingsDialog_mail.invalid')).toHaveLength(1)
+    wrapper.find('.body #SettingsDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
+    expect(wrapper.find('.body #SettingsDialog_mail.invalid')).toHaveLength(0)
+    expect(wrapper.find('.body #SettingsDialog_name.invalid')).toHaveLength(1)
+    wrapper.find('.body #SettingsDialog_name').simulate('change', { target: { value: 'asd' } })
+    expect(wrapper.find('.body #SettingsDialog_name.invalid')).toHaveLength(0)
+    wrapper.find('.body #SettingsDialog_name').simulate('change', { target: { value: 'a' } })
+    expect(wrapper.find('.body #SettingsDialog_name.invalid')).toHaveLength(1)
+    wrapper.find('.body #SettingsDialog_name').simulate('change', { target: { value: 'asd' } })
+    expect(wrapper.find('.body #SettingsDialog_name.invalid')).toHaveLength(0)
+    expect(wrapper.find('.submit').prop('disabled')).toBe(false)
+    expect(wrapper.find('.body #SettingsDialog_pass.invalid')).toHaveLength(0)
+    wrapper.find('.body #SettingsDialog_pass').simulate('change', { target: { value: 'asd' } })
+    expect(wrapper.find('.submit').prop('disabled')).toBe(true)
+    expect(wrapper.find('.body #SettingsDialog_pass2.invalid')).toHaveLength(0)
+    wrapper.find('.body #SettingsDialog_pass2').simulate('change', { target: { value: 'sd2' } })
+    expect(wrapper.find('.submit').prop('disabled')).toBe(true)
+    expect(wrapper.find('.body #SettingsDialog_pass2.invalid')).toHaveLength(1)
+    expect(wrapper.find('.body #SettingsDialog_pass.invalid')).toHaveLength(1)
+    wrapper.find('.body #SettingsDialog_pass2').simulate('change', { target: { value: 'asd' } })
+    expect(wrapper.find('.submit').prop('disabled')).toBe(false)
+    expect(wrapper.find('.body #SettingsDialog_pass.invalid')).toHaveLength(0)
+    expect(wrapper.find('.body #SettingsDialog_pass2.invalid')).toHaveLength(0)
   })
 
   test('should send changed values on submit', done => {
@@ -124,14 +197,14 @@ describe('SettingsDialog', () => {
 
   test('should send changed values on submit', done => {
     let save_settings = false
-    const wrapper = shallow(<SettingsDialog user={{id: 1}} save_settings_locally={state => (save_settings = state)} />)
+    const wrapper = shallow(<SettingsDialog user={{ id: 1 }} save_settings_locally={state => (save_settings = state)} />)
 
     wrapper.find('.notificationMatrix .notification input').forEach(elem => {
       elem.simulate('change', { target: { checked: true } })
     })
     wrapper.find('button.submit').simulate('click')
     setTimeout(() => {
-      expect(save_settings).toEqual(false);
+      expect(save_settings).toEqual(false)
       done()
     }, 100)
   })
