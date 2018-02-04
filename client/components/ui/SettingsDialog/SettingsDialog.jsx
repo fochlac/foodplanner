@@ -49,7 +49,7 @@ export default class SettingsDialog extends React.Component {
       userInterface.name(s.name) &&
       (!s.pass.length || (userInterface.pass(s.pass) && userInterface.pass(s.pass2) && s.pass2 === s.pass))
 
-    if (!valid) {
+    if (!valid && this.props.user.id) {
       return
     }
 

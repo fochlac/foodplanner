@@ -3,20 +3,20 @@ import { create_error, delete_error } from '../actions.js'
 export const handleErrors = store => next => action => {
   if (action.status === 'failure') {
     if (action.data.type === 'Internal_Error') {
-      store.dispatch(create_error(action.actionId, 'Auf dem Server ist ein unbekannter Fehler aufgetreten, bitte wenden Sie sich an ihren Administrator.'))
+      store.dispatch(create_error(action.actionId, 'Auf dem Server ist ein unbekannter Fehler aufgetreten, bitte wenden Sie sich an Ihren Administrator.'))
       setTimeout(() => store.dispatch(delete_error(action.actionId)), 10000)
     } else if (action.data.type === 'Invalid_Request') {
       store.dispatch(
         create_error(
           action.actionId,
-          `Der Server hat ihre Anfrage abgelehnt, bitte überprüfen Sie Ihre Eingaben ${
+          `Der Server hat Ihre Anfrage abgelehnt, bitte überprüfen Sie Ihre Eingaben ${
             action.data.data.length > 1 ? 'für die Felder:' : 'für das Feld'
           } '${action.data.data.join("', '")}'.`,
         ),
       )
       setTimeout(() => store.dispatch(delete_error(action.actionId)), 10000)
     } else if (action.data.type === 'FORBIDDEN') {
-      store.dispatch(create_error(action.actionId, `Der Server hat Ihre Anfrage abgelehnt, da Sie über unzureichende Reche verfügen.`))
+      store.dispatch(create_error(action.actionId, `Der Server hat Ihre Anfrage abgelehnt, da Sie über unzureichende Rechte verfügen.`))
       setTimeout(() => store.dispatch(delete_error(action.actionId)), 10000)
     } else if (action.data.type === 'UNAUTHORIZED') {
       store.dispatch(create_error(action.actionId, `Der Server hat Ihre Anfrage abgelehnt, da Sie nicht angemeldet sind.`))
