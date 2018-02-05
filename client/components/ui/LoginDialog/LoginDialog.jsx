@@ -122,6 +122,7 @@ export default class LoginDialog extends React.Component {
                 placeholder="Name"
                 value={name}
                 onChange={this.nameInput}
+                autoComplete="name"
               />
               <label htmlFor="LoginDialog_mail">
                 Email
@@ -136,7 +137,7 @@ export default class LoginDialog extends React.Component {
                 placeholder="E-Mail"
                 onChange={this.mailInput}
                 value={mail}
-                autocomplete="username"
+                autoComplete="email"
               />
               <label htmlFor="LoginDialog_pass">
                 Passwort
@@ -181,7 +182,7 @@ export default class LoginDialog extends React.Component {
               <label htmlFor="LoginDialog_mail">
                 Email<span className="fa fa-asterisk required" />
               </label>
-              <input id="LoginDialog_mail" className="mail" type="text" placeholder="E-Mail" value={mail} onChange={this.mailInput} autocomplete="username" />
+              <input id="LoginDialog_mail" className="mail" type="text" placeholder="E-Mail" value={mail} onChange={this.mailInput} autoComplete="mail" />
 
               <label htmlFor="LoginDialog_pass">Passwort</label>
               <input id="LoginDialog_pass" className="pass" type="password" placeholder="Passwort (optional)" value={pass} onChange={this.passInput} />
