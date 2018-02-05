@@ -34,11 +34,13 @@ describe('app-reducer', () => {
   test('HISTORY', () => {
     const action = {
       type: 'HISTORY',
-      app: 'test1',
+      app: {
+        test1: 'asdasd',
+        errors: { asdas: 'asdaa' },
+        busy: true,
+        hiddenBusy: true,
+      },
       option: 'test2',
-      errors: { asdas: 'asdaa' },
-      busy: true,
-      hiddenBusy: true,
     }
 
     expect(
@@ -46,14 +48,17 @@ describe('app-reducer', () => {
         {},
         {
           type: 'HISTORY',
-          app: 'test1',
+          app: {
+            test1: 'asdasd',
+            errors: { asdas: 'asdaa' },
+            busy: true,
+            hiddenBusy: true,
+          },
           option: 'test2',
         },
       ),
-    ).toBe({
-      type: 'HISTORY',
-      app: 'test1',
-      option: 'test2',
+    ).toEqual({
+      test1: 'asdasd',
       busy: false,
       hiddenBusy: false,
     })
@@ -65,10 +70,8 @@ describe('app-reducer', () => {
         },
         action,
       ),
-    ).toBe({
-      type: 'HISTORY',
-      app: 'test1',
-      option: 'test2',
+    ).toEqual({
+      test1: 'asdasd',
       busy: false,
       hiddenBusy: false,
     })

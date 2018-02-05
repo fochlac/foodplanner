@@ -4,9 +4,9 @@ const app = (state = {}, action) => {
       return { ...state, dialog: { type: action.content, option: action.option } }
     case 'HISTORY':
       delete action.app.errors
+      delete action.app.mailSuggestion
       action.app.busy = false
       action.app.hiddenBusy = false
-      action.app.mailSuggestion = undefined
       return action.app
     case 'CHECK_MAIL':
       if (action.status === 'complete' && !action.data.error) {
