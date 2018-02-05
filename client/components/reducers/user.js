@@ -1,7 +1,7 @@
 const users = (state = {}, action) => {
   switch (action.type) {
     case 'INITIAL_USER':
-      return Object.assign({}, state, action.data, action.localSettings);
+      return Object.assign({}, state, action.localSettings);
 
     case 'SIGNIN':
     case 'REGISTER':

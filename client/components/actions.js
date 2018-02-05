@@ -16,18 +16,8 @@ export const initial_meals = (hidden) => ({
   enqueue: initial_signups.bind(null, hidden)
 });
 
-export const initial_user = (id, localSettings, noToken) => ({
+export const initial_user = (localSettings) => ({
   type: 'INITIAL_USER',
-  status: noToken ? 'hidden' : undefined,
-  data: {},
-  api: (
-    noToken
-      ? {
-        url: '/api/user/' + id,
-        method: 'get'
-      }
-      : undefined
-  ),
   localSettings
 });
 

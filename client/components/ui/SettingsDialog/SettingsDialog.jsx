@@ -1,22 +1,12 @@
 import './SettingsDialog.less'
 
+import { userInterface, userInterfaceText } from 'UI/LoginDialog/LoginDialog.jsx'
+
 import Dialog from 'UI/Dialog.js'
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import React from 'react'
-import { getNotificationPermission } from 'SCRIPTS/serviceWorker.js'
 import { generateHash } from 'SCRIPTS/crypto.js'
-
-const userInterface = {
-  name: name => /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/.test(name),
-  mail: mail => /^[\_A-Za-z0-9.\-]{1,70}@[\_A-Za-z0-9.\-]{1,70}\.[A-Za-z]{1,10}$/.test(mail),
-  pass: pass => /^[ÄÜÖäöüA-Za-z0-9.\-,|;:_#'+*~?=\(/&%$§!\)]{0,100}$/.test(pass),
-}
-
-const userInterfaceText = {
-  name: 'Bitte geben Sie mindestens 2 Zeichen ein. Buchstaben, Zahlen, Bindestrich und Leerzeichen sind erlaubt.',
-  mail: 'Bitte geben Sie eine valide Email-Addresse ein. Buchstaben, Zahlen, Punkt, Bindestrich und Unterstrich sind erlaubt.',
-  pass: "Bitte geben Sie ein valides Passwort ein. Neben Buchstaben und Zahlen sind folgende Sonderzeichen erlaubt: .-,|;:_#'+*~?=(/&%$§!)",
-}
+import { getNotificationPermission } from 'SCRIPTS/serviceWorker.js'
 
 export default class SettingsDialog extends React.Component {
   constructor(props) {
@@ -48,42 +38,53 @@ export default class SettingsDialog extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.user.deadlineReminder_notification !== this.props.user.deadlineReminder_notification ||
+      nextProps.user.creationNotice_notification !== this.props.user.creationNotice_notification
+    ) {
+      this.setState({
+        deadlineReminder_notification: nextProps.user.deadlineReminder_notification ? nextProps.user.deadlineReminder_notification : 0,
+        creationNotice_notification: nextProps.user.creationNotice_notification ? nextProps.user.creationNotice_notification : 0,
+      })
+    }
+  }
+
   submit() {
-    const s = this.state
+    const { mail, name, pass2, pass, deadlineReminder_notification, creationNotice_notification } = this.state
     let getHash = Promise.resolve()
     const valid =
-      userInterface.mail(s.mail) &&
-      userInterface.name(s.name) &&
-      (!s.pass.length || (userInterface.pass(s.pass) && userInterface.pass(s.pass2) && s.pass2 === s.pass))
+      userInterface.mail(mail) && userInterface.name(name) && (!pass.length || (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass))
 
     if (!valid && this.props.user.id) {
       return
     }
 
-    if (s.pass.length) {
-      getHash = generateHash(s.pass)
+    if (pass.length) {
+      getHash = generateHash(pass)
     }
 
     getHash
       .then(hash => {
-        if (s.deadlineReminder_notification || s.creationNotice_notification) {
+        if (deadlineReminder_notification || creationNotice_notification) {
           getNotificationPermission()
             .then(() => {
               if (this.props.user.id) {
-                this.props.save_settings(s, hash)
+                this.props.save_settings(this.state, hash)
               } else {
-                this.props.save_settings_locally(s)
+                this.props.save_settings_locally(this.state)
               }
             })
             .catch(err => {
-              // add error message
+              this.props.create_error('notification_denied', 'In order to use the notification settings, please setup your browser to allow notifications.')
+              setTimeout(() => this.props.delete_error('notification_denied'), 10000)
               this.mySetState({
                 deadlineReminder_notification: 0,
                 creationNotice_notification: 0,
               })
             })
         } else if (this.props.user.id) {
-          this.props.save_settings(s, hash)
+          this.props.save_settings(this.state, hash)
         }
       })
       .catch(console.err)
@@ -110,17 +111,14 @@ export default class SettingsDialog extends React.Component {
   }
 
   render() {
-    const s = this.state,
+    const { mail, name, pass2, pass, creationNotice, creationNotice_notification, deadlineReminder, deadlineReminder_notification } = this.state,
       notificationsBlocked = Notification.permission === 'denied'
     const valid =
       !this.props.user.id ||
-      (userInterface.mail(s.mail) &&
-        userInterface.name(s.name) &&
-        (!s.pass.length || (userInterface.pass(s.pass) && userInterface.pass(s.pass2) && s.pass2 === s.pass)))
-    const passwordValid = s.pass.includes(s.pass2) || (s.pass === s.pass2 && userInterface.pass(s.pass))
-    const nameValid = userInterface.name(s.name)
-    const mailValid = userInterface.mail(s.mail)
-
+      (userInterface.mail(mail) && userInterface.name(name) && (!pass.length || (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass)))
+    const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass(pass)) || !pass2.length
+    const nameValid = userInterface.name(name)
+    const mailValid = userInterface.mail(mail)
     return (
       <Dialog className="settingsDialog">
         <div className="titlebar">
@@ -138,7 +136,7 @@ export default class SettingsDialog extends React.Component {
                   </InfoBubble>
                 </label>
                 <div className="row">
-                  <input type="text" id="SettingsDialog_mail" value={s.mail} className={!mailValid ? 'invalid' : ''} onChange={this.mailInput} />
+                  <input type="text" id="SettingsDialog_mail" value={mail} className={!mailValid ? 'invalid' : ''} onChange={this.mailInput} />
                 </div>
               </div>
               <div>
@@ -149,12 +147,12 @@ export default class SettingsDialog extends React.Component {
                       {userInterfaceText.name}
                     </InfoBubble>
                   </label>
-                  <input type="text" id="SettingsDialog_name" value={s.name} className={!nameValid ? 'invalid' : ''} onChange={this.nameInput} />
+                  <input type="text" id="SettingsDialog_name" value={name} className={!nameValid ? 'invalid' : ''} onChange={this.nameInput} />
                 </div>
                 <div>
                   <label htmlFor="SettingsDialog_pass">
                     Passwort
-                    <InfoBubble style={{ bottom: '28px', left: '-80px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
+                    <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
                       {userInterfaceText.pass}
                     </InfoBubble>
                   </label>
@@ -166,11 +164,11 @@ export default class SettingsDialog extends React.Component {
                     onChange={this.passInput}
                   />
                 </div>
-                {s.pass.length ? (
+                {pass.length ? (
                   <div>
                     <label htmlFor="SettingsDialog_pass2">
                       Passwort wiederholen
-                      <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
+                      <InfoBubble style={{ bottom: '28px', left: '-80px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
                         {userInterfaceText.pass}
                       </InfoBubble>
                     </label>
@@ -191,11 +189,21 @@ export default class SettingsDialog extends React.Component {
             <thead>
               <tr>
                 <th>Ereignis</th>
-                <th>E-Mail</th>
+                <th>
+                  E-Mail
+                  {!this.props.user.id && (
+                    <InfoBubble style={{ bottom: '-60px', right: '26px', width: '180px' }} arrow="left">
+                      Um E-Mail-Benachrichtigungen zu aktivieren,{' '}
+                      <span className="fakeLink pointer" onClick={this.props.start_sign_in}>
+                        erstellen Sie bitte einen Account oder melden sich an.
+                      </span>
+                    </InfoBubble>
+                  )}
+                </th>
                 <th>
                   Push-Nachricht
                   <InfoBubble style={{ bottom: '-60px', right: '26px', width: '180px' }} arrow="left">
-                    Die Einstellungen für Push-Nachrichten gelten jeweils&#13;&#10;nur für das Gerät, auf dem sie ausgewählt wurden.
+                    Die Einstellungen für Push-Nachrichten gelten jeweils nur für das Gerät, auf dem sie ausgewählt wurden.
                   </InfoBubble>
                 </th>
               </tr>
@@ -209,7 +217,7 @@ export default class SettingsDialog extends React.Component {
                   </td>
                 ) : (
                   <td className="notification createdMail" data-fieldtype="E-Mail">
-                    <input type="checkbox" onChange={this.handleCheck('creationNotice')} checked={this.state.creationNotice} />
+                    <input type="checkbox" onChange={this.handleCheck('creationNotice')} checked={creationNotice} />
                   </td>
                 )}
                 {notificationsBlocked ? (
@@ -217,25 +225,25 @@ export default class SettingsDialog extends React.Component {
                     <input
                       type="checkbox"
                       disabled={true}
-                      checked={this.state.creationNotice_notification}
+                      checked={creationNotice_notification}
                       title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;&#10;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können."
                     />
                   </td>
                 ) : (
                   <td className="notification createdNotification" data-fieldtype="Push-Notification">
-                    <input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')} checked={this.state.creationNotice_notification} />
+                    <input type="checkbox" onChange={this.handleCheck('creationNotice', 'notification')} checked={creationNotice_notification} />
                   </td>
                 )}
               </tr>
               <tr>
-                <td>Anmeldungs&shy;frist läuft ab</td>
+                <td>Anmeldungsfrist läuft ab</td>
                 {!this.props.user.id ? (
                   <td className="notification deadlineMail" data-fieldtype="E-Mail">
                     <input type="checkbox" disabled={true} title="Bitte registrieren Sie sich, um diese Option wählen zu können." />
                   </td>
                 ) : (
                   <td className="notification deadlineMail" data-fieldtype="E-Mail">
-                    <input type="checkbox" onChange={this.handleCheck('deadlineReminder')} checked={this.state.deadlineReminder} />
+                    <input type="checkbox" onChange={this.handleCheck('deadlineReminder')} checked={deadlineReminder} />
                   </td>
                 )}
                 {notificationsBlocked ? (
@@ -243,13 +251,13 @@ export default class SettingsDialog extends React.Component {
                     <input
                       type="checkbox"
                       disabled={true}
-                      checked={this.state.deadlineReminder_notification}
+                      checked={deadlineReminder_notification}
                       title="Benachrichtigungen wurden für diese Seite deaktiviert.&#13;Bitte lassen Sie Benachrichtigungen zu, um diese Option wählen zu können."
                     />
                   </td>
                 ) : (
                   <td className="notification deadlineNotification" data-fieldtype="Push-Notification">
-                    <input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'notification')} checked={this.state.deadlineReminder_notification} />
+                    <input type="checkbox" onChange={this.handleCheck('deadlineReminder', 'notification')} checked={deadlineReminder_notification} />
                   </td>
                 )}
               </tr>
