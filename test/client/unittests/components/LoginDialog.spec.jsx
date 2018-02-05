@@ -140,6 +140,13 @@ describe('LoginDialog', () => {
     expect(output.data).toEqual({ mail: 'asd@asd.de', hash: 'ALeLYLKK1Wtl/1TQlW/oEA' })
     expect(output.type).toBe('sign_in')
 
+    wrapper.find('.body #LoginDialog_pass').simulate('change', { target: { value: '' } })
+
+    wrapper.find('.foot button').simulate('click')
+
+    expect(output.data).toEqual({ mail: 'asd@asd.de', hash: undefined })
+    expect(output.type).toBe('sign_in')
+
     wrapper.find('.registerLink').simulate('click')
     wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
     wrapper.find('.body #LoginDialog_name').simulate('change', { target: { value: 'asd' } })
