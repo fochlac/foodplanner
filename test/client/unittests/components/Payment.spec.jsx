@@ -34,7 +34,13 @@ describe('Payment', () => {
         />,
       )
 
-    wrapper.find('.fa-check').simulate('click')
-    wrapper.find('.fa-times').simulate('click')
+    wrapper
+      .find('.state')
+      .at(0)
+      .simulate('click')
+    wrapper
+      .find('.state')
+      .at(1)
+      .simulate('click')
   })
 })
