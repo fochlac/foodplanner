@@ -15,8 +15,8 @@ describe('Payment', () => {
 
     expect(wrapper.find('.body').length).toBe(1)
     expect(wrapper.find('.body table').length).toBe(1)
-    expect(wrapper.find('.body tbody tr').length).toBe(3)
-    expect(wrapper.find('.body tbody tr td.name').length).toBe(3)
+    expect(wrapper.find('.body tbody tr').length).toBe(4)
+    expect(wrapper.find('.body tbody tr td.name').length).toBe(4)
     wrapper.find('.body tbody tr td.name').forEach((node, index) => expect(node.text()).toContain(signups[index].name))
     wrapper.find('.body tbody tr td.price').forEach((node, index) => expect(node.text()).toContain(signups[index].price ? signups[index].price : 'unbekannt'))
     wrapper.find('.body tbody tr td.paid').forEach((node, index) => expect(node.find('.fa-check').length).toBe(signups[index].paid))

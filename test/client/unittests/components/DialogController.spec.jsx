@@ -45,11 +45,11 @@ describe('DialogController', () => {
 
     wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?list=deadlineReminder' }, user: {} } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
-    expect(wrapper.find(ConfirmationDialog).text()).toContain('Anmeldefrist')
+    expect(wrapper.find(ConfirmationDialog).prop('message')).toContain('Anmeldefrist')
 
     wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?list=creationNotice' }, user: {} } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
-    expect(wrapper.find(ConfirmationDialog).text()).toContain('neuem Angebot')
+    expect(wrapper.find(ConfirmationDialog).prop('message')).toContain('neuem Angebot')
 
     wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?' }, user: {} } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
