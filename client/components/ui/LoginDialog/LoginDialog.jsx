@@ -35,6 +35,21 @@ export default class LoginDialog extends React.Component {
     this.mailInput = this.handleInput('mail').bind(this)
     this.passInput = this.handleInput('pass').bind(this)
     this.pass2Input = this.handleInput('pass2').bind(this)
+    this.handleKeyUp = this.handleKeyUp.bind(this)
+  }
+
+  handleKeyUp(evt) {
+    if (evt.keyCode === 13) {
+      this.submit()
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener('keyup', this.handleKeyUp)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keyup', this.handleKeyUp)
   }
 
   submit() {
