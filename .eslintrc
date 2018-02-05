@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "standard",
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/react",
+    "prettier/standard"
+  ],
+  "env": {
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": { "experimentalObjectRestSpread": true }
+  },
+  "plugins": ["react"],
+  "overrides": [
+    {
+      "files": ["*.spec.js", "**/jest/**/*.js"],
+      "env": { "jest": true }
+    }
+  ]
+}

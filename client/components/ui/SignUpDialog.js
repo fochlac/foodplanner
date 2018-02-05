@@ -1,7 +1,8 @@
+import { close_dialog, meal_edit, meal_signup, start_sign_in } from 'ACTIONS';
+
 import React from 'react';
-import { connect } from 'react-redux';
 import SignUpDialog from 'UI/SignUpDialog/SignUpDialog.jsx';
-import {meal_signup, meal_edit, close_dialog } from 'ACTIONS';
+import { connect } from 'react-redux';
 
 const mapStateToProps = (state, ownProps) => {
     const edit = ownProps.type === 'edit';
@@ -39,4 +40,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default connect(mapStateToProps, {meal_signup, meal_edit, close_dialog })(SignUpDialog);
+export default connect(mapStateToProps, { meal_signup, meal_edit, close_dialog, start_sign_in })(SignUpDialog);

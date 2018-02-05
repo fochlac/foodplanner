@@ -147,7 +147,7 @@ describe('CreateMealDialog', () => {
         },
         wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={{}} create_meal={output => create_meal=output}/>);
 
-    history.pushState({}, 'test', '/mahlzeit');
+    history.pushState({}, 'test', '/termin');
     wrapper.find('#SignUpDialog_name').simulate('change', {target: {value: TEST_MEAL.name}})
     wrapper.find('#SignUpDialog_description').simulate('change', {target: {value: TEST_MEAL.description}})
     wrapper.find('#SignUpDialog_signupLimit').simulate('change', {target: {value: TEST_MEAL.signupLimit}})

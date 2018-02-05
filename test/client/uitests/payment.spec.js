@@ -30,8 +30,8 @@ const sendMoney = async function(mail, amount) {
   await this.driver.awaitBusyComplete();
 };
 
-const USER1 = { mail: "test@test.de" }
-const USER2 = { mail: "test2@test.de" }
+const USER1 = { mail: "test@test.de", name: "testuser1" }
+const USER2 = { mail: "test2@test.de", name: "testuser2" }
 
 describe("payment dialog", () => {
   before(async function() {

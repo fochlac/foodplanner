@@ -58,4 +58,19 @@
         }
 
     }
+    
+    @media all and (max-width: 420px) {
+        .row.responsive {
+            flex-direction: column;
+            align-items: stretch;
+            
+            &> .col {
+                align-items: stretch;
+            }
+            &> select {
+                max-width: 100%;
+                min-width: 100%;
+            }
+        }
+    }
 }

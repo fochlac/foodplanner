@@ -34,8 +34,7 @@ function initDb() {
 myDb = initDb();
 
 let setup = [
-    `GRANT USAGE ON *.* TO '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}';`,
-    `DROP USER '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}';`,
+    `DROP USER IF EXISTS '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}';`,
     `CREATE USER '${process.env.FOOD_DB_USERNAME}'@'${process.env.ADMIN_DB_HOST}' IDENTIFIED BY '${process.env.FOOD_DB_PASSWORD}';`,
     `DROP DATABASE IF EXISTS ${process.env.FOOD_DB_NAME};`,
     `CREATE DATABASE ${process.env.FOOD_DB_NAME};`,
@@ -131,6 +130,15 @@ let setup = [
         \`time\`                bigint          NOT NULL,
 
         PRIMARY KEY (id)
+    );`,
+    `CREATE TABLE IF NOT EXISTS \`authentication\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`user\`                int             NOT NULL,
+        \`hash\`                varchar(150),
+        \`salt\`                varchar(150),
+
+        PRIMARY KEY (id),
+        UNIQUE KEY \`user\` (\`user\`)
     );`
 ];
 

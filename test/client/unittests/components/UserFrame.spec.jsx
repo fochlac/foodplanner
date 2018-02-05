@@ -1,7 +1,8 @@
-import React from 'react';
-import { shallow, mount } from 'enzyme';
-import UserFrame from 'UI/UserFrame/UserFrame.jsx';
+import { mount, shallow } from 'enzyme';
+
 import EmailInput from 'UI/EmailInput.js';
+import React from 'react';
+import UserFrame from 'UI/UserFrame/UserFrame.jsx';
 
 let output;
 
@@ -20,8 +21,6 @@ const user = {
 
 	},
 	actions = {
-		sign_in: (data) => output = {data, type: 'sign_in'},
-		save_settings: (data) => output = {data, type: 'save_settings'},
 		show_transaction_history: () => output = 'show_transaction_history',
 		start_send_money: () => output = 'start_send_money'
 	}
@@ -53,54 +52,6 @@ describe('UserFrame', () => {
     expect(wrapper.find('.role')).toHaveLength(0);
     expect(wrapper.find('.historyLink')).toHaveLength(1);
     expect(wrapper.find('.userManagementLink')).toHaveLength(1);
-  });
-
-  test(
-    'should render a unregistered frame and switch between register / signin',
-    () => {
-      const wrapper = shallow(<UserFrame user={{}} app={{}} {...actions} />);
-
-      expect(wrapper.find('.userFrame.register')).toHaveLength(1);
-      expect(wrapper.find('.registerLink')).toHaveLength(1);
-      expect(wrapper.find(EmailInput)).toHaveLength(1);
-      expect(wrapper.find('.userFrame.register button')).toHaveLength(1);
-
-      wrapper.find('.registerLink').simulate('click');
-      expect(wrapper.find('.signinLink')).toHaveLength(1);
-      expect(wrapper.find('.userFrame .name')).toHaveLength(1);
-      expect(wrapper.find('.userFrame .mail')).toHaveLength(1);
-      expect(wrapper.find('.userFrame.register button')).toHaveLength(1);
-
-      wrapper.find('.signinLink').simulate('click');
-
-      expect(wrapper.find('.registerLink')).toHaveLength(1);
-      expect(wrapper.find(EmailInput)).toHaveLength(1);
-      expect(wrapper.find('.userFrame.register button')).toHaveLength(1);
-    }
-  );
-
-  test('should output correct data on login / register', () => {
-    const TESTNAME = 'test123',
-    	TESTMAIL = 'test@test.de',
-    	wrapper = shallow(<UserFrame user={{}} app={{mailSuggestion: 'test123'}} {...actions} />);
-
-    wrapper.find('.userFrame.register button').simulate('click');
-
-    expect(output.data).toBe('test123');
-    expect(output.type).toBe('sign_in');
-
-    wrapper.find('.registerLink').simulate('click');
-    wrapper.find('.userFrame .name').simulate('change', {target: {value: TESTNAME}})
-    wrapper.find('.userFrame .mail').simulate('change', {target: {value: TESTMAIL}})
-    wrapper.find('.userFrame.register button').simulate('click');
-
-    expect(output.type).toBe('save_settings');
-    expect(output.data).toEqual({
-    	creationNotice_mail: 0,
-    	deadlineReminder_mail: 0,
-		name: TESTNAME,
-		mail: TESTMAIL
-    });
   });
 
   test('should render a registered frame', () => {

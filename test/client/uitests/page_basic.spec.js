@@ -21,14 +21,12 @@ describe('open page and check state', () => {
             .then(visibile => expect(visibile).to.be.true);
     });
 
-    it('should display the userframe as register frame', async function() {
-        const userframe = await this.driver.findElement(S.userframe)
+    it('should not display the userframe and show the login button', async function() {
+        const userframe = await this.driver.findElements(S.userframe)
 
-        userframe.isDisplayed()
-            .then(visibile => expect(visibile).to.be.true);
+        expect(userframe).to.have.lengthOf(0);
 
-        return userframe.getAttribute('class')
-            .then(className => expect(className.indexOf('register')).to.not.equal(-1));
+        expect(await this.driver.findElements(S.ql.login)).to.have.lengthOf(1);
     });
 
     it('should display the settings quicklink', function() {

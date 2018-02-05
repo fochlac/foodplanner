@@ -1,14 +1,14 @@
+import { show_transaction_history, start_send_money } from 'ACTIONS';
+
 import React from 'react';
-import { connect } from 'react-redux';
 import UserFrame from 'UI/UserFrame/UserFrame.jsx';
-import { sign_in, save_settings, show_transaction_history, start_send_money } from 'ACTIONS';
+import { connect } from 'react-redux';
 
 const mapStateToProps = (state, ownProps) => {
 
     return {
-        user: state.user,
-        app: state.app
+        user: state.user
     };
 };
 
-export default connect(mapStateToProps, { sign_in, save_settings, show_transaction_history, start_send_money })(UserFrame);
+export default connect(mapStateToProps, { show_transaction_history, start_send_money })(UserFrame);

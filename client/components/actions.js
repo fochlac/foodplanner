@@ -1,4 +1,4 @@
-import {createHash} from './scripts/crypto.js';
+import { createHash } from './scripts/crypto.js';
 
 const closeDialogOptions = {
   content: '',
@@ -16,18 +16,8 @@ export const initial_meals = (hidden) => ({
   enqueue: initial_signups.bind(null, hidden)
 });
 
-export const initial_user = (id, localSettings, noToken) => ({
+export const initial_user = (localSettings) => ({
   type: 'INITIAL_USER',
-  status: noToken ? 'hidden' : undefined,
-  data: {},
-  api: (
-    noToken
-    ? {
-      url: '/api/user/' + id,
-      method: 'get'
-    }
-    : undefined
-  ),
   localSettings
 });
 
@@ -54,12 +44,12 @@ export const apply_history = opt => ({
   app: opt.app
 });
 
-export const set_busy  = state => ({
+export const set_busy = state => ({
   type: 'BUSY',
   state
 });
 
-export const set_hidden_busy  = state => ({
+export const set_hidden_busy = state => ({
   type: 'HIDDEN_BUSY',
   state
 });
@@ -170,7 +160,7 @@ export const toggle_paid = (id, state) => ({
 export const start_meal_signup = id => ({
   type: 'DIALOG',
   content: 'MEAL_SIGNUP',
-  option: {meal: id},
+  option: { meal: id },
   url: '/anmeldung',
   title: 'Mittagsplaner - Anmeldung',
   config: true
@@ -196,7 +186,7 @@ export const meal_signup = (data) => ({
 export const start_meal_edit = id => ({
   type: 'DIALOG',
   content: 'MEAL_EDIT',
-  option: {signup: id},
+  option: { signup: id },
   url: '/anmeldung',
   title: 'Mittagsplaner - Anmeldung bearbeiten',
   config: true
@@ -259,7 +249,7 @@ export const submit_prices = (prices, mealId) => ({
   api: {
     url: `/api/meals/${mealId}/prices`,
     method: 'post',
-    body: {prices}
+    body: { prices }
   }
 });
 
@@ -271,14 +261,14 @@ export const start_payment = (prices, mealId) => ({
   api: {
     url: `/api/meals/${mealId}/lock`,
     method: 'post',
-    body: {prices}
+    body: { prices }
   }
 });
 
 export const start_edit_meal = (id) => ({
   type: 'DIALOG',
   content: 'EDIT_MEAL',
-  option: {meal: id},
+  option: { meal: id },
   url: '/angebot',
   title: 'Mittagsplaner - Angebot bearbeiten',
   config: true
@@ -287,7 +277,7 @@ export const start_edit_meal = (id) => ({
 export const start_edit_price = (id) => ({
   type: 'DIALOG',
   content: 'EDIT_PRICE',
-  option: {meal: id},
+  option: { meal: id },
   url: '/preise',
   title: 'Mittagsplaner - Preise festlegen',
   config: true
@@ -308,7 +298,7 @@ export const edit_meal = (id, data) => ({
 export const start_cancel_meal = (id) => ({
   type: 'DIALOG',
   content: 'CANCEL_MEAL',
-  option: {meal: id},
+  option: { meal: id },
   url: '/angebot',
   title: 'Mittagsplaner - Angebot zurückziehen',
   config: true
@@ -348,25 +338,23 @@ export const create_settings_dialog = () => ({
   config: true
 });
 
-export const save_settings = (data) => ({
+export const save_settings = (data, hash) => ({
   type: 'SAVE_SETTINGS',
   status: 'initialized',
   ...closeDialogOptions,
   api: {
-    url: '/api/user' + ((data.id !== undefined) ? ('/' + data.id) : ''),
-    method: ((data.id !== undefined) ? 'put' : 'post'),
+    url: '/api/user/' + data.id,
+    method: 'put',
     body: {
       id: data.id,
       mail: data.mail,
       name: data.name,
-      creationNotice: data.creationNotice_mail,
-      deadlineReminder: data.deadlineReminder_mail
+      hash,
+      creationNotice: data.creationNotice,
+      deadlineReminder: data.deadlineReminder
     }
   },
-  enqueue: resData => save_settings_locally(Object.assign({}, resData, {
-    creationNotice_notification: data.creationNotice_notification,
-    deadlineReminder_notification: data.deadlineReminder_notification
-  }))
+  enqueue: resData => save_settings_locally(data)
 });
 
 export const save_settings_locally = (data) => ({
@@ -374,7 +362,10 @@ export const save_settings_locally = (data) => ({
   status: 'complete',
   ...closeDialogOptions,
   localkey: 'user',
-  locally: data
+  locally: {
+    creationNotice_notification: data.creationNotice_notification,
+    deadlineReminder_notification: data.deadlineReminder_notification
+  }
 });
 
 export const check_mail = (mail) => ({
@@ -397,14 +388,39 @@ export const sign_out = (id) => ({
   locally: {}
 });
 
-export const sign_in = (data) => ({
+export const sign_in = ({ mail, hash }) => ({
   type: 'SIGNIN',
   status: 'initialized',
+  ...closeDialogOptions,
   api: {
-    url: `/api/user/${data.id}`,
-    method: 'GET'
-  },
-  localkey: 'user',
-  locally: data
+    url: `/api/user/login`,
+    method: 'POST',
+    body: {
+      mail,
+      hash
+    }
+  }
+});
+
+export const register = ({ mail, hash, name }) => ({
+  type: 'REGISTER',
+  status: 'initialized',
+  ...closeDialogOptions,
+  api: {
+    url: `/api/user/`,
+    method: 'POST',
+    body: {
+      name,
+      mail,
+      hash
+    }
+  }
+});
+
+export const start_sign_in = () => ({
+  type: 'DIALOG',
+  content: 'LOGIN',
+  url: '/login',
+  title: 'Mittagsplaner - Anmelden'
 });
 
