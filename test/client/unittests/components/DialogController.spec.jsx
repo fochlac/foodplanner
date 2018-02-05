@@ -5,6 +5,7 @@ import CreateMealDialog from 'UI/CreateMealDialog.js'
 import DialogController from 'ROOT/DialogController.jsx'
 import ImpressumDialog from 'UI/ImpressumDialog.js'
 import IncomingPaymentsDialog from 'UI/IncomingPaymentsDialog.js'
+import LoginDialog from 'UI/LoginDialog.js'
 import PriceDialog from 'UI/PriceDialog.js'
 import PrintDialog from 'UI/PrintDialog.js'
 import React from 'react'
@@ -62,5 +63,8 @@ describe('DialogController', () => {
 
     wrapper.setProps({ dialog: { type: 'INCOMING_PAYMENTS', option: {} } })
     expect(wrapper.find(IncomingPaymentsDialog)).toHaveLength(1)
+
+    wrapper.setProps({ dialog: { type: 'LOGIN', option: {} } })
+    expect(wrapper.find(LoginDialog)).toHaveLength(1)
   })
 })
