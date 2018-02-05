@@ -142,7 +142,7 @@ export default class SettingsDialog extends React.Component {
                     value={mail}
                     className={!mailValid ? 'invalid' : ''}
                     onChange={this.mailInput}
-                    autocomplete="username"
+                    autoComplete="mail"
                   />
                 </div>
               </div>
@@ -154,7 +154,14 @@ export default class SettingsDialog extends React.Component {
                       {userInterfaceText.name}
                     </InfoBubble>
                   </label>
-                  <input type="text" id="SettingsDialog_name" value={name} className={!nameValid ? 'invalid' : ''} onChange={this.nameInput} />
+                  <input
+                    type="text"
+                    id="SettingsDialog_name"
+                    value={name}
+                    className={!nameValid ? 'invalid' : ''}
+                    onChange={this.nameInput}
+                    autoComplete="name"
+                  />
                 </div>
                 <div>
                   <label htmlFor="SettingsDialog_pass">
