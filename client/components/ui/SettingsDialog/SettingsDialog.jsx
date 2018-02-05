@@ -136,7 +136,14 @@ export default class SettingsDialog extends React.Component {
                   </InfoBubble>
                 </label>
                 <div className="row">
-                  <input type="text" id="SettingsDialog_mail" value={mail} className={!mailValid ? 'invalid' : ''} onChange={this.mailInput} />
+                  <input
+                    type="text"
+                    id="SettingsDialog_mail"
+                    value={mail}
+                    className={!mailValid ? 'invalid' : ''}
+                    onChange={this.mailInput}
+                    autocomplete="username"
+                  />
                 </div>
               </div>
               <div>
