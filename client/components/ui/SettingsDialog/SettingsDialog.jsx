@@ -128,24 +128,6 @@ export default class SettingsDialog extends React.Component {
         <div className="body">
           {this.props.user.id ? (
             <div>
-              <div className="mailFrame">
-                <label htmlFor="SettingsDialog_mail">
-                  E-Mail
-                  <InfoBubble style={{ top: '-4px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
-                    {userInterfaceText.mail}
-                  </InfoBubble>
-                </label>
-                <div className="row">
-                  <input
-                    type="text"
-                    id="SettingsDialog_mail"
-                    value={mail}
-                    className={!mailValid ? 'invalid' : ''}
-                    onChange={this.mailInput}
-                    autoComplete="mail"
-                  />
-                </div>
-              </div>
               <div>
                 <div>
                   <label htmlFor="SettingsDialog_name">
@@ -161,6 +143,22 @@ export default class SettingsDialog extends React.Component {
                     className={!nameValid ? 'invalid' : ''}
                     onChange={this.nameInput}
                     autoComplete="name"
+                  />
+                </div>
+                <div className="mailFrame">
+                  <label htmlFor="SettingsDialog_mail">
+                    E-Mail
+                    <InfoBubble style={{ top: '-4px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+                      {userInterfaceText.mail}
+                    </InfoBubble>
+                  </label>
+                  <input
+                    type="text"
+                    id="SettingsDialog_mail"
+                    value={mail}
+                    className={!mailValid ? 'invalid' : ''}
+                    onChange={this.mailInput}
+                    autoComplete="mail"
                   />
                 </div>
                 <div>
