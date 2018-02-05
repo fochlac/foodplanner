@@ -1,4 +1,4 @@
-import { createHash } from './scripts/crypto.js'
+import { createHash } from 'UTILS/crypto.js'
 
 const closeDialogOptions = {
   content: '',

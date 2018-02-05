@@ -1,14 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import TransactionDialog from 'UI/TransactionDialog/TransactionDialog.jsx';
-import { close_dialog, get_transaction_history } from 'ACTIONS';
+import { close_dialog, get_transaction_history } from 'STORE/actions.js'
+
+import React from 'react'
+import TransactionDialog from 'UI/TransactionDialog/TransactionDialog.jsx'
+import { connect } from 'react-redux'
 
 const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user,
+    transactions: state.user.transactions ? state.user.transactions : [],
+  }
+}
 
-    return {
-    	user: state.user,
-    	transactions: state.user.transactions ? state.user.transactions : []
-    };
-};
-
-export default connect(mapStateToProps, { close_dialog, get_transaction_history })(TransactionDialog);
+export default connect(mapStateToProps, { close_dialog, get_transaction_history })(TransactionDialog)

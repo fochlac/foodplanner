@@ -1,4 +1,4 @@
-import user from 'COMPONENTS/reducers/user.js'
+import user from 'STORE/reducers/user.js'
 
 describe('user-reducer', () => {
   test('INITIAL_USER', () => {

@@ -1,14 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import EmailInput from 'UI/EmailInput/EmailInput.jsx';
-import { check_mail } from 'ACTIONS';
+import EmailInput from 'UI/EmailInput/EmailInput.jsx'
+import React from 'react'
+import { check_mail } from 'STORE/actions.js'
+import { connect } from 'react-redux'
 
 const mapStateToProps = (state, ownProps) => {
-    return {
-        ...ownProps,
-        app: state.app,
-        user: state.user
-    }
-};
+  return {
+    ...ownProps,
+    app: state.app,
+    user: state.user,
+  }
+}
 
-export default connect(mapStateToProps, { check_mail })(EmailInput);
+export default connect(mapStateToProps, { check_mail })(EmailInput)

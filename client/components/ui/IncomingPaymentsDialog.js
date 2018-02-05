@@ -1,4 +1,4 @@
-import { close_dialog, send_money, toggle_paid } from 'ACTIONS'
+import { close_dialog, send_money, toggle_paid } from 'STORE/actions.js'
 
 import IncomingPaymentsDialog from 'UI/IncomingPaymentsDialog/IncomingPaymentsDialog.jsx'
 import React from 'react'

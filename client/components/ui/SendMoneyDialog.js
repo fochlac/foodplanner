@@ -1,14 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import SendMoneyDialog from 'UI/SendMoneyDialog/SendMoneyDialog.jsx';
-import { close_dialog, send_money } from 'ACTIONS';
+import { close_dialog, send_money } from 'STORE/actions.js'
+
+import React from 'react'
+import SendMoneyDialog from 'UI/SendMoneyDialog/SendMoneyDialog.jsx'
+import { connect } from 'react-redux'
 
 const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user,
+    app: state.app,
+  }
+}
 
-    return {
-    	user: state.user,
-    	app: state.app
-    };
-};
-
-export default connect(mapStateToProps, { close_dialog, send_money })(SendMoneyDialog);
+export default connect(mapStateToProps, { close_dialog, send_money })(SendMoneyDialog)

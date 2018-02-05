@@ -1,14 +1,12 @@
-import 'ROOT/BaseStyle.less'
-
 import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
-import { apply_history, connect_serviceworker, convert_postmessage, initial_meals, initial_user } from 'COMPONENTS/actions.js'
+import { apply_history, connect_serviceworker, convert_postmessage, initial_meals, initial_user } from 'STORE/actions.js'
 
 import Dashboard from 'PAGES/Dashboard.js'
-import DefaultPage from 'ROOT/DefaultPage.jsx'
+import DefaultPage from 'UI/DefaultPage.js'
 import React from 'react'
 import { connect } from 'react-redux'
-import { initDb } from 'SCRIPTS/indexedDb.js'
-import { initServiceWorker } from 'SCRIPTS/serviceWorker.js'
+import { initDb } from 'UTILS/indexedDb.js'
+import { initServiceWorker } from 'UTILS/serviceWorker.js'
 
 class App extends React.Component {
   constructor(props) {
