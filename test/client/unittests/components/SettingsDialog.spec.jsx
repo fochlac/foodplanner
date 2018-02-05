@@ -220,6 +220,8 @@ describe('SettingsDialog', () => {
     window.Notification = { permission: 'granted' }
     wrapper.setProps({ user: { creationNotice_notification: 1 } })
     wrapper.update()
+    wrapper.setProps({ user: { deadlineReminder_notification: 1 } })
+    wrapper.update()
 
     wrapper.find('button.submit').simulate('click')
     setTimeout(() => {
@@ -228,9 +230,9 @@ describe('SettingsDialog', () => {
         mail: '',
         name: '',
         creationNotice: 0,
-        creationNotice_notification: 1,
+        creationNotice_notification: 0,
         deadlineReminder: 0,
-        deadlineReminder_notification: 0,
+        deadlineReminder_notification: 1,
         pass: '',
         pass2: '',
       })
