@@ -24,7 +24,7 @@ const user = {
 
 describe('LoginDialog', () => {
   test('should render a unregistered frame and switch between register / signin', () => {
-    const wrapper = shallow(<LoginDialog user={{}} {...actions} />)
+    const wrapper = shallow(<LoginDialog {...actions} />)
 
     expect(wrapper.find(Dialog)).toHaveLength(1)
     expect(wrapper.find('.registerLink')).toHaveLength(1)
@@ -52,7 +52,7 @@ describe('LoginDialog', () => {
   })
 
   test('error handling test', () => {
-    const wrapper = shallow(<LoginDialog user={{}} {...actions} />)
+    const wrapper = shallow(<LoginDialog {...actions} />)
     expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
     wrapper.find('.registerLink').simulate('click')
     expect(wrapper.find('.titlebar h3').text()).toBe('Registrieren')
@@ -110,7 +110,7 @@ describe('LoginDialog', () => {
   })
 
   test('should output correct data on login / register', () => {
-    const wrapper = shallow(<LoginDialog user={{}} {...actions} />)
+    const wrapper = shallow(<LoginDialog {...actions} />)
 
     window.crypto = {
       subtle: {
@@ -176,5 +176,32 @@ describe('LoginDialog', () => {
     expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
     wrapper.find('.foot button').simulate('click')
     expect(output).toEqual(false)
+  })
+
+  test('should submit on ENTER-press', () => {
+    let eventListener,
+      tmp = window.addEventListener
+
+    window.addEventListener = (evt, fn) => (eventListener = fn)
+
+    const wrapper = shallow(<LoginDialog {...actions} />)
+    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
+
+    eventListener({ keyCode: 13 })
+
+    expect(output.data).toEqual({ mail: 'asd@asd.de', hash: undefined })
+    expect(output.type).toBe('sign_in')
+
+    output = false
+    eventListener({ keyCode: 27 })
+    expect(output).toBe(false)
+
+    window.addEventListener = tmp
+
+    tmp = window.removeEventListener
+    window.removeEventListener = (evt, fn) => (eventListener = evt)
+    wrapper.unmount()
+    expect(eventListener).toBe('keyup')
+    window.removeEventListener = tmp
   })
 })
