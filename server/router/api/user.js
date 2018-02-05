@@ -30,7 +30,7 @@ user.put(
   '/:id',
   jwt.requireAuthentication,
   error.router.validate('params', {
-    id: /^[1-9]*$/,
+    id: /^[0-9]*$/,
   }),
   error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/,
