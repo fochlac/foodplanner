@@ -1,58 +1,62 @@
 @import './variables.less';
 
 body {
-    color: @font-color-dark;
-    background: @base-color;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    position: absolute;
-    margin: 0;
-    font-size: 16px;
-    font-family: Raleway;
-    text-align: justify;
+  color: @font-color-dark;
+  background: @base-color;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  margin: 0;
+  font-size: 16px;
+  font-family: Raleway;
+  text-align: justify;
 }
 
 p {
-    margin: 0;
+  margin: 0;
 }
 
 a {
-    color: @colorg1;
-    text-decoration: none;
+  color: @colorg1;
+  text-decoration: none;
 }
 
-h3, h4, h2, h1, h5 {
-    margin: 0;
+h3,
+h4,
+h2,
+h1,
+h5 {
+  margin: 0;
 }
 
 .push-right {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 button {
-    background: @colorg3;
-    color: @colorg5;
-    border: solid 1px @colorg1;
-    border-radius: 2px;
-    cursor: pointer;
-    padding: 5px;
-    font-family: Raleway;
-    font-size: 1em;
+  background: @colorg3;
+  color: @colorg5;
+  border: solid 1px @colorg1;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 5px;
+  font-family: Raleway;
+  font-size: 1em;
 
-    &:hover {
-       opacity: 0.85;
-    }
+  &:hover {
+    opacity: 0.85;
+  }
 
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 }
 
 .invalid {
@@ -62,86 +66,106 @@ button {
   &:focus {
     background: white;
   }
+}
 
-  &::after {
-    content: attr(data-info);
-    position: absolute;
-    top: 0px;
+span.optional,
+.optional {
+  .required();
+  &::before {
+    color: @colory2;
   }
 }
+span.required,
+.required {
+  font-size: 0.5em;
+  max-width: 10px;
+  vertical-align: super;
+  margin-left: 0;
+
+  &::before {
+    color: @colorr1;
+  }
+
+  .InfoBubbleContent {
+    font-size: 14px;
+    hyphens: manual;
+    text-align: justify;
+  }
+}
+
 .inlineBlock {
-    display: inline-block;
+  display: inline-block;
 }
 .actionCursor {
-    cursor: pointer;
+  cursor: pointer;
 }
 .fakeLink {
-    color: @colorg4;
-    cursor: pointer;
-    font-weight: 600;
+  color: @colorg4;
+  cursor: pointer;
+  font-weight: 600;
 
-    &:hover {
-        color: @colorg3
-    }
+  &:hover {
+    color: @colorg3;
+  }
 }
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 .invisible {
-    visibility: hidden;
+  visibility: hidden;
 }
 select {
-    font-family: Raleway;
-    font-size: 1.1em;
-    padding: 3px;
+  font-family: Raleway;
+  font-size: 1.1em;
+  padding: 3px;
 }
 .footer {
-    position: fixed;
-    bottom: 0px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    left: 0;
-    right: 0;
-    padding: 5px;
-    border-top: solid 1px @colorg1;
-    font-weight: 600;
-    background: @colorg5;
-    height: @footerHeight;
-    box-sizing: border-box;
+  position: fixed;
+  bottom: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  left: 0;
+  right: 0;
+  padding: 5px;
+  border-top: solid 1px @colorg1;
+  font-weight: 600;
+  background: @colorg5;
+  height: @footerHeight;
+  box-sizing: border-box;
 }
 .inlineBlock {
-    display: inline-block !important;
+  display: inline-block !important;
 }
 .red {
-    background: @colorr1 !important;
+  background: @colorr1 !important;
 }
 .col_red {
-    color: @colorr1 !important;
+  color: @colorr1 !important;
 }
 .col_yellow {
-    color: @colory2 !important;
+  color: @colory2 !important;
 }
 .col_green {
-    color: @colorg3 !important;
+  color: @colorg3 !important;
 }
 input[type='number'] {
-    -moz-appearance:textfield;
+  -moz-appearance: textfield;
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-    padding: 0 1px;
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0 1px;
 }
 .noWrap {
-    white-space: nowrap;
+  white-space: nowrap;
 }
-.margin{
-    &Left {
-        margin-left: 5px;
-    }
-    &Right {
-        margin-right: 5px;
-    }
+.margin {
+  &Left {
+    margin-left: 5px;
+  }
+  &Right {
+    margin-right: 5px;
+  }
 }
