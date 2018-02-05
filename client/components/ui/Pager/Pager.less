@@ -1,31 +1,30 @@
-@import '../../root/variables.less';
-
+@import '../../variables.less';
 
 .pager {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    font-size: 1.1em;
-    min-height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 1.1em;
+  min-height: 25px;
 
-	.pagerList span {
-	    color: @colorg4;
-	    cursor: pointer;
-	    font-weight: 600;
-	    margin: 0 2px;
+  .pagerList span {
+    color: @colorg4;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 0 2px;
 
-	    &:hover {
-	        color: @colorg3
-	    }
+    &:hover {
+      color: @colorg3;
+    }
 
-	    &.activePage {
-	        color: @colorr4;
-	    	cursor: default;
-	    }
-	}
-	.sizeArea {
-	    position: absolute;
-	    right: 0;
-	}
+    &.activePage {
+      color: @colorr4;
+      cursor: default;
+    }
+  }
+  .sizeArea {
+    position: absolute;
+    right: 0;
+  }
 }

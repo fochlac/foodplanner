@@ -2,7 +2,7 @@ import { mount, shallow } from 'enzyme'
 
 import ConfirmationDialog from 'UI/ConfirmationDialog.js'
 import CreateMealDialog from 'UI/CreateMealDialog.js'
-import DialogController from 'ROOT/DialogController.jsx'
+import DialogController from 'UI/DefaultPage/DialogController.jsx'
 import ImpressumDialog from 'UI/ImpressumDialog.js'
 import IncomingPaymentsDialog from 'UI/IncomingPaymentsDialog.js'
 import LoginDialog from 'UI/LoginDialog.js'

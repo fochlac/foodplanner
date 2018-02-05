@@ -1,4 +1,4 @@
-import { create_error, delete_error } from '../actions.js'
+import { create_error, delete_error } from 'STORE/actions.js'
 
 export const handleErrors = store => next => action => {
   if (action.status === 'failure') {

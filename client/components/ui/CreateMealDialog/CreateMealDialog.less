@@ -1,76 +1,75 @@
-@import '../../root/variables.less';
+@import '../../variables.less';
 
 .createMeal {
-    .row {
+  .row {
+    display: flex;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex-grow: 1;
+  }
+  .addOption,
+  .templateSelector {
+    margin-top: 10px;
+    max-width: 200px;
+  }
+
+  .additionalOption {
+    margin-top: 10px;
+    border-top: solid 1px @colorg1;
+    padding-top: 5px;
+
+    .delLink {
+      font-size: 0.85em;
+    }
+    .optionType {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      margin-left: 10px;
+    }
+    .valueCloud {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 5px 0;
+      flex-wrap: wrap;
+
+      li {
+        padding: 2px 5px;
+        font-size: 0.9em;
+        margin: 2px 5px;
+        background: white;
+        border: solid 1px @colorg1;
+        border-radius: @borderRadius;
         display: flex;
-    }
-    .col {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        flex-grow: 1;
-    }
-    .addOption,
-    .templateSelector {
-        margin-top: 10px;
-        max-width: 200px;
-    }
+        align-items: center;
 
-    .additionalOption {
-        margin-top: 10px;
-        border-top: solid 1px @colorg1;
-        padding-top: 5px;
-
-        .delLink {
-            font-size: 0.85em;
+        .fa-times {
+          margin-left: 5px;
         }
-        .optionType {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            margin-left: 10px;
-        }
-        .valueCloud {
-            display: flex;
-            list-style: none;
-            padding: 0;
-            margin: 5px 0;
-            flex-wrap: wrap;
-
-            li {
-                padding: 2px 5px;
-                font-size: 0.9em;
-                margin: 2px 5px;
-                background: white;
-                border: solid 1px  @colorg1;
-                border-radius: @borderRadius;
-                display: flex;
-                align-items: center;
-
-                .fa-times {
-                    margin-left: 5px;
-                }
-            }
-        }
-        .addButton {
-            margin-left: 5px;
-        }
-
+      }
     }
-    
-    @media all and (max-width: 420px) {
-        .row.responsive {
-            flex-direction: column;
-            align-items: stretch;
-            
-            &> .col {
-                align-items: stretch;
-            }
-            &> select {
-                max-width: 100%;
-                min-width: 100%;
-            }
-        }
+    .addButton {
+      margin-left: 5px;
     }
+  }
+
+  @media all and (max-width: 420px) {
+    .row.responsive {
+      flex-direction: column;
+      align-items: stretch;
+
+      & > .col {
+        align-items: stretch;
+      }
+      & > select {
+        max-width: 100%;
+        min-width: 100%;
+      }
+    }
+  }
 }

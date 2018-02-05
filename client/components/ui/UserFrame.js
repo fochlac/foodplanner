@@ -1,4 +1,4 @@
-import { show_incoming_payments, show_transaction_history, start_send_money } from 'ACTIONS'
+import { show_incoming_payments, show_transaction_history, start_send_money } from 'STORE/actions.js'
 
 import React from 'react'
 import UserFrame from 'UI/UserFrame/UserFrame.jsx'

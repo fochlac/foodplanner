@@ -1,170 +1,169 @@
-@import '../../root/variables.less';
+@import '../../variables.less';
 
 .meal {
-    max-width: 1000px;
-    margin: 0 auto 20px;
-    border: solid 1px @colorg3;
-    border-radius: @borderRadius;
+  max-width: 1000px;
+  margin: 0 auto 20px;
+  border: solid 1px @colorg3;
+  border-radius: @borderRadius;
 
-    .moneyFrame {
-        margin-left: 5px;
-        font-style: italic;
-        font-size: 0.9em;
-        color: @colorg1;
+  .moneyFrame {
+    margin-left: 5px;
+    font-style: italic;
+    font-size: 0.9em;
+    color: @colorg1;
 
-        .money {
-            position: relative;
-            top: -1px;
-        }
-
-        &:before {
-            content: '-';
-            margin-right: 5px;
-        }
+    .money {
+      position: relative;
+      top: -1px;
     }
 
-    .titlebar {
-        padding: 5px 10px;
-        margin-bottom: 10px;
-        background: @colorg3;
-        position: relative;
-        display: flex;
-        height: 22px;
-        align-items: center;
+    &:before {
+      content: '-';
+      margin-right: 5px;
+    }
+  }
 
-        .menuIcon {
-            color: @colorg5;
-            padding: 5px;
-            width: 20px;
-            text-align: center;
-        }
+  .titlebar {
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    background: @colorg3;
+    position: relative;
+    display: flex;
+    height: 22px;
+    align-items: center;
 
-        .title {
-            margin-right: auto;
-            margin-left: 5px;
-            color: @colorg5;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .menuIcon {
+      color: @colorg5;
+      padding: 5px;
+      width: 20px;
+      text-align: center;
     }
 
-    .details {
-        display: flex;
-        justify-content: stretch;
-        align-items: stretch;
-        flex-wrap: wrap;
+    .title {
+      margin-right: auto;
+      margin-left: 5px;
+      color: @colorg5;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .details {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .participants {
+    flex-basis: 450px;
+    padding: 0 10px;
+    max-width: 500px;
+
+    .comment {
+      font-size: 0.9em;
+      margin-left: 5px;
+    }
+    .participantsList {
+      padding-left: 20px;
+      margin: 10px 0;
+
+      li {
+        margin-bottom: 5px;
+        cursor: default;
+      }
     }
 
-    .participants {
-        flex-basis: 450px;
-        padding: 0 10px;
-        max-width: 500px;
+    .participation,
+    .deadline {
+      font-size: 0.9em;
+      margin-right: 10px;
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+  }
 
-        .comment {
-            font-size: 0.9em;
-            margin-left: 5px;
-        }
-        .participantsList {
-            padding-left: 20px;
-            margin: 10px 0;
+  .mealDetails {
+    flex-basis: 450px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    max-width: 500px;
 
-            li {
-                margin-bottom: 5px;
-                cursor: default;
-            }
-        }
-
-        .participation,
-        .deadline {
-            font-size: 0.9em;
-            margin-right: 10px;
-            margin-bottom: 5px;
-            display: inline-block;
-        }
+    .mealImage {
+      max-width: 150px;
+      max-height: 150px;
+      display: inline-block;
+      margin: 0 10px 10px 0;
+      float: left;
+      border-radius: @borderRadius;
     }
 
-    .mealDetails {
-        flex-basis: 450px;
-        padding: 0 10px;
-        margin-bottom: 10px;
-        max-width: 500px;
+    .description {
+      margin: 10px 0;
+      white-space: pre-wrap;
+    }
+  }
 
-        .mealImage {
-            max-width: 150px;
-            max-height: 150px;
-            display: inline-block;
-            margin: 0 10px 10px 0;
-            float: left;
-            border-radius: @borderRadius;
-        }
+  .user {
+    font-weight: 700;
 
-        .description {
-            margin: 10px 0;
-            white-space: pre-wrap;
-        }
+    .icons span {
+      cursor: pointer;
+      margin-left: 5px;
+      display: inline-block;
+    }
+  }
+  .signupOptions {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin-left: 5px;
+    font-style: italic;
+
+    li {
+      margin: 1px 5px 1px 0 !important;
+      font-size: 0.9em;
+
+      .optionCount {
+        margin-right: 2px;
+      }
+
+      &:nth-child(n + 2):before {
+        content: '|';
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .summary {
+    margin-bottom: 10px;
+    border-top: solid 1px @colorg1;
+    display: flex;
+    flex-wrap: wrap;
+
+    .optionTitle {
+      margin-right: 3px;
     }
 
-
-    .user {
-        font-weight: 700;
-
-        .icons span {
-            cursor: pointer;
-            margin-left: 5px;
-            display: inline-block;
-        }
-    }
-    .signupOptions {
-        list-style: none;
-        display: flex;
-        flex-wrap: wrap;
-        padding: 0;
-        margin-left: 5px;
-        font-style: italic;
-
-        li {
-            margin: 1px 5px 1px 0 !important;
-            font-size: 0.9em;
-
-            .optionCount {
-                margin-right: 2px;
-            }
-
-            &:nth-child(n+2):before {
-                content: '|';
-                margin-right: 5px;
-            }
-        }
+    .optionCount {
+      margin-right: 2px;
     }
 
-    .summary {
-        margin-bottom: 10px;
-        border-top: solid 1px @colorg1;
-        display: flex;
-        flex-wrap: wrap;
-
-        .optionTitle {
-            margin-right: 3px;
-        }
-
-        .optionCount {
-            margin-right: 2px;
-        }
-
-        .optionGroup {
-            margin-right: 5px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-
-        .optionItem:after {
-            content: ',';
-            margin-right: 5px;
-        }
-        .optionItem:last-child:after {
-            content: '';
-        }
+    .optionGroup {
+      margin-right: 5px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
     }
+
+    .optionItem:after {
+      content: ',';
+      margin-right: 5px;
+    }
+    .optionItem:last-child:after {
+      content: '';
+    }
+  }
 }

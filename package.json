@@ -21,10 +21,9 @@
     "moduleNameMapper": {
       "^COMPONENTS(.*)$": "<rootDir>/client/components$1",
       "^UI(.*)$": "<rootDir>/client/components/ui$1",
-      "^SCRIPTS(.*)$": "<rootDir>/client/components/scripts$1",
-      "^PAGES(.*)$": "<rootDir>/client/components/pages$1",
-      "^ROOT(.*)$": "<rootDir>/client/components/root$1",
-      "^ACTIONS$": "<rootDir>/client/components/actions.js",
+      "^UTILS(.*)$": "<rootDir>/client/utils$1",
+      "^PAGES(.*)$": "<rootDir>/client/components/views$1",
+      "^STORE(.*)$": "<rootDir>/client/store$1",
       "^T_RES(.*)$": "<rootDir>/test/client/resources$1",
       "^T_UI(.*)$": "<rootDir>/test/client/uitests$1",
       "^SW(.*)$": "<rootDir>/test/client/unittests$1",

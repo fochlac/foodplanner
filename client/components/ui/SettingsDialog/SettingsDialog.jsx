@@ -5,8 +5,8 @@ import { userInterface, userInterfaceText } from 'UI/LoginDialog/LoginDialog.jsx
 import Dialog from 'UI/Dialog.js'
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import React from 'react'
-import { generateHash } from 'SCRIPTS/crypto.js'
-import { getNotificationPermission } from 'SCRIPTS/serviceWorker.js'
+import { generateHash } from 'UTILS/crypto.js'
+import { getNotificationPermission } from 'UTILS/serviceWorker.js'
 
 export default class SettingsDialog extends React.Component {
   constructor(props) {
