@@ -10,8 +10,7 @@ export default class UserFrame extends React.Component {
   render() {
     const u = this.props.user
 
-
-    return (u.id) ? (
+    return u.id ? (
       <div className="userFrame">
         <span>
           <span>
@@ -34,10 +33,13 @@ export default class UserFrame extends React.Component {
           <div className="fakeLink userManagementLink noWrap" onClick={this.props.start_send_money.bind(this)}>
             Geld senden
           </div>
+          <div className="fakeLink incomingPaymentsLink noWrap" onClick={this.props.show_incoming_payments.bind(this)}>
+            Ausstehende Zahlungen
+          </div>
         </span>
       </div>
-    ) : {
-
-    }
+    ) : (
+      {}
+    )
   }
 }

@@ -1,88 +1,93 @@
-import ConfirmationDialog from 'UI/ConfirmationDialog.js';
-import CreateMealDialog from 'UI/CreateMealDialog.js';
-import ImpressumDialog from 'UI/ImpressumDialog.js';
-import LoginDialog from 'UI/LoginDialog.js';
-import PriceDialog from 'UI/PriceDialog.js';
-import PrintDialog from 'UI/PrintDialog.js';
-import React from 'react';
-import SendMoneyDialog from 'UI/SendMoneyDialog.js';
-import SettingsDialog from 'UI/SettingsDialog.js';
-import SignUpDialog from 'UI/SignUpDialog.js';
-import TransactionDialog from 'UI/TransactionDialog.js';
+import ConfirmationDialog from 'UI/ConfirmationDialog.js'
+import CreateMealDialog from 'UI/CreateMealDialog.js'
+import ImpressumDialog from 'UI/ImpressumDialog.js'
+import IncomingPaymentsDialog from 'UI/IncomingPaymentsDialog.js'
+import LoginDialog from 'UI/LoginDialog.js'
+import PriceDialog from 'UI/PriceDialog.js'
+import PrintDialog from 'UI/PrintDialog.js'
+import React from 'react'
+import SendMoneyDialog from 'UI/SendMoneyDialog.js'
+import SettingsDialog from 'UI/SettingsDialog.js'
+import SignUpDialog from 'UI/SignUpDialog.js'
+import TransactionDialog from 'UI/TransactionDialog.js'
 
 export default class DialogController extends React.Component {
   constructor(props) {
-    super();
+    super()
   }
 
   render() {
-    const d = this.props.dialog;
-    let search, queries, params, message;
+    const d = this.props.dialog
+    let search, queries, params, message
 
     if (d.location) {
-      search = d.location.search.slice(1);
-      queries = search.split('&');
+      search = d.location.search.slice(1)
+      queries = search.split('&')
       params = queries.reduce((acc, param) => {
-        let keyval = param.split('=');
-        acc[decodeURIComponent(keyval[0])] = decodeURIComponent(keyval[1]);
+        let keyval = param.split('=')
+        acc[decodeURIComponent(keyval[0])] = decodeURIComponent(keyval[1])
 
-        return acc;
-      }, {});
+        return acc
+      }, {})
     }
 
     switch (d.type) {
       case 'MEAL_EDIT':
-        return <SignUpDialog type="edit" id={d.option.signup} />;
+        return <SignUpDialog type="edit" id={d.option.signup} />
 
       case 'MEAL_SIGNUP':
-        return <SignUpDialog type="empty" id={d.option.meal} />;
+        return <SignUpDialog type="empty" id={d.option.meal} />
 
       case 'CREATE_MEAL':
-        return <CreateMealDialog />;
+        return <CreateMealDialog />
 
       case 'EDIT_MEAL':
-        return <CreateMealDialog type="edit" id={d.option.meal} />;
+        return <CreateMealDialog type="edit" id={d.option.meal} />
 
       case 'SEND_MONEY':
-        return <SendMoneyDialog />;
+        return <SendMoneyDialog />
 
       case 'EDIT_PRICE':
-        return <PriceDialog id={d.option.meal} />;
+        return <PriceDialog id={d.option.meal} />
 
       case 'SUBSCRIBE':
-        return <SettingsDialog predef={params} />;
+        return <SettingsDialog predef={params} />
 
       case 'OPEN_TRANSACTIONS':
-        return <TransactionDialog predef={params} />;
+        return <TransactionDialog predef={params} />
 
       case 'UNSUBSCRIBE':
         if (params.list) {
-          message = `Erfolgreich von Emails ${(params.list === 'deadlineReminder') ? 'zur Erinnerung bei Ablauf der Anmeldefrist' : 'zur Benachrichtigung bei einem neuem Angebot'} abgemeldet.`;
-          params = Object.assign({}, d.user, { [params.list]: 0 });
-
+          message = `Erfolgreich von Emails ${
+            params.list === 'deadlineReminder' ? 'zur Erinnerung bei Ablauf der Anmeldefrist' : 'zur Benachrichtigung bei einem neuem Angebot'
+          } abgemeldet.`
+          params = Object.assign({}, d.user, { [params.list]: 0 })
         } else {
-          message = "Erfolgreich von allen E-Mail-Benachrichtigungen abgemeldet.";
-          params = Object.assign({}, d.user, { creationNotice: 0, deadlineReminder: 0 });
+          message = 'Erfolgreich von allen E-Mail-Benachrichtigungen abgemeldet.'
+          params = Object.assign({}, d.user, { creationNotice: 0, deadlineReminder: 0 })
         }
 
-        return <ConfirmationDialog message={message} action="save_settings_locally" parameter={[params]} noCancel={true} />;
+        return <ConfirmationDialog message={message} action="save_settings_locally" parameter={[params]} noCancel={true} />
       case 'OPEN_SETTINGS':
-        return <SettingsDialog />;
+        return <SettingsDialog />
 
       case 'OPEN_IMPRESSUM':
-        return <ImpressumDialog />;
+        return <ImpressumDialog />
 
       case 'CANCEL_MEAL':
-        return <ConfirmationDialog message="Bist du dir sicher, dass du dieses Angebot löschen möchtest?" action="cancel_meal" parameter={[d.option.meal]} />;
+        return <ConfirmationDialog message="Bist du dir sicher, dass du dieses Angebot löschen möchtest?" action="cancel_meal" parameter={[d.option.meal]} />
 
       case 'PRINT_MEAL':
-        return <PrintDialog />;
+        return <PrintDialog />
+
+      case 'INCOMING_PAYMENTS':
+        return <IncomingPaymentsDialog />
 
       case 'LOGIN':
-        return <LoginDialog />;
+        return <LoginDialog />
 
       default:
-        return null;
+        return null
     }
   }
 }

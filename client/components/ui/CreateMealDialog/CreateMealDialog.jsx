@@ -255,7 +255,7 @@ export default class CreateMealDialog extends React.Component {
                 format="DD.MM.YY"
                 onDayChange={this.deadlineInput}
               />
-              <select className="timePicker" onChange={this.deadlineHourInput} value={edit ? formatTime(round(s.deadlineObject, 30 * 60)) : "12:00"}>
+              <select className="timePicker" onChange={this.deadlineHourInput} value={formatTime(round(s.deadlineObject, 30 * 60))}>
                 {times.map(time => <option key={time} value={time}>{time}</option>)}
               </select>
             </div>
@@ -268,7 +268,7 @@ export default class CreateMealDialog extends React.Component {
                 format="DD.MM.YY"
                 onDayChange={this.timeInput}
               />
-              <select className="timePicker" onChange={this.timeHourInput} value={edit ? formatTime(round(s.timeObject, 30 * 60)) : "12:00"}>
+              <select className="timePicker" onChange={this.timeHourInput} value={formatTime(round(s.timeObject, 30 * 60))}>
                 {times.map(time => <option key={time} value={time}>{time}</option>)}
               </select>
             </div>
