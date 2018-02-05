@@ -59,6 +59,7 @@ describe('app-reducer', () => {
       ),
     ).toEqual({
       test1: 'asdasd',
+      errors: {},
       busy: false,
       hiddenBusy: false,
     })
@@ -72,6 +73,7 @@ describe('app-reducer', () => {
       ),
     ).toEqual({
       test1: 'asdasd',
+      errors: {},
       busy: false,
       hiddenBusy: false,
     })

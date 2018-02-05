@@ -3,7 +3,7 @@ const app = (state = {}, action) => {
     case 'DIALOG':
       return { ...state, dialog: { type: action.content, option: action.option } }
     case 'HISTORY':
-      delete action.app.errors
+      action.app.errors = {}
       delete action.app.mailSuggestion
       action.app.busy = false
       action.app.hiddenBusy = false
