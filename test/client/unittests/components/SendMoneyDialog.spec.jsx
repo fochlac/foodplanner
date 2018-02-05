@@ -74,10 +74,6 @@ describe('SendMoneyDialog', () => {
     wrapper.find('.body input').simulate('change', { target: { value: TEST_AMOUNT } })
     wrapper.find('button.submit').simulate('click')
 
-    expect(send_money).toEqual({
-      target: TEST_APP.mailSuggestion.id,
-      source: 1,
-      amount: TEST_AMOUNT,
-    })
+    expect(send_money).toEqual(false)
   })
 })
