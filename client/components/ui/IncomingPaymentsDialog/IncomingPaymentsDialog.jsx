@@ -2,6 +2,7 @@ import Dialog from 'UI/Dialog.js'
 import Payment from 'UI/PriceDialog/Payment.jsx'
 import React from 'react'
 import dEqual from 'fast-deep-equal'
+import { formatDate } from 'UTILS/date.js'
 
 export default class IncomingPaymentsDialog extends React.Component {
   constructor({ userId, meals, signups, close_dialog }) {
@@ -10,7 +11,7 @@ export default class IncomingPaymentsDialog extends React.Component {
 
     this.state = {
       list: Object.values(signups)
-        .filter(signup => !signup.paid && myMeals.includes(signup.meal))
+        .filter(signup => !signup.paid && signup.price && myMeals.includes(signup.meal))
         .map(signup => signup.id),
     }
 
@@ -25,10 +26,15 @@ export default class IncomingPaymentsDialog extends React.Component {
   }
 
   render() {
-    const { signups, toggle_paid } = this.props
+    const { signups, toggle_paid, meals } = this.props
     const { list } = this.state
 
-    const mySignups = Object.values(signups).filter(signup => list.includes(signup.id))
+    const mySignups = Object.values(signups)
+      .filter(signup => list.includes(signup.id))
+      .reduce((acc, signup) => {
+        acc[signup.meal] = acc[signup.meal] ? acc[signup.meal].concat([signup]) : [signup]
+        return acc
+      }, {})
 
     return (
       <Dialog className="PriceDialog" closeOnBackdrop={true}>
@@ -37,7 +43,18 @@ export default class IncomingPaymentsDialog extends React.Component {
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)} />
         </div>
         <div className="body PriceDialog">
-          <Payment signups={mySignups} toggle_paid={toggle_paid.bind(this)} />
+          {Object.keys(mySignups).map(mealId => {
+            const meal = meals.find(meal => meal.id == mealId)
+
+            return (
+              <div key={mealId} className="mealWrapper">
+                <h4>
+                  {meal.name} - {formatDate(meal.time)}
+                </h4>
+                <Payment signups={mySignups[mealId]} toggle_paid={toggle_paid.bind(this)} />
+              </div>
+            )
+          })}
         </div>
         <div className="foot">
           <span>

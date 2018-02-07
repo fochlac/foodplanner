@@ -47,21 +47,24 @@ export default class TransactionDialog extends React.Component {
         <div className="body">
           {this.props.transactions.length ? (
             <Pager wrapper={this.renderWrapper} size={10} bottom={true}>
-              {this.props.transactions.sort((a, b) => b.time - a.time).map((transaction, index) => {
-                total += transaction.diff
+              {this.props.transactions
+                .sort((a, b) => a.time - b.time)
+                .map((transaction, index) => {
+                  total += transaction.diff
 
-                return (
-                  <tr key={index}>
-                    <td>{formatDate(transaction.time)}</td>
-                    <td>{transaction.reason}</td>
-                    <td data-type="Partner:">{transaction.user}</td>
-                    <td data-type="Betrag:" className={+transaction.diff < 0 ? 'negative' : ''}>
-                      {transaction.diff.toFixed(2)}
-                    </td>
-                    <td className={total < 0 ? 'negative' : ''}>{total.toFixed(2)}</td>
-                  </tr>
-                )
-              })}
+                  return (
+                    <tr key={index}>
+                      <td>{formatDate(transaction.time)}</td>
+                      <td>{transaction.reason}</td>
+                      <td data-type="Partner:">{transaction.user}</td>
+                      <td data-type="Betrag:" className={+transaction.diff < 0 ? 'negative' : ''}>
+                        {transaction.diff.toFixed(2)}
+                      </td>
+                      <td className={total < 0 ? 'negative' : ''}>{total.toFixed(2)}</td>
+                    </tr>
+                  )
+                })
+                .reverse()}
             </Pager>
           ) : (
             <p>Noch keine Transaktionen vorhanden.</p>
