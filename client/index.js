@@ -1,15 +1,17 @@
-import 'babel-polyfill';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { store } from 'COMPONENTS/store.js'
+import 'babel-polyfill'
+
+import AppRoot from 'COMPONENTS/AppRoot.jsx'
 import { Provider } from 'react-redux'
-import AppRoot from 'ROOT/AppRoot.jsx';
-require("font-awesome-webpack");
-require.context('./static/', true, /.*/);
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { store } from 'STORE/store.js'
+
+require('font-awesome-webpack')
+require.context('./static/', true, /.*/)
 
 ReactDOM.render(
-    <Provider store={store}>
-        <AppRoot />
-    </Provider>,
-    document.getElementById('root')
-);
+  <Provider store={store}>
+    <AppRoot />
+  </Provider>,
+  document.getElementById('root'),
+)

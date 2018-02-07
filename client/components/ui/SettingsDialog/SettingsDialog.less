@@ -1,84 +1,85 @@
-@import '../../root/variables.less';
+@import '../../variables.less';
 
 .dialog.settingsDialog {
-    flex-basis: 500px;
+  flex-basis: 500px;
 
-    h4 {
-        margin-top: 10px;
+  h4 {
+    margin-top: 10px;
+  }
+
+  .row {
+    margin-bottom: 10px;
+  }
+  th,
+  td {
+    padding: 0 5px 5px;
+
+    @media all and (max-width: 600px) {
+      white-space: initial;
     }
 
-    .row {
-        margin-bottom: 10px;
+    &:nth-child(n + 2) {
+      text-align: center;
     }
-    th, td {
-        padding: 0 5px 5px;
+  }
 
-        @media all and (max-width: 600px) {
-            white-space: initial;
+  @media all and (max-width: 400px) {
+    th {
+      display: none;
+    }
+    tr {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      font-weight: 600;
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &:nth-child(n + 2)::before {
+          content: attr(data-fieldtype);
+          font-weight: 400;
         }
-
-        &:nth-child(n + 2) {
-            text-align: center;
-        }
+      }
     }
+  }
 
-    @media all and (max-width: 400px) {
-        th {
-            display: none;
-        }
-        tr {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            font-weight: 600;
+  #SettingsDialog_mail {
+    margin-right: 2px;
+  }
+  .fa-spinner {
+    position: absolute;
+    right: 5px;
+  }
 
-            td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+  .mailSuggestion {
+    position: absolute;
+    display: block;
+    padding: 5px;
+    background: #074d0e;
+    z-index: 1;
+    top: 55px;
+    color: #ebf1e3;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: @tinyShadowDown;
 
-                &:nth-child(n + 2)::before {
-                    content: attr(data-fieldtype);
-                    font-weight: 400;
-                }
-            }
-        }
+    &:before {
+      position: absolute;
+      display: block;
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 11px solid #074d0e;
+      top: -6px;
+      left: calc(50% ~'-' 11px);
     }
-
-    #SettingsDialog_mail {
-        margin-right: 2px;
-    }
-    .fa-spinner {
-        position: absolute;
-        right: 5px;
-    }
-
-    .mailSuggestion {
-        position: absolute;
-        display: block;
-        padding: 5px;
-        background: #074d0e;
-        z-index: 1;
-        top: 55px;
-        color: #ebf1e3;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: @tinyShadowDown;
-
-        &:before {
-            position: absolute;
-            display: block;
-            content: '';
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 11px solid #074d0e;
-            top: -6px;
-            left: calc(50% ~"-" 11px);
-        }
-    }
-    .mailFrame {
-        position: relative;
-    }
+  }
+  .mailFrame {
+    position: relative;
+  }
 }

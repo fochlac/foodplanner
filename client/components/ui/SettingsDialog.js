@@ -1,4 +1,4 @@
-import { close_dialog, create_error, delete_error, save_settings, save_settings_locally, start_sign_in } from 'ACTIONS'
+import { close_dialog, create_error, delete_error, save_settings, save_settings_locally, start_sign_in } from 'STORE/actions.js'
 
 import React from 'react'
 import SettingsDialog from 'UI/SettingsDialog/SettingsDialog.jsx'

@@ -1,4 +1,4 @@
-import app from 'COMPONENTS/reducers/app.js'
+import app from 'STORE/reducers/app.js'
 
 describe('app-reducer', () => {
   test('DIALOG', () => {

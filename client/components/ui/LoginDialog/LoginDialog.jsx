@@ -3,7 +3,7 @@ import './LoginDialog.less'
 import Dialog from 'UI/Dialog.js'
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import React from 'react'
-import { generateHash } from 'SCRIPTS/crypto.js'
+import { generateHash } from 'UTILS/crypto.js'
 
 export const userInterface = {
   name: name => /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/.test(name),

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --public dev.fochlac.com --hot --inline",
-    "test": "jest",
+    "test": "jest -b",
     "test-ui": "mocha-webpack -b --webpack-config webpack.config.mocha.js --include \"test/client/uitests/setup.js\" \"test/client/uitests/**/*.spec.js\"",
     "coverage": "jest --coverage && codecov --token=ba929a70-e33e-4f56-a89b-95a78037060e",
     "build": "webpack -p",
@@ -14,43 +14,26 @@
   },
   "jest": {
     "coverageDirectory": "./coverage/",
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/test/",
-      "<rootDir>/node_modules/",
-      "components/ui/[^/]*.js$"
-    ],
-    "setupFiles": [
-      "./test/client/unittests/setup.js"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "jsx"
-    ],
-    "moduleDirectories": [
-      "node_modules"
-    ],
+    "coveragePathIgnorePatterns": ["<rootDir>/test/", "<rootDir>/node_modules/", "components/ui/[^/]*.js$"],
+    "setupFiles": ["./test/client/unittests/setup.js"],
+    "moduleFileExtensions": ["js", "jsx"],
+    "moduleDirectories": ["node_modules"],
     "moduleNameMapper": {
       "^COMPONENTS(.*)$": "<rootDir>/client/components$1",
       "^UI(.*)$": "<rootDir>/client/components/ui$1",
-      "^SCRIPTS(.*)$": "<rootDir>/client/components/scripts$1",
-      "^PAGES(.*)$": "<rootDir>/client/components/pages$1",
-      "^ROOT(.*)$": "<rootDir>/client/components/root$1",
-      "^ACTIONS$": "<rootDir>/client/components/actions.js",
+      "^UTILS(.*)$": "<rootDir>/client/utils$1",
+      "^PAGES(.*)$": "<rootDir>/client/components/views$1",
+      "^STORE(.*)$": "<rootDir>/client/store$1",
       "^T_RES(.*)$": "<rootDir>/test/client/resources$1",
       "^T_UI(.*)$": "<rootDir>/test/client/uitests$1",
       "^SW(.*)$": "<rootDir>/test/client/unittests$1",
       "^T_UNIT(.*)$": "<rootDir>/test/client/unittests$1",
       "\\.(css|less)$": "<rootDir>/test/client/unittests/styleMock.js"
     },
-    "roots": [
-      "./test/client/unittests"
-    ],
+    "roots": ["./test/client/unittests"],
     "testURL": "https://food.fochlac.com/test123"
   },
-  "browserslist": [
-    "last 3 versions",
-    "> 1%"
-  ],
+  "browserslist": ["last 3 versions", "> 1%"],
   "author": "",
   "license": "ISC",
   "dependencies": {

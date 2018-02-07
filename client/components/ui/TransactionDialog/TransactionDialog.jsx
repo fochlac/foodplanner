@@ -1,20 +1,21 @@
-import React from 'react';
-import Dialog from 'UI/Dialog.js';
-import Pager from 'UI/Pager/Pager.jsx';
-import { formatDate } from 'SCRIPTS/date.js';
-import './TransactionDialog.less';
+import './TransactionDialog.less'
+
+import Dialog from 'UI/Dialog.js'
+import Pager from 'UI/Pager/Pager.jsx'
+import React from 'react'
+import { formatDate } from 'UTILS/date.js'
 
 export default class TransactionDialog extends React.Component {
   constructor(props) {
-    super();
+    super()
   }
 
   componentDidMount() {
-    this.props.get_transaction_history(this.props.user.id);
+    this.props.get_transaction_history(this.props.user.id)
   }
 
   cancel() {
-    this.props.close_dialog();
+    this.props.close_dialog()
   }
 
   renderWrapper(children) {
@@ -29,51 +30,49 @@ export default class TransactionDialog extends React.Component {
             <th>Summe</th>
           </tr>
         </thead>
-        <tbody>
-          {
-            children
-          }
-        </tbody>
+        <tbody>{children}</tbody>
       </table>
-    );
+    )
   }
 
   render() {
-    let total = 0;
+    let total = 0
 
     return (
       <Dialog closeOnBackdrop={true} className="transactionDialog">
         <div className="titlebar">
           <h3>Transaktionshistorie</h3>
-          <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)}></span>
+          <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)} />
         </div>
         <div className="body">
-          {
-            this.props.transactions.length
-            ? <Pager wrapper={this.renderWrapper} size={10} bottom={true} >
-              {
-                this.props.transactions.sort((a,b) => b.time - a.time).map((transaction, index) => {
-                  total += transaction.diff;
+          {this.props.transactions.length ? (
+            <Pager wrapper={this.renderWrapper} size={10} bottom={true}>
+              {this.props.transactions.sort((a, b) => b.time - a.time).map((transaction, index) => {
+                total += transaction.diff
 
-                  return (
-                    <tr key={index}>
-                      <td>{formatDate(transaction.time)}</td>
-                      <td>{transaction.reason}</td>
-                      <td data-type="Partner:" >{transaction.user}</td>
-                      <td data-type="Betrag:" className={(+transaction.diff < 0 )? 'negative' : ''}>{transaction.diff.toFixed(2)}</td>
-                      <td className={(total < 0 )? 'negative' : ''}>{total.toFixed(2)}</td>
-                    </tr>
-                  )
-                })
-              }
+                return (
+                  <tr key={index}>
+                    <td>{formatDate(transaction.time)}</td>
+                    <td>{transaction.reason}</td>
+                    <td data-type="Partner:">{transaction.user}</td>
+                    <td data-type="Betrag:" className={+transaction.diff < 0 ? 'negative' : ''}>
+                      {transaction.diff.toFixed(2)}
+                    </td>
+                    <td className={total < 0 ? 'negative' : ''}>{total.toFixed(2)}</td>
+                  </tr>
+                )
+              })}
             </Pager>
-            : <p>Noch keine Transaktionen vorhanden.</p>
-          }
+          ) : (
+            <p>Noch keine Transaktionen vorhanden.</p>
+          )}
         </div>
         <div className="foot">
-          <button className="cancel" type="button" onClick={this.cancel.bind(this)}>Schließen</button>
+          <button className="cancel" type="button" onClick={this.cancel.bind(this)}>
+            Schließen
+          </button>
         </div>
       </Dialog>
-    );
+    )
   }
 }
