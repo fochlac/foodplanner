@@ -5,7 +5,7 @@ const express = require('express'),
   bodyparser = require('body-parser'),
   compression = require('compression'),
   xssFilter = require('x-xss-protection'),
-  https = require('https'),
+  http = require('http'),
   fs = require('fs'),
   router = require(process.env.FOOD_HOME + 'router'),
   sanitize = require(process.env.FOOD_HOME + 'helper/sanitize'),
@@ -17,16 +17,10 @@ const express = require('express'),
   version = require(process.env.FOOD_HOME + 'modules/cache').getVersion,
   server_port = process.env.FOOD_PORT,
   server_ip_address = 'localhost',
-  sslServer = https.createServer(
-    {
-      key: fs.readFileSync(process.env.SSLKEY),
-      cert: fs.readFileSync(process.env.SSLCERT),
-    },
-    app,
-  )
+  sslServer = http.createServer(app)
 
 sslServer.listen(server_port, server_ip_address, () => {
-  console.log('listening on https://' + server_ip_address + ':' + server_port)
+  console.log('listening on http://' + server_ip_address + ':' + server_port)
 })
 
 app.use(bodyparser.json())
