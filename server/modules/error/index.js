@@ -4,6 +4,7 @@ const regexp = {
   number: /^[0-9]*$/,
   text: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]*$/,
   bool: /^(0|1|true|false)$/,
+  mail: /^[\_A-Za-z0-9.\-]{1,50}@[\_A-Za-z0-9.\-]{1,50}\.[A-Za-z]{1,100}$/,
 }
 
 
@@ -25,7 +26,10 @@ module.exports = {
     },
     isBool: (value) => {
       regexp.bool.test(String(value))
-    }
+    },
+    isMail: (value) => {
+      regexp.mail.test(String(value))
+    },
   },
 
 	checkError: (level, message) => {

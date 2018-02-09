@@ -5,39 +5,17 @@ const routes = require('express').Router()
   , mail = require('./mail')
   , user = require('./user')
   , github = require('./github')
-  , error = require(process.env.FOOD_HOME + 'modules/error')
-  , mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals')
-  , signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups')
-  , caches = require(process.env.FOOD_HOME + 'modules/cache');
-
-let updateCache = caches.getCache('update');
+  , controller = require(process.env.FOOD_HOME + 'router/controller/update')
+  , error = require(process.env.FOOD_HOME + 'modules/error');
 
 routes.use('/github', github);
 
-routes.get('/update', error.router.validate('query', {
-  version: /^[0-9]{0,100}$/
-}), (req, res) => {
-  if (+caches.getVersion() > +req.query.version) {
-    if (updateCache.get('update')) {
-      res.status(200).send(updateCache.get('update'));
-    } else {
-      Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups()])
-        .then(data => {
-          let response = {
-            signups: data[1],
-            meals: data[0],
-            version: caches.getVersion() + 1
-          };
-
-          updateCache.put('update', response);
-          res.status(200).send(response);
-        })
-        .catch(error.router.internalError(res));
-    }
-  } else {
-    res.status(200).send({});
-  }
-});
+routes.get('/update',
+  error.router.validate('query', {
+    version: /^[0-9]{0,100}$/
+  }),
+  controller.update
+);
 
 routes.use('/signups', signups);
 routes.use('/meals', meals);
