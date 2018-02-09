@@ -1,5 +1,11 @@
 const	log		= require(process.env.FOOD_HOME + 'modules/log');
 
+const regexp = {
+  number: /^[0-9]*$/,
+  text: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]*$/,
+  bool: /^(0|1|true|false)$/,
+}
+
 
 module.exports = {
 	default: log,
@@ -8,7 +14,19 @@ module.exports = {
 		return (err) => {
 			log(level, message, err);
 		}
-	},
+  },
+
+  validation: {
+    isNumber: (value) => {
+      regexp.number.test(String(value))
+    },
+    isText: (value) => {
+      regexp.text.test(String(value))
+    },
+    isBool: (value) => {
+      regexp.bool.test(String(value))
+    }
+  },
 
 	checkError: (level, message) => {
 		return (err) => {
