@@ -7,7 +7,7 @@ const user = require('express').Router(),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   mailer = require(process.env.FOOD_HOME + 'modules/mailer'),
   crypto = require(process.env.FOOD_HOME + 'modules/crypto'),
-  cookieOptions = { secure: true, httpOnly: true, expires: new Date(Date.now() + 1000 * 3600 * 24 * 365) }
+  cookieOptions = { secure: process.env.DEVELOP ? false : true, httpOnly: true, expires: new Date(Date.now() + 1000 * 3600 * 24 * 365) }
 
 let cache = caches.getCache('users'),
   mailCache = caches.getCache('mail'),
@@ -28,6 +28,7 @@ const handleGetUserById = (id, res) => {
           return res.status(200).send({})
         }
         return jwt.createToken(result).then(token => {
+          result.token = token;
           res.cookie('jwt', token, cookieOptions)
           cache.put('user_' + id, result ? result : undefined)
           res.status(200).send(result)

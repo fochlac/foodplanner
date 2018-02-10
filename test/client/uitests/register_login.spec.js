@@ -93,6 +93,7 @@ describe("login area", () => {
     this.timeout(5000);
 
     await this.driver.loginUser(this.usermail);
+    await this.driver.awaitBusyComplete();
 
     return this.checkLoggedin();
   });

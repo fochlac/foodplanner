@@ -108,7 +108,7 @@ before(async function() {
   }
 
   this.driver.get(
-    `https://${process.env.FOOD_EXTERNAL}${
+    `http://${process.env.FOOD_EXTERNAL}${
       process.env.FOOD_EXTERNAL === "localhost"
         ? ":" + process.env.FOOD_PORT
         : ""

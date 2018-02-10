@@ -26,14 +26,14 @@ export default class UserFrame extends React.Component {
             <span className="moneySymbol">€</span>
           </div>
         </span>
-        <span>
+        <span className ="linkBlock">
           <div className="fakeLink historyLink" onClick={this.props.show_transaction_history.bind(this, u.id)}>
             Kontoauszug
           </div>
           <div className="fakeLink userManagementLink noWrap" onClick={this.props.start_send_money.bind(this)}>
             Geld senden
           </div>
-          <div className="fakeLink incomingPaymentsLink noWrap" onClick={this.props.show_incoming_payments.bind(this)}>
+          <div className="fakeLink incomingPaymentsLink" onClick={this.props.show_incoming_payments.bind(this)}>
             Ausstehende Zahlungen
           </div>
         </span>
