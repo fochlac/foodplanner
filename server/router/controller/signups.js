@@ -20,17 +20,20 @@ const validateSignupOptions = (meal, options) => {
       // check for both count and value
       case 'count':
         if (mealOption.count === undefined || !error.validation.isNumber(mealOption.count)) {
+          log(4, 'invalid option: ', mealOption.count);
           return false;
         }
-      // check for value
-      case 'select':
+        // check for value
+        case 'select':
         if (mealOption.value === undefined || !error.validation.isText(mealOption.value)) {
+          log(4, 'invalid option: ', mealOption.value);
           return false;
         }
         break;
-      // check for show option
-      case 'toggle':
+        // check for show option
+        case 'toggle':
         if (mealOption.show === undefined || !error.validation.isBool(mealOption.show)) {
+          log(4, 'invalid option: ', mealOption.show);
           return false;
         }
         break;
@@ -46,7 +49,7 @@ module.exports = {
       signupsDB.getSignupsByProperty('meal', req.body.meal)
     ])
       .then(([meal, signups]) => {
-        if (result[0].signupLimit && result[0].signupLimit <= result[1].length) {
+        if (meal.signupLimit && meal.signupLimit <= signups.length) {
           log(5, 'post - /signups/', 'tried to sign up for full offer');
           return Promise.reject({ status: 409, type: 'Bad_Request', reason: 'offer_full' });
         }

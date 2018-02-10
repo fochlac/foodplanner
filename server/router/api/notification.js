@@ -12,8 +12,7 @@ notification.delete('/:id',
 
 notification.post('/',
   error.router.validate('body', {
-    type: /^(gcm)$/,
-    subscription: 'validJSON'
+    type: /^(gcm)$/
   }),
   controller.create
 );

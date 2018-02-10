@@ -19,21 +19,11 @@ module.exports = {
   },
 
   validation: {
-    isNumber: (value) => {
-      regexp.number.test(String(value))
-    },
-    isText: (value) => {
-      regexp.text.test(String(value))
-    },
-    isBool: (value) => {
-      regexp.bool.test(String(value))
-    },
-    isMail: (value) => {
-      regexp.mail.test(String(value))
-    },
-    isFloat: (value) => {
-      regexp.float.test(String(value))
-    },
+    isNumber: (value) => regexp.number.test(String(value)),
+    isText: (value) => regexp.text.test(String(value)),
+    isBool: (value) => regexp.bool.test(String(value)),
+    isMail: (value) => regexp.mail.test(String(value)),
+    isFloat: (value) => regexp.float.test(String(value)),
   },
 
   checkError: (level, message) => {
