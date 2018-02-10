@@ -30,6 +30,11 @@
     margin-top: 2px;
   }
 
+  .incomingPaymentsLink {
+    margin-top: 4px;
+    line-height: 14px;
+  }
+
   &.register {
     display: flex;
     flex-direction: column;
@@ -90,10 +95,25 @@
   }
 }
 
+@media all and (max-width: 750px) {
+  .userFrame > span:first-child {
+    flex-direction: column;
+  }
+}
+
+@media all and (max-width: 450px) {
+  .linkBlock {
+    max-width: 110px;
+  }
+}
+
 @media all and (max-width: 600px) {
   .userFrame.register {
     max-width: 100%;
     margin-left: 0px;
     margin-bottom: 5px;
+  }
+  .linkBlock {
+    text-align: right;
   }
 }

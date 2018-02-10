@@ -28,6 +28,7 @@ const handleGetUserById = (id, res) => {
           return res.status(200).send({})
         }
         return jwt.createToken(result).then(token => {
+          result.token = token;
           res.cookie('jwt', token, cookieOptions)
           cache.put('user_' + id, result ? result : undefined)
           res.status(200).send(result)
