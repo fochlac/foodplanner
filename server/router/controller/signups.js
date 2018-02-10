@@ -1,11 +1,10 @@
 const signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups')
-  , paymentDB = require(process.env.FOOD_HOME + 'modules/db/payment')
   , mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals')
   , error = require(process.env.FOOD_HOME + 'modules/error')
   , caches = require(process.env.FOOD_HOME + 'modules/cache')
   , log = require(process.env.FOOD_HOME + 'modules/log');
 
-let cache = caches.getCache('signups'),
+let signupCache = caches.getCache('signups'),
   updateCache = caches.getCache('update');
 
 const validateSignupOptions = (meal, options) => {
@@ -57,7 +56,7 @@ module.exports = {
           return Promise.reject({ status: 422, type: 'Invalid_Request', data: ['options'] });
         }
 
-        cache.delete('allSignups');
+        signupCache.delete('allSignups');
         updateCache.deleteAll();
 
         return signupsDB.createSignUp(req.body);
@@ -77,8 +76,8 @@ module.exports = {
           return Promise.reject({ status: 422, type: 'Invalid_Request', data: ['options'] });
         }
 
-        cache.delete(req.params.id);
-        cache.delete('allSignups');
+        signupCache.delete(req.params.id);
+        signupCache.delete('allSignups');
         updateCache.deleteAll();
 
         return Promise.all([signupsDB.getSignupByProperty('id', req.params.id), mealsDB.getMealCreatorBySignupId(req.params.id)]);
@@ -98,8 +97,8 @@ module.exports = {
   },
 
   deleteSignup: (req, res) => {
-    cache.delete(req.params.id);
-    cache.delete('allSignups');
+    signupCache.delete(req.params.id);
+    signupCache.delete('allSignups');
     updateCache.deleteAll();
 
     Promise.all([signupsDB.getSignupByProperty('id', req.params.id), mealsDB.getMealCreatorBySignupId(req.params.id)])
@@ -118,37 +117,17 @@ module.exports = {
   },
 
   listAllSignups: (req, res) => {
-    let signup = cache.get('allSignups');
+    let signup = signupCache.get('allSignups');
 
     if (signup) {
       res.status(200).send(signup);
     } else {
       signupsDB.getAllSignups().then((signups) => {
-        cache.put('allSignups', signups);
+        signupCache.put('allSignups', signups);
         res.status(200).send(signups);
       })
       .catch(error.router.internalError(res));
     }
-  },
-
-  setSignupPaymentStatus: (state) => (req, res) => {
-    cache.delete(req.params.id);
-    cache.delete('allSignups');
-    updateCache.deleteAll();
-
-    mealsDB.getMealCreatorBySignupId(req.params.id)
-      .then(id => {
-        if (id == req.user.id) {
-          return signupsDB.setSignupPaymentStatusById(req.params.id, state);
-        } else {
-          log(4, `User ${req.user.id} tried to update signup ${req.params.id} without being the creator.`);
-          return Promise.reject({ status: 403, type: 'FORBIDDEN' });
-        }
-      })
-      .then((signup) => {
-        res.status(200).send({ success: true });
-      })
-      .catch(error.router.internalError(res));
   }
 }
 

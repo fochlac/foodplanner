@@ -1,7 +1,8 @@
-const userDB = require(process.env.FOOD_HOME + 'modules/db/user')
-  , error = require(process.env.FOOD_HOME + 'modules/error')
-  , caches = require(process.env.FOOD_HOME + 'modules/cache')
-  , mailer = require(process.env.FOOD_HOME + 'modules/mailer');
+const userDB  = require(process.env.FOOD_HOME + 'modules/db/user')
+  , mealsDB   = require(process.env.FOOD_HOME + 'modules/db/meals')
+  , error     = require(process.env.FOOD_HOME + 'modules/error')
+  , caches    = require(process.env.FOOD_HOME + 'modules/cache')
+  , mailer    = require(process.env.FOOD_HOME + 'modules/mailer');
 
 let cache = caches.getCache('mail');
 
@@ -25,5 +26,14 @@ module.exports = {
 
     mailer.sendInvitation(mailingList);
     res.status(200).send(mailingList);
+  },
+
+  resendCreationNotice: (req, res) => {
+    mealsDB.getMealById(req.params.id)
+    .then((meal) => {
+      mailer.sendCreationNotice(meal);
+      res.status(200).send(meal);
+    })
+    .catch(error.router.internalError(res));
   }
 }

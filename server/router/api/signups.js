@@ -1,14 +1,15 @@
-const signups   = require('express').Router()
-  , controller  = require(process.env.FOOD_HOME + 'router/controller/signups')
-  ,	error       = require(process.env.FOOD_HOME + 'modules/error')
-  , jwt         = require(process.env.FOOD_HOME + 'modules/auth/jwt');
+const signups           = require('express').Router()
+  , controller          = require(process.env.FOOD_HOME + 'router/controller/signups')
+  , paymentController   = require(process.env.FOOD_HOME + 'router/controller/payment')
+  ,	error               = require(process.env.FOOD_HOME + 'modules/error')
+  , jwt                 = require(process.env.FOOD_HOME + 'modules/auth/jwt');
 
 signups.post('/:id/paid',
   jwt.requireAuthentication,
   error.router.validate('params', {
     id: /^[0-9]{1,9}$/
   }),
-  controller.setSignupPaymentStatus(true)
+  paymentController.setSignupPaymentStatus(true)
 );
 
 signups.delete('/:id/paid',
@@ -16,7 +17,7 @@ signups.delete('/:id/paid',
   error.router.validate('params', {
     id: /^[0-9]{1,9}$/
   }),
-  controller.setSignupPaymentStatus(false)
+  paymentController.setSignupPaymentStatus(false)
 );
 
 signups.get('/', controller.listAllSignups);

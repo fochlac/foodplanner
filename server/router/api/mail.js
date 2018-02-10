@@ -1,12 +1,13 @@
-const	mail	     = require('express').Router()
-  , error        = require(process.env.FOOD_HOME + 'modules/error')
-  , jwt          = require(process.env.FOOD_HOME + 'modules/auth/jwt');
+const mail            = require('express').Router()
+  , mailController    = require(process.env.FOOD_HOME + 'router/controller/mail')
+  , error             = require(process.env.FOOD_HOME + 'modules/error')
+  , jwt               = require(process.env.FOOD_HOME + 'modules/auth/jwt');
 
 mail.get('/search',
   error.router.validate('query', {
     email: /^[_A-Za-z0-9!#$%&'*+-/=?^_`{|}~.\s@]{5,100}$/
   }),
-  controller.findMail
+  mailController.findMail
 );
 
 mail.post('/invite',
@@ -14,7 +15,7 @@ mail.post('/invite',
   error.router.validate('body', {
     mail: 'array',
   }),
-  controller.sendInvitation
+  mailController.sendInvitation
 );
 
 module.exports = mail;
