@@ -418,6 +418,7 @@ export const register = ({ mail, hash, name }) => ({
       hash,
     },
   },
+  enqueue: create_settings_dialog
 })
 
 export const start_sign_in = () => ({

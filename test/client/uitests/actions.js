@@ -30,6 +30,9 @@ export const createUser = async function({ mail, name = "testuser", pass }) {
   }
   await this.driver.findElement(S.dialog.submit).click();
   await this.driver.awaitBusyComplete();
+
+  await this.driver.waitElementLocated(S.dialog.settings);
+  await this.driver.findElement(S.dialog.close).click();
 };
 
 export const loginUser = async function(mail, pass) {
