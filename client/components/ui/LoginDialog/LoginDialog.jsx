@@ -152,6 +152,7 @@ export default class LoginDialog extends React.Component {
                 placeholder="Passwort (optional)"
                 onChange={this.passInput}
                 value={pass}
+                autoComplete="new-password"
               />
               {pass.length ? (
                 <span>
@@ -168,6 +169,7 @@ export default class LoginDialog extends React.Component {
                     placeholder="Passwort wiederholen"
                     onChange={this.pass2Input}
                     value={pass2}
+                    autoComplete="new-password"
                   />
                 </span>
               ) : null}
@@ -185,7 +187,8 @@ export default class LoginDialog extends React.Component {
               <input id="LoginDialog_mail" className="mail" type="text" placeholder="E-Mail" value={mail} onChange={this.mailInput} autoComplete="mail" />
 
               <label htmlFor="LoginDialog_pass">Passwort</label>
-              <input id="LoginDialog_pass" className="pass" type="password" placeholder="Passwort (optional)" value={pass} onChange={this.passInput} />
+                <input id="LoginDialog_pass" className="pass" type="password" placeholder="Passwort (optional)" value={pass} onChange={this.passInput}
+                  autoComplete="password"/>
               <p className="fakeLink registerLink toggleRegister" onClick={this.toggleRegister.bind(this, true)}>
                 <span>
                   Ein neues Konto anlegen <span className="fa fa-angle-double-right" />
