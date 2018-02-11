@@ -131,7 +131,7 @@ let setup = [
 
         PRIMARY KEY (id)
     );`,
-    `CREATE TABLE IF NOT EXISTS \`authentication\` (
+  `CREATE TABLE IF NOT EXISTS \`authentication\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`user\`                int             NOT NULL,
         \`hash\`                varchar(150),
@@ -139,6 +139,33 @@ let setup = [
 
         PRIMARY KEY (id),
         UNIQUE KEY \`user\` (\`user\`)
+    );`,
+  `CREATE TABLE IF NOT EXISTS \`datefinder\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`creator\`             int             NOT NULL,
+        \`deadline\`            bigint,
+        \`description\`         TEXT,
+
+        PRIMARY KEY (id)
+    );`,
+  `CREATE TABLE IF NOT EXISTS \`datefinder_dates\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`time\`                bigint          NOT NULL,
+
+        PRIMARY KEY (id),
+        UNIQUE KEY \`date\` (\`id\`, \`time\`)
+    );`,
+  `CREATE TABLE IF NOT EXISTS \`datefinder_signups\` (
+        \`user\`                int             NOT NULL,
+        \`date\`                int             NOT NULL,
+
+        UNIQUE KEY \`user\` (\`user\`, \`date\`)
+    );`,
+  `CREATE TABLE IF NOT EXISTS \`datefinder_participants\` (
+        \`user\`                int             NOT NULL,
+        \`datefinder\`                int             NOT NULL,
+
+        UNIQUE KEY \`user\` (\`user\`, \`datefinder\`)
     );`
 ];
 
