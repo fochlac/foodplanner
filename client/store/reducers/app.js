@@ -1,9 +1,5 @@
 const app = (state = {}, action) => {
   switch (action.type) {
-    case 'REGISTER':
-      if(action.status !== 'complete') {
-        return state;
-      }
     case 'DIALOG':
       return { ...state, dialog: { type: action.content, option: action.option } }
     case 'HISTORY':
@@ -35,6 +31,7 @@ const app = (state = {}, action) => {
     case 'SUBMIT_PRICES':
     case 'EDIT_MEAL':
     case 'SIGNIN':
+    case 'REGISTER':
       if (action.status === 'complete') {
         return { ...state, dialog: { type: '' } }
       }
