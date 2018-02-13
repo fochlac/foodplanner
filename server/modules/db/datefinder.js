@@ -52,22 +52,22 @@ executeQuery = (db, query, final) => {
  */
 
 module.exports = {
-  createPoll: async poll => {
+  createPoll: async ({ creator, deadline, description, dates }) => {
     const datefinder_query = `
         INSERT INTO datefinder (
           creator,
           deadline,
           description
         ) VALUES (
-          ${mysql.escape(poll.creator)},
-          ${mysql.escape(poll.deadline)},
-          ${mysql.escape(poll.description)}
+          ${mysql.escape(creator)},
+          ${mysql.escape(deadline)},
+          ${mysql.escape(description)}
         );`,
       dates_query = datefinder => `
         INSERT INTO datefinder_dates (
           datefinder,
           time
-        ) VALUES ${poll.dates
+        ) VALUES ${dates
           .map(
             date => `(
           ${mysql.escape(datefinder)},
@@ -76,8 +76,8 @@ module.exports = {
           )
           .join(',')};`
 
-    const myDb = await getConnection()
     try {
+      const myDb = await getConnection()
       await new Promise((resolve, reject) =>
         myDb.beginTransaction(err => {
           if (err) {
@@ -93,12 +93,12 @@ module.exports = {
 
       return {
         id: result.id,
-        creator: poll.creator,
-        deadline: poll.deadline,
-        description: poll.description,
+        creator,
+        deadline,
+        description,
         participants: [],
         dates: [
-          poll.dates.map((date, index) => ({
+          dates.map((date, index) => ({
             id: datesResult.insertId + index,
             time: date.time,
             users: [],
@@ -124,23 +124,85 @@ module.exports = {
 
   getPolls: async () => {
     const query = `
-      SELECT JSON_OBJECT(
-        'id' VALUE datefinder.id,
-        'creator' VALUE datefinder.creator,
-        'deadline' VALUE datefinder.deadline,
-        'description' VALUE datefinder.description,
-        'uservotes' VALUE (SELECT JSON_ARRAYAGG(datefinder_participants.user) FROM datefinder_participants WHERE datefinder_participants.datefinder = datefinder.id),
-        'dates' VALUE (SELECT JSON_ARRAYAGG(JSON_OBJECT(
-          'id' VALUE datefinder_dates.id,
-          'time' VALUE datefinder_dates.time,
-          'users' VALUE JSON_ARRAYAGG(SELECT user FROM datefinder_signups WHERE date = datefinder_dates.id)
-        )) FROM datefinder_dates WHERE datefinder_dates.datefinder =  datefinder.id)
-      );
+      SELECT
+        id, creator, deadline, description,
+        CONCAT(
+        '[', (
+            SELECT GROUP_CONCAT(user)
+            FROM datefinder_participants
+            WHERE datefinder_participants.datefinder = datefinder.id
+          ), ']'
+        ) AS 'uservotes',
+        CONCAT( '[', (
+          SELECT GROUP_CONCAT(
+            JSON_OBJECT(
+              'id', id,
+              'time', time,
+              'users', CONCAT( '[', (
+                SELECT GROUP_CONCAT(user)
+                FROM datefinder_signups
+                WHERE date = datefinder_dates.id
+                GROUP BY date
+              ), ']' )
+            )
+          )
+          FROM datefinder_dates
+          WHERE datefinder_dates.datefinder = datefinder.id
+          GROUP BY datefinder
+        ), ']' ) AS 'dates'
+      FROM datefinder;`
 
+    return executeQuery(await getConnection(), query, true)
+  },
 
+  createSignup: async ({ user, dates, poll }) => {
+    const querySignups = `
+        INSERT INTO datefinder_signups (
+          user,
+          date
+        ) VALUES ${dates.map(
+          date => `(
+          ${user},
+          ${date}
+        )`,
+        )};`,
+      queryParticipant = `
+        INSERT INTO datefinder_participants (
+          user,
+          poll
+        ) VALUES (
+          ${user},
+          ${poll}
+        );`
 
-      `
+    try {
+      const myDb = await getConnection()
+      await new Promise((resolve, reject) =>
+        myDb.beginTransaction(err => {
+          if (err) {
+            reject(err)
+          }
+          resolve()
+        }),
+      )
 
-    SELECT
+      await executeQuery(myDb, querySignups)
+      await executeQuery(myDb, queryParticipant, true)
+
+      return {}
+    } catch (err) {
+      return new Promise((resolve, reject) =>
+        myDb.rollback(rbErr => {
+          if (rbErr) {
+            log(2, 'rollback failed for errors: ', err, rbErr)
+          }
+          myDb.release()
+          if (err.type === 1) {
+            return resolve(err)
+          }
+          return reject(err)
+        }),
+      )
+    }
   },
 }

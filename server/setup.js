@@ -164,7 +164,7 @@ let setup = [
     );`,
   `CREATE TABLE IF NOT EXISTS \`datefinder_participants\` (
         \`user\`                int             NOT NULL,
-        \`datefinder\`                int             NOT NULL,
+        \`datefinder\`          int             NOT NULL,
 
         UNIQUE KEY \`user\` (\`user\`, \`datefinder\`)
     );`,
