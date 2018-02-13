@@ -1,58 +1,10 @@
-const getConnection = require(process.env.FOOD_HOME + 'modules/db'),
-  mysql = require('mysql'),
+const mysql = require('mysql'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
-  error = require(process.env.FOOD_HOME + 'modules/error')
-
-executeQuery = (db, query, final) => {
-  return new Promise((resolve, reject) =>
-    db.query(query, (err, result) => {
-      if (final === true) {
-        log(6, 'released connection')
-        db.release()
-      }
-      if (err) {
-        log(2, 'modules/db/datefinder:executeQuery - failed executing query', query, err)
-        reject({ status: 500, message: 'Unable to execute query.' })
-      } else {
-        resolve(result)
-      }
-    }),
-  )
-}
-
-/*
-  data structure
-  datefinder: {
-    1: {
-      id: 1,
-      creator: 2,
-      meal: 5,
-      description: "lorem ipsum lauret amour",
-      deadline: 12312123123,
-      uservotes: [1, 4, 5, 9],
-      dates[
-        {
-          id: 23,
-          time: 123123000,
-          users: [1, 4, 5, 9]
-        },
-        {
-          id: 24,
-          time: 123123123,
-          users: [1, 5, 9]
-        },
-        {
-          id: 25,
-          time: 123123456,
-          users: [5, 9]
-        }
-      ]
-    }
-  }
- */
+  error = require(process.env.FOOD_HOME + 'modules/error'),
+  { executeQuery, createTransaction } = require(process.env.FOOD_HOME + 'helper/db')
 
 module.exports = {
-  createPoll: async ({ creator, deadline, description, dates }) => {
+  createDatefinder: async ({ creator, deadline, description, dates }) => {
     const datefinder_query = `
         INSERT INTO datefinder (
           creator,
@@ -76,18 +28,7 @@ module.exports = {
           )
           .join(',')};`
 
-    try {
-      const myDb = await getConnection()
-      await new Promise((resolve, reject) =>
-        myDb.beginTransaction(err => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve()
-          }
-        }),
-      )
-
+    const dbActions = async myDb => {
       const result = await executeQuery(myDb, datefinder_query)
       const datesResult = await executeQuery(myDb, dates_query(result.insertId), true)
 
@@ -105,24 +46,12 @@ module.exports = {
           })),
         ],
       }
-    } catch (err) {
-      return new Promise((resolve, reject) =>
-        myDb.rollback(rbErr => {
-          if (rbErr) {
-            log(2, 'rollback failed for errors: ', err, rbErr)
-          }
-          myDb.release()
-          if (err.type === 1) {
-            return resolve(err)
-          } else {
-            return reject(err)
-          }
-        }),
-      )
     }
+
+    return createTransaction({ dbActions, ident: 'createDatefinder' })
   },
 
-  getPolls: async () => {
+  getDatefinders: async () => {
     const query = `
       SELECT
         id, creator, deadline, description,
@@ -155,7 +84,7 @@ module.exports = {
     return executeQuery(await getConnection(), query, true)
   },
 
-  createSignup: async ({ user, dates, poll }) => {
+  createSignup: async ({ user, dates, datefinder }) => {
     const querySignups = `
         INSERT INTO datefinder_signups (
           user,
@@ -169,40 +98,76 @@ module.exports = {
       queryParticipant = `
         INSERT INTO datefinder_participants (
           user,
-          poll
+          datefinder
         ) VALUES (
           ${user},
-          ${poll}
+          ${datefinder}
         );`
 
-    try {
-      const myDb = await getConnection()
-      await new Promise((resolve, reject) =>
-        myDb.beginTransaction(err => {
-          if (err) {
-            reject(err)
-          }
-          resolve()
-        }),
-      )
-
+    const dbActions = async myDb => {
       await executeQuery(myDb, querySignups)
       await executeQuery(myDb, queryParticipant, true)
 
       return {}
-    } catch (err) {
-      return new Promise((resolve, reject) =>
-        myDb.rollback(rbErr => {
-          if (rbErr) {
-            log(2, 'rollback failed for errors: ', err, rbErr)
-          }
-          myDb.release()
-          if (err.type === 1) {
-            return resolve(err)
-          }
-          return reject(err)
-        }),
-      )
     }
+
+    return createTransaction({ dbActions, ident: 'createSignup' })
+  },
+
+  editSignup: ({ user, dates, datefinder }) => {
+    const querySignups = `
+        INSERT INTO datefinder_signups (
+          user,
+          date
+        ) VALUES ${dates.map(
+          date => `(
+          ${user},
+          ${date}
+        )`,
+        )};`,
+      queryDelete = `
+      DELETE FROM datefinder_signups
+      WHERE user = ${user}
+      AND date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${datefinder});`
+
+    const dbActions = async myDb => {
+      await executeQuery(myDb, queryDelete)
+      await executeQuery(myDb, querySignups, true)
+      return {}
+    }
+
+    return createTransaction({ dbActions, ident: 'editSignup' })
+  },
+
+  deleteSignup: ({ user, datefinder }) => {
+    const querySignups = `DELETE FROM datefinder_participants WHERE user = ${user} AND datefinder = ${datefinder};`,
+      queryDelete = `
+      DELETE FROM datefinder_signups
+      WHERE user = ${user}
+      AND date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${datefinder});`
+
+    const dbActions = async myDb => {
+      await executeQuery(myDb, queryDelete)
+      await executeQuery(myDb, querySignups, true)
+      return {}
+    }
+
+    return createTransaction({ dbActions, ident: 'deleteSignup' })
+  },
+
+  deleteDatefinder: ({ datefinder }) => {
+    const queryBase = `DELETE FROM datefinder WHERE id = ${datefinder};`,
+      queryParticipants = `DELETE FROM datefinder_participants WHERE datefinder = ${datefinder};`,
+      queryDates = `DELETE FROM datefinder_dates WHERE datefinder = ${datefinder};`,
+      querySignups = `DELETE FROM datefinder_signups
+        WHERE date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${datefinder});`
+
+    const dbActions = async myDb => {
+      await Promise.all([executeQuery(myDb, queryBase), executeQuery(myDb, queryParticipants), executeQuery(myDb, queryParticipants)])
+      await executeQuery(myDb, queryDates, true)
+      return {}
+    }
+
+    return createTransaction({ dbActions, ident: 'deleteDatefinder' })
   },
 }
