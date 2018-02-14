@@ -1,4 +1,5 @@
 const mysql = require('mysql'),
+  getConnection = require(process.env.FOOD_HOME + 'modules/db'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
   error = require(process.env.FOOD_HOME + 'modules/error'),
   { executeQuery, createTransaction } = require(process.env.FOOD_HOME + 'helper/db')
@@ -84,6 +85,13 @@ module.exports = {
     return executeQuery(await getConnection(), query, true)
   },
 
+  getDatefinderCreator: async ({id}) => {
+    const query = `
+      SELECT creator FROM datefinder WHERE id = ${id};`
+
+    return executeQuery(await getConnection(), query, true)
+  },
+
   createSignup: async ({ user, dates, datefinder }) => {
     const querySignups = `
         INSERT INTO datefinder_signups (
@@ -155,15 +163,16 @@ module.exports = {
     return createTransaction({ dbActions, ident: 'deleteSignup' })
   },
 
-  deleteDatefinder: ({ datefinder }) => {
-    const queryBase = `DELETE FROM datefinder WHERE id = ${datefinder};`,
-      queryParticipants = `DELETE FROM datefinder_participants WHERE datefinder = ${datefinder};`,
-      queryDates = `DELETE FROM datefinder_dates WHERE datefinder = ${datefinder};`,
+  deleteDatefinder: ({ id }) => {
+    const queryBase = `DELETE FROM datefinder WHERE id = ${id};`,
+      queryParticipants = `DELETE FROM datefinder_participants WHERE datefinder = ${id};`,
+      queryDates = `DELETE FROM datefinder_dates WHERE datefinder = ${id};`,
+      queryDatefinderOnMeal = `UPDATE meals SET datefinder = 0 WHERE datefinder = ${id};`,
       querySignups = `DELETE FROM datefinder_signups
-        WHERE date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${datefinder});`
+        WHERE date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${id});`
 
     const dbActions = async myDb => {
-      await Promise.all([executeQuery(myDb, queryBase), executeQuery(myDb, queryParticipants), executeQuery(myDb, queryParticipants)])
+      await Promise.all([executeQuery(myDb, queryBase), executeQuery(myDb, queryParticipants), executeQuery(myDb, queryParticipants), executeQuery(myDb, queryDatefinderOnMeal)])
       await executeQuery(myDb, queryDates, true)
       return {}
     }

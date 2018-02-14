@@ -1,4 +1,5 @@
-const getConnection = require(process.env.FOOD_HOME + 'modules/db')
+const getConnection = require(process.env.FOOD_HOME + 'modules/db'),
+      log = require(process.env.FOOD_HOME + 'modules/log')
 
 const executeQuery = (db, query, final) => {
   return new Promise((resolve, reject) =>

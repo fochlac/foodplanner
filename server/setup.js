@@ -73,6 +73,7 @@ let setup = [
         \`deadline\`        bigint          NOT NULL,
         \`signupLimit\`     int,
         \`locked\`          int                         DEFAULT 0,
+        \`datefinder\`      int                         DEFAULT 0,
         \`image\`           varchar(150),
 
         PRIMARY KEY (id)
