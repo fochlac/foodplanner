@@ -58,8 +58,10 @@ module.exports = {
         id, creator, deadline, description,
         CONCAT(
         '[', (
-            SELECT GROUP_CONCAT(user)
+            SELECT GROUP_CONCAT(users.name)
             FROM datefinder_participants
+            LEFT JOIN users
+            ON datefinder_participants.user = users.id
             WHERE datefinder_participants.datefinder = datefinder.id
           ), ']'
         ) AS 'uservotes',
@@ -69,8 +71,10 @@ module.exports = {
               'id', id,
               'time', time,
               'users', CONCAT( '[', (
-                SELECT GROUP_CONCAT(user)
+                SELECT GROUP_CONCAT(CONCAT('{user: ', users.id, ', name: "', users.name, '"}')
                 FROM datefinder_signups
+                LEFT JOIN users
+                ON datefinder_signups.user = users.id
                 WHERE date = datefinder_dates.id
                 GROUP BY date
               ), ']' )
@@ -85,7 +89,7 @@ module.exports = {
     return executeQuery(await getConnection(), query, true)
   },
 
-  getDatefinderCreator: async ({id}) => {
+  getDatefinderCreator: async ({ id }) => {
     const query = `
       SELECT creator FROM datefinder WHERE id = ${id};`
 
@@ -172,7 +176,12 @@ module.exports = {
         WHERE date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${id});`
 
     const dbActions = async myDb => {
-      await Promise.all([executeQuery(myDb, queryBase), executeQuery(myDb, queryParticipants), executeQuery(myDb, queryParticipants), executeQuery(myDb, queryDatefinderOnMeal)])
+      await Promise.all([
+        executeQuery(myDb, queryBase),
+        executeQuery(myDb, queryParticipants),
+        executeQuery(myDb, queryParticipants),
+        executeQuery(myDb, queryDatefinderOnMeal),
+      ])
       await executeQuery(myDb, queryDates, true)
       return {}
     }

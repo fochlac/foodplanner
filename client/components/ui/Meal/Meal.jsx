@@ -2,6 +2,7 @@ import './Meal.less'
 
 import { formatDate, formatDateTime, formatDayNameDate, formatTime, formatTimeShort } from 'UTILS/date.js'
 
+import DateFinder from 'UI/Datefinder.js'
 import { Link } from 'react-router-dom'
 import React from 'react'
 import dEqual from 'fast-deep-equal'
@@ -129,6 +130,13 @@ export default class Meal extends React.Component {
             </p>
             <p className="description">{replaceLinks(p.meal.description)}</p>
           </div>
+
+          {p.meal.datefinder ? (
+            <div className="datefinder">
+              <DateFinder id={p.meal.datefinder} />
+            </div>
+          ) : null}
+
           <div className="participants">
             <h4 className="participantsTitle">Teilnehmerliste</h4>
             {p.meal.signupLimit ? (
