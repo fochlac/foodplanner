@@ -49,7 +49,7 @@ app.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.jso
 app.get('*', (req, res) => {
   let meals = mealsDB.getAllMeals(),
     signups = signupsDB.getAllSignups(),
-    datefinder = datefinderDB.list(),
+    datefinder = datefinderDB.getDatefinders(),
     file = new Promise((resolve, reject) => {
       fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
         if (err) {
@@ -60,11 +60,20 @@ app.get('*', (req, res) => {
     })
 
   Promise.all([file, meals, signups, datefinder])
-    .then(([file, meals, signups, datefinder]) => {
+    .then(([file, meals, signups, datefinderList]) => {
       meals = meals.map(meal => {
         meal.signups = signups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
         return meal
       })
+
+      datefinderList = datefinderList.map(datefinder => ({
+        ...datefinder,
+        dates: JSON.parse(datefinder.dates).map(date => {
+          date.users = date.users ? JSON.parse(date.users) : []
+          return date
+        }),
+        uservotes: datefinder.uservotes ? JSON.parse(datefinder.uservotes) : [],
+      }))
 
       signups = signups.reduce((acc, signup) => {
         acc[signup.id] = signup
@@ -81,14 +90,14 @@ app.get('*', (req, res) => {
                         app:{dialog:'', errors:{}, dataversion: ${version()}},
                         meals:${sanitize.html(JSON.stringify(meals))},
                         signups:${sanitize.html(JSON.stringify(signups))},
-                        datefinder:${sanitize.html(JSON.stringify(datefinder))}
+                        datefinder:${sanitize.html(JSON.stringify(datefinderList))}
                     }
                 </script>`,
         ),
       )
     })
     .catch(err => {
-      log(2, 'server/index.js - error adding data to index.html')
+      log(2, 'server/index.js - error adding data to index.html', err)
       res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html')
     })
 })

@@ -16,7 +16,7 @@ module.exports = {
         .getDatefinders()
         .then(results => {
           res.status(200).send(
-            results.map(datefinder => {
+            results.map(datefinders => {
               const dates = JSON.parse(datefinder.dates).map(date => {
                 date.users = date.users ? JSON.parse(date.users) : []
                 return date

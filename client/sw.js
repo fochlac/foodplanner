@@ -78,7 +78,8 @@ function handle_click(event) {
 
 function handle_fetch(event) {
   if (
-    event.request.url.includes('food-dev') &&
+    event.request.url.includes('food-dev') ||
+    event.request.url.includes('localhost') ||
     // Ensure that chrome-extension:// requests don't trigger the default route.
     event.request.url.indexOf('http') !== 0
   ) {

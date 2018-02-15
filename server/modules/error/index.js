@@ -68,7 +68,7 @@ module.exports = {
       }
     },
 
-    validate: (type, options) => {
+    validate: (type, options, hideError) => {
       return (req, res, next) => {
         let param,
           valid = true,
@@ -103,12 +103,18 @@ module.exports = {
           } else {
             validateParam(param, options[param])
           }
+          log(
+            6,
+            `Validating ${param}: '${payload[param]}' against RegExp ${options[param]}, result ${
+              typeof options[param] === 'string' ? valid : options[param].test(payload[param])
+            }`,
+          )
         }
         if (valid) {
           next()
         } else {
           log(4, 'Invalid Request.', payload)
-          res.status(400).send({ type: 'Invalid_Request', data: invalidParams })
+          res.status(400).send(hideError ? { type: 'Invalid_Request_Hidden', data: invalidParams } : { type: 'Invalid_Request', data: invalidParams })
         }
       }
     },

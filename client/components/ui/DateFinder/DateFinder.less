@@ -1,0 +1,58 @@
+@import '../../variables.less';
+
+.datefinder {
+  width: calc(100% ~'-' 20px);
+  padding: 0 10px;
+  margin-bottom: 10px;
+
+  .datesList {
+    white-space: nowrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    background: @colorg5;
+    border: solid 4px @colorg3;
+    padding: 10px;
+
+    & > li {
+      margin-right: 10px;
+      display: inline-flex;
+      flex-direction: column;
+      background: @colorg5;
+      border: solid 2px @font-color-light;
+      align-items: center;
+      padding: 5px;
+      position: relative;
+
+      .signupIcon {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.selected {
+        background: @font-color-light;
+        color: @colorg5;
+      }
+
+      .time {
+        margin-left: 5px;
+      }
+
+      .signupCount {
+        font-size: 2em;
+        font-weight: 600;
+        margin: 10px 0 5px;
+      }
+
+      .userList {
+        display: none;
+      }
+    }
+  }
+}

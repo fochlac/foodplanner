@@ -58,7 +58,7 @@ module.exports = {
         id, creator, deadline, description,
         CONCAT(
         '[', (
-            SELECT GROUP_CONCAT(users.name)
+            SELECT GROUP_CONCAT(CONCAT('{"user": ', users.id, ', "name": "', users.name, '"}'))
             FROM datefinder_participants
             LEFT JOIN users
             ON datefinder_participants.user = users.id
@@ -71,7 +71,7 @@ module.exports = {
               'id', id,
               'time', time,
               'users', CONCAT( '[', (
-                SELECT GROUP_CONCAT(CONCAT('{user: ', users.id, ', name: "', users.name, '"}')
+                SELECT GROUP_CONCAT(CONCAT('{"user": ', users.id, ', "name": "', users.name, '"}'))
                 FROM datefinder_signups
                 LEFT JOIN users
                 ON datefinder_signups.user = users.id

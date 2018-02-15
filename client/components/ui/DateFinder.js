@@ -1,4 +1,4 @@
-import { refresh, show_impressum } from 'STORE/actions.js'
+import {} from 'STORE/actions.js'
 
 import DateFinder from 'UI/DateFinder/DateFinder.jsx'
 import React from 'react'
@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 const mapStateToProps = (state, ownProps) => ({
   user: state.user,
-  datefinder: ownProps.id ? state.datefinder[ownProps.id] : undefined,
+  datefinder: ownProps.id ? state.datefinder.find(datefinder => datefinder.id === ownProps.id) : undefined,
 })
 
-export default connect(mapStateToProps, { show_impressum, refresh })(DateFinder)
+export default connect(mapStateToProps, {})(DateFinder)

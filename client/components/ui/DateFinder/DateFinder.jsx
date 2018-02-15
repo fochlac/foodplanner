@@ -1,13 +1,14 @@
+import './DateFinder.less'
+
 import { formatDate, formatTime } from 'UTILS/date.js'
 
 import React from 'react'
 
-export default class DefaultPage extends React.Component {
+export default class DateFinder extends React.Component {
   constructor(props) {
     super()
-
-    this.refreshContent = this.refreshContent.bind(this)
   }
+
   render() {
     const { datefinder, user } = this.props
     if (!datefinder) {
@@ -16,18 +17,21 @@ export default class DefaultPage extends React.Component {
 
     return (
       <div>
-        <ul>
-          {datefinder.dates.map(({ id, time, users }) => (
-            <li key={id}>
-              <span>
-                <span className="date">{formatDate(time)}</span>
-                <span className="time">{formatTime(time)}</span>
-              </span>
-              <input type="checkbox" checked={true} onClick={() => null} />
-              <span className="signupCount">{users.length}</span>
-              <span className="userList">{users.map(user => user.name).join(', ')}</span>
-            </li>
-          ))}
+        <ul className="datesList">
+          {datefinder.dates.map(({ id, time, users }) => {
+            const selected = users.map(user => user.user).includes(user.id)
+            return (
+              <li key={id} className={selected ? 'selected' : ''}>
+                <span className={(selected ? 'fa-check' : 'fa-times') + ' fa fa-lg signupIcon'} />
+                <span className="signupCount">{users.length}</span>
+                <span>
+                  <span className="date">{formatDate(time)}</span>
+                  <span className="time">{formatTime(time)}</span>
+                </span>
+                <span className="userList">{users.map(user => user.name).join(', ')}</span>
+              </li>
+            )
+          })}
         </ul>
       </div>
     )
