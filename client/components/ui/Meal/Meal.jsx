@@ -2,7 +2,7 @@ import './Meal.less'
 
 import { formatDate, formatDateTime, formatDayNameDate, formatTime, formatTimeShort } from 'UTILS/date.js'
 
-import DateFinder from 'UI/Datefinder.js'
+import DateFinder from 'UI/DateFinder.js'
 import { Link } from 'react-router-dom'
 import React from 'react'
 import dEqual from 'fast-deep-equal'

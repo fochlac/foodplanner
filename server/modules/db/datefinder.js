@@ -64,7 +64,7 @@ module.exports = {
             ON datefinder_participants.user = users.id
             WHERE datefinder_participants.datefinder = datefinder.id
           ), ']'
-        ) AS 'uservotes',
+        ) AS 'participants',
         CONCAT( '[', (
           SELECT GROUP_CONCAT(
             JSON_OBJECT(
@@ -96,25 +96,29 @@ module.exports = {
     return executeQuery(await getConnection(), query, true)
   },
 
-  createSignup: async ({ user, dates, datefinder }) => {
+  createSignup: async ({ user, date }) => {
     const querySignups = `
         INSERT INTO datefinder_signups (
           user,
           date
-        ) VALUES ${dates.map(
-          date => `(
+        ) VALUES (
           ${user},
           ${date}
-        )`,
-        )};`,
+        );`,
       queryParticipant = `
         INSERT INTO datefinder_participants (
           user,
           datefinder
-        ) VALUES (
+        )
+        SELECT
           ${user},
-          ${datefinder}
-        );`
+          datefinder.id
+        FROM datefinder
+        LEFT JOIN datefinder_dates
+        ON datefinder.id = datefinder_dates.datefinder
+        WHERE datefinder_dates.id = ${date}
+        ON DUPLICATE KEY
+        UPDATE user = user;`
 
     const dbActions = async myDb => {
       await executeQuery(myDb, querySignups)
@@ -126,37 +130,11 @@ module.exports = {
     return createTransaction({ dbActions, ident: 'createSignup' })
   },
 
-  editSignup: ({ user, dates, datefinder }) => {
-    const querySignups = `
-        INSERT INTO datefinder_signups (
-          user,
-          date
-        ) VALUES ${dates.map(
-          date => `(
-          ${user},
-          ${date}
-        )`,
-        )};`,
-      queryDelete = `
+  deleteSignup: ({ user, date }) => {
+    const queryDelete = `
       DELETE FROM datefinder_signups
       WHERE user = ${user}
-      AND date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${datefinder});`
-
-    const dbActions = async myDb => {
-      await executeQuery(myDb, queryDelete)
-      await executeQuery(myDb, querySignups, true)
-      return {}
-    }
-
-    return createTransaction({ dbActions, ident: 'editSignup' })
-  },
-
-  deleteSignup: ({ user, datefinder }) => {
-    const querySignups = `DELETE FROM datefinder_participants WHERE user = ${user} AND datefinder = ${datefinder};`,
-      queryDelete = `
-      DELETE FROM datefinder_signups
-      WHERE user = ${user}
-      AND date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${datefinder});`
+      AND date = ${date};`
 
     const dbActions = async myDb => {
       await executeQuery(myDb, queryDelete)

@@ -75,18 +75,7 @@ module.exports = {
   signups: {
     create: (req, res) => {
       datefinderDB
-        .createSignup({ ...req.params, ...req.body, user: req.user.id })
-        .then(results => {
-          datefinderCache.delete('datefinderList')
-          updateCache.deleteAll()
-          res.status(200).send(results)
-        })
-        .catch(error.router.internalError(res))
-    },
-
-    edit: (req, res) => {
-      datefinderDB
-        .editSignup({ ...req.params, ...req.body, user: req.user.id })
+        .createSignup({ user: req.body.user, date: req.body.date })
         .then(results => {
           datefinderCache.delete('datefinderList')
           updateCache.deleteAll()
@@ -97,7 +86,7 @@ module.exports = {
 
     delete: (req, res) => {
       datefinderDB
-        .deleteSignup({ ...req.params, user: req.user.id })
+        .deleteSignup({ user: req.body.user, date: req.body.date })
         .then(() => {
           datefinderCache.delete('datefinderList')
           updateCache.deleteAll()

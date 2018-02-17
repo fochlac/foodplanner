@@ -56,40 +56,20 @@ datefinder.delete('/:id',
 );
 
 
-datefinder.post('/:deadline/signup',
+datefinder.post('/signup',
   jwt.requireAuthentication,
-  error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
-  }),
   error.router.validate('body', {
-    options: [{
-      date: /^[0-9]{1,9}$/,
-    }]
+    date: /^[0-9]{1,9}$/,
+    user: /^[0-9]{1,9}$/,
   }),
   datefinderController.signups.create
 )
 
-datefinder.put('/:deadline/signup/',
+datefinder.delete('/signup/',
   jwt.requireAuthentication,
   error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
-  }),
-  error.router.validate('body', {
-    options: [{
-      date: /^[0-9]{1,9}$/,
-    }]
-  }),
-  datefinderController.signups.edit
-)
-
-datefinder.delete('/:deadline/signup/',
-  jwt.requireAuthentication,
-  error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
-  }),
-  error.router.validate('params', {
-    id: /^[0-9]{1,14}$/,
-    signupId: /^[0-9]{1,14}$/,
+    date: /^[0-9]{1,9}$/,
+    user: /^[0-9]{1,9}$/,
   }),
   datefinderController.signups.delete
 )
