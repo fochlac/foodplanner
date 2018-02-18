@@ -446,3 +446,13 @@ export const datefinderToggleDate = ({ selected, user, date }) => ({
     },
   },
 })
+
+export const datefinderFinalize = id => ({
+  type: 'FINALIZE_DATEFINDER',
+  status: 'initialized',
+  id,
+  api: {
+    url: `/api/datefinder/${id}/lock`,
+    method: 'POST'
+  }
+})

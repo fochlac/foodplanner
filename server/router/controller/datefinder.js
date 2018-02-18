@@ -37,6 +37,13 @@ module.exports = {
     }
   },
 
+  lock: (req,res) => {
+    datefinderDB
+      .getDatefinderCreator(req.params.id)
+      .then(([result]) => (req.user.id === result.id ? Promise.resolve() : Promise.reject({ status: 403, type: 'FORBIDDEN' })))
+      .then(() => datefinderDB.lock(req.params.id))
+  },
+
   create: (req, res) => {
     datefinderDB
       .createDatefinder({ ...req.body, creator: req.user.id })
@@ -50,8 +57,8 @@ module.exports = {
 
   edit: (req, res) => {
     datefinderDB
-      .getDatefinderCreator({ ...req.params })
-      .then(([id]) => (req.user.id === id ? Promise.resolve() : Promise.reject({ status: 403, type: 'FORBIDDEN' })))
+      .getDatefinderCreator(req.params.id)
+      .then(([result]) => (req.user.id === result.id ? Promise.resolve() : Promise.reject({ status: 403, type: 'FORBIDDEN' })))
       .then(() => datefinderDB.deleteDatefinder({ ...req.params }))
       .then(() => datefinderDB.createSignup({ ...req.body, creator: req.user.id }))
       .then(results => {

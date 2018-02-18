@@ -89,7 +89,7 @@ module.exports = {
     return executeQuery(await getConnection(), query, true)
   },
 
-  getDatefinderCreator: async ({ id }) => {
+  getDatefinderCreator: async (id) => {
     const query = `
       SELECT creator FROM datefinder WHERE id = ${id};`
 

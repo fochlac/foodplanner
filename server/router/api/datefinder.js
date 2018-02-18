@@ -3,17 +3,13 @@ const datefinder          = require('express').Router()
   , jwt                   = require(process.env.FOOD_HOME + 'modules/auth/jwt')
   , error                 = require(process.env.FOOD_HOME + 'modules/error');
 
-const upcoming = (req,res) => res.status(501).send()
 
 datefinder.post('/:id/lock',
   jwt.requireAuthentication,
   error.router.validate('params', {
     id: /^[0-9]{1,9}$/
   }, {nextOnError: true}),
-  error.router.validate('body', {
-    prices: 'array'
-  }),
-  upcoming
+  datefinderController.lock
 );
 
 datefinder.get('/', datefinderController.list);
