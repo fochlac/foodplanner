@@ -135,9 +135,7 @@ export default class Meal extends React.Component {
             <div className="datefinder">
               <DateFinder id={p.meal.datefinder} />
             </div>
-          ) : null}
-
-          <div className="participants">
+          ) : <div className="participants">
             <h4 className="participantsTitle">Teilnehmerliste</h4>
             {p.meal.signupLimit ? (
               <span className="participation">
@@ -205,7 +203,7 @@ export default class Meal extends React.Component {
                 ))}
               </div>
             ) : null}
-          </div>
+          </div>}
         </div>
       </div>
     )

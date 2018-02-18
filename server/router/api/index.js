@@ -18,7 +18,7 @@ routes.get(
     {
       version: /^([0-9]{0,100}|undefined)$/,
     },
-    true,
+    {hideError: true},
   ),
   controller.update,
 )

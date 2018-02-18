@@ -9,7 +9,7 @@ datefinder.post('/:id/lock',
   jwt.requireAuthentication,
   error.router.validate('params', {
     id: /^[0-9]{1,9}$/
-  }),
+  }, {nextOnError: true}),
   error.router.validate('body', {
     prices: 'array'
   }),
@@ -35,7 +35,7 @@ datefinder.put('/:id',
   jwt.requireAuthentication,
   error.router.validate('params', {
     id: /^[0-9]{1,9}$/
-  }),
+  }, { nextOnError: true }),
   error.router.validate('body', {
     creator: /^[0-9]{1,9}$/,
     description: /^[^"%;]*$/,
@@ -51,7 +51,7 @@ datefinder.delete('/:id',
   jwt.requireAuthentication,
   error.router.validate('params', {
     id: /^[0-9]{1,9}$/
-  }),
+  }, { nextOnError: true }),
   datefinderController.delete
 );
 
@@ -67,7 +67,7 @@ datefinder.post('/signup',
 
 datefinder.delete('/signup/',
   jwt.requireAuthentication,
-  error.router.validate('params', {
+  error.router.validate('body', {
     date: /^[0-9]{1,9}$/,
     user: /^[0-9]{1,9}$/,
   }),

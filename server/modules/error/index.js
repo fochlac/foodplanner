@@ -68,7 +68,8 @@ module.exports = {
       }
     },
 
-    validate: (type, options, hideError) => {
+    validate: (type, matches, additionalOptions) => {
+      const { hideError = false, nextOnError = false } = additionalOptions || {}
       return (req, res, next) => {
         let param,
           valid = true,
@@ -97,21 +98,23 @@ module.exports = {
             }
           }
 
-        for (param in options) {
-          if (Array.isArray(options[param])) {
-            options[param].forEach(validation => validateParam(param, validation))
+        for (param in matches) {
+          if (Array.isArray(matches[param])) {
+            matches[param].forEach(validation => validateParam(param, validation))
           } else {
-            validateParam(param, options[param])
+            validateParam(param, matches[param])
           }
           log(
             6,
-            `Validating ${param}: '${payload[param]}' against RegExp ${options[param]}, result ${
-              typeof options[param] === 'string' ? valid : options[param].test(payload[param])
+            `Validating ${param}: '${payload[param]}' against RegExp ${matches[param]}, result ${
+              typeof matches[param] === 'string' ? valid : matches[param].test(payload[param])
             }`,
           )
         }
         if (valid) {
           next()
+        } else if (nextOnError) {
+          next('route')
         } else {
           log(4, 'Invalid Request.', payload)
           res.status(400).send(hideError ? { type: 'Invalid_Request_Hidden', data: invalidParams } : { type: 'Invalid_Request', data: invalidParams })

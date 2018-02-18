@@ -72,7 +72,7 @@ app.get('*', (req, res) => {
           date.users = date.users ? JSON.parse(date.users) : []
           return date
         }),
-        uservotes: datefinder.uservotes ? JSON.parse(datefinder.uservotes) : [],
+        participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
       }))
 
       signups = signups.reduce((acc, signup) => {

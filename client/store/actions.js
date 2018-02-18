@@ -432,13 +432,16 @@ export const start_sign_in = () => ({
 
 export const datefinderToggleDate = ({ selected, user, date }) => ({
   type: 'TOGGLE_DATEFINDER_SIGNUP',
-  status: 'initialized',
+  status: 'hidden',
+  date,
+  user,
+  selected,
   api: {
     url: `/api/datefinder/signup`,
     /* if current state is selected, delete signup */
     method: selected ? 'DELETE' : 'POST',
     body: {
-      user,
+      user: user.id,
       date
     },
   },

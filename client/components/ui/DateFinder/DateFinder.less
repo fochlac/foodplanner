@@ -1,9 +1,25 @@
 @import '../../variables.less';
 
 .datefinder {
-  width: calc(100% ~'-' 20px);
+  width: 100%;
   padding: 0 10px;
   margin-bottom: 10px;
+  box-sizing: border-box;
+
+  .participantsList {
+    list-style: none;
+    display: inline-flex;
+    margin: 5px 0;
+    padding: 0;
+
+    li {
+      margin-right: 5px;
+
+      &.myself {
+          font-weight: 600;
+      }
+    }
+  }
 
   .datesList {
     white-space: nowrap;
@@ -12,33 +28,42 @@
     padding: 0;
     overflow-x: auto;
     background: @colorg5;
-    border: solid 4px @colorg3;
+    border: solid 2px @colorg3;
     padding: 10px;
+    user-select: none;
+    display: inline-block;
+    max-width: 100%;
+    box-sizing: border-box;
 
     & > li {
+      display: inline-grid;
+      grid-template: auto / auto auto;
       margin-right: 10px;
-      display: inline-flex;
-      flex-direction: column;
-      background: @colorg5;
       border: solid 2px @font-color-light;
-      align-items: center;
       padding: 5px;
+      background: @colorg5;
+          &.selected {
+            background: @font-color-light;
+            color: @colorg5;
+          }
+
+      &> div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       position: relative;
+      cursor: pointer;
 
       .signupIcon {
         position: absolute;
         top: 5px;
-        right: 5px;
+        right: 0;
       }
 
       &:last-child {
         margin-right: 0;
       }
 
-      &.selected {
-        background: @font-color-light;
-        color: @colorg5;
-      }
 
       .time {
         margin-left: 5px;
@@ -50,9 +75,21 @@
         margin: 10px 0 5px;
       }
 
-      .userList {
-        display: none;
-      }
+    }
+
+    .userListWrapper{
+      margin-left: 5px;
+      border-left: solid 1px;
+      padding-left: 5px;
+    }
+        .userList {
+          list-style: none;
+          padding: 0;
+          display: grid;
+          grid-template: auto auto auto / auto;
+          grid-auto-flow: column;
+          grid-column-gap: 10px;
+        }
     }
   }
 }

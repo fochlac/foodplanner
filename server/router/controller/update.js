@@ -14,12 +14,21 @@ module.exports = {
       if (updateCache.get('update')) {
         res.status(200).send(updateCache.get('update'))
       } else {
-        Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups(), datefinderDB.list()])
-          .then(([meals, signups, datefinder]) => {
+        Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups(), datefinderDB.getDatefinders()])
+          .then(([meals, signups, datefinderList]) => {
+            datefinderList = datefinderList.map(datefinder => ({
+              ...datefinder,
+              dates: JSON.parse(datefinder.dates).map(date => {
+                date.users = date.users ? JSON.parse(date.users) : []
+                return date
+              }),
+              participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
+            }))
+
             let response = {
               signups,
               meals,
-              datefinder,
+              datefinder: datefinderList,
               version: caches.getVersion() + 1,
             }
 

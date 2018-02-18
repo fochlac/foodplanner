@@ -31,7 +31,7 @@ module.exports = {
 
     const dbActions = async myDb => {
       const result = await executeQuery(myDb, datefinder_query)
-      const datesResult = await executeQuery(myDb, dates_query(result.insertId), true)
+      const datesResult = await executeQuery(myDb, dates_query(result.insertId))
 
       return {
         id: result.id,
@@ -104,7 +104,9 @@ module.exports = {
         ) VALUES (
           ${user},
           ${date}
-        );`,
+        )
+        ON DUPLICATE KEY
+        UPDATE user = user;`,
       queryParticipant = `
         INSERT INTO datefinder_participants (
           user,
@@ -122,7 +124,7 @@ module.exports = {
 
     const dbActions = async myDb => {
       await executeQuery(myDb, querySignups)
-      await executeQuery(myDb, queryParticipant, true)
+      await executeQuery(myDb, queryParticipant)
 
       return {}
     }
@@ -130,19 +132,13 @@ module.exports = {
     return createTransaction({ dbActions, ident: 'createSignup' })
   },
 
-  deleteSignup: ({ user, date }) => {
+  deleteSignup: async ({ user, date }) => {
     const queryDelete = `
       DELETE FROM datefinder_signups
       WHERE user = ${user}
       AND date = ${date};`
 
-    const dbActions = async myDb => {
-      await executeQuery(myDb, queryDelete)
-      await executeQuery(myDb, querySignups, true)
-      return {}
-    }
-
-    return createTransaction({ dbActions, ident: 'deleteSignup' })
+    return executeQuery(await getConnection(), queryDelete, true)
   },
 
   deleteDatefinder: ({ id }) => {
@@ -160,7 +156,7 @@ module.exports = {
         executeQuery(myDb, queryParticipants),
         executeQuery(myDb, queryDatefinderOnMeal),
       ])
-      await executeQuery(myDb, queryDates, true)
+      await executeQuery(myDb, queryDates)
       return {}
     }
 

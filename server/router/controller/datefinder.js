@@ -3,11 +3,12 @@ const datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
   error = require(process.env.FOOD_HOME + 'modules/error'),
   log = require(process.env.FOOD_HOME + 'modules/log')
 
-const datefinderCache = caches.getCache('datefinder')
+const datefinderCache = caches.getCache('datefinder'),
+  updateCache = caches.getCache('update');
 
 module.exports = {
   list: (req, res) => {
-    const datefinder = datefinderCache.get('datefinderList')
+    const datefinder = datefinderCache.get('datefinderList');
 
     if (datefinder) {
       res.status(200).send(datefinder)
@@ -24,7 +25,7 @@ module.exports = {
               const datefinderList = {
                 ...datefinder,
                 dates,
-                uservotes: datefinder.uservotes ? JSON.parse(datefinder.uservotes) : [],
+                participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
               }
 
               mealCache.put('datefinderList', datefinderList)

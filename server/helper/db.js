@@ -1,5 +1,5 @@
 const getConnection = require(process.env.FOOD_HOME + 'modules/db'),
-      log = require(process.env.FOOD_HOME + 'modules/log')
+  log = require(process.env.FOOD_HOME + 'modules/log')
 
 const executeQuery = (db, query, final) => {
   return new Promise((resolve, reject) =>
@@ -21,6 +21,7 @@ const executeQuery = (db, query, final) => {
 const createTransaction = async ({ dbActions, ident = 'defaultTransaction' }) => {
   try {
     const myDb = await getConnection()
+
     await new Promise((resolve, reject) =>
       myDb.beginTransaction(err => {
         if (err) {
@@ -31,7 +32,23 @@ const createTransaction = async ({ dbActions, ident = 'defaultTransaction' }) =>
       }),
     )
 
-    return await dbActions(myDb)
+    const result = await dbActions(myDb)
+
+    await new Promise((resolve, reject) =>
+      myDb.commit(err => {
+        if (err) {
+          log(2, 'error commiting transaction', ident, err)
+          reject({ status: 500, message: 'Unable to commit transaction.' })
+        } else {
+          log(6, 'commited transaction', ident)
+          myDb.release()
+          resolve(result)
+        }
+      }),
+    )
+
+    return result
+
   } catch (err) {
     log('Error during transaction: ', ident, err)
     return new Promise((resolve, reject) =>
