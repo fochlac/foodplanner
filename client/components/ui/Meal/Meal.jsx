@@ -9,6 +9,18 @@ import dEqual from 'fast-deep-equal'
 import { replaceLinks } from 'UTILS/markdown.js'
 import sEqual from 'shallow-equals'
 
+const wording = {
+  datefinderTitle: 'Datumsumfrage für',
+  time: 'Zeitpunkt',
+  org: 'Organisator',
+  list: 'Teilnehmerliste',
+  of: 'von',
+  participants: 'Teilnehmern',
+  participant: 'Teilnehmer',
+  deadline: 'Anmeldeschluss',
+  signup: 'Teilnehmen',
+}
+
 export default class Meal extends React.Component {
   constructor(props) {
     super()
@@ -108,7 +120,7 @@ export default class Meal extends React.Component {
       <div className={'meal' + (p.meal.print ? ' print' : '')}>
         <div className="titlebar">
           <h4 className="title">
-            {formatDayNameDate(p.meal.time)}: <span className="name">{p.meal.name}</span>
+            {p.meal.datefinder ? wording.datefinderTitle : formatDayNameDate(p.meal.time)}: <span className="name">{p.meal.name}</span>
           </h4>
           {p.showPrint && <span onClick={this.props.start_print.bind(this, p.meal.id)} className="fa fa-print fa-lg menuIcon pointer" />}
           {p.user.id === p.meal.creatorId ? (
@@ -123,10 +135,10 @@ export default class Meal extends React.Component {
           <div className="mealDetails">
             {p.meal.image ? <img src={p.meal.image} className="mealImage" /> : null}
             <p className="date">
-              Zeitpunkt: <b>{formatTime(p.meal.time)}</b>
+              {wording.time}: <b>{formatTime(p.meal.time)}</b>
             </p>
             <p className="creator">
-              Organisator: <span>{p.meal.creator}</span>
+              {wording.org}: <span>{p.meal.creator}</span>
             </p>
             <p className="description">{replaceLinks(p.meal.description)}</p>
           </div>
@@ -135,20 +147,22 @@ export default class Meal extends React.Component {
             <DateFinder id={p.meal.datefinder} />
           ) : (
             <div className="participants">
-              <h4 className="participantsTitle">Teilnehmerliste</h4>
+              <h4 className="participantsTitle">{wording.list}</h4>
               {p.meal.signupLimit ? (
                 <span className="participation">
-                  <span className="count">{signups.length}</span> von <span className="limit">{p.meal.signupLimit}</span> Teilnehmern
+                  <span className="count">{signups.length}</span> {wording.of} <span className="limit">{p.meal.signupLimit}</span> {wording.participants}
                 </span>
               ) : (
                 <span className="participation">
-                  <span className="count">{signups.length}</span> Teilnehmer
+                  <span className="count">{signups.length}</span> {wording.participant}
                 </span>
               )}
-              <span className="deadline">Anmeldeschluss: {formatTimeShort(p.meal.deadline)}</span>
+              <span className="deadline">
+                {wording.deadline}: {formatTimeShort(p.meal.deadline)}
+              </span>
               {!s.editable || (signups.length >= p.meal.signupLimit && p.meal.signupLimit) ? null : (
                 <p className="fakeLink participate" onClick={this.signup}>
-                  <span>Teilnehmen</span>
+                  <span>{wording.signup}</span>
                   <span className="fa fa-angle-double-right" />
                 </p>
               )}
