@@ -9,18 +9,53 @@
   .participantsList {
     list-style: none;
     display: inline-flex;
-    margin: 5px 0;
+    flex-wrap: wrap;
+    margin: 0;
     padding: 0;
 
     li {
       margin-right: 5px;
 
       &.myself {
-          font-weight: 600;
+        font-weight: 600;
       }
     }
   }
 
+  .finalizeList {
+    list-style: none;
+    margin: 10px 0;
+    padding: 0;
+
+    & > li {
+      padding: 5px;
+      border: solid 2px @colorg3;
+      margin-bottom: 5px;
+      cursor: pointer;
+      color: @colorg3;
+      display: flex;
+      align-items: center;
+
+      .wrap {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      &.selected {
+        background: @font-color-light;
+        color: @colorg5;
+      }
+    }
+
+    .check {
+      min-width: 30px;
+      display: inline-block;
+    }
+  }
+
+  .time {
+    margin-left: 5px;
+  }
   .datesList {
     white-space: nowrap;
     list-style: none;
@@ -34,6 +69,7 @@
     display: inline-block;
     max-width: 100%;
     box-sizing: border-box;
+    margin-top: 10px;
 
     & > li {
       display: inline-grid;
@@ -42,54 +78,49 @@
       border: solid 2px @font-color-light;
       padding: 5px;
       background: @colorg5;
-          &.selected {
-            background: @font-color-light;
-            color: @colorg5;
-          }
 
-      &> div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      cursor: pointer;
-
-      .signupIcon {
-        position: absolute;
-        top: 5px;
-        right: 0;
+      &.selected {
+        background: @font-color-light;
+        color: @colorg5;
       }
 
-      &:last-child {
-        margin-right: 0;
-      }
+      & > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
 
-
-      .time {
-        margin-left: 5px;
-      }
-
-      .signupCount {
-        font-size: 2em;
-        font-weight: 600;
-        margin: 10px 0 5px;
-      }
-
-    }
-
-    .userListWrapper{
-      margin-left: 5px;
-      border-left: solid 1px;
-      padding-left: 5px;
-    }
-        .userList {
-          list-style: none;
-          padding: 0;
-          display: grid;
-          grid-template: auto auto auto / auto;
-          grid-auto-flow: column;
-          grid-column-gap: 10px;
+        .signupIcon {
+          position: absolute;
+          top: 5px;
+          right: 0;
         }
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        .signupCount {
+          font-size: 2em;
+          font-weight: 600;
+          margin: 10px 0 5px;
+        }
+      }
+
+      .userListWrapper {
+        margin-left: 5px;
+        border-left: solid 1px;
+        padding-left: 5px;
+      }
+      .userList {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template: auto auto auto / auto;
+        grid-auto-flow: column;
+        grid-column-gap: 10px;
+      }
     }
   }
 }
