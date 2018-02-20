@@ -150,7 +150,11 @@ export default class DateFinder extends React.Component {
                 <button className="finalize marginRight" onClick={() => this.setState({ finalize: false })}>
                   {wording.cancel}
                 </button>
-                <button className="finalize" disabled={this.state.selectedDate === -1} onClick={() => datefinderFinalize(this.state.selectedDate)}>
+                <button
+                  className="finalize"
+                  disabled={this.state.selectedDate === -1}
+                  onClick={() => datefinderFinalize(datefinder.id, this.state.selectedDate)}
+                >
                   {wording.finalize}
                 </button>
               </div>

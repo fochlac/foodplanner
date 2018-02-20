@@ -418,7 +418,7 @@ export const register = ({ mail, hash, name }) => ({
       hash,
     },
   },
-  enqueue: create_settings_dialog
+  enqueue: create_settings_dialog,
 })
 
 export const start_sign_in = () => ({
@@ -442,17 +442,21 @@ export const datefinderToggleDate = ({ selected, user, date }) => ({
     method: selected ? 'DELETE' : 'POST',
     body: {
       user: user.id,
-      date
+      date,
     },
   },
 })
 
-export const datefinderFinalize = id => ({
+export const datefinderFinalize = (id, date) => ({
   type: 'FINALIZE_DATEFINDER',
   status: 'initialized',
   id,
+  date,
   api: {
     url: `/api/datefinder/${id}/lock`,
-    method: 'POST'
-  }
+    method: 'POST',
+    body: {
+      date,
+    },
+  },
 })

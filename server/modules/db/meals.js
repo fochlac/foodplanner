@@ -1,7 +1,8 @@
 const getConnection = require(process.env.FOOD_HOME + 'modules/db'),
   mysql = require('mysql'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
-  error = require(process.env.FOOD_HOME + 'modules/error')
+  error = require(process.env.FOOD_HOME + 'modules/error'),
+  { executeQuery } = require(process.env.FOOD_HOME + 'helper/db')
 
 function doubleFlattenResults(result) {
   let objectResult = result.reduce((acc, row) => {
@@ -26,6 +27,7 @@ function doubleFlattenResults(result) {
         creatorId: row.creatorId,
         time: row.time,
         datefinder: row.datefinder,
+        datefinderLocked: row.datefinderLocked,
         deadline: row.deadline,
         signupLimit: row.signupLimit,
         image: row.image,
@@ -56,49 +58,48 @@ function doubleFlattenResults(result) {
   })
 }
 
-module.exports = {
-  getMealById: id => {
-    const query = `SELECT
-                meals.id,
-                meals.name,
-                meals.description,
-                meals.creator,
-                meals.creatorId,
-                meals.time,
-                meals.datefinder,
-                meals.deadline,
-                meals.signupLimit,
-                meals.image,
-                meals.price,
-                meals.locked,
-                mealOptions.id AS mealOptionsId,
-                mealOptions.name AS mealOptionsName,
-                mealOptions.type AS mealOptionsType,
-                mealOptions.price AS mealOptionsPrice,
-                mealOptionValues.name AS mealOptionValueName,
-                mealOptionValues.price AS mealOptionValuePrice,
-                mealOptionValues.id AS mealOptionValueId
-            FROM meals
-            LEFT JOIN mealOptions
-            ON meals.id = mealOptions.mealId
-            LEFT JOIN mealOptionValues
-            ON mealOptionValues.mealOptionId = mealOptions.id
-            WHERE meals.id = ${mysql.escape(id)}`
+const getFullMealByProperty = async (prop, val) => {
+  const query = `SELECT
+              meals.id,
+              meals.name,
+              meals.description,
+              meals.creator,
+              meals.creatorId,
+              meals.time,
+              meals.datefinder,
+              meals.deadline,
+              meals.signupLimit,
+              meals.image,
+              meals.price,
+              meals.locked,
+              (CASE WHEN meals.datefinderLocked = 0 THEN meals.datefinder ELSE 0 END) AS datefinder,
+              meals.datefinder AS datefinderLocked,
+              mealOptions.id AS mealOptionsId,
+              mealOptions.name AS mealOptionsName,
+              mealOptions.type AS mealOptionsType,
+              mealOptions.price AS mealOptionsPrice,
+              mealOptionValues.name AS mealOptionValueName,
+              mealOptionValues.price AS mealOptionValuePrice,
+              mealOptionValues.id AS mealOptionValueId
+          FROM meals
+          LEFT JOIN mealOptions
+          ON meals.id = mealOptions.mealId
+          LEFT JOIN mealOptionValues
+          ON mealOptionValues.mealOptionId = mealOptions.id
+          WHERE meals.${prop} = ${val}`
 
-    return getConnection().then(myDb => {
-      return new Promise((resolve, reject) =>
-        myDb.query(query, (err, result) => {
-          myDb.release()
-          if (err) {
-            log(2, 'modules/db/meal:getMealById', err, query)
-            reject({ status: 500, message: 'Unable to get meallist.' })
-          } else {
-            resolve(doubleFlattenResults(result)[0])
-          }
-        }),
-      )
+  return executeQuery(await getConnection(), query, true)
+    .then(result => doubleFlattenResults(result))
+    .catch(err => {
+      log(2, 'modules/db/meal:getFullMealByProperty', err, query)
+      return Promise.reject({ status: 500, message: 'Unable to get meallist.' })
     })
-  },
+}
+
+module.exports = {
+  getMealById: id => getFullMealByProperty('id', mysql.escape(id)).then(result => result[0]),
+
+  getMealByDatefinderLocked: id => getFullMealByProperty('datefinderLocked', mysql.escape(id)).then(result => result[0]),
 
   getMealCreatorBySignupId: id => {
     const query = `SELECT
@@ -446,48 +447,7 @@ module.exports = {
       })
   },
 
-  getAllMeals: () => {
-    return getConnection().then(myDb => {
-      const query = `SELECT
-                meals.id,
-                meals.name,
-                meals.description,
-                meals.creator,
-                meals.creatorId,
-                meals.time,
-                meals.deadline,
-                meals.datefinder,
-                meals.signupLimit,
-                meals.image,
-                meals.price,
-                meals.locked,
-                mealOptions.id AS mealOptionsId,
-                mealOptions.name AS mealOptionsName,
-                mealOptions.type AS mealOptionsType,
-                mealOptions.price AS mealOptionsPrice,
-                mealOptionValues.name AS mealOptionValueName,
-                mealOptionValues.price AS mealOptionValuePrice,
-                mealOptionValues.id AS mealOptionValueId
-            FROM meals
-            LEFT JOIN mealOptions
-            ON meals.id = mealOptions.mealId
-            LEFT JOIN mealOptionValues
-            ON mealOptionValues.mealOptionId = mealOptions.id;`
-
-      return new Promise((resolve, reject) =>
-        myDb.query(query, (err, result) => {
-          myDb.release()
-          if (err) {
-            log(2, 'modules/db/meal:getAllMeals', err)
-            reject({ status: 500, message: 'Unable to get meallist.' })
-          } else {
-            log(6, 'modules/db/meal:getAllMeals', 'got all data')
-            resolve(doubleFlattenResults(result))
-          }
-        }),
-      )
-    })
-  },
+  getAllMeals: () => getFullMealByProperty('id', 'meals.id'),
 
   getUnsignedUsersByProp: (mealId, prop, val) => {
     return getConnection().then(myDb => {

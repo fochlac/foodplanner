@@ -89,11 +89,24 @@ module.exports = {
     return executeQuery(await getConnection(), query, true)
   },
 
-  getDatefinderCreator: async (id) => {
+  getDatefinderCreator: async id => {
     const query = `
-      SELECT creator FROM datefinder WHERE id = ${id};`
+      SELECT creator FROM datefinder WHERE id = ${mysql.escape(id)};`
 
     return executeQuery(await getConnection(), query, true)
+  },
+
+  lockDatefinder: async ({ id, date }) => {
+    const queryLock = `
+        UPDATE meals
+        SET
+          datefinderLocked = 1,
+          time = (SELECT time FROM datefinder_dates WHERE id = ${mysql.escape(date)}),
+          deadline = (SELECT time FROM datefinder_dates WHERE id = ${mysql.escape(date)}) - deadline
+        WHERE datefinder = ${mysql.escape(id)}
+        AND datefinderLocked = 0;`
+
+    return executeQuery(await getConnection(), queryLock, true)
   },
 
   createSignup: async ({ user, date }) => {
@@ -102,8 +115,8 @@ module.exports = {
           user,
           date
         ) VALUES (
-          ${user},
-          ${date}
+          ${mysql.escape(user)},
+          ${mysql.escape(date)}
         )
         ON DUPLICATE KEY
         UPDATE user = user;`,
@@ -113,12 +126,12 @@ module.exports = {
           datefinder
         )
         SELECT
-          ${user},
+          ${mysql.escape(user)},
           datefinder.id
         FROM datefinder
         LEFT JOIN datefinder_dates
         ON datefinder.id = datefinder_dates.datefinder
-        WHERE datefinder_dates.id = ${date}
+        WHERE datefinder_dates.id = ${mysql.escape(date)}
         ON DUPLICATE KEY
         UPDATE user = user;`
 
@@ -135,19 +148,19 @@ module.exports = {
   deleteSignup: async ({ user, date }) => {
     const queryDelete = `
       DELETE FROM datefinder_signups
-      WHERE user = ${user}
-      AND date = ${date};`
+      WHERE user = ${mysql.escape(user)}
+      AND date = ${mysql.escape(date)};`
 
     return executeQuery(await getConnection(), queryDelete, true)
   },
 
   deleteDatefinder: ({ id }) => {
-    const queryBase = `DELETE FROM datefinder WHERE id = ${id};`,
-      queryParticipants = `DELETE FROM datefinder_participants WHERE datefinder = ${id};`,
-      queryDates = `DELETE FROM datefinder_dates WHERE datefinder = ${id};`,
-      queryDatefinderOnMeal = `UPDATE meals SET datefinder = 0 WHERE datefinder = ${id};`,
+    const queryBase = `DELETE FROM datefinder WHERE id = ${mysql.escape(id)};`,
+      queryParticipants = `DELETE FROM datefinder_participants WHERE datefinder = ${mysql.escape(id)};`,
+      queryDates = `DELETE FROM datefinder_dates WHERE datefinder = ${mysql.escape(id)};`,
+      queryDatefinderOnMeal = `UPDATE meals SET datefinder = 0 WHERE datefinder = ${mysql.escape(id)};`,
       querySignups = `DELETE FROM datefinder_signups
-        WHERE date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${id});`
+        WHERE date IN (SELECT date FROM datefinder_dates WHERE datefinder = ${mysql.escape(id)});`
 
     const dbActions = async myDb => {
       await Promise.all([
