@@ -25,9 +25,9 @@ describe('CreateMealDialog', () => {
     expect(wrapper.find(ImageUploader)).toHaveLength(1)
     expect(wrapper.find(DayPickerInput)).toHaveLength(2)
 
-    expect(wrapper.find('#SignUpDialog_name')).toHaveLength(1)
-    expect(wrapper.find('#SignUpDialog_description')).toHaveLength(1)
-    expect(wrapper.find('#SignUpDialog_signupLimit')).toHaveLength(1)
+    expect(wrapper.find('#CreateMealDialog_name')).toHaveLength(1)
+    expect(wrapper.find('#CreateMealDialog_description')).toHaveLength(1)
+    expect(wrapper.find('#CreateMealDialog_signupLimit')).toHaveLength(1)
     expect(wrapper.find('.addOption')).toHaveLength(1)
     expect(wrapper.find('.deadline .timePicker')).toHaveLength(1)
     expect(wrapper.find('.time .timePicker')).toHaveLength(1)
@@ -175,9 +175,9 @@ describe('CreateMealDialog', () => {
       wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={{}} create_meal={output => (create_meal = output)} />)
 
     history.pushState({}, 'test', '/termin')
-    wrapper.find('#SignUpDialog_name').simulate('change', { target: { value: TEST_MEAL.name } })
-    wrapper.find('#SignUpDialog_description').simulate('change', { target: { value: TEST_MEAL.description } })
-    wrapper.find('#SignUpDialog_signupLimit').simulate('change', { target: { value: TEST_MEAL.signupLimit } })
+    wrapper.find('#CreateMealDialog_name').simulate('change', { target: { value: TEST_MEAL.name } })
+    wrapper.find('#CreateMealDialog_description').simulate('change', { target: { value: TEST_MEAL.description } })
+    wrapper.find('#CreateMealDialog_signupLimit').simulate('change', { target: { value: TEST_MEAL.signupLimit } })
     wrapper.setState({
       timeObject: new Date(TEST_MEAL.time),
       deadlineObject: new Date(TEST_MEAL.deadline),
@@ -240,9 +240,9 @@ describe('CreateMealDialog', () => {
 
     expect(wrapper.find(MealOption)).toHaveLength(2)
 
-    expect(wrapper.find('#SignUpDialog_name').prop('defaultValue')).toBe(TEST_MEAL.name)
-    expect(wrapper.find('#SignUpDialog_description').prop('defaultValue')).toBe(TEST_MEAL.description)
-    expect(wrapper.find('#SignUpDialog_signupLimit').prop('defaultValue')).toBe(TEST_MEAL.signupLimit)
+    expect(wrapper.find('#CreateMealDialog_name').prop('defaultValue')).toBe(TEST_MEAL.name)
+    expect(wrapper.find('#CreateMealDialog_description').prop('defaultValue')).toBe(TEST_MEAL.description)
+    expect(wrapper.find('#CreateMealDialog_signupLimit').prop('defaultValue')).toBe(TEST_MEAL.signupLimit)
     expect(wrapper.find('.deadline .timePicker').prop('value')).toBe(formatTime(round(deadline, 30 * 60)))
     expect(wrapper.find('.time .timePicker').prop('value')).toBe(formatTime(round(time, 30 * 60)))
     expect(wrapper.find('.templateSelector')).toHaveLength(0)

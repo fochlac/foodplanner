@@ -3,7 +3,10 @@ import { By } from 'selenium-webdriver'
 export const S = {
   busy: By.className('busyBackground'),
   topbar: By.className('topbar'),
+<<<<<<< HEAD
   reload: By.css('.topbar h3.pointer'),
+=======
+>>>>>>> FP-195: parse markdown links fix tests
   userframe: By.className('userFrame'),
   optionByName: name => By.css(`option[value="${name}"]`),
   uf: {
@@ -54,9 +57,15 @@ export const S = {
     mail: By.id('SendMoneyDialog_mail'),
   },
   cm: {
+<<<<<<< HEAD
     name: By.id('SignUpDialog_name'),
     signup: By.id('SignUpDialog_signupLimit'),
     description: By.id('SignUpDialog_description'),
+=======
+    name: By.id('CreateMealDialog_name'),
+    signup: By.id('CreateMealDialog_signupLimit'),
+    description: By.id('CreateMealDialog_description'),
+>>>>>>> FP-195: parse markdown links fix tests
     imageInput: By.css('.createMeal input[type="file"]'),
     image: By.css('.createMeal .imageContainer img'),
     time: By.css('.createMeal .time input'),
