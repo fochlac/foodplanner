@@ -1,6 +1,7 @@
 import './Meal.less'
 
 import { formatDate, formatDateTime, formatDayNameDate, formatTime, formatTimeShort } from 'UTILS/date.js'
+import { replaceLinks } from 'UTILS/markdown.js'
 
 import { Link } from 'react-router-dom'
 import React from 'react'
@@ -126,7 +127,7 @@ export default class Meal extends React.Component {
             <p className="creator">
               Organisator: <span>{p.meal.creator}</span>
             </p>
-            <p className="description">{p.meal.description}</p>
+            <p className="description">{replaceLinks(p.meal.description)}</p>
           </div>
           <div className="participants">
             <h4 className="participantsTitle">Teilnehmerliste</h4>
