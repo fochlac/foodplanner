@@ -6,12 +6,12 @@ import { formatDate, formatTime, round } from 'UTILS/date.js'
 import DayPickerInput from 'react-day-picker/DayPickerInput'
 import Dialog from 'UI/Dialog.js'
 import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx'
+import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import MealOption from './MealOption.jsx'
 import React from 'react'
 import dEqual from 'fast-deep-equal'
 import { formDataFromObject } from 'UTILS/formData.js'
 import sEqual from 'shallow-equals'
-import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 
 export default class CreateMealDialog extends React.Component {
   constructor(props) {
@@ -61,7 +61,7 @@ export default class CreateMealDialog extends React.Component {
     this.timeInput = this.handleDatepicker('time').bind(this)
     this.handleImage = this.handleImage.bind(this)
 
-    this.mySetState = function (data, cb) {
+    this.mySetState = function(data, cb) {
       this.setState(data, () => {
         const app = history && history.state && history.state.app ? history.state.app : {}
         history.replaceState({ app: { ...app, dialog: { ...(app.dialog ? app.dialog : {}), state: this.state } } }, document.title, document.location.pathname)

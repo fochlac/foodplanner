@@ -1,6 +1,7 @@
+import { mount, shallow } from 'enzyme'
+
+import React from 'react'
 import { replaceLinks } from 'UTILS/markdown.js'
-import React from 'react';
-import { shallow, mount } from 'enzyme';
 
 describe('replaceLinks', () => {
   test('should create link elements from markdown links', () => {

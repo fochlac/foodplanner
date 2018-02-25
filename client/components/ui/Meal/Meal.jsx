@@ -1,11 +1,11 @@
 import './Meal.less'
 
 import { formatDate, formatDateTime, formatDayNameDate, formatTime, formatTimeShort } from 'UTILS/date.js'
-import { replaceLinks } from 'UTILS/markdown.js'
 
 import { Link } from 'react-router-dom'
 import React from 'react'
 import dEqual from 'fast-deep-equal'
+import { replaceLinks } from 'UTILS/markdown.js'
 import sEqual from 'shallow-equals'
 
 export default class Meal extends React.Component {
