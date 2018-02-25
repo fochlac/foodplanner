@@ -5,6 +5,7 @@ import { formatDate, formatDateTime, formatDayNameDate, formatTime, formatTimeSh
 import { Link } from 'react-router-dom'
 import React from 'react'
 import dEqual from 'fast-deep-equal'
+import { replaceLinks } from 'UTILS/markdown.js'
 import sEqual from 'shallow-equals'
 
 export default class Meal extends React.Component {
@@ -126,7 +127,7 @@ export default class Meal extends React.Component {
             <p className="creator">
               Organisator: <span>{p.meal.creator}</span>
             </p>
-            <p className="description">{p.meal.description}</p>
+            <p className="description">{replaceLinks(p.meal.description)}</p>
           </div>
           <div className="participants">
             <h4 className="participantsTitle">Teilnehmerliste</h4>

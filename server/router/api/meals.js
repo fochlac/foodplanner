@@ -1,83 +1,88 @@
-const meals             = require('express').Router()
-  , mealController      = require(process.env.FOOD_HOME + 'router/controller/meals')
-  , paymentController   = require(process.env.FOOD_HOME + 'router/controller/payment')
-  , mailController      = require(process.env.FOOD_HOME + 'router/controller/mail')
-  , image               = require(process.env.FOOD_HOME + 'middleware/singleImage')
-  , jwt                 = require(process.env.FOOD_HOME + 'modules/auth/jwt')
-  , error               = require(process.env.FOOD_HOME + 'modules/error');
+const meals = require('express').Router(),
+  mealController = require(process.env.FOOD_HOME + 'router/controller/meals'),
+  paymentController = require(process.env.FOOD_HOME + 'router/controller/payment'),
+  mailController = require(process.env.FOOD_HOME + 'router/controller/mail'),
+  image = require(process.env.FOOD_HOME + 'middleware/singleImage'),
+  jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
+  error = require(process.env.FOOD_HOME + 'modules/error')
 
-meals.post('/:id/lock',
+meals.post(
+  '/:id/lock',
   jwt.requireAuthentication,
   error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
+    id: /^[0-9]{1,9}$/,
   }),
   error.router.validate('body', {
-    prices: 'array'
+    prices: 'array',
   }),
-  paymentController.lockMeal
-);
+  paymentController.lockMeal,
+)
 
-meals.post('/:id/prices',
+meals.post(
+  '/:id/prices',
   jwt.requireAuthentication,
   error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
+    id: /^[0-9]{1,9}$/,
   }),
   error.router.validate('body', {
-    prices: 'array'
+    prices: 'array',
   }),
-  paymentController.savePrices
-);
+  paymentController.savePrices,
+)
 
-meals.get('/', mealController.listAllMeals);
+meals.get('/', mealController.listAllMeals)
 
-meals.put('/:id',
+meals.put(
+  '/:id',
   image.single('imageData'),
   jwt.requireAuthentication,
   error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
+    id: /^[0-9]{1,9}$/,
   }),
   error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
-    description: /^[^"%;]*$/,
+    description: 'utf8',
     time: /^[0-9]{1,15}$/,
     deadline: /^[0-9]{0,15}$/,
     signupLimit: /^[0-9]{0,9}$/,
-    options: 'jsonString'
+    options: 'jsonString',
   }),
-  mealController.editMeal
-);
+  mealController.editMeal,
+)
 
-meals.delete('/:id',
+meals.delete(
+  '/:id',
   jwt.requireAuthentication,
   error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
+    id: /^[0-9]{1,9}$/,
   }),
-  mealController.deleteMeal
-);
+  mealController.deleteMeal,
+)
 
-meals.post('/',
+meals.post(
+  '/',
   image.single('imageData'),
   jwt.requireAuthentication,
   error.router.validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
     creator: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,70}$/,
     creatorId: /^[0-9]{1,14}$/,
-    description: /^[^"%;]*$/,
+    description: 'utf8',
     time: /^[0-9]{1,50}$/,
     deadline: /^[0-9]{0,50}$/,
     signupLimit: /^[0-9]{0,50}$/,
-    options: 'jsonString'
+    options: 'jsonString',
   }),
-  mealController.createMeal
-);
+  mealController.createMeal,
+)
 
-
-meals.post('/:id/mail',
+meals.post(
+  '/:id/mail',
   jwt.requireAdmin,
   error.router.validate('params', {
-    id: /^[0-9]{1,9}$/
+    id: /^[0-9]{1,9}$/,
   }),
-  mailController.resendCreationNotice
-);
+  mailController.resendCreationNotice,
+)
 
-module.exports = meals;
+module.exports = meals

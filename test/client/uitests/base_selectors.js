@@ -54,9 +54,9 @@ export const S = {
     mail: By.id('SendMoneyDialog_mail'),
   },
   cm: {
-    name: By.id('SignUpDialog_name'),
-    signup: By.id('SignUpDialog_signupLimit'),
-    description: By.id('SignUpDialog_description'),
+    name: By.id('CreateMealDialog_name'),
+    signup: By.id('CreateMealDialog_signupLimit'),
+    description: By.id('CreateMealDialog_description'),
     imageInput: By.css('.createMeal input[type="file"]'),
     image: By.css('.createMeal .imageContainer img'),
     time: By.css('.createMeal .time input'),
