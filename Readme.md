@@ -1,10 +1,12 @@
 [![codecov](https://codecov.io/gh/ep-friedel/foodplanner/branch/develop/graph/badge.svg)](https://codecov.io/gh/ep-friedel/foodplanner)
+[![CircleCI](https://circleci.com/gh/ep-friedel/foodplanner/tree/develop.svg?style=svg)](https://circleci.com/gh/ep-friedel/foodplanner/tree/develop)
+
 # Foodplanner
 
 Small food planning tool
 
 component structure:
-![ComponentStructure](https://raw.githubusercontent.com/ep-friedel/foodplanner/develop/components.png "Map of the components")
+![ComponentStructure](https://raw.githubusercontent.com/ep-friedel/foodplanner/develop/components.png 'Map of the components')
 
 # Full Installation Using Install Script
 
@@ -13,14 +15,18 @@ First clone the repo. Then go to the folder 'buildScripts' and adjust the 'varia
 Then run the script 'buildScripts/setup' to install the project and all dependencies.
 
 # Building the project
+
 First go to the project folder, then run the following commands:
+
 ```
 npm install
 npm run-script build
 ```
 
 # Starting the Server
+
 Before starting the server you need to provide the following environment variables. You can for example do so by writíng them to a file and use the following shell script to export all of them:
+
 ```
 while read p; do
   export $p
@@ -57,4 +63,5 @@ node server/index.js
 ```
 
 # dev-server
+
 https://food-dev.fochlac.com
