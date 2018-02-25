@@ -74,20 +74,20 @@ module.exports = {
           valid = true,
           payload = req[type],
           invalidParams = [],
-          validateParam = param => {
-            if (typeof options[param] !== 'string' && !options[param].test(payload[param])) {
+          validateParam = (param, validation) => {
+            if (typeof validation !== 'string' && !validation.test(payload[param])) {
               return false
               invalidParams.push(param)
-            } else if (options[param] === 'object' && typeof payload[param] !== 'object') {
+            } else if (validation === 'object' && typeof payload[param] !== 'object') {
               return false
               invalidParams.push(param)
-            } else if (options[param] === 'array' && !Array.isArray(payload[param])) {
+            } else if (validation === 'array' && !Array.isArray(payload[param])) {
               return false
               invalidParams.push(param)
-            } else if (options[param] === 'utf8' && !regexp.utf8.test(payload[param])) {
+            } else if (validation === 'utf8' && !regexp.utf8.test(payload[param])) {
               return false
               invalidParams.push(param)
-            } else if (options[param] === 'jsonString') {
+            } else if (validation === 'jsonString') {
               try {
                 JSON.parse(payload[param])
               } catch (err) {
@@ -99,9 +99,9 @@ module.exports = {
 
         for (param in options) {
           if (Array.isArray(options[param])) {
-            options[param].forEach(param => validateParam(param))
+            options[param].forEach(validation => validateParam(param, validation))
           } else {
-            validateParam(param)
+            validateParam(param, options[param])
           }
         }
         if (valid) {

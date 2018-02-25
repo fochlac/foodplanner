@@ -61,6 +61,9 @@ jobs:
             cat test-log
             pkill -f "node.*server/index.js"
       - run: 
+          name: coverage
+          command: npm run coverage
+      - run: 
           name: cleanup and post test-ui-log
           when: on_fail
           command: |
