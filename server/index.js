@@ -14,6 +14,8 @@ const express = require('express'),
   signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
+  timestamp = require(process.env.FOOD_HOME + 'middleware/timestamp'),
+  logger = require(process.env.FOOD_HOME + 'middleware/logger'),
   version = require(process.env.FOOD_HOME + 'modules/cache').getVersion,
   server_port = process.env.FOOD_PORT,
   server_ip_address = 'localhost',
@@ -28,7 +30,9 @@ app.use(bodyparser.urlencoded({ extended: true }))
 app.use(compression())
 app.use(xssFilter())
 app.set('x-powered-by', false)
+app.use(timestamp)
 app.use(jwt.checkToken)
+app.use(logger)
 
 // connect router
 app.use('/', router)
@@ -54,11 +58,7 @@ app.get('*', (req, res) => {
     })
 
   Promise.all([file, meals, signups])
-    .then(data => {
-      let file = data[0],
-        meals = data[1],
-        signups = data[2]
-
+    .then(([file, meals, signups]) => {
       meals = meals.map(meal => {
         meal.signups = signups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
         return meal

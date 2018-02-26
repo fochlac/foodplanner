@@ -14,10 +14,21 @@
   },
   "jest": {
     "coverageDirectory": "./coverage/",
-    "coveragePathIgnorePatterns": ["<rootDir>/test/", "<rootDir>/node_modules/", "components/ui/[^/]*.js$"],
-    "setupFiles": ["./test/client/unittests/setup.js"],
-    "moduleFileExtensions": ["js", "jsx"],
-    "moduleDirectories": ["node_modules"],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/test/",
+      "<rootDir>/node_modules/",
+      "components/ui/[^/]*.js$"
+    ],
+    "setupFiles": [
+      "./test/client/unittests/setup.js"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
     "moduleNameMapper": {
       "^COMPONENTS(.*)$": "<rootDir>/client/components$1",
       "^UI(.*)$": "<rootDir>/client/components/ui$1",
@@ -30,10 +41,15 @@
       "^T_UNIT(.*)$": "<rootDir>/test/client/unittests$1",
       "\\.(css|less)$": "<rootDir>/test/client/unittests/styleMock.js"
     },
-    "roots": ["./test/client/unittests"],
+    "roots": [
+      "./test/client/unittests"
+    ],
     "testURL": "https://food.fochlac.com/test123"
   },
-  "browserslist": ["last 3 versions", "> 1%"],
+  "browserslist": [
+    "last 3 versions",
+    "> 1%"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -52,6 +68,7 @@
     "react": "^16.0.0",
     "react-day-picker": "^6.2.1",
     "react-dom": "^16.0.0",
+    "react-markdown": "^3.2.1",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",

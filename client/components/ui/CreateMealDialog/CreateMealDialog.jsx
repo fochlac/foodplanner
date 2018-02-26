@@ -6,6 +6,7 @@ import { formatDate, formatTime, round } from 'UTILS/date.js'
 import DayPickerInput from 'react-day-picker/DayPickerInput'
 import Dialog from 'UI/Dialog.js'
 import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx'
+import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import MealOption from './MealOption.jsx'
 import React from 'react'
 import dEqual from 'fast-deep-equal'
@@ -209,7 +210,7 @@ export default class CreateMealDialog extends React.Component {
 
     if (this.props.invalid) {
       return (
-        <Dialog className="SignUpDialog">
+        <Dialog className="CreateMealDialog">
           <div className="titlebar">
             <h3>Ungültiger Termin!</h3>
             <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)} />
@@ -236,12 +237,12 @@ export default class CreateMealDialog extends React.Component {
           <div className="row responsive">
             <div className="col">
               <div>
-                <label htmlFor="SignUpDialog_name">Name</label>
-                <input type="text" id="SignUpDialog_name" defaultValue={s.name} onChange={this.nameInput} />
+                <label htmlFor="CreateMealDialog_name">Name</label>
+                <input type="text" id="CreateMealDialog_name" defaultValue={s.name} onChange={this.nameInput} />
               </div>
               <div>
-                <label htmlFor="SignUpDialog_signupLimit">Teilnehmerbegrenzung</label>
-                <input type="number" id="SignUpDialog_signupLimit" defaultValue={edit ? s.signupLimit : 0} onChange={this.signupLimitInput} />
+                <label htmlFor="CreateMealDialog_signupLimit">Teilnehmerbegrenzung</label>
+                <input type="number" id="CreateMealDialog_signupLimit" defaultValue={edit ? s.signupLimit : 0} onChange={this.signupLimitInput} />
               </div>
             </div>
             <div className="col">
@@ -249,11 +250,16 @@ export default class CreateMealDialog extends React.Component {
             </div>
           </div>
           <div>
-            <label htmlFor="SignUpDialog_comment">Beschreibung</label>
-            <textarea type="text" id="SignUpDialog_description" onChange={this.descriptionInput} defaultValue={s.description} />
+            <label htmlFor="CreateMealDialog_comment">
+              Beschreibung
+              <InfoBubble style={{ bottom: '-60px', right: '26px', width: '180px' }} arrow="left">
+                Um Links einzubinden, können Sie Markdown verwenden: [Linkname](http://www.link.de)
+              </InfoBubble>
+            </label>
+            <textarea type="text" id="CreateMealDialog_description" onChange={this.descriptionInput} defaultValue={s.description} />
           </div>
           <div>
-            <label htmlFor="SignUpDialog_deadline">Anmeldeschluss</label>
+            <label htmlFor="CreateMealDialog_deadline">Anmeldeschluss</label>
             <div className="row deadline">
               <DayPickerInput value={formatDate(s.deadlineObject)} format="DD.MM.YY" onDayChange={this.deadlineInput} />
               <select className="timePicker" onChange={this.deadlineHourInput} value={formatTime(round(s.deadlineObject, 30 * 60))}>
@@ -266,7 +272,7 @@ export default class CreateMealDialog extends React.Component {
             </div>
           </div>
           <div>
-            <label htmlFor="SignUpDialog_time">Lieferzeitpunkt</label>
+            <label htmlFor="CreateMealDialog_time">Lieferzeitpunkt</label>
             <div className="row time">
               <DayPickerInput value={formatDate(s.timeObject)} format="DD.MM.YY" onDayChange={this.timeInput} />
               <select className="timePicker" onChange={this.timeHourInput} value={formatTime(round(s.timeObject, 30 * 60))}>
