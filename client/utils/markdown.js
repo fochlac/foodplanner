@@ -1,8 +1,8 @@
 import React from 'react'
 
 const regex = {
-  linkGlobal: /\[[^\(\)]*\]\([^\[\]]*\)/g,
-  link: /\[([^\(\)]*)\]\(([^\[\]]*)\)/,
+  linkGlobal: /\[[^\[\]*\]\([^\(\)]*\)/g,
+  link: /\[([^\[\]*)\]\(([^\(\)]*)\)/,
 }
 
 const parseLink = string => {
