@@ -33,6 +33,7 @@ var wording = {
   dateType: 'Datumstyp',
   predefDate: 'Festes Datum',
   useDatefinder: 'Datumsumfrage',
+  linkInfo: 'Um Links einzubinden, können Sie Markdown verwenden: [Linkname](http://www.link.de)',
 }
 
 export default class CreateMealDialog extends React.Component {
@@ -56,6 +57,7 @@ export default class CreateMealDialog extends React.Component {
         time: time,
         deadline: deadline,
         dateType: props.meal.datefinder ? 'datefinder' : 'predef',
+        datefinder: props.datefinder ? { ...props.datefinder, meal_deadline: props.deadline } : {},
       }
     } else {
       this.state = {
@@ -70,11 +72,13 @@ export default class CreateMealDialog extends React.Component {
         deadline: this.tomorrow12,
         options: [],
         dateType: 'predef',
+        datefinder: {},
       }
     }
 
     this.nameInput = this.handleInput('name').bind(this)
     this.creatorInput = this.handleInput('creator').bind(this)
+    this.datefinderOutput = this.handleOutput('datefinder').bind(this)
     this.saveImage = this.handleInput('image').bind(this)
     this.saveImageUrl = this.handleInput('imageUrl').bind(this)
     this.descriptionInput = this.handleInput('description').bind(this)
@@ -116,6 +120,14 @@ export default class CreateMealDialog extends React.Component {
     }
   }
 
+  handleOutput(field) {
+    return value => {
+      this.mySetState({
+        [field]: value,
+      })
+    }
+  }
+
   handleImage(imageData, objectUrl) {
     this.mySetState({ imageData })
   }
@@ -123,13 +135,13 @@ export default class CreateMealDialog extends React.Component {
   handleDatepicker(field) {
     return date => {
       let obj = {
-        [field]: jsDate,
+        [field]: date,
       }
 
-      if (field === 'deadline' && this.state.time < jsDate) {
-        obj.time = jsDate
-      } else if (field === 'time' && this.state.deadline > jsDate) {
-        obj.deadline = jsDate
+      if (field === 'deadline' && this.state.time < date) {
+        obj.time = date
+      } else if (field === 'time' && this.state.deadline > date) {
+        obj.deadline = date
       }
       this.mySetState(obj)
     }
@@ -149,6 +161,7 @@ export default class CreateMealDialog extends React.Component {
         deadline: s.deadline.getTime(),
         time: s.time.getTime(),
         options: JSON.stringify(s.options),
+        datefinder: JSON.stringify(s.dateType === 'datefinder' ? s.datefinder : {}),
       },
       formData = formDataFromObject(data)
 
@@ -258,43 +271,52 @@ export default class CreateMealDialog extends React.Component {
             <label htmlFor="CreateMealDialog_comment">
               {wording.description}
               <InfoBubble style={{ bottom: '-60px', right: '26px', width: '180px' }} arrow="left">
-                Um Links einzubinden, können Sie Markdown verwenden: [Linkname](http://www.link.de)
+                {wording.linkInfo}
               </InfoBubble>
             </label>
             <textarea type="text" id="CreateMealDialog_description" onChange={this.descriptionInput} defaultValue={s.description} />
           </div>
           <h4 className="sectionHead">{wording.dateHeadline}</h4>
-          <div>
-            <label htmlFor="">{wording.dateType}</label>
-            <div className="row dateType marginTop">
-              <div className="row marginRight">
-                <label htmlFor="SignUpDialog_predefDate" className="inlineLabel">
-                  {wording.predefDate}
-                </label>
-                <input
-                  type="radio"
-                  name="dateType"
-                  value="predef"
-                  id="SignUpDialog_predefDate"
-                  onChange={this.handleDateType}
-                  checked={s.dateType === 'predef'}
-                />
-              </div>
-              <div className="row">
-                <label htmlFor="SignUpDialog_datefinder" className="inlineLabel">
-                  {wording.useDatefinder}
-                </label>
-                <input
-                  type="radio"
-                  name="dateType"
-                  value="datefinder"
-                  id="SignUpDialog_datefinder"
-                  onChange={this.handleDateType}
-                  checked={s.dateType === 'datefinder'}
-                />
+          {!edit ? (
+            <div>
+              <label htmlFor="">{wording.dateType}</label>
+              <div className="row dateType marginTop">
+                <div className="row marginRight">
+                  <label htmlFor="SignUpDialog_predefDate" className="inlineLabel">
+                    {wording.predefDate}
+                  </label>
+                  <input
+                    type="radio"
+                    name="dateType"
+                    value="predef"
+                    id="SignUpDialog_predefDate"
+                    onChange={this.handleDateType}
+                    checked={s.dateType === 'predef'}
+                  />
+                </div>
+                <div className="row">
+                  <label htmlFor="SignUpDialog_datefinder" className="inlineLabel">
+                    {wording.useDatefinder}
+                  </label>
+                  <input
+                    type="radio"
+                    name="dateType"
+                    value="datefinder"
+                    id="SignUpDialog_datefinder"
+                    onChange={this.handleDateType}
+                    checked={s.dateType === 'datefinder'}
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="row">
+              <label htmlFor="">{wording.dateType}:</label>
+              <label htmlFor="" className="inlineLabel marginLeft marginTop">
+                {s.dateType === 'predef' ? wording.predefDate : wording.useDatefinder}
+              </label>
+            </div>
+          )}
 
           {s.dateType === 'predef' ? (
             <div className="predfinedTime">
@@ -308,7 +330,7 @@ export default class CreateMealDialog extends React.Component {
               </div>
             </div>
           ) : (
-            <DateFinderOption onChange={() => null} />
+            <DateFinderOption onChange={this.datefinderOutput} datefinder={s.datefinder} editable={!edit} />
           )}
           <h4 className="sectionHead">{wording.additionalOptions}</h4>
           {s.options.map((option, index) => (
@@ -324,7 +346,7 @@ export default class CreateMealDialog extends React.Component {
           {!edit || !p.meal.signups.length ? (
             <div className="row responsive">
               <p className="fakeLink addOption" onClick={this.addOption.bind(this)}>
-                <span className="fa fa-plus fa-lg" />
+                <span className="fa fa-plus fa-lg marginRight" />
                 {wording.addOption}
               </p>
               {!s.options.length ? (
@@ -354,7 +376,7 @@ export default class CreateMealDialog extends React.Component {
         </div>
         <div className="foot">
           <button className="cancel" type="button" onClick={this.cancel.bind(this)}>
-            {wording.abort}
+            {wording.cancel}
           </button>
           <button className="submit" type="button" onClick={this.submit.bind(this)}>
             {wording.save}

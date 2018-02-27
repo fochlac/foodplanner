@@ -61,31 +61,6 @@ module.exports = {
       .catch(error.router.internalError(res))
   },
 
-  create: (req, res) => {
-    datefinderDB
-      .createDatefinder({ ...req.body, creator: req.user.id })
-      .then(results => {
-        datefinderCache.delete('datefinderList')
-        updateCache.deleteAll()
-        res.status(200).send(results)
-      })
-      .catch(error.router.internalError(res))
-  },
-
-  edit: (req, res) => {
-    datefinderDB
-      .getDatefinderCreator(req.params.id)
-      .then(([result]) => (req.user.id === result.id ? Promise.resolve() : Promise.reject({ status: 403, type: 'FORBIDDEN' })))
-      .then(() => datefinderDB.deleteDatefinder({ ...req.params }))
-      .then(() => datefinderDB.createSignup({ ...req.body, creator: req.user.id }))
-      .then(results => {
-        datefinderCache.delete('datefinderList')
-        updateCache.deleteAll()
-        res.status(200).send(results)
-      })
-      .catch(error.router.internalError(res))
-  },
-
   delete: (req, res) => {
     datefinderDB
       .deleteDatefinder({ ...req.params })

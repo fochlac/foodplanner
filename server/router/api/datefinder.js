@@ -21,45 +21,6 @@ datefinder.post(
 
 datefinder.get('/', datefinderController.list)
 
-datefinder.post(
-  '/',
-  jwt.requireAuthentication,
-  error.router.validate('body', {
-    creator: /^[0-9]{1,9}$/,
-    description: /^[^"%;]*$/,
-    deadline: /^[0-9]{0,15}$/,
-    dates: [
-      {
-        time: /^[0-9]{1,9}$/,
-      },
-    ],
-  }),
-  datefinderController.create,
-)
-
-datefinder.put(
-  '/:id',
-  jwt.requireAuthentication,
-  error.router.validate(
-    'params',
-    {
-      id: /^[0-9]{1,9}$/,
-    },
-    { nextOnError: true },
-  ),
-  error.router.validate('body', {
-    creator: /^[0-9]{1,9}$/,
-    description: /^[^"%;]*$/,
-    deadline: /^[0-9]{0,15}$/,
-    dates: [
-      {
-        time: /^[0-9]{1,9}$/,
-      },
-    ],
-  }),
-  datefinderController.edit,
-)
-
 datefinder.delete(
   '/:id',
   jwt.requireAuthentication,

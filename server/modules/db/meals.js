@@ -322,6 +322,7 @@ module.exports = {
                 deadline,
                 signupLimit,
                 ${options.price ? 'price,' : ''}
+                ${options.datefinder ? 'datefinder,' : ''}
                 image
             )
             SELECT
@@ -333,6 +334,7 @@ module.exports = {
                 ${mysql.escape(options.deadline)},
                 ${mysql.escape(options.signupLimit)},
                 ${options.price ? `${mysql.escape(options.price)},` : ''}
+                ${options.datefinder ? `${mysql.escape(options.datefinder)},` : ''}
                 ${
                   options.image
                     ? "CONCAT( '/static/images/meals/" + options.image[0] + "', `AUTO_INCREMENT`, '" + '.' + options.image[1] + "' )"

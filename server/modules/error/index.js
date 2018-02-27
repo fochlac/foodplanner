@@ -2,6 +2,7 @@ const log = require(process.env.FOOD_HOME + 'modules/log')
 
 const regexp = {
   number: /^[0-9]*$/,
+  bigint: /^[0-9]{0,15}$/,
   text: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]*$/,
   bool: /^(0|1|true|false)$/,
   mail: /^[\_A-Za-z0-9.\-]{1,50}@[\_A-Za-z0-9.\-]{1,50}\.[A-Za-z]{1,100}$/,
@@ -20,6 +21,7 @@ module.exports = {
 
   validation: {
     isNumber: value => regexp.number.test(String(value)),
+    isBigInt: value => regexp.bigint.test(String(value)),
     isText: value => regexp.text.test(String(value)),
     isBool: value => regexp.bool.test(String(value)),
     isMail: value => regexp.mail.test(String(value)),
@@ -96,13 +98,14 @@ module.exports = {
                 invalidParams.push(param)
               }
             }
+            return true
           }
 
-        for (param in matches) {
+        Object.keys(matches).every(param => {
           if (Array.isArray(matches[param])) {
-            matches[param].forEach(validation => validateParam(param, validation))
+            valid = matches[param].every(validation => validateParam(param, validation))
           } else {
-            validateParam(param, matches[param])
+            valid = validateParam(param, matches[param])
           }
           log(
             6,
@@ -110,7 +113,9 @@ module.exports = {
               typeof matches[param] === 'string' ? valid : matches[param].test(payload[param])
             }`,
           )
-        }
+          return valid
+        })
+
         if (valid) {
           next()
         } else if (nextOnError) {

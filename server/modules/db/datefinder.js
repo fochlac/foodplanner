@@ -34,18 +34,16 @@ module.exports = {
       const datesResult = await executeQuery(myDb, dates_query(result.insertId))
 
       return {
-        id: result.id,
+        id: result.insertId,
         creator,
         deadline,
         description,
         participants: [],
-        dates: [
-          dates.map((date, index) => ({
-            id: datesResult.insertId + index,
-            time: date.time,
-            users: [],
-          })),
-        ],
+        dates: dates.map((date, index) => ({
+          id: datesResult.insertId + index,
+          time: date.time,
+          users: [],
+        })),
       }
     }
 

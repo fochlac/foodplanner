@@ -41,7 +41,7 @@ export default class DateFinder extends React.Component {
       Array.from(evt.target.parentElement.parentElement.classList),
     )
 
-    if (!classLists.includes('signupIcon') && (this.props.datefinder.deadline < Date.now() || !this.props.user.id)) {
+    if (!classLists.includes('signupIcon') && this.props.datefinder.deadline > Date.now() && this.props.user.id) {
       this.props.datefinderToggleDate(options)
     }
   }

@@ -37,12 +37,16 @@ export default class DayTimePicker extends React.Component {
   }
 
   render() {
-    const { className, time } = this.props
+    const { className, time, disabled } = this.props
 
     return (
       <div className={(className ? className : '') + ' row'}>
-        <DayPickerInput value={formatDate(time)} format="DD.MM.YY" onDayChange={this.handleDatepicker} />
-        <select className="timePicker" onChange={this.handleTime} value={formatTime(round(time, 30 * 60))}>
+        {!disabled ? (
+          <DayPickerInput value={formatDate(time)} format="DD.MM.YY" onDayChange={this.handleDatepicker} />
+        ) : (
+          <input type="text" disabled={true} value={formatDate(time)} className="DayPickerInput" />
+        )}
+        <select className="timePicker" onChange={this.handleTime} value={formatTime(round(time, 30 * 60))} disabled={disabled}>
           {times.map(time => (
             <option value={time} key={time}>
               {time}

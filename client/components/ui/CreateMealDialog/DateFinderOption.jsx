@@ -17,8 +17,9 @@ export default class DateFinderOption extends React.Component {
 
     this.state = {
       addValue: new Date(round(Date.now(), 30 * 60)),
-      deadline: new Date(round(props.deadline ? props.deadline : Date.now(), 30 * 60)),
-      dates: props.dates || [],
+      deadline: new Date(round(props.datefinder && props.datefinder.deadline ? props.datefinder.deadline : Date.now(), 30 * 60)),
+      dates: (props.datefinder && props.datefinder.dates) || [],
+      description: (props.datefinder && props.datefinder.description) || '',
     }
 
     this.setAddValue = this.handleDatepicker('addValue').bind(this)
@@ -28,7 +29,7 @@ export default class DateFinderOption extends React.Component {
   }
   handleDatepicker(field) {
     return function(date) {
-      return this.setState({ [field]: date })
+      return this.setState({ [field]: date }, this.handleChange)
     }
   }
   handleChange() {
@@ -36,8 +37,9 @@ export default class DateFinderOption extends React.Component {
 
     this.props.onChange({
       description: description,
-      deadline: deadline.getDate(),
+      deadline: deadline.getTime(),
       dates: dates,
+      meal_deadline: 3600000,
     })
   }
   handleDescription(evt) {
@@ -70,17 +72,17 @@ export default class DateFinderOption extends React.Component {
 
   render() {
     const { deadline, dates, addValue, description } = this.state
-    const editable = true
+    const { editable } = this.props
 
     return (
       <div className="additionalOption datefinderOption">
         <div>
           <label htmlFor="SignUpDialog_datefinder_description">{wording.description}</label>
-          <textarea type="text" id="SignUpDialog_datefinder_description" />
+          <textarea type="text" id="SignUpDialog_datefinder_description" disabled={!editable} />
         </div>
         <div>
           <label htmlFor="SignUpDialog_deadline">{wording.deadline}</label>
-          <DayTimePicker className="deadline" onChange={this.setDeadline} time={deadline} />
+          <DayTimePicker className="deadline" onChange={this.setDeadline} time={deadline} disabled={!editable} />
         </div>
         <div>
           <label>{wording.dates}</label>

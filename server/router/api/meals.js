@@ -46,6 +46,7 @@ meals.put(
     deadline: /^[0-9]{0,15}$/,
     signupLimit: /^[0-9]{0,9}$/,
     options: 'jsonString',
+    datefinder: 'jsonString',
   }),
   mealController.editMeal,
 )
@@ -72,6 +73,7 @@ meals.post(
     deadline: /^[0-9]{0,50}$/,
     signupLimit: /^[0-9]{0,50}$/,
     options: 'jsonString',
+    datefinder: 'jsonString',
   }),
   mealController.createMeal,
 )

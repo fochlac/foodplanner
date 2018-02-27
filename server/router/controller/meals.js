@@ -1,6 +1,7 @@
 const signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
   paymentDB = require(process.env.FOOD_HOME + 'modules/db/payment'),
   mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals'),
+  datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   error = require(process.env.FOOD_HOME + 'modules/error'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
@@ -13,6 +14,7 @@ const signupCache = caches.getCache('signups'),
   mealCache = caches.getCache('meals'),
   updateCache = caches.getCache('update'),
   userCache = caches.getCache('users'),
+  datefinderCache = caches.getCache('datefinder'),
   userListCache = caches.getCache('userList')
 
 const validateMealOptions = options => {
@@ -38,9 +40,32 @@ const validateUserCreator = (meal, user) => {
   })
 }
 
+const validateDatefinder = datefinder => {
+  if (!Object.keys(datefinder).length) {
+    return true
+  }
+  if (!error.validation.isBigInt(datefinder.deadline)) {
+    log(4, 'invalid deadline')
+    return false
+  }
+  if (!error.validation.isBigInt(datefinder.meal_deadline)) {
+    log(4, 'invalid meal_deadline')
+    return false
+  }
+  if (!error.validation.isText(datefinder.description)) {
+    log(4, 'invalid description')
+    return false
+  }
+  if (!datefinder.dates.every(date => error.validation.isBigInt(date.time))) {
+    log(4, 'invalid dates')
+    return false
+  }
+  return true
+}
+
 module.exports = {
-  createMeal: (req, res) => {
-    let mealData = Object.assign({}, req.body, { options: JSON.parse(req.body.options) })
+  createMeal: async (req, res) => {
+    let mealData = Object.assign({}, req.body, { options: JSON.parse(req.body.options), datefinder: JSON.parse(req.body.datefinder) })
 
     if (validateMealOptions(mealData.options)) {
       log(4, 'Options not valid.')
@@ -54,30 +79,48 @@ module.exports = {
     } else {
       delete mealData.image
     }
+    if (!validateDatefinder(mealData.datefinder)) {
+      log(4, 'datefinder not valid.')
+      return res.status(400).send({ msg: 'Datefinder not valid.', type: 'Invalid_Request', data: ['datefinder'] })
+    }
 
-    mealsDB
-      .createMeal(mealData)
-      .then(id => mealsDB.getMealById(id))
-      .then(meal => {
-        mealCache.delete('allMeals')
-        updateCache.deleteAll()
+    // apply datefinder deadline to meal
+    if (mealData.datefinder.meal_deadline) {
+      mealData.deadline = mealData.datefinder.meal_deadline
+    }
 
-        // async calls, not gonna wait for them
-        mailer.sendCreationNotice(meal)
-        scheduler.scheduleMeal(meal)
-        notification.sendCreationNotice(meal)
+    try {
+      const datefinder = await (mealData.datefinder
+        ? datefinderDB.createDatefinder({ ...mealData.datefinder, creator: mealData.creatorId })
+        : Promise.resolve({}))
 
-        if (req.file) {
-          let imageName = meal.image.split('/')
-          fs.rename(req.file.path, req.file.destination + imageName[imageName.length - 1], err => {
-            error.checkError(3, 'failed renaming ' + req.file.path)(err)
-            res.status(200).send(meal)
-          })
-        } else {
-          res.status(200).send(meal)
-        }
-      })
-      .catch(error.router.internalError(res))
+      mealData.datefinder = datefinder.id
+
+      const mealId = await mealsDB.createMeal(mealData)
+      const meal = await mealsDB.getMealById(mealId)
+
+      // clear caches
+      mealCache.delete('allMeals')
+      updateCache.deleteAll()
+      datefinderCache.delete('datefinderList')
+
+      // async calls, not gonna wait for them
+      mailer.sendCreationNotice(meal)
+      scheduler.scheduleMeal(meal)
+      notification.sendCreationNotice(meal)
+
+      if (req.file) {
+        let imageName = meal.image.split('/')
+        fs.rename(req.file.path, req.file.destination + imageName[imageName.length - 1], err => {
+          error.checkError(3, 'failed renaming ' + req.file.path)(err)
+          res.status(200).send({ meal, datefinder })
+        })
+      } else {
+        res.status(200).send({ meal, datefinder })
+      }
+    } catch (err) {
+      return error.router.internalError(res)
+    }
   },
 
   editMeal: (req, res) => {
@@ -96,15 +139,24 @@ module.exports = {
       delete mealData.image
     }
 
-    mealCache.delete(req.params.id)
-    mealCache.delete('allMeals')
-    updateCache.deleteAll()
+    if (!validateDatefinder(mealData.datefinder)) {
+      log(4, 'datefinder not valid.')
+      return res.status(400).send({ msg: 'Datefinder not valid.', type: 'Invalid_Request', data: ['datefinder'] })
+    }
+
+    // apply datefinder deadline to
+    if (mealData.datefinder.meal_deadline) {
+      mealData.deadline = mealData.datefinder.meal_deadline
+    }
 
     validateUserCreator(req.params.id, req.user.id)
       .then(() => mealsDB.setMealById(req.params.id, mealData))
       .then(id => mealsDB.getMealById(id))
       .then(meal => {
         scheduler.rescheduleMeal(meal)
+        mealCache.delete(req.params.id)
+        mealCache.delete('allMeals')
+        updateCache.deleteAll()
         if (req.file) {
           fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function(err, files) {
             if (err) {
