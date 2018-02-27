@@ -1,6 +1,6 @@
 import { formatDateTime, round } from 'UTILS/date.js'
 
-import DayTimePicker from './DayTimePicker'
+import DayTimePicker from 'UI/DayTimePicker/DayTimePicker'
 import React from 'react'
 
 const wording = {
@@ -36,7 +36,7 @@ export default class DateFinderOption extends React.Component {
     const { description, deadline, dates } = this.state
 
     this.props.onChange({
-      description: description,
+      description: '',
       deadline: deadline.getTime(),
       dates: dates,
       meal_deadline: 3600000,
@@ -71,15 +71,11 @@ export default class DateFinderOption extends React.Component {
   }
 
   render() {
-    const { deadline, dates, addValue, description } = this.state
+    const { deadline, dates, addValue } = this.state
     const { editable } = this.props
 
     return (
       <div className="additionalOption datefinderOption">
-        <div>
-          <label htmlFor="SignUpDialog_datefinder_description">{wording.description}</label>
-          <textarea type="text" id="SignUpDialog_datefinder_description" disabled={!editable} />
-        </div>
         <div>
           <label htmlFor="SignUpDialog_deadline">{wording.deadline}</label>
           <DayTimePicker className="deadline" onChange={this.setDeadline} time={deadline} disabled={!editable} />

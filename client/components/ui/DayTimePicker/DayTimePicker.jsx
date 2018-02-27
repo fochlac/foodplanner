@@ -1,4 +1,5 @@
 import 'react-day-picker/lib/style.css'
+import './DayTimePicker.less'
 
 import { formatDate, formatTime, round } from 'UTILS/date.js'
 
@@ -9,9 +10,15 @@ const times = Array(48)
   .fill(0)
   .map((item, index) => ('00' + Math.floor(index / 2) + ':' + (index % 2 ? '30' : '00')).slice(-5))
 
+const wording = {
+  submit: 'Speichern',
+}
+
 export default class DayTimePicker extends React.Component {
   constructor(props) {
     super()
+
+    this.state = {}
 
     this.handleDatepicker = this.handleDatepicker.bind(this)
     this.handleTime = this.handleTime.bind(this)
@@ -25,6 +32,7 @@ export default class DayTimePicker extends React.Component {
     jsDate.setMinutes(this.props.time.getMinutes())
 
     this.props.onChange(jsDate)
+    this.setState({ date })
   }
 
   handleTime(evt) {
@@ -37,10 +45,10 @@ export default class DayTimePicker extends React.Component {
   }
 
   render() {
-    const { className, time, disabled } = this.props
+    const { className, time, disabled, onSubmit } = this.props
 
     return (
-      <div className={(className ? className : '') + ' row'}>
+      <div className={(className ? className : '') + ' DayPicker'}>
         {!disabled ? (
           <DayPickerInput value={formatDate(time)} format="DD.MM.YY" onDayChange={this.handleDatepicker} />
         ) : (
@@ -53,6 +61,7 @@ export default class DayTimePicker extends React.Component {
             </option>
           ))}
         </select>
+        {onSubmit ? <button onClick={() => onSubmit(this.state.date)}>{wording.submit}</button> : null}
       </div>
     )
   }

@@ -3,7 +3,7 @@ import './CreateMealDialog.less'
 import { formatDate, formatTime, round } from 'UTILS/date.js'
 
 import DateFinderOption from './DateFinderOption'
-import DayTimePicker from './DayTimePicker'
+import DayTimePicker from 'UI/DayTimePicker/DayTimePicker'
 import Dialog from 'UI/Dialog.js'
 import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx'
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'

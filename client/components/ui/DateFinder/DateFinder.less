@@ -22,9 +22,18 @@
     }
   }
 
+  .deadlineDatefinder {
+    max-width: 400px;
+    flex-wrap: wrap;
+  }
+
+  .finalize {
+    margin-top: 10px;
+  }
+
   .finalizeList {
     list-style: none;
-    margin: 10px 0;
+    margin: 10px 0 0;
     padding: 0;
 
     & > li {
@@ -66,10 +75,29 @@
     border: solid 2px @colorg3;
     padding: 10px;
     user-select: none;
-    display: inline-block;
+    display: inline-flex;
     max-width: 100%;
     box-sizing: border-box;
     margin-top: 10px;
+
+    .addDateWrapper {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      padding: 5px 15px;
+      cursor: pointer;
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      .fa-plus {
+        opacity: 0.5;
+      }
+    }
 
     & > li {
       display: inline-grid;
@@ -95,6 +123,12 @@
           position: absolute;
           top: 5px;
           right: 0;
+        }
+
+        .deleteIcon {
+          left: 0;
+          top: 0;
+          right: inherit;
         }
 
         &:last-child {

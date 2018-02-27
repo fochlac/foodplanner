@@ -2,6 +2,7 @@ import './DateFinder.less'
 
 import { formatDate, formatDateTime, formatTime } from 'UTILS/date.js'
 
+import DayTimePicker from 'UI/DayTimePicker/DayTimePicker'
 import React from 'react'
 
 const wording = {
@@ -13,6 +14,8 @@ const wording = {
   finalize: 'Datum festlegen',
   votes: 'Stimmen',
   cancel: 'Abbrechen',
+  addDate1: 'Datum',
+  addDate2: 'hinzufügen',
 }
 
 const handleWheel = evt => {
@@ -32,6 +35,8 @@ export default class DateFinder extends React.Component {
       visibleUsers: -1,
       finalize: false,
       selectedDate: -1,
+      addDate: false,
+      editDeadline: false,
     }
   }
 
@@ -55,15 +60,31 @@ export default class DateFinder extends React.Component {
   }
 
   renderDatesList() {
-    const { datefinder, user } = this.props
+    const { datefinder, user, edit, datefinderStartDeleteDate, datefinderStartAddDate, datefinderSetDeadline } = this.props
+    const { editDeadline } = this.state
 
     return (
       <div>
         <div className="description">
           <h3>{wording.title}</h3>
-          <p className="marginTop">
-            {wording.deadline}: <b>{formatDateTime(datefinder.deadline)}</b>
-          </p>
+          {editDeadline ? (
+            <div>
+              <label htmlFor="">{wording.deadline}</label>
+              <DayTimePicker
+                onSubmit={date => datefinderSetDeadline({ datefinder: datefinder.id, date })}
+                time={datefinder.deadline}
+                className="deadlineDatefinder"
+              />
+            </div>
+          ) : (
+            <p className="marginTop">
+              {wording.deadline}:
+              <b className="marginLeft">
+                {formatDateTime(datefinder.deadline)}
+                <span className="fa fa-pencil pointer marginLeft" onClick={() => this.setState({ editDeadline: true })} />
+              </b>
+            </p>
+          )}
           <div className="marginTop">
             <span className="marginRight">{wording.participants}:</span>
             <ul className="participantsList">
@@ -76,6 +97,13 @@ export default class DateFinder extends React.Component {
           </div>
         </div>
         <ul className="datesList" onWheel={handleWheel}>
+          {edit && (
+            <li className="addDateWrapper" onClick={() => datefinderStartAddDate()}>
+              <span className="addDate">{wording.addDate1}</span>
+              <span className="fa fa-plus fa-2x" />
+              <span className="addDate">{wording.addDate2}</span>
+            </li>
+          )}
           {datefinder.dates.sort((a, b) => a.time - b.time).map(({ id, time, users }, index) => {
             const selected = user && user.id ? users.map(user => user.user).includes(user.id) : false
             const usersVisible = this.state.visibleUsers === index
@@ -87,6 +115,7 @@ export default class DateFinder extends React.Component {
                     <span className="fa-users fa" />
                     <span className={(usersVisible ? 'fa-chevron-left' : 'fa-chevron-right') + ' fa marginLeft'} />
                   </span>
+                  {edit && <span className="fa fa-times fa-lg deleteIcon signupIcon" onClick={() => datefinderStartDeleteDate(id)} />}
                   <span className="signupCount">{users.length}</span>
                   <span>
                     <span className="date">{formatDate(time)}</span>
