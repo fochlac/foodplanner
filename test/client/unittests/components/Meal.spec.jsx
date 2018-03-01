@@ -1,6 +1,6 @@
 import { mount, shallow } from 'enzyme'
 
-import DateFinder from 'UI/DateFinder/DateFinder.jsx'
+import DateFinder from 'UI/DateFinder.js'
 import Meal from 'UI/Meal/Meal.jsx'
 import React from 'react'
 

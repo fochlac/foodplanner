@@ -151,7 +151,7 @@ const meals = (state = [], action) => {
     case 'FINALIZE_DATEFINDER':
       if (action.status === 'complete') {
         let newArr = state.concat([]),
-          correctIndex = state.findIndex(meal => meal.signups.includes(action.id))
+          correctIndex = state.findIndex(meal => meal.id === action.id)
 
         newArr[correctIndex] = {
           ...state[correctIndex],

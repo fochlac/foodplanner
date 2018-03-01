@@ -477,13 +477,13 @@ describe('meal-reducer', () => {
   test('FINALIZE_DATEFINDER', () => {
     const action = {
       type: 'FINALIZE_DATEFINDER',
-      status: 'initialized',
+      status: 'complete',
       id: 1,
       data: {
         deadline: 1,
         time: 2,
         datefinder: 3,
-        datefinder_locked: 4,
+        datefinderLocked: 4,
       },
     }
 
@@ -495,14 +495,14 @@ describe('meal-reducer', () => {
             deadline: 9,
             time: 8,
             datefinder: 7,
-            datefinder_locked: 6,
+            datefinderLocked: 6,
           },
           {
             id: 2,
             deadline: 9,
             time: 8,
             datefinder: 7,
-            datefinder_locked: 6,
+            datefinderLocked: 6,
           },
         ],
         action,
@@ -513,14 +513,14 @@ describe('meal-reducer', () => {
         deadline: 1,
         time: 2,
         datefinder: 3,
-        datefinder_locked: 4,
+        datefinderLocked: 4,
       },
       {
         id: 2,
         deadline: 9,
         time: 8,
         datefinder: 7,
-        datefinder_locked: 6,
+        datefinderLocked: 6,
       },
     ])
 
