@@ -49,6 +49,12 @@ const users = (state = {}, action) => {
       }
       return state
 
+    case 'CREATE_MEAL':
+      if (action.status === 'complete' && Object.keys(action.data.datefinder).length) {
+        return [...state, action.data.datefinder]
+      }
+      return state
+
     default:
       return state
   }

@@ -10,7 +10,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
     datefinder,
-    edit: datefinder && state.user.id === datefinder.creator,
+    edit: datefinder && +state.user.id === +datefinder.creator,
   }
 }
 

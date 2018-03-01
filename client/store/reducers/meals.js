@@ -27,8 +27,8 @@ const meals = (state = [], action) => {
 
     case 'CREATE_MEAL':
       if (action.status === 'complete') {
-        action.data.signups = []
-        return [...state, action.data]
+        action.data.meal.signups = []
+        return [...state, action.data.meal]
       }
       return state
 

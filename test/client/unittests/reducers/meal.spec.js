@@ -126,7 +126,7 @@ describe('meal-reducer', () => {
     const action = {
       status: 'complete',
       type: 'CREATE_MEAL',
-      data: { test: 'test' },
+      data: { meal: { test: 'test' } },
     }
 
     expect(

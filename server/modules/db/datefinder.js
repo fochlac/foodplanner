@@ -35,7 +35,6 @@ module.exports = {
         id: result.insertId,
         creator,
         deadline,
-        description,
         participants: [],
         dates: dates.map((date, index) => ({
           id: datesResult.insertId + index,
