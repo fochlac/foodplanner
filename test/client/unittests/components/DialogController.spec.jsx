@@ -1,6 +1,6 @@
 import { mount, shallow } from 'enzyme'
 
-import AddDateDialog from 'UI/AddDateDialog .js'
+import AddDateDialog from 'UI/AddDateDialog.js'
 import ConfirmationDialog from 'UI/ConfirmationDialog.js'
 import CreateMealDialog from 'UI/CreateMealDialog.js'
 import DialogController from 'UI/DefaultPage/DialogController.jsx'
