@@ -461,16 +461,13 @@ export const datefinderFinalize = (id, date) => ({
   },
 })
 
-export const datefinderStartDeleteDate = (datefinder, date) => {
-  console.log(datefinder, date)
-  return {
-    type: 'DIALOG',
-    content: 'DATEFINDER_DELETE_DATE',
-    option: { datefinder, date },
-    url: '/datefinder',
-    title: 'Mittagsplaner - Terminplaner',
-  }
-}
+export const datefinderStartDeleteDate = (datefinder, date) => ({
+  type: 'DIALOG',
+  content: 'DATEFINDER_DELETE_DATE',
+  option: { datefinder, date },
+  url: '/datefinder',
+  title: 'Mittagsplaner - Terminplaner',
+})
 
 export const datefinderDeleteDate = (id, date) => ({
   type: 'DATEFINDER_DELETE_DATE',

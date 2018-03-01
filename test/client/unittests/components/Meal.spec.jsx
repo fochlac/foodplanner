@@ -1,5 +1,6 @@
 import { mount, shallow } from 'enzyme'
 
+import DateFinder from 'UI/DateFinder/DateFinder.jsx'
 import Meal from 'UI/Meal/Meal.jsx'
 import React from 'react'
 
@@ -52,7 +53,17 @@ const TU1 = {
     name: 'testuser2',
     id: 5,
   },
-  TM = ({ locked = 0, options = [], time = Date.now() + 20000000, deadline = Date.now() + 10000000, signups = [], signupLimit = 3, image, print = false }) => ({
+  TM = ({
+    locked = 0,
+    options = [],
+    time = Date.now() + 20000000,
+    deadline = Date.now() + 10000000,
+    signups = [],
+    signupLimit = 3,
+    image,
+    print = false,
+    datefinder = 0,
+  }) => ({
     id: 1,
     name: 'testmeal',
     creator: TU1.name,
@@ -66,6 +77,7 @@ const TU1 = {
     options,
     locked,
     print,
+    datefinder,
   }),
   TO = [
     {
@@ -197,6 +209,16 @@ describe('Meal', () => {
     signupElems.forEach((signup, index) => {
       expect(signup.find('.money')).toHaveLength(0)
     })
+  })
+
+  test('should show datefinder title if datefinder active', () => {
+    const user = TU1,
+      meal = TM({ datefinder: 1 })
+
+    const wrapper = shallow(<Meal meal={meal} user={user} signups={[]} {...actions} />)
+
+    expect(wrapper.find('.title').text()).toContain('Datumsumfrage für')
+    expect(wrapper.find(DateFinder)).toHaveLength(1)
   })
 
   test('should not show edit options if past deadline', () => {
