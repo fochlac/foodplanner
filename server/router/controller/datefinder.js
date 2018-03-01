@@ -8,6 +8,16 @@ const datefinderCache = caches.getCache('datefinder'),
   updateCache = caches.getCache('update'),
   mealCache = caches.getCache('meals')
 
+const validateCreator = (id, creator) => {
+  if (id === creator) {
+    return Promise.resolve()
+  }
+  log(4, `User ${id} tried to edit datefinder ${req.params.id} without being the creator (${creator}).`)
+  return Promise.reject({ status: 403, type: 'FORBIDDEN' })
+}
+
+const validateCreatorAndCallDBAction = action => {}
+
 module.exports = {
   list: (req, res) => {
     const datefinder = datefinderCache.get('datefinderList')
@@ -42,15 +52,10 @@ module.exports = {
   lock: (req, res) => {
     datefinderDB
       .getDatefinderCreator(req.params.id)
-      .then(([result]) => {
-        if (req.user.id === result.creator) {
-          return Promise.resolve()
-        }
-        log(4, `User ${req.user.id} tried to lock datefinder ${req.params.id} without being the creator (${result.creator}).`)
-        return Promise.reject({ status: 403, type: 'FORBIDDEN' })
-      })
+      .then(([result]) => validateCreator(req.user.id, result.creator))
       .then(() => datefinderDB.lockDatefinder({ id: req.params.id, date: req.body.date }))
       .then(() => {
+        datefinderCache.delete('datefinderList')
         updateCache.deleteAll()
         mealCache.delete('allMeals')
         return mealsDB.getMealByDatefinderLocked(req.params.id)
@@ -61,8 +66,52 @@ module.exports = {
       .catch(error.router.internalError(res))
   },
 
+  addDate: (req, res) => {
+    datefinderDB
+      .getDatefinderCreator(req.params.id)
+      .then(([result]) => validateCreator(req.user.id, result.creator))
+      .then(() => datefinderDB.addDatefinderDate({ datefinder: req.params.id, ...req.body }))
+      .then(results => {
+        datefinderCache.delete('datefinderList')
+        updateCache.deleteAll()
+        mealCache.delete('allMeals')
+        res.status(200).send(results)
+      })
+      .catch(error.router.internalError(res))
+  },
+
+  deleteDate: (req, res) => {
+    datefinderDB
+      .getDatefinderCreator(req.params.id)
+      .then(([result]) => validateCreator(req.user.id, result.creator))
+      .then(() => datefinderDB.deleteDatefinderDate({ datefinder: req.params.id, ...req.body }))
+      .then(() => {
+        datefinderCache.delete('datefinderList')
+        updateCache.deleteAll()
+        mealCache.delete('allMeals')
+        res.status(200).send({})
+      })
+      .catch(error.router.internalError(res))
+  },
+
+  setDeadline: (req, res) => {
+    datefinderDB
+      .getDatefinderCreator(req.params.id)
+      .then(([result]) => validateCreator(req.user.id, result.creator))
+      .then(() => datefinderDB.setDatefinderDeadline({ datefinder: req.params.id, ...req.body }))
+      .then(results => {
+        datefinderCache.delete('datefinderList')
+        updateCache.deleteAll()
+        mealCache.delete('allMeals')
+        res.status(200).send(results)
+      })
+      .catch(error.router.internalError(res))
+  },
+
   delete: (req, res) => {
     datefinderDB
+      .getDatefinderCreator(req.params.id)
+      .then(([result]) => validateCreator(req.user.id, result.creator))
       .deleteDatefinder({ ...req.params })
       .then(() => {
         datefinderCache.delete('datefinderList')

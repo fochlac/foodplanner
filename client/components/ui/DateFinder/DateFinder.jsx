@@ -72,7 +72,7 @@ export default class DateFinder extends React.Component {
               <label htmlFor="">{wording.deadline}</label>
               <DayTimePicker
                 onSubmit={deadline => {
-                  datefinderSetDeadline({ datefinder: datefinder.id, deadline })
+                  datefinderSetDeadline({ datefinder: datefinder.id, deadline: deadline.getTime() })
                   this.setState({ editDeadline: false })
                 }}
                 time={datefinder.deadline}
@@ -84,7 +84,7 @@ export default class DateFinder extends React.Component {
               {wording.deadline}:
               <b className="marginLeft">
                 {formatDateTime(datefinder.deadline)}
-                <span className="fa fa-pencil pointer marginLeft" onClick={() => this.setState({ editDeadline: true })} />
+                {edit && <span className="fa fa-pencil pointer marginLeft" onClick={() => this.setState({ editDeadline: true })} />}
               </b>
             </p>
           )}

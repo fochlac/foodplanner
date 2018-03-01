@@ -19,6 +19,54 @@ datefinder.post(
   datefinderController.lock,
 )
 
+datefinder.put(
+  '/:id/deadline',
+  jwt.requireAuthentication,
+  error.router.validate(
+    'params',
+    {
+      id: /^[0-9]{1,9}$/,
+    },
+    { nextOnError: true },
+  ),
+  error.router.validate('body', {
+    deadline: /^[0-9]{1,15}$/,
+  }),
+  datefinderController.setDeadline,
+)
+
+datefinder.post(
+  '/:id/date',
+  jwt.requireAuthentication,
+  error.router.validate(
+    'params',
+    {
+      id: /^[0-9]{1,9}$/,
+    },
+    { nextOnError: true },
+  ),
+  error.router.validate('body', {
+    time: /^[0-9]{1,15}$/,
+  }),
+  datefinderController.addDate,
+)
+
+datefinder.delete(
+  '/:id/date',
+  jwt.requireAuthentication,
+  error.router.validate(
+    'params',
+    {
+      id: /^[0-9]{1,9}$/,
+    },
+    { nextOnError: true },
+  ),
+  error.router.validate('body', {
+    date: /^[0-9]{1,9}$/,
+  }),
+  datefinderController.deleteDate,
+)
+
 datefinder.get('/', datefinderController.list)
 
 datefinder.delete(

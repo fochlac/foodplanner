@@ -14,22 +14,22 @@ export default class AddDateDialog extends React.Component {
   constructor(props) {
     super()
     this.state = {
-      date: new Date(),
+      time: new Date(),
     }
 
-    this.dateInput = this.handleInput('date').bind(this)
+    this.dateInput = this.handleInput('time').bind(this)
   }
 
   submit() {
-    const { date } = this.state
+    const { time } = this.state
     const { datefinder, datefinderAddDate } = this.props
-    if (!date || !datefinder) {
+    if (!time || !datefinder) {
       return
     }
 
     datefinderAddDate({
       datefinder,
-      date,
+      time: time.getTime(),
     })
   }
 
@@ -43,7 +43,7 @@ export default class AddDateDialog extends React.Component {
 
   render() {
     const { close_dialog } = this.props
-    const { date } = this.state
+    const { time } = this.state
 
     return (
       <Dialog closeOnBackdrop={true} className="AddDateDialog">
@@ -53,7 +53,7 @@ export default class AddDateDialog extends React.Component {
         </div>
         <div className="body">
           <label htmlFor="AddDateDialog_date">{wording.date}</label>
-          <DayTimePicker time={date} onChange={this.dateInput} />
+          <DayTimePicker time={time} onChange={this.dateInput} />
         </div>
         <div className="foot">
           <button className="cancel" type="button" onClick={close_dialog}>

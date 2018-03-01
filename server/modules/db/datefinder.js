@@ -5,16 +5,14 @@ const mysql = require('mysql'),
   { executeQuery, createTransaction } = require(process.env.FOOD_HOME + 'helper/db')
 
 module.exports = {
-  createDatefinder: async ({ creator, deadline, description, dates }) => {
+  createDatefinder: async ({ creator, deadline, dates }) => {
     const datefinder_query = `
         INSERT INTO datefinder (
           creator,
-          deadline,
-          description
+          deadline
         ) VALUES (
           ${mysql.escape(creator)},
-          ${mysql.escape(deadline)},
-          ${mysql.escape(description)}
+          ${mysql.escape(deadline)}
         );`,
       dates_query = datefinder => `
         INSERT INTO datefinder_dates (
@@ -53,7 +51,7 @@ module.exports = {
   getDatefinders: async () => {
     const query = `
       SELECT
-        id, creator, deadline, description,
+        id, creator, deadline,
         CONCAT(
         '[', (
             SELECT GROUP_CONCAT(CONCAT('{"user": ', users.id, ', "name": "', users.name, '"}'))
@@ -150,6 +148,43 @@ module.exports = {
       AND date = ${mysql.escape(date)};`
 
     return executeQuery(await getConnection(), queryDelete, true)
+  },
+
+  addDatefinderDate: async ({ datefinder, time }) => {
+    const query = `INSERT INTO datefinder_dates (
+      datefinder,
+      time
+    ) VALUES (
+      ${mysql.escape(datefinder)},
+      ${mysql.escape(time)}
+    )
+    ON DUPLICATE KEY
+    UPDATE datefinder = datefinder;`
+
+    const result = await executeQuery(await getConnection(), query, true)
+
+    return {
+      datefinder,
+      time,
+      id: result.insertId,
+    }
+  },
+
+  deleteDatefinderDate: async ({ datefinder, date }) => {
+    const query = `DELETE FROM datefinder_dates WHERE datefinder = ${mysql.escape(datefinder)} AND id = ${mysql.escape(date)};`
+
+    return executeQuery(await getConnection(), query, true)
+  },
+
+  setDatefinderDeadline: async ({ datefinder, deadline }) => {
+    const query = `UPDATE datefinder SET deadline = ${mysql.escape(deadline)} WHERE id = ${mysql.escape(datefinder)};`
+    const mealQuery = `UPDATE meals SET time = ${mysql.escape(deadline)} WHERE datefinder = ${mysql.escape(datefinder)};`
+
+    const dbActions = myDb => {
+      return Promise.all([executeQuery(myDb, query), executeQuery(myDb, mealQuery)])
+    }
+
+    return createTransaction({ dbActions, ident: 'deleteDatefinder' })
   },
 
   deleteDatefinder: ({ id }) => {

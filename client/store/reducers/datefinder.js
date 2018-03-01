@@ -24,7 +24,7 @@ const users = (state = {}, action) => {
         const newState = state.concat([]),
           datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
 
-        newState[datefinderIndex] = { ...state[datefinderIndex], dates: state[datefinderIndex].filter(date => date.id !== action.date) }
+        newState[datefinderIndex] = { ...state[datefinderIndex], dates: state[datefinderIndex].dates.filter(date => date.id !== action.date) }
         return newState
       }
       return state
@@ -32,9 +32,9 @@ const users = (state = {}, action) => {
     case 'DATEFINDER_ADD_DATE':
       if (action.status === 'complete') {
         const newState = state.concat([]),
-          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
+          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.datefinder)
 
-        newState[datefinderIndex] = { ...state[datefinderIndex], dates: [...state[datefinderIndex].dates, action.data] }
+        newState[datefinderIndex] = { ...state[datefinderIndex], dates: [...state[datefinderIndex].dates, { users: [], ...action.data }] }
         return newState
       }
       return state

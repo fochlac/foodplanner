@@ -18,14 +18,17 @@ export default class DayTimePicker extends React.Component {
   constructor(props) {
     super()
 
-    this.state = {}
+    this.state = {
+      time: props.time ? props.time : new Date(),
+    }
 
     this.handleDatepicker = this.handleDatepicker.bind(this)
     this.handleTime = this.handleTime.bind(this)
   }
 
   handleDatepicker(date) {
-    const { time, onChange } = this.props
+    const { onChange } = this.props
+    const { time } = this.state
     var jsDate = date.toDate(),
       timeObj = new Date(time)
 
@@ -33,20 +36,23 @@ export default class DayTimePicker extends React.Component {
     jsDate.setMinutes(timeObj.getMinutes())
 
     onChange && onChange(jsDate)
-    this.setState({ date })
+    this.setState({ time: new Date(jsDate) })
   }
 
   handleTime(evt) {
-    var newDate = new Date(this.props.time),
+    const { onChange } = this.props
+    let newDate = new Date(this.state.time),
       values = evt.target.value.split(':')
     newDate.setHours(values[0])
     newDate.setMinutes(values[1])
 
-    this.props.onChange(newDate)
+    onChange && onChange(newDate)
+    this.setState({ time: newDate })
   }
 
   render() {
-    const { className, time, disabled, onSubmit } = this.props
+    const { className, disabled, onSubmit } = this.props
+    const { time } = this.state
 
     return (
       <div className={(className ? className : '') + ' DayPicker'}>
@@ -62,7 +68,7 @@ export default class DayTimePicker extends React.Component {
             </option>
           ))}
         </select>
-        {onSubmit ? <button onClick={() => onSubmit(this.state.date)}>{wording.submit}</button> : null}
+        {onSubmit ? <button onClick={() => onSubmit(this.state.time)}>{wording.submit}</button> : null}
       </div>
     )
   }

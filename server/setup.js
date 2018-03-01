@@ -146,7 +146,6 @@ let setup = [
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`creator\`             int             NOT NULL,
         \`deadline\`            bigint,
-        \`description\`         TEXT,
 
         PRIMARY KEY (id)
     );`,
