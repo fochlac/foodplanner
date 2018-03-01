@@ -83,8 +83,8 @@ export default class CreateMealDialog extends React.Component {
     this.saveImageUrl = this.handleInput('imageUrl').bind(this)
     this.descriptionInput = this.handleInput('description').bind(this)
     this.signupLimitInput = this.handleInput('signupLimit').bind(this)
-    this.deadlineInput = this.handleDatepicker('deadline').bind(this)
-    this.timeInput = this.handleDatepicker('time').bind(this)
+    this.deadlineInput = this.handleOutput('deadline').bind(this)
+    this.timeInput = this.handleOutput('time').bind(this)
     this.handleImage = this.handleImage.bind(this)
     this.handleDateType = this.handleInput('dateType').bind(this)
 
@@ -130,21 +130,6 @@ export default class CreateMealDialog extends React.Component {
 
   handleImage(imageData, objectUrl) {
     this.mySetState({ imageData })
-  }
-
-  handleDatepicker(field) {
-    return date => {
-      let obj = {
-        [field]: date,
-      }
-
-      if (field === 'deadline' && this.state.time < date) {
-        obj.time = date
-      } else if (field === 'time' && this.state.deadline > date) {
-        obj.deadline = date
-      }
-      this.mySetState(obj)
-    }
   }
 
   submit() {
