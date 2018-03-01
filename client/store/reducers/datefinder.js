@@ -19,6 +19,36 @@ const users = (state = {}, action) => {
       }
       return state
 
+    case 'DATEFINDER_DELETE_DATE':
+      if (action.status === 'complete') {
+        const newState = state.concat([]),
+          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
+
+        newState[datefinderIndex] = { ...state[datefinderIndex], dates: state[datefinderIndex].filter(date => date.id !== action.date) }
+        return newState
+      }
+      return state
+
+    case 'DATEFINDER_ADD_DATE':
+      if (action.status === 'complete') {
+        const newState = state.concat([]),
+          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
+
+        newState[datefinderIndex] = { ...state[datefinderIndex], dates: [...state[datefinderIndex].dates, action.data] }
+        return newState
+      }
+      return state
+
+    case 'DATEFINDER_SET_DEADLINE':
+      if (action.status === 'complete') {
+        const newState = state.concat([]),
+          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
+
+        newState[datefinderIndex] = { ...state[datefinderIndex], deadline: action.deadline }
+        return newState
+      }
+      return state
+
     default:
       return state
   }

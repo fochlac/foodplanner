@@ -71,7 +71,10 @@ export default class DateFinder extends React.Component {
             <div>
               <label htmlFor="">{wording.deadline}</label>
               <DayTimePicker
-                onSubmit={date => datefinderSetDeadline({ datefinder: datefinder.id, date })}
+                onSubmit={deadline => {
+                  datefinderSetDeadline({ datefinder: datefinder.id, deadline })
+                  this.setState({ editDeadline: false })
+                }}
                 time={datefinder.deadline}
                 className="deadlineDatefinder"
               />
@@ -98,7 +101,7 @@ export default class DateFinder extends React.Component {
         </div>
         <ul className="datesList" onWheel={handleWheel}>
           {edit && (
-            <li className="addDateWrapper" onClick={() => datefinderStartAddDate()}>
+            <li className="addDateWrapper" onClick={() => datefinderStartAddDate(datefinder.id)}>
               <span className="addDate">{wording.addDate1}</span>
               <span className="fa fa-plus fa-2x" />
               <span className="addDate">{wording.addDate2}</span>
@@ -115,7 +118,7 @@ export default class DateFinder extends React.Component {
                     <span className="fa-users fa" />
                     <span className={(usersVisible ? 'fa-chevron-left' : 'fa-chevron-right') + ' fa marginLeft'} />
                   </span>
-                  {edit && <span className="fa fa-times fa-lg deleteIcon signupIcon" onClick={() => datefinderStartDeleteDate(id)} />}
+                  {edit && <span className="fa fa-times fa-lg deleteIcon signupIcon" onClick={() => datefinderStartDeleteDate(datefinder.id, id)} />}
                   <span className="signupCount">{users.length}</span>
                   <span>
                     <span className="date">{formatDate(time)}</span>

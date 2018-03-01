@@ -1,4 +1,4 @@
-import { datefinderFinalize, datefinderToggleDate } from 'STORE/actions.js'
+import { datefinderFinalize, datefinderSetDeadline, datefinderStartAddDate, datefinderStartDeleteDate, datefinderToggleDate } from 'STORE/actions.js'
 
 import DateFinder from 'UI/DateFinder/DateFinder.jsx'
 import React from 'react'
@@ -14,4 +14,10 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { datefinderToggleDate, datefinderFinalize })(DateFinder)
+export default connect(mapStateToProps, {
+  datefinderToggleDate,
+  datefinderFinalize,
+  datefinderStartDeleteDate,
+  datefinderStartAddDate,
+  datefinderSetDeadline,
+})(DateFinder)

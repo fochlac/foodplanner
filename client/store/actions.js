@@ -460,3 +460,64 @@ export const datefinderFinalize = (id, date) => ({
     },
   },
 })
+
+export const datefinderStartDeleteDate = (datefinder, date) => {
+  console.log(datefinder, date)
+  return {
+    type: 'DIALOG',
+    content: 'DATEFINDER_DELETE_DATE',
+    option: { datefinder, date },
+    url: '/datefinder',
+    title: 'Mittagsplaner - Terminplaner',
+  }
+}
+
+export const datefinderDeleteDate = (id, date) => ({
+  type: 'DATEFINDER_DELETE_DATE',
+  status: 'initialized',
+  id,
+  date,
+  api: {
+    url: `/api/datefinder/${id}/date`,
+    method: 'DELETE',
+    body: {
+      date,
+    },
+  },
+})
+
+export const datefinderStartAddDate = datefinder => ({
+  type: 'DIALOG',
+  content: 'DATEFINDER_ADD_DATE',
+  option: { datefinder },
+  url: '/datefinder',
+  title: 'Mittagsplaner - Terminplaner',
+})
+
+export const datefinderAddDate = (id, date) => ({
+  type: 'DATEFINDER_ADD_DATE',
+  status: 'initialized',
+  id,
+  date,
+  api: {
+    url: `/api/datefinder/${id}/date`,
+    method: 'POST',
+    body: {
+      date,
+    },
+  },
+})
+
+export const datefinderSetDeadline = ({ datefinder, deadline }) => ({
+  type: 'DATEFINDER_SET_DEADLINE',
+  status: 'initialized',
+  datefinder,
+  deadline,
+  api: {
+    url: `/api/datefinder/${datefinder}/deadline`,
+    method: 'PUT',
+    body: {
+      deadline,
+    },
+  },
+})
