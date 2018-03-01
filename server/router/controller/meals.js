@@ -90,7 +90,7 @@ module.exports = {
     }
 
     try {
-      const datefinder = await (mealData.datefinder
+      const datefinder = await (mealData.datefinder && Object.keys(mealData.datefinder).length
         ? datefinderDB.createDatefinder({ ...mealData.datefinder, creator: mealData.creatorId })
         : Promise.resolve({}))
 
