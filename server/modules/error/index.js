@@ -107,12 +107,7 @@ module.exports = {
           } else {
             valid = validateParam(param, matches[param])
           }
-          log(
-            6,
-            `Validating ${param}: '${payload[param]}' against RegExp ${matches[param]}, result ${
-              typeof matches[param] === 'string' ? valid : matches[param].test(payload[param])
-            }`,
-          )
+          log(6, `Validating ${param}: '${payload[param]}' against RegExp ${matches[param]}, result ${valid}`)
           return valid
         })
 
