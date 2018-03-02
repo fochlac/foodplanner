@@ -23,7 +23,7 @@ export default class AddDateDialog extends React.Component {
   submit() {
     const { time } = this.state
     const { datefinder, datefinderAddDate } = this.props
-    if (!time || !datefinder) {
+    if (!datefinder) {
       return
     }
 
