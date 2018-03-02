@@ -139,16 +139,6 @@ module.exports = {
       delete mealData.image
     }
 
-    if (!validateDatefinder(mealData.datefinder)) {
-      log(4, 'datefinder not valid.')
-      return res.status(400).send({ msg: 'Datefinder not valid.', type: 'Invalid_Request', data: ['datefinder'] })
-    }
-
-    // apply datefinder deadline to
-    if (mealData.datefinder.meal_deadline) {
-      mealData.deadline = mealData.datefinder.meal_deadline
-    }
-
     validateUserCreator(req.params.id, req.user.id)
       .then(() => mealsDB.setMealById(req.params.id, mealData))
       .then(id => mealsDB.getMealById(id))
