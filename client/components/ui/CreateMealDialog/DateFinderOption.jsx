@@ -16,8 +16,8 @@ export default class DateFinderOption extends React.Component {
     super()
 
     this.state = {
-      addValue: new Date(round(Date.now(), 30 * 60)),
-      deadline: new Date(round(props.datefinder && props.datefinder.deadline ? props.datefinder.deadline : Date.now(), 30 * 60)),
+      addValue: round(Date.now(), 30 * 60),
+      deadline: round(props.datefinder && props.datefinder.deadline ? props.datefinder.deadline : Date.now(), 30 * 60),
       dates: (props.datefinder && props.datefinder.dates) || [],
       description: (props.datefinder && props.datefinder.description) || '',
     }
@@ -25,25 +25,20 @@ export default class DateFinderOption extends React.Component {
     this.setAddValue = this.handleDatepicker('addValue').bind(this)
     this.setDeadline = this.handleDatepicker('deadline').bind(this)
     this.addValue = this.addValue.bind(this)
-    this.handleDescription = this.handleDescription.bind(this)
   }
   handleDatepicker(field) {
     return function(date) {
-      return this.setState({ [field]: date }, this.handleChange)
+      return this.setState({ [field]: round(date, 30 * 60) }, this.handleChange)
     }
   }
   handleChange() {
     const { description, deadline, dates } = this.state
 
     this.props.onChange({
-      description: '',
       deadline: deadline.getTime(),
       dates: dates,
       meal_deadline: 3600000,
     })
-  }
-  handleDescription(evt) {
-    this.setState({ description: evt.target.value }, this.handleChange)
   }
 
   addValue() {
