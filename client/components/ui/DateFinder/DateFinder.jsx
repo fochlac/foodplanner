@@ -18,7 +18,7 @@ const wording = {
   addDate2: 'hinzufügen',
 }
 
-const handleWheel = evt => {
+export const handleWheel = evt => {
   const scrollDiff = evt.currentTarget.scrollWidth - evt.currentTarget.offsetWidth
   if (scrollDiff > 0 && ((evt.deltaY > 0 && evt.currentTarget.scrollLeft < scrollDiff) || (evt.deltaY < 0 && evt.currentTarget.scrollLeft > 0))) {
     evt.preventDefault()
@@ -64,7 +64,7 @@ export default class DateFinder extends React.Component {
     const { editDeadline } = this.state
 
     return (
-      <div>
+      <div className="datesListWrapper">
         <div className="description">
           <h3>{wording.title}</h3>
           {editDeadline ? (
@@ -80,7 +80,7 @@ export default class DateFinder extends React.Component {
               />
             </div>
           ) : (
-            <p className="marginTop">
+            <p className="deadline marginTop">
               {wording.deadline}:
               <b className="marginLeft">
                 {formatDateTime(datefinder.deadline)}
@@ -179,11 +179,11 @@ export default class DateFinder extends React.Component {
           {datefinder.creator === user.id &&
             (this.state.finalize ? (
               <div>
-                <button className="finalize marginRight" onClick={() => this.setState({ finalize: false })}>
+                <button className="finalize marginRight cancel" onClick={() => this.setState({ finalize: false })}>
                   {wording.cancel}
                 </button>
                 <button
-                  className="finalize"
+                  className="finalize complete"
                   disabled={this.state.selectedDate === -1}
                   onClick={() => datefinderFinalize(datefinder.id, this.state.selectedDate)}
                 >
@@ -192,7 +192,7 @@ export default class DateFinder extends React.Component {
               </div>
             ) : (
               <div>
-                <button className="finalize" onClick={() => this.setState({ finalize: true, visibleUsers: -1 })}>
+                <button className="finalize start" onClick={() => this.setState({ finalize: true, visibleUsers: -1 })}>
                   {wording.startFinalize}
                 </button>
               </div>
