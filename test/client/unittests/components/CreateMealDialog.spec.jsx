@@ -107,6 +107,55 @@ describe('CreateMealDialog', () => {
     expect(dialog_closed).toBe(true)
   })
 
+  test('should properly restore state', () => {
+    let create_meal = false
+
+    const TEST_USER = { id: 1, name: 'test' },
+      TEST_APP = {
+        dialog: {
+          state: {
+            time: new Date(),
+            deadline: new Date(),
+            options: [],
+            name: 'test',
+          },
+        },
+      },
+      TEST_MEALS = [],
+      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={{}} create_meal={output => (create_meal = output)} />)
+
+    wrapper.find('button.submit').simulate('click')
+
+    expect(create_meal.get()).toMatchObject({
+      name: 'test',
+    })
+  })
+
+  test('should properly set image data', () => {
+    let create_meal = false
+
+    const TEST_USER = { id: 1, name: 'test' },
+      TEST_APP = {
+        dialog: {
+          state: {
+            time: new Date(),
+            deadline: new Date(),
+            options: [],
+            name: 'test',
+          },
+        },
+      },
+      TEST_MEALS = [],
+      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={{}} create_meal={output => (create_meal = output)} />)
+
+    wrapper.find(ImageUploader).prop('callback')('test123')
+
+    wrapper.find('button.submit').simulate('click')
+    expect(create_meal.get()).toMatchObject({
+      imageData: 'test123',
+    })
+  })
+
   test('should output correct data on submit button click', () => {
     let create_meal = false
 
@@ -146,6 +195,48 @@ describe('CreateMealDialog', () => {
 
     wrapper.find('button.submit').simulate('click')
 
+    expect(create_meal.get()).toEqual(TEST_MEAL)
+  })
+
+  test('should delete and set options', () => {
+    let create_meal = false
+
+    const TEST_USER = { id: 1, name: 'test' },
+      TEST_APP = { dialog: {} },
+      TEST_MEALS = [],
+      TEST_MEAL = {
+        name: 'testmeal',
+        creator: TEST_USER.name,
+        creatorId: TEST_USER.id,
+        datefinder: '{}',
+        image: '',
+        description: 'testdescription',
+        signupLimit: 3,
+        deadline: Date.now() + 10000000,
+        time: Date.now() + 20000000,
+        options: [],
+        signups: [],
+      },
+      wrapper = shallow(
+        <CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={TEST_MEAL} edit={true} edit_meal={(id, output) => (create_meal = output)} />,
+      )
+
+    wrapper.find('.addOption').simulate('click')
+
+    expect(wrapper.find(MealOption)).toHaveLength(1)
+    wrapper.find(MealOption).prop('deleteOption')()
+    wrapper.update()
+
+    expect(wrapper.find(MealOption)).toHaveLength(0)
+
+    wrapper.find('.addOption').simulate('click')
+    expect(wrapper.find(MealOption)).toHaveLength(1)
+    wrapper.find(MealOption).prop('setOption')({ test: 'test' })
+
+    wrapper.find('button.submit').simulate('click')
+
+    TEST_MEAL.options = JSON.stringify([{ test: 'test' }])
+    delete TEST_MEAL.signups
     expect(create_meal.get()).toEqual(TEST_MEAL)
   })
 

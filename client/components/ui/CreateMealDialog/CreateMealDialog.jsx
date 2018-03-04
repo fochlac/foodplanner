@@ -79,8 +79,6 @@ export default class CreateMealDialog extends React.Component {
     this.nameInput = this.handleInput('name').bind(this)
     this.creatorInput = this.handleInput('creator').bind(this)
     this.datefinderOutput = this.handleOutput('datefinder').bind(this)
-    this.saveImage = this.handleInput('image').bind(this)
-    this.saveImageUrl = this.handleInput('imageUrl').bind(this)
     this.descriptionInput = this.handleInput('description').bind(this)
     this.signupLimitInput = this.handleInput('signupLimit').bind(this)
     this.deadlineInput = this.handleOutput('deadline').bind(this)
