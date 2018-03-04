@@ -19,7 +19,7 @@ export default class DayTimePicker extends React.Component {
     super()
 
     this.state = {
-      time: props.time ? props.time : new Date(),
+      time: props.time ? new Date(props.time) : new Date(),
     }
 
     this.handleDatepicker = this.handleDatepicker.bind(this)
@@ -29,14 +29,13 @@ export default class DayTimePicker extends React.Component {
   handleDatepicker(date) {
     const { onChange } = this.props
     const { time } = this.state
-    var jsDate = date.toDate(),
-      timeObj = new Date(time)
+    var jsDate = date.toDate()
 
-    jsDate.setHours(timeObj.getHours())
-    jsDate.setMinutes(timeObj.getMinutes())
+    jsDate.setHours(time.getHours())
+    jsDate.setMinutes(time.getMinutes())
 
     onChange && onChange(jsDate)
-    this.setState({ time: new Date(jsDate) })
+    this.setState({ time: jsDate })
   }
 
   handleTime(evt) {
