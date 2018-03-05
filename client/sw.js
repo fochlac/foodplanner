@@ -2,7 +2,7 @@
 
 'use strict'
 const serverUrl = location.origin
-let version = '25',
+let version = '26',
   dbVersion = '2',
   assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
   offline = new Response(new Blob(), { status: 279 }),
@@ -78,7 +78,8 @@ function handle_click(event) {
 
 function handle_fetch(event) {
   if (
-    event.request.url.includes('food-dev') &&
+    event.request.url.includes('food-dev') ||
+    event.request.url.includes('localhost') ||
     // Ensure that chrome-extension:// requests don't trigger the default route.
     event.request.url.indexOf('http') !== 0
   ) {

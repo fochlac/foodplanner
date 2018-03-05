@@ -2,11 +2,24 @@ import './Meal.less'
 
 import { formatDate, formatDateTime, formatDayNameDate, formatTime, formatTimeShort } from 'UTILS/date.js'
 
+import DateFinder from 'UI/DateFinder.js'
 import { Link } from 'react-router-dom'
 import React from 'react'
 import dEqual from 'fast-deep-equal'
 import { replaceLinks } from 'UTILS/markdown.js'
 import sEqual from 'shallow-equals'
+
+const wording = {
+  datefinderTitle: 'Datumsumfrage für',
+  time: 'Zeitpunkt',
+  org: 'Organisator',
+  list: 'Teilnehmerliste',
+  of: 'von',
+  participants: 'Teilnehmern',
+  participant: 'Teilnehmer',
+  deadline: 'Anmeldeschluss',
+  signup: 'Teilnehmen',
+}
 
 export default class Meal extends React.Component {
   constructor(props) {
@@ -107,7 +120,7 @@ export default class Meal extends React.Component {
       <div className={'meal' + (p.meal.print ? ' print' : '')}>
         <div className="titlebar">
           <h4 className="title">
-            {formatDayNameDate(p.meal.time)}: <span className="name">{p.meal.name}</span>
+            {p.meal.datefinder ? wording.datefinderTitle : formatDayNameDate(p.meal.time)}: <span className="name">{p.meal.name}</span>
           </h4>
           {p.showPrint && <span onClick={this.props.start_print.bind(this, p.meal.id)} className="fa fa-print fa-lg menuIcon pointer" />}
           {p.user.id === p.meal.creatorId ? (
@@ -122,82 +135,89 @@ export default class Meal extends React.Component {
           <div className="mealDetails">
             {p.meal.image ? <img src={p.meal.image} className="mealImage" /> : null}
             <p className="date">
-              Zeitpunkt: <b>{formatTime(p.meal.time)}</b>
+              {wording.time}: <b>{formatTime(p.meal.time)}</b>
             </p>
             <p className="creator">
-              Organisator: <span>{p.meal.creator}</span>
+              {wording.org}: <span>{p.meal.creator}</span>
             </p>
             <p className="description">{replaceLinks(p.meal.description)}</p>
           </div>
-          <div className="participants">
-            <h4 className="participantsTitle">Teilnehmerliste</h4>
-            {p.meal.signupLimit ? (
-              <span className="participation">
-                <span className="count">{signups.length}</span> von <span className="limit">{p.meal.signupLimit}</span> Teilnehmern
-              </span>
-            ) : (
-              <span className="participation">
-                <span className="count">{signups.length}</span> Teilnehmer
-              </span>
-            )}
-            <span className="deadline">Anmeldeschluss: {formatTimeShort(p.meal.deadline)}</span>
-            {!s.editable || (signups.length >= p.meal.signupLimit && p.meal.signupLimit) ? null : (
-              <p className="fakeLink participate" onClick={this.signup}>
-                <span>Teilnehmen</span>
-                <span className="fa fa-angle-double-right" />
-              </p>
-            )}
-            <ul className="participantsList">
-              {signups.map(signup => (
-                <li key={signup.id}>
-                  <p className="user">
-                    <span className="name">{signup.name}</span>
-                    {signup.price ? (
-                      <span className="moneyFrame">
-                        <span className="money">{signup.price.toFixed(2)}</span>
-                        <span className="moneySymbol">€</span>
-                      </span>
-                    ) : null}
-                    {s.editable && (p.user.id === p.meal.creatorId || p.user.id === signup.userId) ? (
-                      <span className="icons">
-                        <span className="fa fa-pencil edit" onClick={() => this.edit(signup.id)} />
-                        <span className="fa fa-times cancel" onClick={() => this.cancel(signup.id)} />
-                      </span>
-                    ) : null}
-                  </p>
-                  <ul className="signupOptions">
-                    {signup.options.map(option => {
-                      const mealOption = p.meal.options.find(opt => opt.id == option.id)
 
-                      return mealOption.type !== 'toggle' || option.show ? (
-                        <li key={option.id} className="row">
-                          {mealOption.type === 'count' ? <span className="optionCount">{option.count}</span> : null}
-                          {mealOption.type !== 'toggle' ? <span className="optionValue">{option.value}</span> : null}
-                          {mealOption.type === 'toggle' ? <span className="optionShow">{mealOption.name}</span> : null}
-                        </li>
-                      ) : null
-                    })}
-                  </ul>
-                  <p className="comment">{signup.comment}</p>
-                </li>
-              ))}
-            </ul>
-            {summary.length ? (
-              <div className="summary">
-                {summary.map((mealOption, index) => (
-                  <span key={index} className="optionGroup">
-                    <b className="optionTitle">{mealOption.name}:</b>
-                    {Object.values(mealOption.values).map((option, index) => (
-                      <span key={index} className="optionItem">
-                        <span className="optionCount">{option.count}</span>
-                        <span>{option.value}</span>
-                      </span>
-                    ))}
-                  </span>
+          {p.meal.datefinder ? (
+            <DateFinder id={p.meal.datefinder} />
+          ) : (
+            <div className="participants">
+              <h4 className="participantsTitle">{wording.list}</h4>
+              {p.meal.signupLimit ? (
+                <span className="participation">
+                  <span className="count">{signups.length}</span> {wording.of} <span className="limit">{p.meal.signupLimit}</span> {wording.participants}
+                </span>
+              ) : (
+                <span className="participation">
+                  <span className="count">{signups.length}</span> {wording.participant}
+                </span>
+              )}
+              <span className="deadline">
+                {wording.deadline}: {formatTimeShort(p.meal.deadline)}
+              </span>
+              {!s.editable || (signups.length >= p.meal.signupLimit && p.meal.signupLimit) ? null : (
+                <p className="fakeLink participate" onClick={this.signup}>
+                  <span>{wording.signup}</span>
+                  <span className="fa fa-angle-double-right" />
+                </p>
+              )}
+              <ul className="participantsList">
+                {signups.map(signup => (
+                  <li key={signup.id}>
+                    <p className="user">
+                      <span className="name">{signup.name}</span>
+                      {signup.price ? (
+                        <span className="moneyFrame">
+                          <span className="money">{signup.price.toFixed(2)}</span>
+                          <span className="moneySymbol">€</span>
+                        </span>
+                      ) : null}
+                      {s.editable && (p.user.id === p.meal.creatorId || p.user.id === signup.userId) ? (
+                        <span className="icons">
+                          <span className="fa fa-pencil edit" onClick={() => this.edit(signup.id)} />
+                          <span className="fa fa-times cancel" onClick={() => this.cancel(signup.id)} />
+                        </span>
+                      ) : null}
+                    </p>
+                    <ul className="signupOptions">
+                      {signup.options.map(option => {
+                        const mealOption = p.meal.options.find(opt => opt.id == option.id)
+
+                        return mealOption.type !== 'toggle' || option.show ? (
+                          <li key={option.id} className="row">
+                            {mealOption.type === 'count' ? <span className="optionCount">{option.count}</span> : null}
+                            {mealOption.type !== 'toggle' ? <span className="optionValue">{option.value}</span> : null}
+                            {mealOption.type === 'toggle' ? <span className="optionShow">{mealOption.name}</span> : null}
+                          </li>
+                        ) : null
+                      })}
+                    </ul>
+                    <p className="comment">{signup.comment}</p>
+                  </li>
                 ))}
-              </div>
-            ) : null}
-          </div>
+              </ul>
+              {summary.length ? (
+                <div className="summary">
+                  {summary.map((mealOption, index) => (
+                    <span key={index} className="optionGroup">
+                      <b className="optionTitle">{mealOption.name}:</b>
+                      {Object.values(mealOption.values).map((option, index) => (
+                        <span key={index} className="optionItem">
+                          <span className="optionCount">{option.count}</span>
+                          <span>{option.value}</span>
+                        </span>
+                      ))}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
     )

@@ -12,6 +12,7 @@ const express = require('express'),
   scheduler = require(process.env.FOOD_HOME + 'modules/scheduler'),
   mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals'),
   signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
+  datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
   timestamp = require(process.env.FOOD_HOME + 'middleware/timestamp'),
@@ -48,6 +49,7 @@ app.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.jso
 app.get('*', (req, res) => {
   let meals = mealsDB.getAllMeals(),
     signups = signupsDB.getAllSignups(),
+    datefinder = datefinderDB.getDatefinders(),
     file = new Promise((resolve, reject) => {
       fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
         if (err) {
@@ -57,12 +59,21 @@ app.get('*', (req, res) => {
       })
     })
 
-  Promise.all([file, meals, signups])
-    .then(([file, meals, signups]) => {
+  Promise.all([file, meals, signups, datefinder])
+    .then(([file, meals, signups, datefinderList]) => {
       meals = meals.map(meal => {
         meal.signups = signups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
         return meal
       })
+
+      datefinderList = datefinderList.map(datefinder => ({
+        ...datefinder,
+        dates: JSON.parse(datefinder.dates).map(date => {
+          date.users = date.users ? JSON.parse(date.users) : []
+          return date
+        }),
+        participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
+      }))
 
       signups = signups.reduce((acc, signup) => {
         acc[signup.id] = signup
@@ -78,14 +89,15 @@ app.get('*', (req, res) => {
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
                         app:{dialog:'', errors:{}, dataversion: ${version()}},
                         meals:${sanitize.html(JSON.stringify(meals))},
-                        signups:${sanitize.html(JSON.stringify(signups))}
+                        signups:${sanitize.html(JSON.stringify(signups))},
+                        datefinder:${sanitize.html(JSON.stringify(datefinderList))}
                     }
                 </script>`,
         ),
       )
     })
     .catch(err => {
-      log(2, 'server/index.js - error adding data to index.html')
+      log(2, 'server/index.js - error adding data to index.html', err)
       res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html')
     })
 })

@@ -14,6 +14,7 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user,
     meal: meal ? meal : {},
     meals: state.meals,
+    datefinder: meal.datefinder ? state.datefinder.find(datefinder => datefinder.id === meal.datefinder) : {},
     edit,
   }
 }

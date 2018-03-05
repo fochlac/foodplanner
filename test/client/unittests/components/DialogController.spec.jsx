@@ -1,5 +1,6 @@
 import { mount, shallow } from 'enzyme'
 
+import AddDateDialog from 'UI/AddDateDialog.js'
 import ConfirmationDialog from 'UI/ConfirmationDialog.js'
 import CreateMealDialog from 'UI/CreateMealDialog.js'
 import DialogController from 'UI/DefaultPage/DialogController.jsx'
@@ -63,6 +64,9 @@ describe('DialogController', () => {
     wrapper.setProps({ dialog: { type: 'CANCEL_MEAL', option: {} } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
 
+    wrapper.setProps({ dialog: { type: 'DATEFINDER_DELETE_DATE', option: {} } })
+    expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
+
     wrapper.setProps({ dialog: { type: 'PRINT_MEAL', option: {} } })
     expect(wrapper.find(PrintDialog)).toHaveLength(1)
 
@@ -71,5 +75,8 @@ describe('DialogController', () => {
 
     wrapper.setProps({ dialog: { type: 'LOGIN', option: {} } })
     expect(wrapper.find(LoginDialog)).toHaveLength(1)
+
+    wrapper.setProps({ dialog: { type: 'DATEFINDER_ADD_DATE', option: {} } })
+    expect(wrapper.find(AddDateDialog)).toHaveLength(1)
   })
 })
