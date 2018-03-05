@@ -24,8 +24,8 @@ module.exports = (meal) =>
       <td style="width: 300px; vertical-align: top;">
           <p>Organisator: ${meal.creator}</p>
           <p>Teilnehmergrenze: ${meal.signupLimit ? meal.signupLimit : 'keine'}</p>
-          <p>Anmeldeschluss: ${date.formatDateTime(meal.deadline)}</p>
-          <p>Lieferzeitpunkt: ${date.formatDateTime(meal.time)}</p>
+          ${meal.datefinder ? `<p>Anmeldeschluss: ${date.formatDateTime(meal.deadline)}</p>
+          <p>Lieferzeitpunkt: ${date.formatDateTime(meal.time)}</p>` : ''}
       </td>
       ${
         meal.description.length
