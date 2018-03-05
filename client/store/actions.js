@@ -469,14 +469,14 @@ export const datefinderStartDeleteDate = (datefinder, date) => ({
   title: 'Mittagsplaner - Terminplaner',
 })
 
-export const datefinderDeleteDate = (id, date) => ({
+export const datefinderDeleteDate = (datefinder, date) => ({
   type: 'DATEFINDER_DELETE_DATE',
   status: 'initialized',
   ...closeDialogOptions,
-  id,
+  datefinder,
   date,
   api: {
-    url: `/api/datefinder/${id}/date`,
+    url: `/api/datefinder/${datefinder}/date`,
     method: 'DELETE',
     body: {
       date,

@@ -528,6 +528,55 @@ describe('meal-reducer', () => {
     expect(meal('test', action)).toEqual('test')
   })
 
+  test('DATEFINDER_SET_DEADLINE', () => {
+    const action = {
+      type: 'DATEFINDER_SET_DEADLINE',
+      status: 'complete',
+      datefinder: 1,
+      deadline: 123,
+    }
+
+    expect(
+      meal(
+        [
+          {
+            id: 1,
+            deadline: 9,
+            time: 8,
+            datefinder: 1,
+            datefinderLocked: 6,
+          },
+          {
+            id: 2,
+            deadline: 9,
+            time: 8,
+            datefinder: 7,
+            datefinderLocked: 6,
+          },
+        ],
+        action,
+      ),
+    ).toEqual([
+      {
+        id: 1,
+        deadline: 9,
+        time: 123,
+        datefinder: 1,
+        datefinderLocked: 6,
+      },
+      {
+        id: 2,
+        deadline: 9,
+        time: 8,
+        datefinder: 7,
+        datefinderLocked: 6,
+      },
+    ])
+
+    action.status = 'incomplete'
+    expect(meal('test', action)).toEqual('test')
+  })
+
   test('default', () => {
     const action = {
       type: 'asdawd',

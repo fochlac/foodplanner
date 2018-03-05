@@ -23,7 +23,7 @@ const users = (state = {}, action) => {
     case 'DATEFINDER_DELETE_DATE':
       if (action.status === 'complete') {
         const newState = state.concat([]),
-          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
+          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.datefinder)
 
         newState[datefinderIndex] = { ...state[datefinderIndex], dates: state[datefinderIndex].dates.filter(date => date.id !== action.date) }
         return newState
