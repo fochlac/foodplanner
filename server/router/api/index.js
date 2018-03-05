@@ -23,6 +23,8 @@ routes.get(
   controller.update,
 )
 
+routes.get('/history', controller.history)
+
 routes.use('/signups', signups)
 routes.use('/meals', meals)
 routes.use('/user', user)
