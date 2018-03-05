@@ -14,6 +14,7 @@ const users = (state = {}, action) => {
         newState[datefinderIndex] = {
           ...newState[datefinderIndex],
           dates: [...newDates, newDate],
+          participants: [...newState[datefinderIndex].participants.filter(user => user.user !== action.user.id), { user: action.user.id, name: action.user.name }]
         }
         return newState
       }
