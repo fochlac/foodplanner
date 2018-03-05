@@ -126,7 +126,7 @@ describe('meal-reducer', () => {
     const action = {
       status: 'complete',
       type: 'CREATE_MEAL',
-      data: { test: 'test' },
+      data: { meal: { test: 'test' } },
     }
 
     expect(
@@ -467,6 +467,60 @@ describe('meal-reducer', () => {
       {
         id: 4,
         signups: [7, 8, 9],
+      },
+    ])
+
+    action.status = 'incomplete'
+    expect(meal('test', action)).toEqual('test')
+  })
+
+  test('FINALIZE_DATEFINDER', () => {
+    const action = {
+      type: 'FINALIZE_DATEFINDER',
+      status: 'complete',
+      id: 1,
+      data: {
+        deadline: 1,
+        time: 2,
+        datefinder: 3,
+        datefinderLocked: 4,
+      },
+    }
+
+    expect(
+      meal(
+        [
+          {
+            id: 1,
+            deadline: 9,
+            time: 8,
+            datefinder: 7,
+            datefinderLocked: 6,
+          },
+          {
+            id: 2,
+            deadline: 9,
+            time: 8,
+            datefinder: 7,
+            datefinderLocked: 6,
+          },
+        ],
+        action,
+      ),
+    ).toEqual([
+      {
+        id: 1,
+        deadline: 1,
+        time: 2,
+        datefinder: 3,
+        datefinderLocked: 4,
+      },
+      {
+        id: 2,
+        deadline: 9,
+        time: 8,
+        datefinder: 7,
+        datefinderLocked: 6,
       },
     ])
 

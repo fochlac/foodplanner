@@ -2,6 +2,7 @@ const log = require(process.env.FOOD_HOME + 'modules/log')
 
 const regexp = {
   number: /^[0-9]*$/,
+  bigint: /^[0-9]{0,15}$/,
   text: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]*$/,
   bool: /^(0|1|true|false)$/,
   mail: /^[\_A-Za-z0-9.\-]{1,50}@[\_A-Za-z0-9.\-]{1,50}\.[A-Za-z]{1,100}$/,
@@ -20,6 +21,7 @@ module.exports = {
 
   validation: {
     isNumber: value => regexp.number.test(String(value)),
+    isBigInt: value => regexp.bigint.test(String(value)),
     isText: value => regexp.text.test(String(value)),
     isBool: value => regexp.bool.test(String(value)),
     isMail: value => regexp.mail.test(String(value)),
@@ -68,7 +70,8 @@ module.exports = {
       }
     },
 
-    validate: (type, options) => {
+    validate: (type, matches, additionalOptions) => {
+      const { hideError = false, nextOnError = false } = additionalOptions || {}
       return (req, res, next) => {
         let param,
           valid = true,
@@ -95,20 +98,26 @@ module.exports = {
                 invalidParams.push(param)
               }
             }
+            return true
           }
 
-        for (param in options) {
-          if (Array.isArray(options[param])) {
-            options[param].forEach(validation => validateParam(param, validation))
+        Object.keys(matches).every(param => {
+          if (Array.isArray(matches[param])) {
+            valid = matches[param].every(validation => validateParam(param, validation))
           } else {
-            validateParam(param, options[param])
+            valid = validateParam(param, matches[param])
           }
-        }
+          log(6, `Validating ${param}: '${payload[param]}' against RegExp ${matches[param]}, result ${valid}`)
+          return valid
+        })
+
         if (valid) {
           next()
+        } else if (nextOnError) {
+          next('route')
         } else {
           log(4, 'Invalid Request.', payload)
-          res.status(400).send({ type: 'Invalid_Request', data: invalidParams })
+          res.status(400).send(hideError ? { type: 'Invalid_Request_Hidden', data: invalidParams } : { type: 'Invalid_Request', data: invalidParams })
         }
       }
     },

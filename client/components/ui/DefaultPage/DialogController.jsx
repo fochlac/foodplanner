@@ -1,3 +1,4 @@
+import AddDateDialog from 'UI/AddDateDialog.js'
 import ConfirmationDialog from 'UI/ConfirmationDialog.js'
 import CreateMealDialog from 'UI/CreateMealDialog.js'
 import ImpressumDialog from 'UI/ImpressumDialog.js'
@@ -10,6 +11,16 @@ import SendMoneyDialog from 'UI/SendMoneyDialog.js'
 import SettingsDialog from 'UI/SettingsDialog.js'
 import SignUpDialog from 'UI/SignUpDialog.js'
 import TransactionDialog from 'UI/TransactionDialog.js'
+
+const wording = {
+  unsubscribe1: 'Erfolgreich von Emails ',
+  unsubscribe2: ' abgemeldet.',
+  unsubscribe_deadline: 'zur Erinnerung bei Ablauf der Anmeldefrist',
+  unsubscribe_create: 'zur Benachrichtigung bei einem neuem Angebot',
+  unsubscribeAll: 'Erfolgreich von allen E-Mail-Benachrichtigungen abgemeldet.',
+  confirmDeleteMeal: 'Bist du dir sicher, dass du dieses Angebot löschen möchtest?',
+  confirmDeleteDate: 'Bist du dir sicher, dass du diesen Termin löschen möchtest?',
+}
 
 export default class DialogController extends React.Component {
   constructor(props) {
@@ -58,12 +69,11 @@ export default class DialogController extends React.Component {
 
       case 'UNSUBSCRIBE':
         if (params.list) {
-          message = `Erfolgreich von Emails ${
-            params.list === 'deadlineReminder' ? 'zur Erinnerung bei Ablauf der Anmeldefrist' : 'zur Benachrichtigung bei einem neuem Angebot'
-          } abgemeldet.`
+          message =
+            wording.unsubscribe1 + (params.list === 'deadlineReminder' ? wording.unsubscribe_deadline : wording.unsubscribe_create) + wording.unsubscribe2
           params = Object.assign({}, d.user, { [params.list]: 0 })
         } else {
-          message = 'Erfolgreich von allen E-Mail-Benachrichtigungen abgemeldet.'
+          message = wording.unsubscribeAll
           params = Object.assign({}, d.user, { creationNotice: 0, deadlineReminder: 0 })
         }
 
@@ -75,7 +85,13 @@ export default class DialogController extends React.Component {
         return <ImpressumDialog />
 
       case 'CANCEL_MEAL':
-        return <ConfirmationDialog message="Bist du dir sicher, dass du dieses Angebot löschen möchtest?" action="cancel_meal" parameter={[d.option.meal]} />
+        return <ConfirmationDialog message={wording.confirmDeleteMeal} action="cancel_meal" parameter={[d.option.meal]} />
+
+      case 'DATEFINDER_DELETE_DATE':
+        return <ConfirmationDialog message={wording.confirmDeleteDate} action="datefinderDeleteDate" parameter={[d.option.datefinder, d.option.date]} />
+
+      case 'DATEFINDER_ADD_DATE':
+        return <AddDateDialog datefinder={d.option.datefinder} />
 
       case 'PRINT_MEAL':
         return <PrintDialog />

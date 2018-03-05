@@ -31,6 +31,8 @@ const app = (state = {}, action) => {
     case 'SUBMIT_PRICES':
     case 'EDIT_MEAL':
     case 'SIGNIN':
+    case 'DATEFINDER_DELETE_DATE':
+    case 'DATEFINDER_ADD_DATE':
     case 'REGISTER':
       if (action.status === 'complete') {
         return { ...state, dialog: { type: '' } }
