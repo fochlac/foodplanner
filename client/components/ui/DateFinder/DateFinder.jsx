@@ -82,9 +82,9 @@ export default class DateFinder extends React.Component {
           ) : (
             <p className="deadline marginTop">
               {wording.deadline}:
-              <b className="marginLeft noWrap fakeLink">
+              <b className="marginLeft noWrap">
                 {formatDateTime(datefinder.deadline)}
-                {edit && <span className="fa fa-pencil pointer marginLeft" onClick={() => this.setState({ editDeadline: true })} />}
+                {edit && <span className="fa fa-pencil fakeLink marginLeft" onClick={() => this.setState({ editDeadline: true })} />}
               </b>
             </p>
           )}

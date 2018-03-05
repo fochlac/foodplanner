@@ -43,7 +43,7 @@ const users = (state = {}, action) => {
     case 'DATEFINDER_SET_DEADLINE':
       if (action.status === 'complete') {
         const newState = state.concat([]),
-          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
+          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.datefinder)
 
         newState[datefinderIndex] = { ...state[datefinderIndex], deadline: action.deadline }
         return newState

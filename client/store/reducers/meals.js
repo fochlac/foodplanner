@@ -165,6 +165,16 @@ const meals = (state = [], action) => {
       }
       return state
 
+    case 'DATEFINDER_SET_DEADLINE':
+      if (action.status === 'complete') {
+        const newState = state.concat([]),
+          mealIndex = state.findIndex(meal => meal.datefinder === action.datefinder)
+
+        newState[mealIndex] = { ...state[mealIndex], time: action.deadline }
+        return newState
+      }
+      return state
+
     default:
       return state
   }
