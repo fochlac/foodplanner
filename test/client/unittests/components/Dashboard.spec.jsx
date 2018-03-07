@@ -9,10 +9,11 @@ import UserFrame from 'UI/UserFrame.js';
 let output;
 
 const options = {
-  meals: [{ id: 1 }],
-  oldMeals: [{ id: 3 }, { id: 2 }],
+  meals: [{ id: 1, time: Date.now() + 1000000 }, { id: 3, time: Date.now() - 1000000000 }, { id: 2, time: Date.now() - 20000000000 }],
+  oldMealIds: [2, 3],
   app: { offline: true },
-  login: true
+  login: true,
+  load_history: page => output = page
 }
 
 describe('Dashboard', () => {

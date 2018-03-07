@@ -24,7 +24,7 @@ export const handleAssync = store => next => action => {
       const busyType = hiddenActions[action.actionId]
       delete hiddenActions[action.actionId]
       if (!Object.keys(hiddenActions).length || action.busyType && !Object.values(hiddenActions).filter(storedType => storedType === busyType).length) {
-        store.dispatch(set_hidden_busy(false, {final: !Object.keys(hiddenActions).length, busyType}))
+        store.dispatch(set_hidden_busy(false, {final: !Object.keys(hiddenActions).length, busyType: action.busyType}))
       }
     }
   }
