@@ -120,9 +120,18 @@ export default class CreateMealDialog extends React.Component {
 
   handleOutput(field) {
     return value => {
-      this.mySetState({
+      let update = {
         [field]: value,
-      })
+      }
+
+      // adaptations for deadline & time
+      if (field == 'time' && value < this.state.deadline) {
+        update.deadline = value
+      } else if (field == 'deadline' && value > this.state.time) {
+        update.time = value
+      }
+
+      this.mySetState(update)
     }
   }
 

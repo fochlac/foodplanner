@@ -1,3 +1,5 @@
+import {filterDuplicatesById} from 'UTILS/helper.js'
+
 const meals = (state = [], action) => {
   switch (action.type) {
     case 'MEAL_SIGNUP':
@@ -101,6 +103,7 @@ const meals = (state = [], action) => {
       }
       return state
 
+    case 'LOAD_HISTORY':
     case 'REFRESH':
       if (action.status === 'complete' && action.data.meals) {
         let helper = action.data.signups.reduce((acc, signup) => {
@@ -115,7 +118,12 @@ const meals = (state = [], action) => {
           meal.signups = helper[meal.id] ? helper[meal.id] : []
         })
 
-        return action.data.meals
+        if (action.type === 'REFRESH') {
+          return action.data.meals
+        } else if (action.type === 'LOAD_HISTORY') {
+          let ids = [];
+          return filterDuplicatesById([...state, ...action.data.meals])
+        }
       }
       return state
 

@@ -13,7 +13,7 @@ export const handleAssync = store => next => action => {
     if (!Object.keys(hiddenActions).length || action.busyType && !Object.values(hiddenActions).filter(storedType => storedType === action.busyType).length) {
       store.dispatch(set_hidden_busy(true, {busyType: action.busyType}))
     }
-    hiddenActions[action.actionId] = action.busyType
+    hiddenActions[action.actionId] = action.busyType ? action.busyType : 'default'
   } else if (action.status === 'complete' || action.status === 'failure') {
     if (runningActions[action.actionId]) {
       delete runningActions[action.actionId]

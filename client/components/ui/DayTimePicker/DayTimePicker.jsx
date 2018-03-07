@@ -26,6 +26,12 @@ export default class DayTimePicker extends React.Component {
     this.handleTime = this.handleTime.bind(this)
   }
 
+  componentDidUpdate(oldProps) {
+    if (this.props.time !== oldProps.time) {
+      this.setState({time: this.props.time ? new Date(this.props.time) : new Date()})
+    }
+  }
+
   handleDatepicker(date) {
     const { onChange } = this.props
     const { time } = this.state
