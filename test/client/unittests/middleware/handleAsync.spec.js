@@ -63,10 +63,10 @@ describe('handleAssync', () => {
 
     handleAssync({
       dispatch: action => {
-        expect(action).toEqual(set_hidden_busy(true))
+        expect(action).toEqual(set_hidden_busy(true, {}))
       },
     })(action => {
-      expect(action).toEqual(act3)
+      expect(action).toEqual({...act3, busyType: 'default', final: true})
     })(act3)
 
     handleAssync({
@@ -87,10 +87,10 @@ describe('handleAssync', () => {
 
     handleAssync({
       dispatch: action => {
-        expect(action).toEqual(set_hidden_busy(false))
+        expect(action).toEqual(set_hidden_busy(false, {}))
       },
     })(action => {
-      expect(action).toEqual(act4c)
+      expect(action).toEqual({...act4c, busyType: 'default', final: true})
     })(act4c)
   })
 
@@ -107,7 +107,7 @@ describe('handleAssync', () => {
         expect(action).toEqual(set_hidden_busy(true, { busyType: 'test1' }))
       },
     })(action => {
-      expect(action).toEqual(act3)
+      expect(action).toEqual({...act3})
     })(act3)
 
     handleAssync({
@@ -115,7 +115,7 @@ describe('handleAssync', () => {
         expect(action).toEqual(set_hidden_busy(true, { busyType: 'test2' }))
       },
     })(action => {
-      expect(action).toEqual(act4)
+      expect(action).toEqual({...act4, final: true})
     })(act4)
 
     handleAssync({

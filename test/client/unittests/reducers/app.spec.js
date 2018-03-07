@@ -62,6 +62,8 @@ describe('app-reducer', () => {
       errors: {},
       busy: false,
       hiddenBusy: false,
+      busyList: [],
+      offline: false,
     })
 
     expect(
@@ -76,6 +78,8 @@ describe('app-reducer', () => {
       errors: {},
       busy: false,
       hiddenBusy: false,
+      busyList: [],
+      offline: false,
     })
   })
 
@@ -238,7 +242,7 @@ describe('app-reducer', () => {
       cleanState = {
         test: '1231',
         hiddenBusy: true,
-        busyList: []
+        busyList: [],
       }
 
     expect(app(initialState, action)).toEqual(cleanState)
