@@ -67,7 +67,7 @@ const users = (state = {}, action) => {
         if (action.type === 'REFRESH') {
           return action.data.datefinder
         } else if (action.type === 'LOAD_HISTORY') {
-          return filterDuplicatesById([ ...state, ...action.data.datefinder ])
+          return filterDuplicatesById([ ...state, ...action.data.datefinder ].reverse()).reverse()
         }
       }
       return state

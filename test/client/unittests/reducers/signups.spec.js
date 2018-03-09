@@ -243,6 +243,79 @@ describe('signups-reducer', () => {
     })
   })
 
+  test('LOAD_HISTORY', () => {
+    const action = {
+      type: 'LOAD_HISTORY',
+      status: 'complete',
+      data: {
+        signups: [
+          {
+            id: 1,
+            test: 'test123',
+            test2: 'test1234',
+          },
+          {
+            id: 2,
+            test2: 'test1223',
+            test3: 'test12334',
+          },
+        ],
+      },
+    }
+
+    expect(signups({}, action)).toEqual({
+      [1]: {
+        id: 1,
+        test: 'test123',
+        test2: 'test1234',
+      },
+      [2]: {
+        id: 2,
+        test2: 'test1223',
+        test3: 'test12334',
+      },
+    })
+
+    expect(
+      signups(
+        {
+          test4: '12312534',
+          [1]: {
+            id: 1,
+            test: 'test1asads23',
+            test3: 'tasdasest1234',
+          },
+        },
+        action,
+      ),
+    ).toEqual({
+      [1]: {
+        id: 1,
+        test: 'test123',
+        test2: 'test1234',
+      },
+      [2]: {
+        id: 2,
+        test2: 'test1223',
+        test3: 'test12334',
+      },
+      test4: '12312534',
+    })
+
+    action.status = 'asd'
+
+    expect(
+      signups(
+        {
+          test4: '12312534',
+        },
+        action,
+      ),
+    ).toEqual({
+      test4: '12312534',
+    })
+  })
+
   test('REFRESH', () => {
     const action = {
       type: 'REFRESH',

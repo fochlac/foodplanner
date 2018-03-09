@@ -252,6 +252,65 @@ describe('datefinder-reducer', () => {
     })
   })
 
+  test('REFRESH', () => {
+    const action = {
+      type: 'REFRESH',
+      status: 'complete',
+      data: {datefinder: [{id: 1, test: 'test'}]}
+    }
+
+    expect(datefinder(datefinderSample, action)).toEqual([
+        {
+          id: 1,
+          test: 'test'
+        },
+      ]
+    )
+
+    action.status = 'incomplete'
+
+    expect(
+      datefinder(
+        {
+          test4: '12312534',
+        },
+        action,
+      ),
+    ).toEqual({
+      test4: '12312534',
+    })
+  })
+
+  test('LOAD_HISTORY', () => {
+    const action = {
+      type: 'LOAD_HISTORY',
+      status: 'complete',
+      data: { datefinder: [{ id: 1, test: 'test' }] }
+    }
+
+    expect(datefinder(datefinderSample, action)).toEqual([
+      datefinderSample[1],
+      {
+        id: 1,
+        test: 'test'
+      },
+    ]
+    )
+
+    action.status = 'incomplete'
+
+    expect(
+      datefinder(
+        {
+          test4: '12312534',
+        },
+        action,
+      ),
+    ).toEqual({
+      test4: '12312534',
+    })
+  })
+
   test('default', () => {
     const action = {
       type: 'asdawd',

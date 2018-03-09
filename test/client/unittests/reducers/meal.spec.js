@@ -399,6 +399,40 @@ describe('meal-reducer', () => {
     expect(meal('test', action)).toEqual('test')
   })
 
+  test('LOAD_HISTORY', () => {
+    const action = {
+      status: 'complete',
+      type: 'LOAD_HISTORY',
+      data: {
+        meals: [{ test: 'test', id: 2 }, { test: 'test', id: 3 }, { test: 'test', id: 4 }],
+        signups: [{ meal: 2, id: 1 }, { meal: 2, id: 2 }, { meal: 2, id: 3 }, { meal: 4, id: 1 }, { meal: 4, id: 2 }],
+      },
+    }
+
+    expect(
+      meal(
+        [
+          {
+            id: 1,
+            signups: [1, 2, 3],
+          },
+          {
+            id: 2,
+            signups: [1, 2, 3],
+          },
+          {
+            id: 3,
+            signups: [1, 2, 3],
+          },
+        ],
+        action,
+      ),
+    ).toEqual([{ id: 1, signups: [1, 2, 3], }, { test: 'test', id: 2, signups: [1, 2, 3] }, { test: 'test', id: 3, signups: [] }, { test: 'test', id: 4, signups: [1, 2] }])
+
+    action.status = 'incomplete'
+    expect(meal('test', action)).toEqual('test')
+  })
+
   test('INITIAL_SIGNUPS', () => {
     const action = {
       status: 'complete',

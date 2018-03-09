@@ -122,7 +122,7 @@ const meals = (state = [], action) => {
           return action.data.meals
         } else if (action.type === 'LOAD_HISTORY') {
           let ids = [];
-          return filterDuplicatesById([...state, ...action.data.meals])
+          return filterDuplicatesById([...state, ...action.data.meals].reverse()).reverse()
         }
       }
       return state
