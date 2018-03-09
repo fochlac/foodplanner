@@ -12,6 +12,28 @@
     flex-grow: 1;
   }
 
+.tabList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+
+    li {
+      border: solid 1px @colorg3;
+      padding: 2px 5px;
+      border-radius: @borderRadius;
+      margin-right: 5px;
+      cursor: pointer;
+
+      &.active {
+        color: @colorg5;
+        background: @colorg3;
+        user-select: none;
+        cursor: default;
+      }
+    }
+}
+
   .addOption,
   .templateSelector {
     margin-top: 5px;

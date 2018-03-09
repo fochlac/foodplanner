@@ -30,6 +30,7 @@ var wording = {
   editHeadline: name => name + ' bearbeiten',
   loadOption: 'Optionen laden',
   additionalOptions: 'Teilnahmeoptionen',
+  generalOptions: 'Basisoptionen',
   dateType: 'Datumstyp',
   predefDate: 'Festes Datum',
   useDatefinder: 'Datumsumfrage',
@@ -97,13 +98,14 @@ export default class CreateMealDialog extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const {time, deadline,image,dateType,options} = this.state
-    const {meals, historyLoaded} = this.props
+    const { time, deadline, image, dateType, options, activeTab } = this.state
+    const { meals, historyLoaded } = this.props
     if (
       nextState.time !== time ||
       nextState.deadline !== deadline ||
       nextState.image !== image ||
       nextState.dateType !== dateType ||
+      nextState.activeTab !== activeTab ||
       !sEqual(nextState.options, options)
     ) {
       return true
@@ -256,8 +258,8 @@ export default class CreateMealDialog extends React.Component {
         </div>
         <div className="body createMeal">
           <ul className="tabList">
-            <li onClick={() => this.setState({ activeTab: 1 })}>{wording.generalOptions}</li>
-            <li onClick={() => this.openTab2()}>{wording.additionalOptions}</li>
+            <li className={s.activeTab == 1 && 'active'} onClick={() => this.setState({ activeTab: 1 })}>{wording.generalOptions}</li>
+            <li className={s.activeTab == 2 && 'active'} onClick={() => this.openTab2()}>{wording.additionalOptions}</li>
           </ul>
           {s.activeTab === 1 && <div className="tab1">
             <div className="row responsive">
@@ -342,7 +344,7 @@ export default class CreateMealDialog extends React.Component {
               )}
           </div>}
           {s.activeTab === 2 && <div className="tab2">
-              {p.historyLoaded}
+            {p.historyLoaded}
             {s.options.map((option, index) => (
               <MealOption
                 key={index}
