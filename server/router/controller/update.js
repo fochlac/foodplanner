@@ -15,10 +15,10 @@ module.exports = {
         res.status(200).send(updateCache.get('update'))
       } else {
         Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups(), datefinderDB.getDatefinders()])
-          .then(([meals, signups, datefinderList]) => {
+          .then(([allMeals, signups, datefinderList]) => {
             const startOfDay = new Date().setHours(0, 0, 0)
 
-            meals = meals.filter(meal => meal.time > startOfDay)
+            meals = allMeals.filter(meal => meal.time > startOfDay)
 
             const mealIds = meals.map(meal => meal.id)
             const mealDatefinders = meals.map(meal => meal.datefinder)
@@ -40,6 +40,7 @@ module.exports = {
               meals,
               datefinder: datefinderList,
               version: caches.getVersion() + 1,
+              historySize: allMeals.length - mealsDB.length
             }
 
             updateCache.put('update', response)
@@ -62,9 +63,11 @@ module.exports = {
         .then(([meals, signups, datefinderList]) => {
           const startOfDay = new Date().setHours(0, 0, 0)
 
-          meals = meals
-            .filter(meal => meal.time < startOfDay)
-            .sort((a, b) => b.time - a.time)
+          meals = meals.filter(meal => meal.time < startOfDay)
+
+          const historySize = meals.length
+
+          meals = meals.sort((a, b) => b.time - a.time)
             .slice(size * (page - 1), size * page)
 
           const mealIds = meals.map(meal => meal.id)
@@ -82,10 +85,11 @@ module.exports = {
             participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
           }))
 
-          let response = {
+          const response = {
             signups,
             meals,
             datefinder: datefinderList,
+            historySize
           }
 
           updateCache.put('history', response)
