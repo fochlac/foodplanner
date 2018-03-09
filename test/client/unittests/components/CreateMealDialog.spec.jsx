@@ -189,12 +189,19 @@ describe('CreateMealDialog', () => {
       .find(DayTimePicker)
       .at(1)
       .prop('onChange')
+    const now = Date.now()
 
     changeDead(new Date(TEST_MEAL.deadline))
     wrapper.update()
     expect(wrapper.find(DayTimePicker).at(1).prop('time')).toEqual(new Date(TEST_MEAL.deadline))
-    changeTime(new Date(TEST_MEAL.time))
 
+    changeTime(new Date(now))
+    wrapper.update()
+    expect(wrapper.find(DayTimePicker).at(1).prop('deadline')).toEqual(new Date(now))
+    expect(wrapper.find(DayTimePicker).at(1).prop('time')).toEqual(new Date(now))
+
+    changeDead(new Date(TEST_MEAL.deadline))
+    changeTime(new Date(TEST_MEAL.time))
     wrapper.find('button.submit').simulate('click')
 
     expect(create_meal.get()).toEqual(TEST_MEAL)
