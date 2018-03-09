@@ -40,7 +40,7 @@ module.exports = {
               meals,
               datefinder: datefinderList,
               version: caches.getVersion() + 1,
-              historySize: allMeals.length - mealsDB.length
+              historySize: allMeals.length - meals.length
             }
 
             updateCache.put('update', response)
