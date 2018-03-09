@@ -170,8 +170,8 @@ describe('CreateMealDialog', () => {
         datefinder: '{}',
         description: 'testdescription',
         signupLimit: 3,
-        deadline: Date.now() + 10000000,
-        time: Date.now() + 20000000,
+        deadline: Date.now() + 1000000000,
+        time: Date.now() + 2000000000,
         options: JSON.stringify([]),
       },
       wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={{}} create_meal={output => (create_meal = output)} />)
@@ -191,6 +191,8 @@ describe('CreateMealDialog', () => {
       .prop('onChange')
 
     changeDead(new Date(TEST_MEAL.deadline))
+    wrapper.update()
+    expect(wrapper.find(DayTimePicker).at(1).prop('time')).toEqual(new Date(TEST_MEAL.deadline))
     changeTime(new Date(TEST_MEAL.time))
 
     wrapper.find('button.submit').simulate('click')
