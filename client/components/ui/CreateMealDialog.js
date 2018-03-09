@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => {
   const edit = ownProps.type === 'edit',
     meal = ownProps.id !== undefined ? state.meals.filter(meal => meal.id === ownProps.id)[0] : {}
 
-  const historyLoaded = Array(state.app.historySize).fill().slice(0, 50).map((val, index) => state.historyMealMap[index]).some(id => !id)
+  const historyLoaded = Array(state.app.historySize).fill().slice(0, 50).map((val, index) => state.historyMealMap[index]).every(id => id)
 
   return {
     invalid: !meal,

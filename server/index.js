@@ -62,7 +62,6 @@ app.get('*', (req, res) => {
 
   Promise.all([file, meals, signups, datefinder])
     .then(([file, allMeals, allSignups, fullDatefinderList]) => {
-      allMeals.forEach(meal => console.log(meal.time > startOfDay, meal.time, startOfDay))
       let meals = allMeals.filter(meal => meal.time > startOfDay).map(meal => {
         meal.signups = allSignups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
         return meal
