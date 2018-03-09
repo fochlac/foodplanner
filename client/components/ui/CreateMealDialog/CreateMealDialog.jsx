@@ -258,8 +258,8 @@ export default class CreateMealDialog extends React.Component {
         </div>
         <div className="body createMeal">
           <ul className="tabList">
-            <li className={s.activeTab == 1 && 'active'} onClick={() => this.setState({ activeTab: 1 })}>{wording.generalOptions}</li>
-            <li className={s.activeTab == 2 && 'active'} onClick={() => this.openTab2()}>{wording.additionalOptions}</li>
+            <li className={s.activeTab == 1 ? 'active' : undefined} onClick={() => this.setState({ activeTab: 1 })}>{wording.generalOptions}</li>
+            <li className={s.activeTab == 2 ? 'active' : undefined} onClick={() => this.openTab2()}>{wording.additionalOptions}</li>
           </ul>
           {s.activeTab === 1 && <div className="tab1">
             <div className="row responsive">

@@ -24,7 +24,7 @@ export default class Dashboard extends React.Component {
   }
 
   refreshContent() {
-    if (this.state.filter === 'meals' && !(this.props.app.dialog && this.props.dialog.type !== '')) {
+    if (this.state.filter === 'meals' && !(this.props.app.dialog && this.props.app.dialog.type !== '')) {
       this.props.refresh(this.props.app.dataversion)
     }
   }
