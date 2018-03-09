@@ -68,7 +68,7 @@ const app = (state = {}, action) => {
         return { ...state, dataversion: action.data.version, historySize: action.data.historySize }
       }
       return state
-      return { ...state, errors: errors }
+
     case 'LOAD_HISTORY':
       if (action.status === 'complete' && action.data.historySize) {
         return { ...state, historySize: action.data.historySize }
