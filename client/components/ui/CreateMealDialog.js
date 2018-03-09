@@ -1,4 +1,4 @@
-import { close_dialog, create_meal, edit_meal } from 'STORE/actions.js'
+import { close_dialog, create_meal, edit_meal, load_history } from 'STORE/actions.js'
 
 import CreateMealDialog from 'UI/CreateMealDialog/CreateMealDialog.jsx'
 import React from 'react'
@@ -19,4 +19,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { create_meal, edit_meal, close_dialog })(CreateMealDialog)
+export default connect(mapStateToProps, { create_meal, edit_meal, close_dialog, load_history })(CreateMealDialog)

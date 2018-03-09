@@ -342,7 +342,7 @@ export default class CreateMealDialog extends React.Component {
                 {wording.addOption}
               </p>
               {!s.options.length ? (
-                <select className="push-right templateSelector" onChange={this.selectOptions.bind(this)}>
+                <select className="push-right templateSelector" onChange={this.selectOptions.bind(this)} onClick={() => this.props.load_history({size: 50})}>
                   <option value="-1">Optionen laden</option>
                   {p.meals
                     .filter(meal => meal.options.length)

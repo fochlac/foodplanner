@@ -37,13 +37,16 @@ export default class Dashboard extends React.Component {
 
   setFilter(filter) {
     this.setState({ filter: filter })
-    if (filter === 'oldMeals') {
+    if (filter === 'oldMeals' && !oldMealIds[0]) {
       this.loadHistory(1);
     }
   }
 
   loadHistory(page) {
-    this.props.load_history({page})
+    const { oldMealIds } = this.props
+    if (!oldMealIds[(page - 1) * size]) {
+      this.props.load_history({ page, size: 5 })
+    }
   }
 
   render() {
@@ -88,22 +91,22 @@ export default class Dashboard extends React.Component {
           </ul>
         </div>
         <div className="meals">
-          <Pager size={5} top={true} bottom={true} inactive={this.state.filter === 'meals'} onChange={({page}) => this.loadHistory(page)}>
+          <Pager size={5} top={true} bottom={true} inactive={this.state.filter === 'meals'} onChange={({ page }) => this.loadHistory(page)}>
             {mealList.map(
               (meal, index) =>
                 meal ? (
                   <Meal id={meal.id} key={meal.id} showPrint={this.state.filter === 'meals'} />
                 ) : (
-                  <div className="emptyMeal meal" key={'invalidMeal_' + index}>
-                    <div className="titlebar">
-                      <h4 className="title">&#9644;&#9644;&#9644;&#9644;</h4>
+                    <div className="emptyMeal meal" key={'invalidMeal_' + index}>
+                      <div className="titlebar">
+                        <h4 className="title">&#9644;&#9644;&#9644;&#9644;</h4>
+                      </div>
+                      <div className="details">
+                        <span className="fa fa-spin fa-spinner fa-fw" />
+                        <span>{wording.loadMessage}</span>
+                      </div>
                     </div>
-                    <div className="details">
-                      <span className="fa fa-spin fa-spinner fa-fw" />
-                      <span>{wording.loadMessage}</span>
-                    </div>
-                  </div>
-                ),
+                  ),
             )}
           </Pager>
         </div>
