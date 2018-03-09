@@ -18,11 +18,13 @@ export default class Dashboard extends React.Component {
       filter: 'meals',
     }
 
+    this.size=5
+
     this.refreshContent = this.refreshContent.bind(this)
   }
 
   refreshContent() {
-    if (this.state.filter === 'meals') {
+    if (this.state.filter === 'meals' && !this.props.app.dialog || this.props.dialog.type === '') {
       this.props.refresh(this.props.app.dataversion)
     }
   }
@@ -45,8 +47,8 @@ export default class Dashboard extends React.Component {
 
   loadHistory(page) {
     const { oldMealIds } = this.props
-    if (!oldMealIds[(page - 1) * size]) {
-      this.props.load_history({ page, size: 5 })
+    if (!oldMealIds[(page - 1) * this.size]) {
+      this.props.load_history({ page, size: this.size })
     }
   }
 
@@ -92,7 +94,7 @@ export default class Dashboard extends React.Component {
           </ul>
         </div>
         <div className="meals">
-          <Pager size={5} top={true} bottom={true} inactive={this.state.filter === 'meals'} onChange={({ page }) => this.loadHistory(page)}>
+          <Pager size={this.size} top={true} bottom={true} inactive={this.state.filter === 'meals'} onChange={({ page }) => this.loadHistory(page)}>
             {mealList.map(
               (meal, index) =>
                 meal ? (

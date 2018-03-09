@@ -56,8 +56,8 @@ module.exports = {
   history: (req, res) => {
     const { page, size } = req.query
 
-    if (updateCache.get('history')) {
-      res.status(200).send(updateCache.get('history'))
+    if (updateCache.get(`history-${size}_${page}`)) {
+      res.status(200).send(updateCache.get(`history-${size}_${page}`))
     } else {
       Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups(), datefinderDB.getDatefinders()])
         .then(([meals, signups, datefinderList]) => {
@@ -92,7 +92,7 @@ module.exports = {
             historySize
           }
 
-          updateCache.put('history', response)
+          updateCache.put(`history-${size}_${page}`, response)
           res.status(200).send(response)
         })
         .catch(error.router.internalError(res))
