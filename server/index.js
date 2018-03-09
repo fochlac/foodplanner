@@ -47,6 +47,7 @@ app.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.jso
 
 // if no route and no static content, redirect to index
 app.get('*', (req, res) => {
+  const startOfDay = new Date().setHours(0, 0, 0)
   let meals = mealsDB.getAllMeals(),
     signups = signupsDB.getAllSignups(),
     datefinder = datefinderDB.getDatefinders(),
@@ -60,13 +61,21 @@ app.get('*', (req, res) => {
     })
 
   Promise.all([file, meals, signups, datefinder])
-    .then(([file, meals, signups, datefinderList]) => {
-      meals = meals.map(meal => {
-        meal.signups = signups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
+    .then(([file, allMeals, allSignups, fullDatefinderList]) => {
+      allMeals.forEach(meal => console.log(meal.time > startOfDay, meal.time, startOfDay))
+      let meals = allMeals.filter(meal => meal.time > startOfDay).map(meal => {
+        meal.signups = allSignups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
         return meal
       })
 
-      datefinderList = datefinderList.map(datefinder => ({
+      const mealIds = meals.map(meal => meal.id)
+      const mealDatefinders = meals.map(meal => meal.datefinder)
+      const signups = allSignups.filter(signup => mealIds.includes(signup.meal)).reduce((acc, signup) => {
+        acc[signup.id] = signup
+        return acc
+      }, {})
+
+      const datefinderList = fullDatefinderList.filter(datefinder => mealDatefinders.includes(datefinder.id)).map(datefinder => ({
         ...datefinder,
         dates: JSON.parse(datefinder.dates).map(date => {
           date.users = date.users ? JSON.parse(date.users) : []
@@ -75,19 +84,15 @@ app.get('*', (req, res) => {
         participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
       }))
 
-      signups = signups.reduce((acc, signup) => {
-        acc[signup.id] = signup
-        return acc
-      }, {})
-
       log(6, 'server/index.js - sending enriched index.html to user ' + (req.auth ? req.user.id : 'unknown'))
       res.status(200).send(
         file.replace(
           '<script>/**DEFAULTSTORE**/</script>',
           `<script>
                     window.defaultStore = {
+                        historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
-                        app:{dialog:'', errors:{}, dataversion: ${version()}},
+                        app:{dialog:'', errors:{}, dataversion: ${version()}, historySize: ${allMeals.length - meals.length}},
                         meals:${sanitize.html(JSON.stringify(meals))},
                         signups:${sanitize.html(JSON.stringify(signups))},
                         datefinder:${sanitize.html(JSON.stringify(datefinderList))}

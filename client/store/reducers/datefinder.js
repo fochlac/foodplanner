@@ -1,3 +1,5 @@
+import {filterDuplicatesById} from 'UTILS/helper.js'
+
 const users = (state = {}, action) => {
   switch (action.type) {
     case 'TOGGLE_DATEFINDER_SIGNUP':
@@ -14,6 +16,10 @@ const users = (state = {}, action) => {
         newState[datefinderIndex] = {
           ...newState[datefinderIndex],
           dates: [...newDates, newDate],
+          participants: [
+            ...newState[datefinderIndex].participants.filter(user => user.user !== action.user.id),
+            { user: action.user.id, name: action.user.name },
+          ],
         }
         return newState
       }
@@ -22,7 +28,7 @@ const users = (state = {}, action) => {
     case 'DATEFINDER_DELETE_DATE':
       if (action.status === 'complete') {
         const newState = state.concat([]),
-          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
+          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.datefinder)
 
         newState[datefinderIndex] = { ...state[datefinderIndex], dates: state[datefinderIndex].dates.filter(date => date.id !== action.date) }
         return newState
@@ -42,7 +48,7 @@ const users = (state = {}, action) => {
     case 'DATEFINDER_SET_DEADLINE':
       if (action.status === 'complete') {
         const newState = state.concat([]),
-          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.id)
+          datefinderIndex = state.findIndex(datefinder => datefinder.id === action.datefinder)
 
         newState[datefinderIndex] = { ...state[datefinderIndex], deadline: action.deadline }
         return newState
@@ -52,6 +58,17 @@ const users = (state = {}, action) => {
     case 'CREATE_MEAL':
       if (action.status === 'complete' && Object.keys(action.data.datefinder).length) {
         return [...state, action.data.datefinder]
+      }
+      return state
+
+    case 'LOAD_HISTORY':
+    case 'REFRESH':
+      if (action.status === 'complete' && action.data.datefinder) {
+        if (action.type === 'REFRESH') {
+          return action.data.datefinder
+        } else if (action.type === 'LOAD_HISTORY') {
+          return filterDuplicatesById([ ...state, ...action.data.datefinder ].reverse()).reverse()
+        }
       }
       return state
 

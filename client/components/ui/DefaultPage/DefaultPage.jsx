@@ -9,24 +9,12 @@ import React from 'react'
 import Topbar from 'UI/Topbar.js'
 
 export default class DefaultPage extends React.Component {
-  constructor(props) {
-    super()
-
-    this.refreshContent = this.refreshContent.bind(this)
-  }
-
-  refreshContent() {
-    this.props.refresh(this.props.app.dataversion)
-  }
-
   componentDidMount() {
     resizeFocus()
-    window.addEventListener('focus', this.refreshContent)
   }
 
   componentWillUnmount() {
     removeResizeFocus()
-    window.removeEventListener('focus', this.refreshContent)
   }
 
   render() {

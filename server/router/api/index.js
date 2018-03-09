@@ -23,6 +23,16 @@ routes.get(
   controller.update,
 )
 
+routes.get('/history',
+error.router.validate(
+  'query',
+  {
+    page: /^([0-9]{0,100})$/,
+    size: /^([0-9]{0,100})$/,
+  },
+  {hideError: false},
+), controller.history)
+
 routes.use('/signups', signups)
 routes.use('/meals', meals)
 routes.use('/user', user)

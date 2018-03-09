@@ -16,6 +16,16 @@ module.exports = {
       } else {
         Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups(), datefinderDB.getDatefinders()])
           .then(([meals, signups, datefinderList]) => {
+            const startOfDay = new Date().setHours(0, 0, 0)
+
+            meals = meals.filter(meal => meal.time > startOfDay)
+
+            const mealIds = meals.map(meal => meal.id)
+            const mealDatefinders = meals.map(meal => meal.datefinder)
+
+            signups = signups.filter(signup => mealIds.includes(signup.meal))
+            datefinderList = datefinderList.filter(datefinder => mealDatefinders.includes(datefinder.id))
+
             datefinderList = datefinderList.map(datefinder => ({
               ...datefinder,
               dates: JSON.parse(datefinder.dates).map(date => {
@@ -39,6 +49,49 @@ module.exports = {
       }
     } else {
       res.status(200).send({})
+    }
+  },
+
+  history: (req, res) => {
+    const { page, size } = req.query
+
+    if (updateCache.get('history')) {
+      res.status(200).send(updateCache.get('history'))
+    } else {
+      Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups(), datefinderDB.getDatefinders()])
+        .then(([meals, signups, datefinderList]) => {
+          const startOfDay = new Date().setHours(0, 0, 0)
+
+          meals = meals
+            .filter(meal => meal.time < startOfDay)
+            .sort((a, b) => b.time - a.time)
+            .slice(size * (page - 1), size * page)
+
+          const mealIds = meals.map(meal => meal.id)
+          const mealDatefinders = meals.map(meal => meal.datefinder)
+
+          signups = signups.filter(signup => mealIds.includes(signup.meal))
+          datefinderList = datefinderList.filter(datefinder => mealDatefinders.includes(datefinder.id))
+
+          datefinderList = datefinderList.map(datefinder => ({
+            ...datefinder,
+            dates: JSON.parse(datefinder.dates).map(date => {
+              date.users = date.users ? JSON.parse(date.users) : []
+              return date
+            }),
+            participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
+          }))
+
+          let response = {
+            signups,
+            meals,
+            datefinder: datefinderList,
+          }
+
+          updateCache.put('history', response)
+          res.status(200).send(response)
+        })
+        .catch(error.router.internalError(res))
     }
   },
 }

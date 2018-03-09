@@ -1,4 +1,4 @@
-import { refresh, show_impressum } from 'STORE/actions.js'
+import { show_impressum } from 'STORE/actions.js'
 
 import DefaultPage from 'UI/DefaultPage/DefaultPage.jsx'
 import React from 'react'
@@ -10,4 +10,4 @@ const mapStateToProps = (state, ownProps) => ({
   errors: state.app.errors,
 })
 
-export default connect(mapStateToProps, { show_impressum, refresh })(DefaultPage)
+export default connect(mapStateToProps, { show_impressum })(DefaultPage)
