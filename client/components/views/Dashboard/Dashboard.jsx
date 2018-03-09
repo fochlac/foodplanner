@@ -36,6 +36,7 @@ export default class Dashboard extends React.Component {
   }
 
   setFilter(filter) {
+    const { oldMealIds } = this.props
     this.setState({ filter: filter })
     if (filter === 'oldMeals' && !oldMealIds[0]) {
       this.loadHistory(1);
