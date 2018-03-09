@@ -377,22 +377,72 @@ describe('app-reducer', () => {
       status: 'complete',
       data: {
         version: 10,
+        historySize: 8
       },
     }
 
     expect(app({}, action)).toEqual({
       dataversion: 10,
+      historySize: 8
     })
 
     expect(
       app(
         {
           dataversion: 9,
+          historySize: 5,
         },
         action,
       ),
     ).toEqual({
       dataversion: 10,
+      historySize: 8
+    })
+
+    action.status = false
+
+    expect(
+      app(
+        {
+          test: '123',
+          errors: {
+            1: 'asd',
+          },
+        },
+        action,
+      ),
+    ).toEqual({
+      test: '123',
+      errors: {
+        1: 'asd',
+      },
+    })
+  })
+
+  test('LOAD_HISTORY', () => {
+    const action = {
+      type: 'LOAD_HISTORY',
+      status: 'complete',
+      data: {
+        historySize: 8
+      },
+    }
+
+    expect(app({}, action)).toEqual({
+      historySize: 8
+    })
+
+    expect(
+      app(
+        {
+          dataversion: 9,
+          historySize: 5,
+        },
+        action,
+      ),
+    ).toEqual({
+      dataversion: 9,
+      historySize: 8
     })
 
     action.status = false
