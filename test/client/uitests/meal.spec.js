@@ -80,6 +80,7 @@ const setDay = async function (day) {
     return this.driver.waitElementLocated(S.dialog.signup);
   },
   setupMeal = async function (meal, edit = false) {
+    this.driver.findElement(S.cm.tab1).click()
     const elems = await Promise.all([S.cm.name, S.cm.imageInput, S.cm.description, S.cm.signup].map(selector => this.driver.findElement(selector))),
       name = elems[0],
       imageInput = elems[1],
