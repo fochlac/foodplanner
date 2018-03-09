@@ -197,7 +197,7 @@ describe('CreateMealDialog', () => {
 
     changeTime(new Date(now))
     wrapper.update()
-    expect(wrapper.find(DayTimePicker).at(1).prop('deadline')).toEqual(new Date(now))
+    expect(wrapper.find(DayTimePicker).at(0).prop('time')).toEqual(new Date(now))
     expect(wrapper.find(DayTimePicker).at(1).prop('time')).toEqual(new Date(now))
 
     changeDead(new Date(TEST_MEAL.deadline))
