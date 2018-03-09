@@ -344,6 +344,7 @@ describe('edit meal', () => {
       expect(await image.getAttribute('src'), 'testing product image src').to.not.include('undefined');
     }
 
+    this.driver.findElement(S.cm.tab2).click()
     const options = await this.driver.findElements(S.cm.option);
     return Promise.all(meal.options.map((option, index) => this.checkOption(options[index], option)));
   });
