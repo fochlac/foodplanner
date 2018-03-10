@@ -30,6 +30,7 @@ var wording = {
   editHeadline: name => name + ' bearbeiten',
   loadOption: 'Optionen laden',
   additionalOptions: 'Teilnahmeoptionen',
+  generalOptions: 'Basisoptionen',
   dateType: 'Datumstyp',
   predefDate: 'Festes Datum',
   useDatefinder: 'Datumsumfrage',
@@ -58,6 +59,7 @@ export default class CreateMealDialog extends React.Component {
         deadline: deadline,
         dateType: props.meal.datefinder ? 'datefinder' : 'predef',
         datefinder: props.datefinder ? { ...props.datefinder, meal_deadline: props.deadline } : {},
+        activeTab: 1,
       }
     } else {
       this.state = {
@@ -73,6 +75,7 @@ export default class CreateMealDialog extends React.Component {
         options: [],
         dateType: 'predef',
         datefinder: {},
+        activeTab: 1,
       }
     }
 
@@ -86,7 +89,7 @@ export default class CreateMealDialog extends React.Component {
     this.handleImage = this.handleImage.bind(this)
     this.handleDateType = this.handleInput('dateType').bind(this)
 
-    this.mySetState = function(data, cb) {
+    this.mySetState = function (data, cb) {
       this.setState(data, () => {
         const app = history && history.state && history.state.app ? history.state.app : {}
         history.replaceState({ app: { ...app, dialog: { ...(app.dialog ? app.dialog : {}), state: this.state } } }, document.title, document.location.pathname)
@@ -95,16 +98,19 @@ export default class CreateMealDialog extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    const { time, deadline, image, dateType, options, activeTab } = this.state
+    const { meals, historyLoaded } = this.props
     if (
-      nextState.time !== this.state.time ||
-      nextState.deadline !== this.state.deadline ||
-      nextState.image !== this.state.image ||
-      nextState.dateType !== this.state.dateType ||
-      !sEqual(nextState.options, this.state.options)
+      nextState.time !== time ||
+      nextState.deadline !== deadline ||
+      nextState.image !== image ||
+      nextState.dateType !== dateType ||
+      nextState.activeTab !== activeTab ||
+      !sEqual(nextState.options, options)
     ) {
       return true
     }
-    if (!sEqual(nextProps.meals, this.props.meals)) {
+    if (!sEqual(nextProps.meals, this.props.meals) || nextProps.historyLoaded !== historyLoaded) {
       return true
     }
     return false
@@ -210,6 +216,13 @@ export default class CreateMealDialog extends React.Component {
     }
   }
 
+  openTab2() {
+    if (!this.props.historyLoaded) {
+      this.props.load_history({ size: 50 })
+    }
+    this.setState({ activeTab: 2 })
+  }
+
   render() {
     const p = this.props,
       s = this.state,
@@ -244,127 +257,135 @@ export default class CreateMealDialog extends React.Component {
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)} />
         </div>
         <div className="body createMeal">
-          <div className="row responsive">
-            <div className="col">
-              <div>
-                <label htmlFor="CreateMealDialog_name">{wording.name}</label>
-                <input type="text" id="CreateMealDialog_name" defaultValue={s.name} onChange={this.nameInput} />
-              </div>
-              <div>
-                <label htmlFor="CreateMealDialog_signupLimit">{wording.limit}</label>
-                <input type="number" id="CreateMealDialog_signupLimit" defaultValue={edit ? s.signupLimit : 0} onChange={this.signupLimitInput} />
-              </div>
-            </div>
-            <div className="col">
-              <ImageUploader callback={this.handleImage} opts={{ imageUrl: this.state.image }} />
-            </div>
-          </div>
-          <div>
-            <label htmlFor="CreateMealDialog_comment">
-              {wording.description}
-              <InfoBubble style={{ bottom: '-60px', right: '26px', width: '180px' }} arrow="left">
-                {wording.linkInfo}
-              </InfoBubble>
-            </label>
-            <textarea type="text" id="CreateMealDialog_description" onChange={this.descriptionInput} defaultValue={s.description} />
-          </div>
-          <h4 className="sectionHead">{wording.dateHeadline}</h4>
-          {!edit ? (
-            <div>
-              <label htmlFor="">{wording.dateType}</label>
-              <div className="row dateType marginTop">
-                <div className="row marginRight">
-                  <label htmlFor="SignUpDialog_predefDate" className="inlineLabel">
-                    {wording.predefDate}
-                  </label>
-                  <input
-                    type="radio"
-                    name="dateType"
-                    value="predef"
-                    id="SignUpDialog_predefDate"
-                    onChange={this.handleDateType}
-                    checked={s.dateType === 'predef'}
-                  />
-                </div>
-                <div className="row">
-                  <label htmlFor="SignUpDialog_datefinder" className="inlineLabel">
-                    {wording.useDatefinder}
-                  </label>
-                  <input
-                    type="radio"
-                    name="dateType"
-                    value="datefinder"
-                    id="SignUpDialog_datefinder"
-                    onChange={this.handleDateType}
-                    checked={s.dateType === 'datefinder'}
-                  />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="row">
-              <label htmlFor="">{wording.dateType}:</label>
-              <label htmlFor="" className="inlineLabel marginLeft marginTop">
-                {s.dateType === 'predef' ? wording.predefDate : wording.useDatefinder}
-              </label>
-            </div>
-          )}
-
-          {s.dateType === 'predef' ? (
-            <div className="predfinedTime">
-              <div>
-                <label htmlFor="SignUpDialog_deadline">{wording.deadline}</label>
-                <DayTimePicker className="deadline" onChange={this.deadlineInput} time={s.deadline} />
-              </div>
-              <div>
-                <label htmlFor="SignUpDialog_time">{wording.time}</label>
-                <DayTimePicker className="time" onChange={this.timeInput} time={s.time} />
-              </div>
-            </div>
-          ) : (
-            <DateFinderOption onChange={this.datefinderOutput} datefinder={s.datefinder} editable={!edit} />
-          )}
-          <h4 className="sectionHead">{wording.additionalOptions}</h4>
-          {s.options.map((option, index) => (
-            <MealOption
-              key={index}
-              option={option}
-              index={index}
-              setOption={this.setOption(index)}
-              deleteOption={() => this.deleteOption(index)}
-              editable={!edit || !p.meal.signups.length}
-            />
-          ))}
-          {!edit || !p.meal.signups.length ? (
+          <ul className="tabList">
+            <li className={s.activeTab == 1 ? 'active tab1' : 'tab1'} onClick={() => this.setState({ activeTab: 1 })}>{wording.generalOptions}</li>
+            <li className={s.activeTab == 2 ? 'active tab2' : 'tab2'} onClick={() => this.openTab2()}>{wording.additionalOptions}</li>
+          </ul>
+          {s.activeTab === 1 && <div className="tab1">
             <div className="row responsive">
-              <p className="fakeLink addOption" onClick={this.addOption.bind(this)}>
-                <span className="fa fa-plus fa-lg marginRight" />
-                {wording.addOption}
-              </p>
-              {!s.options.length ? (
-                <select className="push-right templateSelector" onChange={this.selectOptions.bind(this)}>
-                  <option value="-1">Optionen laden</option>
-                  {p.meals
-                    .filter(meal => meal.options.length)
-                    .sort((a, b) => b.time - a.time)
-                    .reduce((uniqueMeals, meal) => {
-                      // clean unneccesary ids to allow comparing options
-                      const cleanedMealOptions = JSON.parse(JSON.stringify(meal.options).replace(/("id":[0-9]*,)|(,"id":[0-9]*)/g, ''))
-                      // if no equivalent mealoptions is in unique mealoptions list, add meal with cleaned options
-                      if (!uniqueMeals.some(uniqueMeal => dEqual(uniqueMeal.options, cleanedMealOptions))) {
-                        uniqueMeals.push({ ...meal, options: cleanedMealOptions })
-                      }
-                      return uniqueMeals
-                    }, [])
-                    .map(meal => (
-                      <option value={meal.id} key={meal.id}>
-                        {meal.name}
-                      </option>
-                    ))}
-                </select>
-              ) : null}
+              <div className="col">
+                <div>
+                  <label htmlFor="CreateMealDialog_name">{wording.name}</label>
+                  <input type="text" id="CreateMealDialog_name" defaultValue={s.name} onChange={this.nameInput} />
+                </div>
+                <div>
+                  <label htmlFor="CreateMealDialog_signupLimit">{wording.limit}</label>
+                  <input type="number" id="CreateMealDialog_signupLimit" defaultValue={edit ? s.signupLimit : 0} onChange={this.signupLimitInput} />
+                </div>
+              </div>
+              <div className="col">
+                <ImageUploader callback={this.handleImage} opts={{ imageUrl: s.image }} />
+              </div>
             </div>
-          ) : null}
+            <div>
+              <label htmlFor="CreateMealDialog_comment">
+                {wording.description}
+                <InfoBubble style={{ bottom: '-60px', right: '26px', width: '180px' }} arrow="left">
+                  {wording.linkInfo}
+                </InfoBubble>
+              </label>
+              <textarea type="text" id="CreateMealDialog_description" onChange={this.descriptionInput} defaultValue={s.description} />
+            </div>
+            <h4 className="sectionHead">{wording.dateHeadline}</h4>
+            {!edit ? (
+              <div>
+                <label htmlFor="">{wording.dateType}</label>
+                <div className="row dateType marginTop">
+                  <div className="row marginRight">
+                    <label htmlFor="SignUpDialog_predefDate" className="inlineLabel">
+                      {wording.predefDate}
+                    </label>
+                    <input
+                      type="radio"
+                      name="dateType"
+                      value="predef"
+                      id="SignUpDialog_predefDate"
+                      onChange={this.handleDateType}
+                      checked={s.dateType === 'predef'}
+                    />
+                  </div>
+                  <div className="row">
+                    <label htmlFor="SignUpDialog_datefinder" className="inlineLabel">
+                      {wording.useDatefinder}
+                    </label>
+                    <input
+                      type="radio"
+                      name="dateType"
+                      value="datefinder"
+                      id="SignUpDialog_datefinder"
+                      onChange={this.handleDateType}
+                      checked={s.dateType === 'datefinder'}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+                <div className="row">
+                  <label htmlFor="">{wording.dateType}:</label>
+                  <label htmlFor="" className="inlineLabel marginLeft marginTop">
+                    {s.dateType === 'predef' ? wording.predefDate : wording.useDatefinder}
+                  </label>
+                </div>
+              )}
+
+            {s.dateType === 'predef' ? (
+              <div className="predfinedTime">
+                <div>
+                  <label htmlFor="SignUpDialog_deadline">{wording.deadline}</label>
+                  <DayTimePicker className="deadline" onChange={this.deadlineInput} time={s.deadline} />
+                </div>
+                <div>
+                  <label htmlFor="SignUpDialog_time">{wording.time}</label>
+                  <DayTimePicker className="time" onChange={this.timeInput} time={s.time} />
+                </div>
+              </div>
+            ) : (
+                <DateFinderOption onChange={this.datefinderOutput} datefinder={s.datefinder} editable={!edit} />
+              )}
+          </div>}
+          {s.activeTab === 2 && <div className="tab2">
+            {p.historyLoaded}
+            {s.options.map((option, index) => (
+              <MealOption
+                key={index}
+                option={option}
+                index={index}
+                setOption={this.setOption(index)}
+                deleteOption={() => this.deleteOption(index)}
+                editable={!edit || !p.meal.signups.length}
+              />
+            ))}
+            {!edit || !p.meal.signups.length ? (
+              <div className="row responsive">
+                <p className="fakeLink addOption" onClick={this.addOption.bind(this)}>
+                  <span className="fa fa-plus fa-lg marginRight" />
+                  {wording.addOption}
+                </p>
+                {!s.options.length ? (
+                  <select className="push-right templateSelector" onChange={this.selectOptions.bind(this)}>
+                    <option value="-1">Optionen laden</option>
+                    {p.meals
+                      .filter(meal => meal.options.length)
+                      .sort((a, b) => b.time - a.time)
+                      .reduce((uniqueMeals, meal) => {
+                        // clean unneccesary ids to allow comparing options
+                        const cleanedMealOptions = JSON.parse(JSON.stringify(meal.options).replace(/("id":[0-9]*,)|(,"id":[0-9]*)/g, ''))
+                        // if no equivalent mealoptions is in unique mealoptions list, add meal with cleaned options
+                        if (!uniqueMeals.some(uniqueMeal => dEqual(uniqueMeal.options, cleanedMealOptions))) {
+                          uniqueMeals.push({ ...meal, options: cleanedMealOptions })
+                        }
+                        return uniqueMeals
+                      }, [])
+                      .map(meal => (
+                        <option value={meal.id} key={meal.id}>
+                          {meal.name}
+                        </option>
+                      ))}
+                  </select>
+                ) : null}
+              </div>
+            ) : null}
+          </div>}
         </div>
         <div className="foot">
           <button className="cancel" type="button" onClick={this.cancel.bind(this)}>

@@ -23,7 +23,7 @@ describe('Dashboard', () => {
       tmp2 = window.removeEventListener
 
     window.addEventListener = (event, fn) => (output = { type: 'addListener', func: fn, event })
-    window.removeEventListener = (event) => (output = {type: 'removeListener', event})
+    window.removeEventListener = (event) => (output = { type: 'removeListener', event })
     const wrapper = shallow(<Dashboard {...options} />);
 
     expect(output.type).toBe('addListener')
@@ -52,8 +52,8 @@ describe('Dashboard', () => {
     const triggerHistory = wrapper.find(Pager).prop('onChange')
 
 
-    triggerHistory({page: 2})
-    expect(output).toEqual({page: 2})
+    triggerHistory({ page: 2 })
+    expect(output).toEqual({ page: 2, size: 5 })
 
     output = false
     triggerFocus()
@@ -64,5 +64,11 @@ describe('Dashboard', () => {
     expect(output.event).toBe('focus')
     window.addEventListener = tmp
     window.removeEventListener = tmp2
+  });
+
+  test('should trigger load_history on mount without old meals', () => {
+    const wrapper = shallow(<Dashboard {...{ ...options, oldMealIds: [] }} />);
+    wrapper.find('.filterList li').at(1).simulate('click');
+    expect(output).toEqual({ page: 1, size: 5 })
   });
 });

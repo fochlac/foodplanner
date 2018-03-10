@@ -125,6 +125,7 @@ export const createMeal = async function({
 }
 
 const addMealOption = async function(option, index) {
+  this.driver.findElement(S.cm.tab2).click()
   this.driver.findElement(S.cm.addOpt).click()
 
   const elem = (await this.driver.findElements(S.cm.option))[index]

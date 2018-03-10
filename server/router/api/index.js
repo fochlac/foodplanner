@@ -6,7 +6,7 @@ const routes = require('express').Router(),
   datefinder = require('./datefinder'),
   user = require('./user'),
   github = require('./github'),
-  controller = require(process.env.FOOD_HOME + 'router/controller/update'),
+  controller = require(process.env.FOOD_HOME + 'router/controller/index'),
   error = require(process.env.FOOD_HOME + 'modules/error')
 
 routes.use('/github', github)
