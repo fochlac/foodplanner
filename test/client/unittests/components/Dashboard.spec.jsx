@@ -65,4 +65,10 @@ describe('Dashboard', () => {
     window.addEventListener = tmp
     window.removeEventListener = tmp2
   });
+
+  test('should trigger load_history on mount without old meals', () => {
+    const wrapper = shallow(<Dashboard {...{ ...options, oldMealIds: [] }} />);
+    wrapper.find('.filterList li').at(1).simulate('click');
+    expect(output).toEqual({ page: 1, size: 5 })
+  });
 });
