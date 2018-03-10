@@ -93,7 +93,7 @@ export default class DateFinder extends React.Component {
             <ul className="participantsList">
               {datefinder.participants.map(participant => (
                 <li key={participant.user} className={participant.user === user.id ? 'myself' : ''}>
-                  {participant.name}
+                  {participant.name}<span className="hideOnLast">,</span>
                 </li>
               ))}
             </ul>
