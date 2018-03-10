@@ -7,6 +7,8 @@ const app = (state = {}, action) => {
       delete action.app.mailSuggestion
       action.app.busy = false
       action.app.hiddenBusy = false
+      action.app.busyList = []
+      action.app.offline = false
       return action.app
     case 'CHECK_MAIL':
       if (action.status === 'complete' && !action.data.error) {
@@ -41,7 +43,15 @@ const app = (state = {}, action) => {
     case 'BUSY':
       return { ...state, busy: action.state }
     case 'HIDDEN_BUSY':
-      return { ...state, hiddenBusy: action.state }
+      return {
+        ...state,
+        hiddenBusy: action.state ? action.state : action.final ? action.state : state.hiddenBusy,
+        busyList: action.final
+          ? []
+          : action.state
+            ? state.busyList && action.busyType ? state.busyList.concat([action.busyType]) : action.busyType ? [action.busyType] : []
+            : state.busyList.filter(type => type !== action.busyType),
+      }
     case 'POSTMESSAGE':
       if (action.message === 'offline') {
         return { ...state, offline: action.payload.state }
@@ -55,7 +65,13 @@ const app = (state = {}, action) => {
       return { ...state, errors: errors }
     case 'REFRESH':
       if (action.status === 'complete' && action.data.version) {
-        return { ...state, dataversion: action.data.version }
+        return { ...state, dataversion: action.data.version, historySize: action.data.historySize }
+      }
+      return state
+
+    case 'LOAD_HISTORY':
+      if (action.status === 'complete' && action.data.historySize) {
+        return { ...state, historySize: action.data.historySize }
       }
       return state
 

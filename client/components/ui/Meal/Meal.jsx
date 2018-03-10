@@ -179,8 +179,8 @@ export default class Meal extends React.Component {
                       ) : null}
                       {s.editable && (p.user.id === p.meal.creatorId || p.user.id === signup.userId) ? (
                         <span className="icons">
-                          <span className="fa fa-pencil edit" onClick={() => this.edit(signup.id)} />
-                          <span className="fa fa-times cancel" onClick={() => this.cancel(signup.id)} />
+                          <span className="fa fa-pencil edit fakeLink" onClick={() => this.edit(signup.id)} />
+                          <span className="fa fa-times cancel fakeLink" onClick={() => this.cancel(signup.id)} />
                         </span>
                       ) : null}
                     </p>

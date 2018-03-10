@@ -6,6 +6,23 @@
   border: solid 1px @colorg3;
   border-radius: @borderRadius;
 
+  &.emptyMeal {
+    min-height: 200px;
+    background: rgba(0, 0, 0, 0.5);
+
+    .title {
+      letter-spacing: -5px;
+    }
+    .details {
+      height: 150px;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5em;
+      text-align: center;
+      color: white;
+    }
+  }
+
   .moneyFrame {
     margin-left: 5px;
     font-style: italic;

@@ -33,8 +33,21 @@ export const initial_signups = hidden => ({
 export const refresh = version => ({
   type: 'REFRESH',
   status: 'hidden',
+  busyType: 'refresh',
   api: {
     url: `/api/update?version=${version}`,
+    method: 'get',
+  },
+})
+
+export const load_history = ({page = 1, size = 5}) => ({
+  type: 'LOAD_HISTORY',
+  status: 'hidden',
+  busyType: 'history',
+  page,
+  size,
+  api: {
+    url: `/api/history?page=${page}&size=${size}`,
     method: 'get',
   },
 })
@@ -49,9 +62,11 @@ export const set_busy = state => ({
   state,
 })
 
-export const set_hidden_busy = state => ({
+export const set_hidden_busy = (state, {final, busyType}) => ({
   type: 'HIDDEN_BUSY',
   state,
+  final,
+  busyType
 })
 
 // service worker
@@ -469,14 +484,14 @@ export const datefinderStartDeleteDate = (datefinder, date) => ({
   title: 'Mittagsplaner - Terminplaner',
 })
 
-export const datefinderDeleteDate = (id, date) => ({
+export const datefinderDeleteDate = (datefinder, date) => ({
   type: 'DATEFINDER_DELETE_DATE',
   status: 'initialized',
   ...closeDialogOptions,
-  id,
+  datefinder,
   date,
   api: {
-    url: `/api/datefinder/${id}/date`,
+    url: `/api/datefinder/${datefinder}/date`,
     method: 'DELETE',
     body: {
       date,

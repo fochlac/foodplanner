@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import reducers from './reducers.js';
 import { apiMiddleware } from './middleware/api.js';
 import { addActionId } from './middleware/addActionId.js';
@@ -19,14 +19,17 @@ const defaultStore = window.defaultStore ? window.defaultStore : {
     meals: [
     ],
     signups: {
-    }
+    },
+    historyMealMap: {}
 };
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export function configureStore(initialState = {}) {
   const store = createStore(
     reducers,
     initialState,
-    applyMiddleware(addActionId, apiMiddleware, localDb, urlHandler, handleAssync, handleErrors, logMiddleware)
+    composeEnhancers(applyMiddleware(addActionId, apiMiddleware, localDb, urlHandler, handleAssync, handleErrors, logMiddleware))
   )
   return store;
 };

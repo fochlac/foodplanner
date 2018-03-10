@@ -7,13 +7,14 @@ import Dialog from 'UI/Dialog.js'
 import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx'
 import MealOption from 'UI/CreateMealDialog/MealOption.jsx'
 import React from 'react'
+let output
 
 describe('CreateMealDialog', () => {
   test('should render all elements', () => {
     const TEST_USER = { id: 1, name: 'test' },
-      TEST_APP = { dialog: {} },
+      TEST_APP = { dialog: {}, historySize: 5 },
       TEST_MEALS = [],
-      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS} />)
+      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS} load_history={() => output = 'load_history'} />)
 
     expect(wrapper.find('.titlebar').length).toBe(1)
     expect(wrapper.find('.titlebar span.fa-times').length).toBe(1)
@@ -28,24 +29,46 @@ describe('CreateMealDialog', () => {
     expect(wrapper.find('#CreateMealDialog_name')).toHaveLength(1)
     expect(wrapper.find('#CreateMealDialog_description')).toHaveLength(1)
     expect(wrapper.find('#CreateMealDialog_signupLimit')).toHaveLength(1)
+    expect(wrapper.find('.tabList')).toHaveLength(1)
+    expect(wrapper.find('.tabList .active')).toHaveLength(1)
+
+    wrapper.find('.tabList > li').at(1).simulate('click')
+
+    expect(wrapper.find(ImageUploader)).toHaveLength(0)
+    expect(wrapper.find(DayTimePicker)).toHaveLength(0)
+
+    expect(wrapper.find('#CreateMealDialog_name')).toHaveLength(0)
+    expect(wrapper.find('#CreateMealDialog_description')).toHaveLength(0)
+    expect(wrapper.find('#CreateMealDialog_signupLimit')).toHaveLength(0)
+
+    expect(wrapper.find('.tabList .active')).toHaveLength(1)
     expect(wrapper.find('.addOption')).toHaveLength(1)
+    expect(output).toEqual('load_history')
+    output = false
   })
 
   test('should render meal options on add option link click', () => {
     const TEST_USER = { id: 1, name: 'test' },
       TEST_APP = { dialog: {} },
       TEST_MEALS = [],
-      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS} />)
+      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS} historyLoaded={true} load_history={() => output = 'load_history'} />)
+    wrapper.find('.tabList > li').at(1).simulate('click')
     wrapper.find('.addOption').simulate('click')
 
     expect(wrapper.find(MealOption)).toHaveLength(1)
+    expect(output).toEqual(false)
+    wrapper.find('.tabList > li').at(0).simulate('click')
+    expect(wrapper.find('#CreateMealDialog_name')).toHaveLength(1)
+    expect(wrapper.find('#CreateMealDialog_signupLimit')).toHaveLength(1)
+    expect(wrapper.find('.tabList .active')).toHaveLength(1)
   })
 
   test('should display templates and render them on selection', () => {
     const TEST_USER = { id: 1, name: 'test' },
       TEST_APP = { dialog: {} },
       TEST_MEALS = [{ options: ['', ''], name: 'test', id: 0 }, { options: ['', '', '', ''], name: 'test2', id: 1 }],
-      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS} />)
+      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={{}} meals={TEST_MEALS} load_history={() => output = 'load_history'} />)
+    wrapper.find('.tabList > li').at(1).simulate('click')
 
     expect(wrapper.find('.templateSelector')).toHaveLength(1)
     expect(wrapper.find('.templateSelector option')).toHaveLength(3)
@@ -90,7 +113,7 @@ describe('CreateMealDialog', () => {
         <CreateMealDialog user={TEST_USER} invalid={true} app={TEST_APP} meals={TEST_MEALS} meal={{}} close_dialog={() => (dialog_closed = true)} />,
       )
 
-    expect(wrapper.find('.addOption')).toHaveLength(0)
+    expect(wrapper.find('.tabList')).toHaveLength(0)
     expect(wrapper.find('.body p')).toHaveLength(1)
   })
 
@@ -142,6 +165,7 @@ describe('CreateMealDialog', () => {
             deadline: new Date(),
             options: [],
             name: 'test',
+            activeTab: 1
           },
         },
       },
@@ -170,8 +194,8 @@ describe('CreateMealDialog', () => {
         datefinder: '{}',
         description: 'testdescription',
         signupLimit: 3,
-        deadline: Date.now() + 10000000,
-        time: Date.now() + 20000000,
+        deadline: Date.now() + 1000000000,
+        time: Date.now() + 2000000000,
         options: JSON.stringify([]),
       },
       wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={{}} create_meal={output => (create_meal = output)} />)
@@ -189,10 +213,19 @@ describe('CreateMealDialog', () => {
       .find(DayTimePicker)
       .at(1)
       .prop('onChange')
+    const now = Date.now()
+
+    changeDead(new Date(TEST_MEAL.deadline))
+    wrapper.update()
+    expect(wrapper.find(DayTimePicker).at(1).prop('time')).toEqual(new Date(TEST_MEAL.deadline))
+
+    changeTime(new Date(now))
+    wrapper.update()
+    expect(wrapper.find(DayTimePicker).at(0).prop('time')).toEqual(new Date(now))
+    expect(wrapper.find(DayTimePicker).at(1).prop('time')).toEqual(new Date(now))
 
     changeDead(new Date(TEST_MEAL.deadline))
     changeTime(new Date(TEST_MEAL.time))
-
     wrapper.find('button.submit').simulate('click')
 
     expect(create_meal.get()).toEqual(TEST_MEAL)
@@ -218,8 +251,9 @@ describe('CreateMealDialog', () => {
         signups: [],
       },
       wrapper = shallow(
-        <CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={TEST_MEAL} edit={true} edit_meal={(id, output) => (create_meal = output)} />,
+        <CreateMealDialog user={TEST_USER} app={TEST_APP} meals={TEST_MEALS} meal={TEST_MEAL} edit={true} edit_meal={(id, output) => (create_meal = output)} historyLoaded={true} />,
       )
+    wrapper.find('.tabList > li').at(1).simulate('click')
 
     wrapper.find('.addOption').simulate('click')
 
@@ -289,13 +323,15 @@ describe('CreateMealDialog', () => {
       },
       deadline = new Date(TEST_MEAL.deadline),
       time = new Date(TEST_MEAL.time),
-      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={TEST_MEAL} edit={true} meals={TEST_MEALS} />)
+      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={TEST_MEAL} edit={true} meals={TEST_MEALS} historyLoaded={true} />)
 
-    expect(wrapper.find(MealOption)).toHaveLength(2)
 
     expect(wrapper.find('#CreateMealDialog_name').prop('defaultValue')).toBe(TEST_MEAL.name)
     expect(wrapper.find('#CreateMealDialog_description').prop('defaultValue')).toBe(TEST_MEAL.description)
     expect(wrapper.find('#CreateMealDialog_signupLimit').prop('defaultValue')).toBe(TEST_MEAL.signupLimit)
+    wrapper.find('.tabList > li').at(1).simulate('click')
+    expect(wrapper.find(MealOption)).toHaveLength(2)
+
     expect(wrapper.find('.templateSelector')).toHaveLength(0)
     expect(wrapper.find('.addOption')).toHaveLength(1)
   })
@@ -319,7 +355,8 @@ describe('CreateMealDialog', () => {
       },
       deadline = new Date(TEST_MEAL.deadline),
       time = new Date(TEST_MEAL.time),
-      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={TEST_MEAL} edit={true} meals={TEST_MEALS} />)
+      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={TEST_MEAL} edit={true} meals={TEST_MEALS} historyLoaded={true} />)
+    wrapper.find('.tabList > li').at(1).simulate('click')
 
     expect(wrapper.find('.addOption')).toHaveLength(1)
     expect(wrapper.find('.templateSelector')).toHaveLength(1)
@@ -344,7 +381,8 @@ describe('CreateMealDialog', () => {
       },
       deadline = new Date(TEST_MEAL.deadline),
       time = new Date(TEST_MEAL.time),
-      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={TEST_MEAL} edit={true} meals={TEST_MEALS} />)
+      wrapper = shallow(<CreateMealDialog user={TEST_USER} app={TEST_APP} meal={TEST_MEAL} edit={true} meals={TEST_MEALS} historyLoaded={true} />)
+    wrapper.find('.tabList > li').at(1).simulate('click')
 
     expect(wrapper.find('.addOption')).toHaveLength(0)
     expect(wrapper.find('.templateSelector')).toHaveLength(0)

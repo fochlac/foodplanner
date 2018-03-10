@@ -62,6 +62,8 @@ describe('app-reducer', () => {
       errors: {},
       busy: false,
       hiddenBusy: false,
+      busyList: [],
+      offline: false,
     })
 
     expect(
@@ -76,6 +78,8 @@ describe('app-reducer', () => {
       errors: {},
       busy: false,
       hiddenBusy: false,
+      busyList: [],
+      offline: false,
     })
   })
 
@@ -228,18 +232,34 @@ describe('app-reducer', () => {
   })
 
   test('HIDDEN_BUSY', () => {
-    const action = {
+    let action = {
         type: 'HIDDEN_BUSY',
-        state: 'complete',
+        state: true,
       },
       initialState = {
         test: '1231',
       },
       cleanState = {
         test: '1231',
-        hiddenBusy: 'complete',
+        hiddenBusy: true,
+        busyList: [],
       }
 
+    expect(app(initialState, action)).toEqual(cleanState)
+
+    action.busyType = 'test'
+    cleanState.busyList = ['test']
+
+    expect(app(initialState, action)).toEqual(cleanState)
+
+    action.state = false
+    cleanState.busyList = []
+    initialState.busyList = ['test']
+    initialState.hiddenBusy = true
+    expect(app(initialState, action)).toEqual(cleanState)
+
+    cleanState.hiddenBusy = false
+    action.final = true
     expect(app(initialState, action)).toEqual(cleanState)
   })
 
@@ -357,22 +377,26 @@ describe('app-reducer', () => {
       status: 'complete',
       data: {
         version: 10,
+        historySize: 8
       },
     }
 
     expect(app({}, action)).toEqual({
       dataversion: 10,
+      historySize: 8
     })
 
     expect(
       app(
         {
           dataversion: 9,
+          historySize: 5,
         },
         action,
       ),
     ).toEqual({
       dataversion: 10,
+      historySize: 8
     })
 
     action.status = false
@@ -392,6 +416,75 @@ describe('app-reducer', () => {
       errors: {
         1: 'asd',
       },
+    })
+  })
+
+  test('LOAD_HISTORY', () => {
+    const action = {
+      type: 'LOAD_HISTORY',
+      status: 'complete',
+      data: {
+        historySize: 8
+      },
+    }
+
+    expect(app({}, action)).toEqual({
+      historySize: 8
+    })
+
+    expect(
+      app(
+        {
+          dataversion: 9,
+          historySize: 5,
+        },
+        action,
+      ),
+    ).toEqual({
+      dataversion: 9,
+      historySize: 8
+    })
+
+    action.status = false
+
+    expect(
+      app(
+        {
+          test: '123',
+          errors: {
+            1: 'asd',
+          },
+        },
+        action,
+      ),
+    ).toEqual({
+      test: '123',
+      errors: {
+        1: 'asd',
+      },
+    })
+  })
+
+  test('default', () => {
+    const action = {
+      type: 'asdawd',
+      status: 'complete',
+      id: 1,
+    }
+
+    expect(
+      app(
+        {
+          1: '12312534',
+          2: '12312534',
+          3: '12312534',
+        },
+        action,
+      ),
+    ).toEqual({
+      1: '12312534',
+      2: '12312534',
+      3: '12312534',
     })
   })
 })

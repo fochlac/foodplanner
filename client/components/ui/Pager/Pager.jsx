@@ -52,7 +52,9 @@ export default class Pager extends React.Component {
   }
 
   setPage(page) {
-    this.setState({page});
+    this.setState({page}, () => {
+      typeof this.props.onChange === 'function' && this.props.onChange({page})
+    });
   }
 
   renderPager() {

@@ -27,6 +27,7 @@ describe('DefaultPage', () => {
 
     window.addEventListener = (type, fn) => (output = { type: 'addListener', func: fn })
     window.removeEventListener = () => (output = 'removeListener')
+    window.document.activeElement.scrollIntoView = () => output = 'test'
 
     const wrapper = shallow(
       <DefaultPage {...options}>

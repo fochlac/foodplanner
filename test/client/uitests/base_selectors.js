@@ -61,6 +61,8 @@ export const S = {
     image: By.css('.createMeal .imageContainer img'),
     time: By.css('.createMeal .time input'),
     deadline: By.css('.createMeal .deadline input'),
+    tab1: By.css('.tabList .tab1'),
+    tab2: By.css('.tabList .tab2'),
     deadlineTime: By.css('.createMeal .deadline .timePicker'),
     daypicker: By.className('DayPicker'),
     day: id => By.xpath(`//div[contains(@class, 'DayPicker-Day') and contains(normalize-space(string(self::div)), '${id}')]`),

@@ -6,7 +6,7 @@ const routes = require('express').Router(),
   datefinder = require('./datefinder'),
   user = require('./user'),
   github = require('./github'),
-  controller = require(process.env.FOOD_HOME + 'router/controller/update'),
+  controller = require(process.env.FOOD_HOME + 'router/controller/index'),
   error = require(process.env.FOOD_HOME + 'modules/error')
 
 routes.use('/github', github)
@@ -22,6 +22,16 @@ routes.get(
   ),
   controller.update,
 )
+
+routes.get('/history',
+error.router.validate(
+  'query',
+  {
+    page: /^([0-9]{0,100})$/,
+    size: /^([0-9]{0,100})$/,
+  },
+  {hideError: false},
+), controller.history)
 
 routes.use('/signups', signups)
 routes.use('/meals', meals)
