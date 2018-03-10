@@ -67,7 +67,7 @@ export default class Dashboard extends React.Component {
     let mealList
 
     if (this.state.filter === 'meals') {
-      mealList = this.props.meals.filter(meal => meal.time > startOfDay)
+      mealList = this.props.meals.filter(meal => meal.time > startOfDay).sort((a, b) => a.time - b.time)
     } else {
       mealList = this.props.oldMealIds.map(id => this.props.meals.find(meal => meal.id === id))
     }
