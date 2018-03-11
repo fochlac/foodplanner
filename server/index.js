@@ -37,7 +37,8 @@ app.use(jwt.checkToken)
 app.use(logger)
 
 // connect router
-app.use('/:instance',
+app.use(
+  '/:instance',
   error.router.validate(
     'params',
     {
@@ -46,10 +47,11 @@ app.use('/:instance',
     { nextOnError: true },
   ),
   (req, res, next) => {
-    req.instance = req.params.instance;
-    next();
+    req.instance = req.params.instance
+    next()
   },
-  router)
+  router,
+)
 
 // if not connected to a route, deliver static content
 app.use('/static/', express.static(process.env.FOOD_CLIENT + ''))
@@ -59,7 +61,8 @@ app.use('/sw.js', express.static(process.env.FOOD_CLIENT + 'sw.js'))
 app.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.json'))
 
 // if no route and no static content, redirect to index
-app.get('/:instance/*',
+app.get(
+  '/:instance/*',
   error.router.validate(
     'params',
     {
@@ -104,6 +107,10 @@ app.get('/:instance/*',
           participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
         }))
 
+        console.log(req.headers.Referer)
+        console.log(req.headers.referer)
+        console.log(req.headers)
+
         log(6, 'server/index.js - sending enriched index.html to user ' + (req.auth ? req.user.id : 'unknown'))
         res.status(200).send(
           file.replace(
@@ -132,7 +139,8 @@ app.get('/:instance/*',
         log(2, 'server/index.js - error adding data to index.html', err)
         res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html')
       })
-  })
+  },
+)
 
 // load scheduler
 scheduler.init()
