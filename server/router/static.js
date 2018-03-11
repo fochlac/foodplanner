@@ -1,6 +1,5 @@
-const staticRouter = require('express').Router(),
-  api = require('./api'),
-  unsubscribe = require('./unsubscribe')
+const express = require('express'),
+  staticRouter = express.Router()
 
 // if not connected to a route, deliver static content
 staticRouter.use('/static/', express.static(process.env.FOOD_CLIENT + ''))

@@ -116,6 +116,9 @@ module.exports = {
         } else if (nextOnError) {
           log(6, 'Invalid request, trying next route')
           next('route')
+        } else if (nextRouterOnError) {
+          log(6, 'Invalid request, trying next router')
+          next('router')
         } else {
           log(4, 'Invalid Request.', payload)
           res.status(400).send(hideError ? { type: 'Invalid_Request_Hidden', data: invalidParams } : { type: 'Invalid_Request', data: invalidParams })
