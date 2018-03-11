@@ -24,13 +24,14 @@ module.exports = {
     })
   },
 
-  getUserAuthByMail: mail => {
+  getUserAuthByMail: (instance, mail) => {
     const query = `
         SELECT authentication.*
         FROM authentication
         RIGHT JOIN users
         ON users.id = authentication.user
-        WHERE users.mail = ${mysql.escape(mail)}`
+        WHERE users.mail = ${mysql.escape(mail)}
+        AND users.instance = ${mysql.escape(instance)}`
 
     log(6, 'getting user auth data')
     return getConnection().then(myDb => {
@@ -51,10 +52,10 @@ module.exports = {
     })
   },
 
-  getUsersByProperty: (prop, val) => {
+  getUsersByProperty: (instance, prop, val) => {
     return getConnection().then(myDb => {
       return new Promise((resolve, reject) =>
-        myDb.query(`select * from users where ${prop} = ${mysql.escape(val)}`, (err, result) => {
+        myDb.query(`select * from users where ${prop} = ${mysql.escape(val)} AND instance = ${instance};`, (err, result) => {
           myDb.release()
           if (err) {
             log(2, 'modules/db/user:getUserByProperty', err)
@@ -92,10 +93,10 @@ module.exports = {
     })
   },
 
-  searchUsersByProperty: (prop, val) => {
+  searchUsersByProperty: (instance, prop, val) => {
     return getConnection().then(myDb => {
       return new Promise((resolve, reject) =>
-        myDb.query(`select * from users where ${prop} like ${mysql.escape(val + '%')}`, (err, result) => {
+        myDb.query(`select * from users where ${prop} like ${mysql.escape(val + '%')} AND instance = ${instance};`, (err, result) => {
           myDb.release()
           if (err) {
             log(2, 'modules/db/user:getUserByProperty', err)
@@ -195,10 +196,12 @@ module.exports = {
 
   createUser: (options, hash, salt) => {
     const query = `INSERT INTO users (
+            instance,
             name,
             mail,
             admin
         ) SELECT
+            ${mysql.escape(options.instance)},
             ${mysql.escape(options.name)},
             ${mysql.escape(options.mail)},
             (CASE WHEN AUTO_INCREMENT = 1 THEN 1 ELSE 0 END)
@@ -266,9 +269,9 @@ module.exports = {
     })
   },
 
-  getAllUsers: () => {
+  getAllUsers: (instance) => {
     return getConnection().then(myDb => {
-      const query = `SELECT * FROM users;`
+      const query = `SELECT * FROM users WHERE instance = ${instance};`
 
       return new Promise((resolve, reject) =>
         myDb.query(query, (err, result) => {

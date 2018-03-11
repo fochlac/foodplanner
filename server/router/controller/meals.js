@@ -95,6 +95,7 @@ module.exports = {
         : Promise.resolve({}))
 
       mealData.datefinder = datefinder.id
+      mealData.instance = req.instance
 
       const mealId = await mealsDB.createMeal(mealData)
       const meal = await mealsDB.getMealById(mealId)
@@ -107,7 +108,7 @@ module.exports = {
       // async calls, not gonna wait for them
       mailer.sendCreationNotice(meal)
       scheduler.scheduleMeal(meal)
-      notification.sendCreationNotice(meal)
+      notification.sendCreationNotice(req.instance, meal)
 
       if (req.file) {
         let imageName = meal.image.split('/')
@@ -206,7 +207,7 @@ module.exports = {
       res.status(200).send(meal)
     } else {
       mealsDB
-        .getAllMeals()
+        .getAllMeals(req.instance)
         .then(meals => {
           mealCache.put('allMeals', meals)
           res.status(200).send(meals)

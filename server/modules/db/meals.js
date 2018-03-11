@@ -314,6 +314,7 @@ module.exports = {
 
   createMeal: options => {
     const query = `INSERT INTO meals (
+                instance,
                 name,
                 description,
                 creator,
@@ -326,6 +327,7 @@ module.exports = {
                 image
             )
             SELECT
+                ${mysql.escape(options.instance)},
                 ${mysql.escape(options.name)},
                 ${mysql.escape(options.description)},
                 ${mysql.escape(options.creator)},
@@ -449,13 +451,14 @@ module.exports = {
       })
   },
 
-  getAllMeals: () => getFullMealByProperty('id', 'meals.id'),
+  getAllMeals: (instance) => getFullMealByProperty('instance', instance),
 
   getUnsignedUsersByProp: (mealId, prop, val) => {
     return getConnection().then(myDb => {
       const query = `
                 SELECT * FROM users
-                WHERE NOT users.id IN (
+                WHERE instance = (SELECT instance FROM meals WHERE mealId = ${mealId})
+                AND NOT users.id IN (
                 SELECT users.id FROM signups
                 LEFT JOIN meals
                 ON signups.meal = meals.id

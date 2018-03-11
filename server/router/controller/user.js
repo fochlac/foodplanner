@@ -87,7 +87,7 @@ module.exports = {
 
   login: (req, res) => {
     crypto
-      .verifyUser(req.body)
+      .verifyUser(req.instance, req.body)
       .then(id => {
         handleGetUserById(id, res)
       })

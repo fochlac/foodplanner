@@ -23,7 +23,7 @@ function getUserList() {
     return userDB.getAllUsers()
       .then((UL) => {
         userList = UL;
-        userMap = UL.reduce((acc, user) => Object.assign(acc, { [user.id]: user }), {});
+        userMap = UL.reduce((acc, user) => Object.assign(acc, { [`${user.id}_${user.instance}`]: user }), {});
         cache.put('userList', { UL, ULMap: userMap });
         return UL;
       });
@@ -33,7 +33,7 @@ function getUserList() {
 function createJWT(userObject) {
   return new Promise((resolve, reject) => {
     log(6, 'createJWT: Creating JWT for User: ', userObject.name);
-    jwt.sign({ id: userObject.id, admin: userObject.admin }, secretKey, jwtOptions, (err, token) => {
+    jwt.sign({ id: userObject.id, admin: userObject.admin, instance: userObject.instance }, secretKey, jwtOptions, (err, token) => {
       if (err) {
         log(5, 'createJWT: Error creating JWT.', err);
         reject(err);
@@ -79,7 +79,7 @@ function jwtGetUser(token) {
 
   return getUserList()
     .then(() => new Promise((resolve, reject) => {
-      let userObject = userMap[token.id.toString()];
+      let userObject = userMap[`${token.id.toString()}_${token.instance.toString()}`];
 
       if (userObject) {
         log(7, 'jwtGetUser: got user');
@@ -116,7 +116,7 @@ module.exports = {
       if (req.user.admin) {
         next();
       } else {
-        log(4, `User ${req.user.id} tried to access call restricted to role "admin"`);
+        log(4, `User ${req.user.id} from instance ${req.user.instance} tried to access call restricted to role "admin"`);
         res.status(403).send({ type: 'FORBIDDEN' });
       }
     }

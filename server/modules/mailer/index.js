@@ -54,9 +54,9 @@ module.exports = {
                 }
             }).catch(error.promise(4, 'error sending deadline mails'));
     },
-    sendCreationNotice(meal) {
+    sendCreationNotice(instance, meal) {
         log(6, 'sending creation notice for meal ' + meal.name);
-        userDb.getUsersByProperty('creationNotice', 1)
+        userDb.getUsersByProperty(instance, 'creationNotice', 1)
             .then((data) => {
                 if (data.length) {
                     data.forEach(user => mail(meal.datefinder ? creationNotice_df(user, meal) : creationNotice(user, meal), error.checkError(3, 'Error sending creation notice.'), user.name, 'creationNotice'));

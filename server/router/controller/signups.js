@@ -23,15 +23,15 @@ const validateSignupOptions = (meal, options) => {
           log(4, 'invalid option: ', mealOption.count);
           return false;
         }
-        // check for value
-        case 'select':
+      // check for value
+      case 'select':
         if (mealOption.value === undefined || !error.validation.isText(mealOption.value)) {
           log(4, 'invalid option: ', mealOption.value);
           return false;
         }
         break;
-        // check for show option
-        case 'toggle':
+      // check for show option
+      case 'toggle':
         if (mealOption.show === undefined || !error.validation.isBool(mealOption.show)) {
           log(4, 'invalid option: ', mealOption.show);
           return false;
@@ -62,7 +62,7 @@ module.exports = {
         signupCache.delete('allSignups');
         updateCache.deleteAll();
 
-        return signupsDB.createSignUp(req.body);
+        return signupsDB.createSignUp({ ...req.body, instance: req.instance });
       })
       .then((signup) => signupsDB.getSignupByProperty('id', signup.id))
       .then((signup) => {
@@ -125,11 +125,11 @@ module.exports = {
     if (signup) {
       res.status(200).send(signup);
     } else {
-      signupsDB.getAllSignups().then((signups) => {
+      signupsDB.getAllSignups(req.instance).then((signups) => {
         signupCache.put('allSignups', signups);
         res.status(200).send(signups);
       })
-      .catch(error.router.internalError(res));
+        .catch(error.router.internalError(res));
     }
   }
 }

@@ -47,7 +47,7 @@ module.exports = {
     return createTransaction({ dbActions, ident: 'createDatefinder' })
   },
 
-  getDatefinders: async () => {
+  getDatefinders: async (instance) => {
     const query = `
       SELECT
         id, creator, deadline,
@@ -79,7 +79,8 @@ module.exports = {
           WHERE datefinder_dates.datefinder = datefinder.id
           GROUP BY datefinder
         ), ']' ) AS 'dates'
-      FROM datefinder;`
+      FROM datefinder
+      WHERE instance = ${instance};`
 
     return executeQuery(await getConnection(), query, true)
   },
