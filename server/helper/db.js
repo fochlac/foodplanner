@@ -9,7 +9,7 @@ const executeQuery = (db, query, final) => {
         db.release()
       }
       if (err) {
-        log(2, 'modules/db/datefinder:executeQuery - failed executing query', query, err)
+        log(2, 'helper/db:executeQuery - failed executing query', query, err)
         reject({ status: 500, message: 'Unable to execute query.' })
       } else {
         resolve(result)

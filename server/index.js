@@ -69,7 +69,7 @@ app.get('/:instance/*',
   ),
   (req, res) => {
     const startOfDay = new Date().setHours(0, 0, 0)
-    let meals = mealsDB.getAllMeals(req.instance),
+    let meals = mealsDB.getAllMealsByInstance(req.instance),
       signups = signupsDB.getAllSignups(req.instance),
       datefinder = datefinderDB.getDatefinders(req.instance),
       file = new Promise((resolve, reject) => {

@@ -451,7 +451,9 @@ module.exports = {
       })
   },
 
-  getAllMeals: (instance) => getFullMealByProperty('instance', instance),
+  getAllMealsByInstance: (instance) => getFullMealByProperty('instance', instance),
+
+  getAllMeals: () => getFullMealByProperty('id', 'meals.id'),
 
   getUnsignedUsersByProp: (mealId, prop, val) => {
     return getConnection().then(myDb => {

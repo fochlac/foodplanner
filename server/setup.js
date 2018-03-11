@@ -156,7 +156,6 @@ let setup = [
       );`,
       `CREATE TABLE IF NOT EXISTS \`datefinder_dates\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
-        \`instance\`            int             NOT NULL,
         \`datefinder\`          int             NOT NULL,
         \`time\`                bigint          NOT NULL,
 

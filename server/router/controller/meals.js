@@ -207,7 +207,7 @@ module.exports = {
       res.status(200).send(meal)
     } else {
       mealsDB
-        .getAllMeals(req.instance)
+        .getAllMealsByInstance(req.instance)
         .then(meals => {
           mealCache.put('allMeals', meals)
           res.status(200).send(meals)

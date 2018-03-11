@@ -14,7 +14,7 @@ module.exports = {
       if (updateCache.get('update')) {
         res.status(200).send(updateCache.get('update'))
       } else {
-        Promise.all([mealsDB.getAllMeals(req.instance), signupsDB.getAllSignups(req.instance), datefinderDB.getDatefinders(req.instance)])
+        Promise.all([mealsDB.getAllMealsByInstance(req.instance), signupsDB.getAllSignups(req.instance), datefinderDB.getDatefinders(req.instance)])
           .then(([allMeals, signups, datefinderList]) => {
             const startOfDay = new Date().setHours(0, 0, 0)
 
@@ -59,7 +59,7 @@ module.exports = {
     if (updateCache.get(`history-${size}_${page}`)) {
       res.status(200).send(updateCache.get(`history-${size}_${page}`))
     } else {
-      Promise.all([mealsDB.getAllMeals(req.instance), signupsDB.getAllSignups(req.instance), datefinderDB.getDatefinders(req.instance)])
+      Promise.all([mealsDB.getAllMealsByInstance(req.instance), signupsDB.getAllSignups(req.instance), datefinderDB.getDatefinders(req.instance)])
         .then(([meals, signups, datefinderList]) => {
           const startOfDay = new Date().setHours(0, 0, 0)
 
