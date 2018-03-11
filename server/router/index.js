@@ -7,8 +7,7 @@ const routes = require('express').Router(),
   xssFilter = require('x-xss-protection'),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   timestamp = require(process.env.FOOD_HOME + 'middleware/timestamp'),
-  logger = require(process.env.FOOD_HOME + 'middleware/logger'),
-  error = require(process.env.FOOD_HOME + 'modules/error')
+  logger = require(process.env.FOOD_HOME + 'middleware/logger')
 
 routes.use(bodyparser.json())
 routes.use(bodyparser.urlencoded({ extended: true }))
@@ -18,21 +17,7 @@ routes.use(timestamp)
 routes.use(jwt.checkToken)
 routes.use(logger)
 
-routes.use(
-  '/:instance',
-  error.router.validate(
-    'params',
-    {
-      instance: /^[0-9]{1,9}$/,
-    },
-    { nextRouterOnError: true },
-  ),
-  (req, res, next) => {
-    req.instance = req.params.instance
-    next()
-  },
-  instance,
-)
+routes.use(instance)
 
 // fallback for direct usage without subdomain
 routes.get('/unsubscribe', unsubscribe)

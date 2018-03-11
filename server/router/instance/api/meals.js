@@ -4,15 +4,15 @@ const meals = require('express').Router(),
   mailController = require(process.env.FOOD_HOME + 'router/controller/mail'),
   image = require(process.env.FOOD_HOME + 'middleware/singleImage'),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
-  error = require(process.env.FOOD_HOME + 'modules/error')
+  validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
 meals.post(
   '/:id/lock',
   jwt.requireAuthentication,
-  error.router.validate('params', {
+  validate('params', {
     id: /^[0-9]{1,9}$/,
   }),
-  error.router.validate('body', {
+  validate('body', {
     prices: 'array',
   }),
   paymentController.lockMeal,
@@ -21,10 +21,10 @@ meals.post(
 meals.post(
   '/:id/prices',
   jwt.requireAuthentication,
-  error.router.validate('params', {
+  validate('params', {
     id: /^[0-9]{1,9}$/,
   }),
-  error.router.validate('body', {
+  validate('body', {
     prices: 'array',
   }),
   paymentController.savePrices,
@@ -36,10 +36,10 @@ meals.put(
   '/:id',
   image.single('imageData'),
   jwt.requireAuthentication,
-  error.router.validate('params', {
+  validate('params', {
     id: /^[0-9]{1,9}$/,
   }),
-  error.router.validate('body', {
+  validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
     description: 'utf8',
     time: /^[0-9]{1,15}$/,
@@ -53,7 +53,7 @@ meals.put(
 meals.delete(
   '/:id',
   jwt.requireAuthentication,
-  error.router.validate('params', {
+  validate('params', {
     id: /^[0-9]{1,9}$/,
   }),
   mealController.deleteMeal,
@@ -63,7 +63,7 @@ meals.post(
   '/',
   image.single('imageData'),
   jwt.requireAuthentication,
-  error.router.validate('body', {
+  validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,70}$/,
     creator: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,70}$/,
     creatorId: /^[0-9]{1,14}$/,
@@ -80,7 +80,7 @@ meals.post(
 meals.post(
   '/:id/mail',
   jwt.requireAdmin,
-  error.router.validate('params', {
+  validate('params', {
     id: /^[0-9]{1,9}$/,
   }),
   mailController.resendCreationNotice,

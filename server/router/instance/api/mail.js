@@ -1,11 +1,11 @@
 const mail = require('express').Router(),
   mailController = require(process.env.FOOD_HOME + 'router/controller/mail'),
-  error = require(process.env.FOOD_HOME + 'modules/error'),
-  jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt')
+  jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
+  validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
 mail.get(
   '/search',
-  error.router.validate('query', {
+  validate('query', {
     email: /^[_A-Za-z0-9!#$%&'*+-/=?^_`{|}~.\s@]{5,100}$/,
   }),
   mailController.findMail,
@@ -14,7 +14,7 @@ mail.get(
 mail.post(
   '/invite',
   jwt.requireAdmin,
-  error.router.validate('body', {
+  validate('body', {
     mail: 'array',
   }),
   mailController.sendInvitation,

@@ -8,13 +8,13 @@ const routes = require('express').Router(),
   github = require('./github'),
   update = require(process.env.FOOD_HOME + 'router/controller/update'),
   history = require(process.env.FOOD_HOME + 'router/controller/history'),
-  error = require(process.env.FOOD_HOME + 'modules/error')
+  validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
 routes.use('/github', github)
 
 routes.get(
   '/update',
-  error.router.validate(
+  validate(
     'query',
     {
       version: /^([0-9]{0,100}|undefined)$/,
@@ -26,7 +26,7 @@ routes.get(
 
 routes.get(
   '/history',
-  error.router.validate('query', {
+  validate('query', {
     page: /^([0-9]{0,100})$/,
     size: /^([0-9]{0,100})$/,
   }),
