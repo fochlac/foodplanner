@@ -114,6 +114,7 @@ module.exports = {
         if (valid) {
           next()
         } else if (nextOnError) {
+          log(6, 'Invalid request, trying next route')
           next('route')
         } else {
           log(4, 'Invalid Request.', payload)
