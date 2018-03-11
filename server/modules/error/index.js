@@ -71,7 +71,7 @@ module.exports = {
     },
 
     validate: (type, matches, additionalOptions) => {
-      const { hideError = false, nextOnError = false } = additionalOptions || {}
+      const { hideError = false, nextOnError = false, nextRouterOnError = false } = additionalOptions || {}
       return (req, res, next) => {
         let param,
           valid = true,

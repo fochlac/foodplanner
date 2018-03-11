@@ -36,6 +36,6 @@ routes.use(
 
 // fallback for direct usage without subdomain
 routes.get('/unsubscribe', unsubscribe)
-routes.use('/', staticRouter)
+routes.use(staticRouter)
 
 module.exports = routes

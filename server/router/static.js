@@ -8,4 +8,8 @@ staticRouter.use('/static/', express.static(process.env.FOOD_CLIENT + ''))
 staticRouter.use('/sw.js', express.static(process.env.FOOD_CLIENT + 'sw.js'))
 staticRouter.use('/manifest.json', express.static(process.env.FOOD_CLIENT + 'manifest.json'))
 
+staticRouter.get('*', (req, res) => {
+  res.send('hallo')
+})
+
 module.exports = staticRouter
