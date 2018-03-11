@@ -24,7 +24,7 @@ instance.use(
   instanceRouter,
 )
 
-instanceRouter.get('/api', api)
+instanceRouter.use('/api', api)
 instanceRouter.get('/unsubscribe', unsubscribe)
 instanceRouter.use(staticRouter)
 instanceRouter.get('*', index)

@@ -36,7 +36,7 @@ export const apiMiddleware = store => next => action => {
       }
     }
 
-    fetch(instance.subdomain ? o.url : `/${instance.id}/${o.url}`, opt)
+    fetch(instance.subdomain ? o.url : `/${instance.id}${o.url}`, opt)
       .then(res => {
         action.timeDiff = Date.now() - +res.headers.get('timestamp')
         if (res.status >= 400) {

@@ -55,7 +55,7 @@ module.exports = (req, res) => {
                           id: 1,
                           domain: 'food-dev.fochlac.com',
                           language: 'de-DE',
-                          subdomain: false
+                          subdomain: ${req.path !== req.originalUrl}
                         },
                         historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
