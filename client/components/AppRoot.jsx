@@ -59,7 +59,7 @@ class App extends React.Component {
             )}
           />
           <Route
-            path="/"
+            path={["/", "/" + state.instance.id + '/']}
             exact
             render={() => (
               <DefaultPage dialog={this.props.app.dialog}>
@@ -69,7 +69,7 @@ class App extends React.Component {
           />
           {history.state && history.state.app ? null : <Redirect to="/" />}
           <Route
-            path="/"
+            path={["/", "/" + state.instance.id + '/']}
             render={() => (
               <DefaultPage dialog={this.props.app.dialog}>
                 <Dashboard />
@@ -85,6 +85,7 @@ class App extends React.Component {
 const mapStateToProps = (state, ownProps) => ({
   user: state.user,
   app: state.app,
+  instance: state.instance,
 })
 
 export default connect(mapStateToProps, { initial_meals, initial_user, connect_serviceworker, convert_postmessage, apply_history })(App)

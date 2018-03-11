@@ -110,6 +110,12 @@ app.get('/:instance/*',
             '<script>/**DEFAULTSTORE**/</script>',
             `<script>
                     window.defaultStore = {
+                        instance: {
+                          name: 'Mittagsplaner',
+                          id: 1,
+                          domain: 'food-dev.fochlac.com',
+                          language: 'de-DE',
+                        },
                         historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
                         app:{dialog:'', errors:{}, dataversion: ${version()}, historySize: ${allMeals.length - meals.length}},
