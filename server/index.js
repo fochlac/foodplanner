@@ -115,6 +115,7 @@ app.get('/:instance/*',
                           id: 1,
                           domain: 'food-dev.fochlac.com',
                           language: 'de-DE',
+                          subdomain: false
                         },
                         historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},

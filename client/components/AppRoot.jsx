@@ -47,31 +47,32 @@ class App extends React.Component {
   }
 
   render() {
+    const {instance, user, app} = this.props
     return (
       <Router>
         <Switch>
           <Route
             path="/unsubscribe"
             render={({ location }) => (
-              <DefaultPage dialog={Object.assign({ type: 'UNSUBSCRIBE', location: location, user: this.props.user }, this.props.app.dialog)}>
+              <DefaultPage dialog={Object.assign({ type: 'UNSUBSCRIBE', location: location, user: user }, app.dialog)}>
                 <Dashboard />
               </DefaultPage>
             )}
           />
           <Route
-            path={["/", "/" + state.instance.id + '/']}
+            path={["/", "/" + instance.id + '/']}
             exact
             render={() => (
-              <DefaultPage dialog={this.props.app.dialog}>
+              <DefaultPage dialog={app.dialog}>
                 <Dashboard />
               </DefaultPage>
             )}
           />
-          {history.state && history.state.app ? null : <Redirect to="/" />}
+          {history.state && history.state.app ? null : <Redirect to={instance.subdomain ? "/" : `/${instance.id}/`} />}
           <Route
-            path={["/", "/" + state.instance.id + '/']}
+            path={["/", `/${instance.id}/`]}
             render={() => (
-              <DefaultPage dialog={this.props.app.dialog}>
+              <DefaultPage dialog={app.dialog}>
                 <Dashboard />
               </DefaultPage>
             )}
