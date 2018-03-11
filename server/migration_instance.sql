@@ -8,3 +8,5 @@ ALTER TABLE signups ADD `instance` int NOT NULL;
 UPDATE signups SET instance = 1;
 ALTER TABLE authentication ADD `instance` int NOT NULL;
 UPDATE authentication SET instance = 1;
+ALTER TABLE datefinder ADD `instance` int NOT NULL;
+UPDATE datefinder SET instance = 1;
