@@ -76,6 +76,7 @@ module.exports = {
             ON signups.userId = users.id
             AND signups.meal = ${mealId}
             WHERE signups.userId IS NULL
+            AND users.instance = (SELECT instance FROM meals WHERE mealId = ${mealId})
             AND users.${prop} = ${mysql.escape(val)};`
 
     return getConnection().then(myDb => {
@@ -269,9 +270,9 @@ module.exports = {
     })
   },
 
-  getAllUsers: (instance) => {
+  getAllUsers: () => {
     return getConnection().then(myDb => {
-      const query = `SELECT * FROM users WHERE instance = ${instance};`
+      const query = `SELECT * FROM users;`
 
       return new Promise((resolve, reject) =>
         myDb.query(query, (err, result) => {
