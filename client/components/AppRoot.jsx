@@ -47,7 +47,7 @@ class App extends React.Component {
   }
 
   render() {
-    const {instance, user, app} = this.props
+    const { instance, user, app } = this.props
     return (
       <Router>
         <Switch>
@@ -60,7 +60,7 @@ class App extends React.Component {
             )}
           />
           <Route
-            path={["/", "/" + instance.id + '/']}
+            path={instance.subdomain ? '/' : `/${instance.id}/`}
             exact
             render={() => (
               <DefaultPage dialog={app.dialog}>
@@ -68,9 +68,9 @@ class App extends React.Component {
               </DefaultPage>
             )}
           />
-          {history.state && history.state.app ? null : <Redirect to={instance.subdomain ? "/" : `/${instance.id}/`} />}
+          {history.state && history.state.app ? null : <Redirect to={instance.subdomain ? '/' : `/${instance.id}/`} />}
           <Route
-            path={["/", `/${instance.id}/`]}
+            path="/"
             render={() => (
               <DefaultPage dialog={app.dialog}>
                 <Dashboard />

@@ -1,53 +1,53 @@
-import './Topbar.less';
+import './Topbar.less'
 
-import { Link } from 'react-router-dom';
-import React from 'react';
+import { Link } from 'react-router-dom'
+import React from 'react'
 
 export default class Topbar extends React.Component {
   constructor(props) {
-    super();
+    super()
   }
 
   render() {
+    const { instance, app, user, create_meal_dialog, create_settings_dialog, sign_out, start_sign_in } = this.props
+
     return (
       <div className="topbar">
         <div className="spacer">
-          <span className="fa fa-cutlery fa-lg"></span>
-          <h3 className="pointer" onClick={() => window.location.assign(window.location.origin)}>Mittagsplaner</h3>
+          <span className="fa fa-cutlery fa-lg" />
+          <h3 className="pointer" onClick={() => window.location.assign(instance.root)}>
+            {instance.name}
+          </h3>
           <ul className="quicklinks">
-            {
-              (this.props.app.hiddenBusy && this.props.app.dialog === '')
-              ? <li>
-                  <span className="fa fa-refresh fa-spin fa-lg"></span>
+            {app.hiddenBusy && app.dialog === '' ? (
+              <li>
+                <span className="fa fa-refresh fa-spin fa-lg" />
               </li>
-              : null
-            }
-            <li onClick={this.props.create_settings_dialog.bind(this)}>
-                <span className="symbolExplanation">Einstellungen</span>
-                <span className="fa fa-cog fa-lg" title="Einstellungen"></span>
+            ) : null}
+            <li onClick={create_settings_dialog.bind(this)}>
+              <span className="symbolExplanation">Einstellungen</span>
+              <span className="fa fa-cog fa-lg" title="Einstellungen" />
             </li>
-            {
-              this.props.user.id
-              ? <li onClick={this.props.create_meal_dialog.bind(this)}>
-                  <span className="symbolExplanation">Termin anlegen</span>
-                  <span className="fa fa-plus fa-lg" title="Termin anlegen"></span>
+            {user.id ? (
+              <li onClick={create_meal_dialog.bind(this)}>
+                <span className="symbolExplanation">Termin anlegen</span>
+                <span className="fa fa-plus fa-lg" title="Termin anlegen" />
               </li>
-              : null
-            }
-            {
-              this.props.user.id
-              ? <li onClick={this.props.sign_out.bind(this, this.props.user.id)}>
-                  <span className="symbolExplanation">Abmelden</span>
-                  <span className="fa fa-sign-out fa-lg" title="Abmelden"></span>
+            ) : null}
+            {user.id ? (
+              <li onClick={sign_out.bind(this, user.id)}>
+                <span className="symbolExplanation">Abmelden</span>
+                <span className="fa fa-sign-out fa-lg" title="Abmelden" />
               </li>
-                : <li onClick={this.props.start_sign_in.bind(this)}>
+            ) : (
+              <li onClick={start_sign_in.bind(this)}>
                 <span className="symbolExplanation">Anmelden</span>
-                  <span className="fa fa-sign-in fa-flip-horizontal fa-lg" title="Anmelden"></span>
+                <span className="fa fa-sign-in fa-flip-horizontal fa-lg" title="Anmelden" />
               </li>
-            }
+            )}
           </ul>
         </div>
       </div>
-    );
+    )
   }
 }

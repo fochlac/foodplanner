@@ -44,6 +44,8 @@ module.exports = (req, res) => {
         participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
       }))
 
+      const subdomain = req.headers.proxied && req.headers.proxy_url !== req.originalUrl
+
       log(6, 'server/index.js - sending enriched index.html to user ' + (req.auth ? req.user.id : 'unknown'))
       res.status(200).send(
         file.replace(
@@ -53,11 +55,13 @@ module.exports = (req, res) => {
                         instance: {
                           name: 'Mittagsplaner',
                           id: ${req.instance},
-                          domain: '${
-                            req.headers.proxied ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + req.headers.proxy_url : req.host + req.url
+                          root: '${
+                            req.headers.proxied
+                              ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + (subdomain ? '/' : '/' + req.instance + '/')
+                              : req.host + '/' + req.instance + '/'
                           }',
                           language: 'de-DE',
-                          subdomain: ${req.headers.proxied && req.headers.proxy_url !== req.originalUrl}
+                          subdomain: ${subdomain}
                         },
                         historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
