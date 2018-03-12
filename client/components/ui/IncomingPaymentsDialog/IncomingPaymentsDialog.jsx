@@ -18,6 +18,10 @@ export default class IncomingPaymentsDialog extends React.Component {
     this.cancel = close_dialog.bind(this)
   }
 
+  componentDidMount() {
+    !this.props.historyLoaded && this.props.load_history({size: 20, busy: true})
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     if (!dEqual(nextProps.meal, this.props.meal) || !dEqual(nextProps.signups, this.props.signups)) {
       return true

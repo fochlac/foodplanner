@@ -40,9 +40,9 @@ export const refresh = version => ({
   },
 })
 
-export const load_history = ({page = 1, size = 5}) => ({
+export const load_history = ({page = 1, size = 5, busy = false}) => ({
   type: 'LOAD_HISTORY',
-  status: 'hidden',
+  status: busy ? 'initialized' : 'hidden',
   busyType: 'history',
   page,
   size,
