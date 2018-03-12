@@ -15,7 +15,7 @@ instance.use(
     {
       instance: /^[0-9]{1,9}$/,
     },
-    { nextRouterOnError: true },
+    { nextRouterOnError: true, logLevel: 7 },
   ),
   (req, res, next) => {
     req.instance = req.params.instance

@@ -5,14 +5,16 @@ const mysql = require('mysql'),
   { executeQuery, createTransaction } = require(process.env.FOOD_HOME + 'helper/db')
 
 module.exports = {
-  createDatefinder: async ({ creator, deadline, dates }) => {
+  createDatefinder: async (instance, { creator, deadline, dates }) => {
     const datefinder_query = `
         INSERT INTO datefinder (
           creator,
-          deadline
+          deadline,
+          instance
         ) VALUES (
           ${mysql.escape(creator)},
-          ${mysql.escape(deadline)}
+          ${mysql.escape(deadline)},
+          ${mysql.escape(instance)}
         );`,
       dates_query = datefinder => `
         INSERT INTO datefinder_dates (
@@ -47,7 +49,7 @@ module.exports = {
     return createTransaction({ dbActions, ident: 'createDatefinder' })
   },
 
-  getDatefinders: async (instance) => {
+  getDatefinders: async instance => {
     const query = `
       SELECT
         id, creator, deadline,

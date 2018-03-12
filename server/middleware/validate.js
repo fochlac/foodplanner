@@ -5,7 +5,7 @@ const regexp = {
 }
 
 module.exports = (type, matches, additionalOptions) => {
-  const { hideError = false, nextOnError = false, nextRouterOnError = false } = additionalOptions || {}
+  const { hideError = false, nextOnError = false, nextRouterOnError = false, logLevel = 6 } = additionalOptions || {}
 
   return (req, res, next) => {
     let param,
@@ -43,17 +43,17 @@ module.exports = (type, matches, additionalOptions) => {
         valid = validateParam(param, matches[param])
       }
 
-      log(6, `Validating ${param}: '${payload[param]}' against RegExp ${matches[param]}, result ${valid}`)
+      log(logLevel, `Validating ${param}: '${payload[param]}' against RegExp ${matches[param]}, result ${valid}`)
       return valid
     })
 
     if (valid) {
       next()
     } else if (nextOnError) {
-      log(6, 'Invalid request, trying next route')
+      log(logLevel, 'Invalid request, trying next route')
       next('route')
     } else if (nextRouterOnError) {
-      log(6, 'Invalid request, trying next router')
+      log(logLevel, 'Invalid request, trying next router')
       next('router')
     } else {
       log(4, 'Invalid Request.', payload)
