@@ -1,5 +1,9 @@
 const log = require(process.env.FOOD_HOME + 'modules/log')
 
+const regexp = {
+  utf8: /^([\x00-\x7F]|([\xC2-\xDF]|\xE0[\xA0-\xBF]|\xED[\x80-\x9F]|(|[\xE1-\xEC]|[\xEE-\xEF]|\xF0[\x90-\xBF]|\xF4[\x80-\x8F]|[\xF1-\xF3][\x80-\xBF])[\x80-\xBF])[\x80-\xBF])*$/,
+}
+
 module.exports = (type, matches, additionalOptions) => {
   const { hideError = false, nextOnError = false, nextRouterOnError = false } = additionalOptions || {}
 
