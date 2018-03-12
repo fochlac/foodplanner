@@ -144,7 +144,7 @@ let setup = [
         \`salt\`                varchar(150),
 
         PRIMARY KEY (id),
-        UNIQUE KEY \`user\` (\`user\`, \`instance\`)
+        UNIQUE KEY \`user\` (\`user\`)
       );`,
   `CREATE TABLE IF NOT EXISTS \`datefinder\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
