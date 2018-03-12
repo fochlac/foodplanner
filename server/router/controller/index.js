@@ -52,10 +52,12 @@ module.exports = (req, res) => {
                     window.defaultStore = {
                         instance: {
                           name: 'Mittagsplaner',
-                          id: 1,
-                          domain: 'food-dev.fochlac.com',
+                          id: ${req.instance},
+                          domain: '${
+                            req.headers.proxied ? req.headers.proxy_protocoll + '://' + req.headers.proxy_host + req.headers.proxy_url : req.host + req.url
+                          }',
                           language: 'de-DE',
-                          subdomain: ${req.path !== req.originalUrl}
+                          subdomain: ${req.headers.proxied && req.headers.proxy_url !== req.originalUrl}
                         },
                         historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
