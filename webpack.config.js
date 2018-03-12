@@ -3,6 +3,7 @@
 */
 const path = require('path'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
+  webpack = require('webpack'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin'),
   GoogleFontsPlugin = require('google-fonts-webpack-plugin')
@@ -15,9 +16,9 @@ module.exports = {
     publicPath: '/static/',
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /.*(deep-equals|shallow-equals).*\.js$/,
+        test: /.*(deep-equals|shallow-equals|pikaday).*\.js$/,
         loader: 'babel-loader',
       },
       {
@@ -98,6 +99,11 @@ module.exports = {
     },
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.IgnorePlugin(/.*moment.*/),
     new ExtractTextPlugin({
       filename: 'styles.css',
     }),

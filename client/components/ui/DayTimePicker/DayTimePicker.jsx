@@ -1,18 +1,30 @@
-import 'react-day-picker/lib/style.css'
-import './DayTimePicker.less'
-
 import { formatDate, formatTime, round } from 'UTILS/date.js'
+import './DayTimePicker.less'
+import 'pikaday/css/pikaday.css'
 
-import DayPickerInput from 'react-day-picker/DayPickerInput'
+import DatePicker from '@reaktor/react-pikaday-component'
 import React from 'react'
+
+const wording = {
+  german: {
+    previousMonth: 'Letzter Monat',
+    nextMonth: 'Nächster Monat',
+    months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'October', 'November', 'Dezember'],
+    weekdays: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+    weekdaysShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+  },
+  submit: 'Speichern',
+}
+
+const pikaOptions = {
+  enableSelectionDaysInNextAndPreviousMonths: true,
+  firstDay: 1,
+  i18n: wording.german,
+}
 
 const times = Array(48)
   .fill(0)
   .map((item, index) => ('00' + Math.floor(index / 2) + ':' + (index % 2 ? '30' : '00')).slice(-5))
-
-const wording = {
-  submit: 'Speichern',
-}
 
 export default class DayTimePicker extends React.Component {
   constructor(props) {
@@ -28,14 +40,13 @@ export default class DayTimePicker extends React.Component {
 
   componentDidUpdate(oldProps) {
     if (this.props.time !== oldProps.time) {
-      this.setState({time: this.props.time ? new Date(this.props.time) : new Date()})
+      this.setState({ time: this.props.time ? new Date(this.props.time) : new Date() })
     }
   }
 
-  handleDatepicker(date) {
+  handleDatepicker(jsDate) {
     const { onChange } = this.props
     const { time } = this.state
-    var jsDate = date.toDate()
 
     jsDate.setHours(time.getHours())
     jsDate.setMinutes(time.getMinutes())
@@ -62,7 +73,7 @@ export default class DayTimePicker extends React.Component {
     return (
       <div className={(className ? className : '') + ' DayPicker'}>
         {!disabled ? (
-          <DayPickerInput value={formatDate(time)} format="DD.MM.YY" onDayChange={this.handleDatepicker} />
+          <DatePicker value={new Date(time)} format="DD.MM.YY" onChange={this.handleDatepicker} {...pikaOptions} />
         ) : (
           <input type="text" disabled={true} value={formatDate(time)} className="DayPickerInput" />
         )}
