@@ -58,7 +58,7 @@ module.exports = (req, res) => {
                           root: '${
                             req.headers.proxied
                               ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + (subdomain ? '/' : '/' + req.instance + '/')
-                              : req.host + '/' + req.instance + '/'
+                              : req.protocol + '://' + req.headers.host + '/' + req.instance + '/'
                           }',
                           language: 'de-DE',
                           subdomain: ${subdomain}
