@@ -54,7 +54,7 @@ module.exports = (req, res) => {
                           name: 'Mittagsplaner',
                           id: ${req.instance},
                           domain: '${
-                            req.headers.proxied ? req.headers.proxy_protocoll + '://' + req.headers.proxy_host + req.headers.proxy_url : req.host + req.url
+                            req.headers.proxied ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + req.headers.proxy_url : req.host + req.url
                           }',
                           language: 'de-DE',
                           subdomain: ${req.headers.proxied && req.headers.proxy_url !== req.originalUrl}
