@@ -24,13 +24,14 @@ module.exports = {
     })
   },
 
-  getUserAuthByMail: mail => {
+  getUserAuthByMail: (instance, mail) => {
     const query = `
         SELECT authentication.*
         FROM authentication
         RIGHT JOIN users
         ON users.id = authentication.user
-        WHERE users.mail = ${mysql.escape(mail)}`
+        WHERE users.mail = ${mysql.escape(mail)}
+        AND users.instance = ${mysql.escape(instance)}`
 
     log(6, 'getting user auth data')
     return getConnection().then(myDb => {
@@ -51,10 +52,10 @@ module.exports = {
     })
   },
 
-  getUsersByProperty: (prop, val) => {
+  getUsersByProperty: (instance, prop, val) => {
     return getConnection().then(myDb => {
       return new Promise((resolve, reject) =>
-        myDb.query(`select * from users where ${prop} = ${mysql.escape(val)}`, (err, result) => {
+        myDb.query(`select * from users where ${prop} = ${mysql.escape(val)} AND instance = ${instance};`, (err, result) => {
           myDb.release()
           if (err) {
             log(2, 'modules/db/user:getUserByProperty', err)
@@ -75,6 +76,7 @@ module.exports = {
             ON signups.userId = users.id
             AND signups.meal = ${mealId}
             WHERE signups.userId IS NULL
+            AND users.instance = (SELECT instance FROM meals WHERE mealId = ${mealId})
             AND users.${prop} = ${mysql.escape(val)};`
 
     return getConnection().then(myDb => {
@@ -92,10 +94,10 @@ module.exports = {
     })
   },
 
-  searchUsersByProperty: (prop, val) => {
+  searchUsersByProperty: (instance, prop, val) => {
     return getConnection().then(myDb => {
       return new Promise((resolve, reject) =>
-        myDb.query(`select * from users where ${prop} like ${mysql.escape(val + '%')}`, (err, result) => {
+        myDb.query(`select * from users where ${prop} like ${mysql.escape(val + '%')} AND instance = ${instance};`, (err, result) => {
           myDb.release()
           if (err) {
             log(2, 'modules/db/user:getUserByProperty', err)
@@ -195,10 +197,12 @@ module.exports = {
 
   createUser: (options, hash, salt) => {
     const query = `INSERT INTO users (
+            instance,
             name,
             mail,
             admin
         ) SELECT
+            ${mysql.escape(options.instance)},
             ${mysql.escape(options.name)},
             ${mysql.escape(options.mail)},
             (CASE WHEN AUTO_INCREMENT = 1 THEN 1 ELSE 0 END)
@@ -235,6 +239,7 @@ module.exports = {
               deadlineReminder: options.deadlineReminder,
               creationNotice: options.creationNotice,
               balance: 0,
+              instance: options.instance,
               id: result.insertId,
             })
           }

@@ -37,12 +37,14 @@ module.exports = {
         });
     },
 
-    createNotificationId: (options) => {
+    createNotificationId: (instance, options) => {
         const query = `INSERT INTO notificationList (
+                instance
                 type,
                 hash,
                 subscription
             ) VALUES (
+                ${mysql.escape(instance)},
                 ${mysql.escape(options.type)},
                 ${mysql.escape(crypto.createHash('md5').update(JSON.stringify(options.subscription)).digest("hex"))},
                 ${mysql.escape(JSON.stringify(options.subscription))}
@@ -79,10 +81,10 @@ module.exports = {
         });
     },
 
-    getAllNotificationIds: () => {
+    getAllNotificationIds: (instance) => {
         return getConnection()
         .then (myDb => {
-            const query = `SELECT * FROM notificationList;`;
+          const query = `SELECT * FROM notificationList WHERE instance = ${instance};`;
 
             return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();

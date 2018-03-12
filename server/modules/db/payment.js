@@ -7,7 +7,7 @@ executeQuery = (db, query, final) => {
   return new Promise((resolve, reject) =>
     db.query(query, (err, result) => {
       if (final === true) {
-        log(6, 'released connection')
+        log(6, 'modules/db/payment:executeQuery - released connection')
         db.release()
       }
       if (err) {

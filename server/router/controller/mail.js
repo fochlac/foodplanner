@@ -12,7 +12,7 @@ module.exports = {
     if (search) {
       res.status(200).send(search);
     } else {
-      userDB.searchUsersByProperty('mail', decodeURIComponent(req.query.email)).then((result) => {
+      userDB.searchUsersByProperty(req.instance, 'mail', decodeURIComponent(req.query.email)).then((result) => {
         let parsedResult = (result.length === 1) ? result[0] : { error: (result.length ? 'unclear_result' : 'empty_result'), count: result.length };
         cache.put(req.query.email, parsedResult);
         res.status(200).send(parsedResult);
@@ -31,7 +31,7 @@ module.exports = {
   resendCreationNotice: (req, res) => {
     mealsDB.getMealById(req.params.id)
     .then((meal) => {
-      mailer.sendCreationNotice(meal);
+      mailer.sendCreationNotice(req.instance, meal);
       res.status(200).send(meal);
     })
     .catch(error.router.internalError(res));

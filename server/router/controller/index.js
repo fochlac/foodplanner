@@ -1,101 +1,81 @@
-const error = require(process.env.FOOD_HOME + 'modules/error'),
+const fs = require('fs'),
+  sanitize = require(process.env.FOOD_HOME + 'helper/sanitize'),
   mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals'),
   signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
   datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
-  caches = require(process.env.FOOD_HOME + 'modules/cache')
+  error = require(process.env.FOOD_HOME + 'modules/error'),
+  version = require(process.env.FOOD_HOME + 'modules/cache').getVersion
 
-let updateCache = caches.getCache('update')
+module.exports = (req, res) => {
+  const startOfDay = new Date().setHours(0, 0, 0)
+  let meals = mealsDB.getAllMealsByInstance(req.instance),
+    signups = signupsDB.getAllSignups(req.instance),
+    datefinder = datefinderDB.getDatefinders(req.instance),
+    file = new Promise((resolve, reject) => {
+      fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
+        if (err) {
+          reject(err)
+        }
+        resolve(data)
+      })
+    })
 
-module.exports = {
-  update: (req, res) => {
-    if (+caches.getVersion() > +req.query.version) {
-      log(6, 'responding with update', caches.getVersion(), req.query.version)
-      if (updateCache.get('update')) {
-        res.status(200).send(updateCache.get('update'))
-      } else {
-        Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups(), datefinderDB.getDatefinders()])
-          .then(([allMeals, signups, datefinderList]) => {
-            const startOfDay = new Date().setHours(0, 0, 0)
+  Promise.all([file, meals, signups, datefinder])
+    .then(([file, allMeals, allSignups, fullDatefinderList]) => {
+      let meals = allMeals.filter(meal => meal.time > startOfDay).map(meal => {
+        meal.signups = allSignups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
+        return meal
+      })
 
-            meals = allMeals.filter(meal => meal.time > startOfDay)
+      const mealIds = meals.map(meal => meal.id)
+      const mealDatefinders = meals.map(meal => meal.datefinder)
+      const signups = allSignups.filter(signup => mealIds.includes(signup.meal)).reduce((acc, signup) => {
+        acc[signup.id] = signup
+        return acc
+      }, {})
 
-            const mealIds = meals.map(meal => meal.id)
-            const mealDatefinders = meals.map(meal => meal.datefinder)
+      const datefinderList = fullDatefinderList.filter(datefinder => mealDatefinders.includes(datefinder.id)).map(datefinder => ({
+        ...datefinder,
+        dates: JSON.parse(datefinder.dates).map(date => {
+          date.users = date.users ? JSON.parse(date.users) : []
+          return date
+        }),
+        participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
+      }))
 
-            signups = signups.filter(signup => mealIds.includes(signup.meal))
-            datefinderList = datefinderList.filter(datefinder => mealDatefinders.includes(datefinder.id))
+      const subdomain = req.headers.proxied && req.headers.proxy_url !== req.originalUrl
 
-            datefinderList = datefinderList.map(datefinder => ({
-              ...datefinder,
-              dates: JSON.parse(datefinder.dates).map(date => {
-                date.users = date.users ? JSON.parse(date.users) : []
-                return date
-              }),
-              participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
-            }))
-
-            let response = {
-              signups,
-              meals,
-              datefinder: datefinderList,
-              version: caches.getVersion() + 1,
-              historySize: allMeals.length - meals.length
-            }
-
-            updateCache.put('update', response)
-            res.status(200).send(response)
-          })
-          .catch(error.router.internalError(res))
-      }
-    } else {
-      res.status(200).send({})
-    }
-  },
-
-  history: (req, res) => {
-    const { page, size } = req.query
-
-    if (updateCache.get(`history-${size}_${page}`)) {
-      res.status(200).send(updateCache.get(`history-${size}_${page}`))
-    } else {
-      Promise.all([mealsDB.getAllMeals(), signupsDB.getAllSignups(), datefinderDB.getDatefinders()])
-        .then(([meals, signups, datefinderList]) => {
-          const startOfDay = new Date().setHours(0, 0, 0)
-
-          meals = meals.filter(meal => meal.time < startOfDay)
-
-          const historySize = meals.length
-
-          meals = meals.sort((a, b) => b.time - a.time)
-            .slice(size * (page - 1), size * page)
-
-          const mealIds = meals.map(meal => meal.id)
-          const mealDatefinders = meals.map(meal => meal.datefinder)
-
-          signups = signups.filter(signup => mealIds.includes(signup.meal))
-          datefinderList = datefinderList.filter(datefinder => mealDatefinders.includes(datefinder.id))
-
-          datefinderList = datefinderList.map(datefinder => ({
-            ...datefinder,
-            dates: JSON.parse(datefinder.dates).map(date => {
-              date.users = date.users ? JSON.parse(date.users) : []
-              return date
-            }),
-            participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
-          }))
-
-          const response = {
-            signups,
-            meals,
-            datefinder: datefinderList,
-            historySize
-          }
-
-          updateCache.put(`history-${size}_${page}`, response)
-          res.status(200).send(response)
-        })
-        .catch(error.router.internalError(res))
-    }
-  },
+      log(6, 'server/index.js - sending enriched index.html to user ' + (req.auth ? req.user.id : 'unknown'))
+      res.status(200).send(
+        file.replace(
+          '<script>/**DEFAULTSTORE**/</script>',
+          `<script>
+                    window.defaultStore = {
+                        instance: {
+                          name: 'Mittagsplaner',
+                          id: ${req.instance},
+                          root: '${
+                            req.headers.proxied
+                              ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + (subdomain ? '/' : '/' + req.instance + '/')
+                              : req.protocol + '://' + req.headers.host + '/' + req.instance + '/'
+                          }',
+                          language: 'de-DE',
+                          subdomain: ${subdomain}
+                        },
+                        historyMealMap: {},
+                        user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
+                        app:{dialog:'', errors:{}, dataversion: ${version()}, historySize: ${allMeals.length - meals.length}},
+                        meals:${sanitize.html(JSON.stringify(meals))},
+                        signups:${sanitize.html(JSON.stringify(signups))},
+                        datefinder:${sanitize.html(JSON.stringify(datefinderList))}
+                    }
+                </script>`,
+        ),
+      )
+    })
+    .catch(err => {
+      log(2, 'server/index.js - error adding data to index.html', err)
+      res.status(200).sendFile(process.env.FOOD_CLIENT + 'index.html')
+    })
 }

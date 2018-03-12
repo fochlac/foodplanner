@@ -6,32 +6,32 @@ const routes = require('express').Router(),
   datefinder = require('./datefinder'),
   user = require('./user'),
   github = require('./github'),
-  controller = require(process.env.FOOD_HOME + 'router/controller/index'),
-  error = require(process.env.FOOD_HOME + 'modules/error')
+  update = require(process.env.FOOD_HOME + 'router/controller/update'),
+  history = require(process.env.FOOD_HOME + 'router/controller/history'),
+  validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
 routes.use('/github', github)
 
 routes.get(
   '/update',
-  error.router.validate(
+  validate(
     'query',
     {
       version: /^([0-9]{0,100}|undefined)$/,
     },
-    {hideError: true},
+    { hideError: true },
   ),
-  controller.update,
+  update,
 )
 
-routes.get('/history',
-error.router.validate(
-  'query',
-  {
+routes.get(
+  '/history',
+  validate('query', {
     page: /^([0-9]{0,100})$/,
     size: /^([0-9]{0,100})$/,
-  },
-  {hideError: false},
-), controller.history)
+  }),
+  history,
+)
 
 routes.use('/signups', signups)
 routes.use('/meals', meals)

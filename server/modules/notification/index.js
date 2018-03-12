@@ -13,9 +13,9 @@ message.setVapidDetails(
 
 
 module.exports = {
-    sendCreationNotice: (meal) => {
+    sendCreationNotice: (instance, meal) => {
         // get user subscriptions
-        return notificationDB.getAllNotificationIds()
+        return notificationDB.getAllNotificationIds(instance)
             .then(results => {
                 const payload = JSON.stringify({type: 'creationNotice', data: meal}),
                       ttl = meal.deadline - Date.now();

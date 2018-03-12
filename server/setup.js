@@ -49,21 +49,24 @@ let setup = [
         \`balance\`             FLOAT(10, 2)    NOT NULL    DEFAULT 0,
         \`deadlineReminder\`    int                         DEFAULT 0,
         \`creationNotice\`      int                         DEFAULT 0,
+        \`instance\`            int             NOT NULL,
 
         PRIMARY KEY (id),
-        UNIQUE KEY \`mail\` (\`mail\`)
+        UNIQUE KEY \`mail\` (\`mail\`, \`instance\`)
     );`,
   `CREATE TABLE IF NOT EXISTS \`notificationList\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`instance\`            int             NOT NULL,
         \`hash\`                varchar(150)    NOT NULL,
         \`subscription\`        TEXT            NOT NULL,
         \`type\`                varchar(150)    NOT NULL,
 
         PRIMARY KEY (id),
         UNIQUE KEY \`hash\` (\`hash\`)
-    );`,
+      );`,
   `CREATE TABLE IF NOT EXISTS \`meals\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`instance\`            int             NOT NULL,
         \`name\`                varchar(150)    NOT NULL,
         \`description\`         text,
         \`creator\`             varchar(150)    NOT NULL,
@@ -88,7 +91,7 @@ let setup = [
 
         PRIMARY KEY (id),
         UNIQUE KEY \`mealId\` (\`mealId\`, \`name\`)
-    );`,
+      );`,
   `CREATE TABLE IF NOT EXISTS \`mealOptionValues\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`mealId\`              int             NOT NULL,
@@ -98,15 +101,16 @@ let setup = [
 
         PRIMARY KEY (id),
         UNIQUE KEY \`mealOptionId\` (\`mealOptionId\`, \`name\`)
-    );`,
+      );`,
   `CREATE TABLE IF NOT EXISTS \`signups\` (
-        \`id\`      int             NOT NULL    AUTO_INCREMENT,
-        \`name\`    varchar(150)    NOT NULL,
-        \`meal\`    int             NOT NULL,
-        \`comment\` varchar(255)    NOT NULL,
-        \`userId\`  int,
-        \`paid\`    int                         DEFAULT 0,
-        \`price\`   FLOAT(10, 2)    NOT NULL    DEFAULT 0,
+        \`id\`         int             NOT NULL    AUTO_INCREMENT,
+        \`instance\`   int             NOT NULL,
+        \`name\`       varchar(150)    NOT NULL,
+        \`meal\`       int             NOT NULL,
+        \`comment\`    varchar(255)    NOT NULL,
+        \`userId\`     int,
+        \`paid\`       int                         DEFAULT 0,
+        \`price\`      FLOAT(10, 2)    NOT NULL    DEFAULT 0,
 
         PRIMARY KEY (id),
         UNIQUE KEY \`userId\` (\`meal\`, \`userId\`)
@@ -122,7 +126,7 @@ let setup = [
 
         PRIMARY KEY (id),
         UNIQUE KEY \`signupId\` (\`signupId\`, \`mealOptionId\`)
-    );`,
+      );`,
   `CREATE TABLE IF NOT EXISTS \`transactions\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`source\`              int             NOT NULL,
@@ -132,7 +136,7 @@ let setup = [
         \`time\`                bigint          NOT NULL,
 
         PRIMARY KEY (id)
-    );`,
+      );`,
   `CREATE TABLE IF NOT EXISTS \`authentication\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`user\`                int             NOT NULL,
@@ -141,14 +145,15 @@ let setup = [
 
         PRIMARY KEY (id),
         UNIQUE KEY \`user\` (\`user\`)
-    );`,
+      );`,
   `CREATE TABLE IF NOT EXISTS \`datefinder\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`instance\`            int             NOT NULL,
         \`creator\`             int             NOT NULL,
         \`deadline\`            bigint,
 
         PRIMARY KEY (id)
-    );`,
+      );`,
   `CREATE TABLE IF NOT EXISTS \`datefinder_dates\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`datefinder\`          int             NOT NULL,

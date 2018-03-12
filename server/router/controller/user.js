@@ -42,7 +42,7 @@ module.exports = {
   createUser: async (req, res) => {
     crypto
       .createUserHash(req.body.hash)
-      .then(({ hash, salt }) => userDB.createUser(req.body, hash, salt))
+      .then(({ hash, salt }) => userDB.createUser({...req.body, instance: req.instance }, hash, salt))
       .then(user => {
         mailCache.deleteAll()
         userListCache.deleteAll()
@@ -87,7 +87,7 @@ module.exports = {
 
   login: (req, res) => {
     crypto
-      .verifyUser(req.body)
+      .verifyUser(req.instance, req.body)
       .then(id => {
         handleGetUserById(id, res)
       })
