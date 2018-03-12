@@ -239,6 +239,7 @@ module.exports = {
               deadlineReminder: options.deadlineReminder,
               creationNotice: options.creationNotice,
               balance: 0,
+              instance: options.instance,
               id: result.insertId,
             })
           }
