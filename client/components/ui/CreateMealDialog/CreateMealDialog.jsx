@@ -218,7 +218,7 @@ export default class CreateMealDialog extends React.Component {
 
   openTab2() {
     if (!this.props.historyLoaded) {
-      this.props.load_history({ size: 50 })
+      this.props.load_history({ size: 50, busy: true })
     }
     this.setState({ activeTab: 2 })
   }
