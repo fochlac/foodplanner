@@ -34,7 +34,7 @@ var wording = {
   dateType: 'Datumstyp',
   predefDate: 'Festes Datum',
   useDatefinder: 'Datumsumfrage',
-  linkInfo: 'Um Links einzubinden, können Sie Markdown verwenden:' + <br /> + ' [Linkname](http://www.link.de)',
+  linkInfo: ['Um Links einzubinden, können Sie Markdown verwenden:', <br />, ' [Linkname](http://www.link.de)'],
 }
 
 export default class CreateMealDialog extends React.Component {
