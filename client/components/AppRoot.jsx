@@ -3,6 +3,7 @@ import { apply_history, connect_serviceworker, convert_postmessage, initial_meal
 
 import Dashboard from 'PAGES/Dashboard.js'
 import DefaultPage from 'UI/DefaultPage.js'
+import LandingPage from 'PAGES/LandingPage.js'
 import React from 'react'
 import { connect } from 'react-redux'
 import { initDb } from 'UTILS/indexedDb.js'
@@ -59,24 +60,35 @@ class App extends React.Component {
               </DefaultPage>
             )}
           />
-          <Route
-            path={instance.subdomain ? '/' : `/${instance.id}/`}
-            exact
-            render={() => (
-              <DefaultPage dialog={app.dialog}>
-                <Dashboard />
-              </DefaultPage>
-            )}
-          />
-          {history.state && history.state.app ? null : <Redirect to={instance.subdomain ? '/' : `/${instance.id}/`} />}
-          <Route
-            path="/"
-            render={() => (
-              <DefaultPage dialog={app.dialog}>
-                <Dashboard />
-              </DefaultPage>
-            )}
-          />
+          {(() => {
+            switch (instance.page) {
+              case 'instance':
+                return [
+                  <Route
+                    path={instance.subdomain ? '/' : `/${instance.id}/`}
+                    exact
+                    render={() => (
+                      <DefaultPage dialog={app.dialog}>
+                        <Dashboard />
+                      </DefaultPage>
+                    )}
+                  />,
+                  history.state && history.state.app ? null : <Redirect to={instance.subdomain ? '/' : `/${instance.id}/`} />,
+                  <Route
+                    path="/"
+                    render={() => (
+                      <DefaultPage dialog={app.dialog}>
+                        <Dashboard />
+                      </DefaultPage>
+                    )}
+                  />,
+                ]
+                break
+              case 'administration':
+              case 'landing':
+                return <Route path="/" render={() => <LandingPage />} />
+            }
+          })()}
         </Switch>
       </Router>
     )

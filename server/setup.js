@@ -54,6 +54,17 @@ let setup = [
         PRIMARY KEY (id),
         UNIQUE KEY \`mail\` (\`mail\`, \`instance\`)
     );`,
+
+  `CREATE TABLE IF NOT EXISTS \`instances\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`name\`                varchar(150)    NOT NULL,
+        \`address\`             varchar(150)    NOT NULL,
+        \`sprache\`             varchar(150)    NOT NULL,
+        \`titel\`               varchar(150)    NOT NULL,
+
+        PRIMARY KEY (id),
+        UNIQUE KEY \`name\` (\`name\`)
+    );`,
   `CREATE TABLE IF NOT EXISTS \`notificationList\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`instance\`            int             NOT NULL,

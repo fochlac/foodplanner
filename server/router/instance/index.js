@@ -3,7 +3,7 @@ const express = require('express'),
   instanceRouter = express.Router(),
   api = require('./api'),
   unsubscribe = require(process.env.FOOD_HOME + 'router/controller/unsubscribe'),
-  index = require(process.env.FOOD_HOME + 'router/controller/index'),
+  index = require(process.env.FOOD_HOME + 'router/controller/index').index,
   staticRouter = require('../static'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
