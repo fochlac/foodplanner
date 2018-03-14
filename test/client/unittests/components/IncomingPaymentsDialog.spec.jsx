@@ -6,8 +6,19 @@ import React from 'react'
 
 describe('IncomingPaymentsDialog', () => {
   test('should render all elements', () => {
-    const wrapper = shallow(<IncomingPaymentsDialog meals={[]} userId="1" signups={{}} toggle_paid={() => null} close_dialog={() => (dialog_closed = true)} />)
+    let output
+    const wrapper = shallow(
+      <IncomingPaymentsDialog
+        meals={[]}
+        userId="1"
+        signups={{}}
+        toggle_paid={() => null}
+        close_dialog={() => (dialog_closed = true)}
+        load_history={() => (output = true)}
+      />,
+    )
 
+    expect(output).toBe(true)
     expect(wrapper.find('.titlebar').length).toBe(1)
     expect(wrapper.find('.titlebar span.fa-times').length).toBe(1)
     expect(wrapper.find('.body').length).toBe(1)
@@ -29,6 +40,7 @@ describe('IncomingPaymentsDialog', () => {
         }}
         toggle_paid={() => null}
         close_dialog={() => (dialog_closed = true)}
+        load_history={() => null}
       />,
     )
 
@@ -62,6 +74,7 @@ describe('IncomingPaymentsDialog', () => {
           4: { meal: 1, price: 0, paid: 0, id: 4 },
         }}
         toggle_paid={() => null}
+        load_history={() => null}
         close_dialog={() => (dialog_closed = true)}
       />,
     )
@@ -73,7 +86,16 @@ describe('IncomingPaymentsDialog', () => {
   test('should close on close button click', () => {
     let dialog_closed = false
 
-    const wrapper = shallow(<IncomingPaymentsDialog meals={[]} userId="1" signups={{}} toggle_paid={() => null} close_dialog={() => (dialog_closed = true)} />)
+    const wrapper = shallow(
+      <IncomingPaymentsDialog
+        meals={[]}
+        userId="1"
+        signups={{}}
+        toggle_paid={() => null}
+        close_dialog={() => (dialog_closed = true)}
+        load_history={() => null}
+      />,
+    )
     wrapper.find('.titlebar span.fa-times').simulate('click')
 
     expect(dialog_closed).toBe(true)
@@ -82,7 +104,16 @@ describe('IncomingPaymentsDialog', () => {
   test('should close on cancel button click', () => {
     let dialog_closed = false
 
-    const wrapper = shallow(<IncomingPaymentsDialog meals={[]} userId="1" signups={{}} toggle_paid={() => null} close_dialog={() => (dialog_closed = true)} />)
+    const wrapper = shallow(
+      <IncomingPaymentsDialog
+        meals={[]}
+        userId="1"
+        signups={{}}
+        toggle_paid={() => null}
+        close_dialog={() => (dialog_closed = true)}
+        load_history={() => null}
+      />,
+    )
     wrapper.find('.foot button.cancel').simulate('click')
 
     expect(dialog_closed).toBe(true)
