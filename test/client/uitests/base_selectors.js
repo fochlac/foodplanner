@@ -65,8 +65,8 @@ export const S = {
     tab2: By.css('.tabList .tab2'),
     deadlineTime: By.css('.createMeal .deadline .timePicker'),
     daypicker: By.className('DayPicker'),
-    day: id => By.xpath(`//div[contains(@class, 'DayPicker-Day') and contains(normalize-space(string(self::div)), '${id}')]`),
-    today: By.className('DayPicker-Day--today'),
+    day: id => By.css(`.pika-table td[data-day="${id}"]`),
+    today: By.className('is-today'),
     option: By.className('additionalOption'),
     addOpt: By.className('addOption'),
     opt: {
