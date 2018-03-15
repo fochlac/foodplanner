@@ -5,6 +5,7 @@ const express = require('express'),
   unsubscribe = require(process.env.FOOD_HOME + 'router/controller/unsubscribe'),
   index = require(process.env.FOOD_HOME + 'router/controller/index').index,
   staticRouter = require('../static'),
+  instanceMiddleware = require(process.env.FOOD_HOME + 'middleware/instance'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
 // need to add this this additional level in order to be able to skip this block with next('router')
@@ -17,10 +18,7 @@ instance.use(
     },
     { nextRouterOnError: true, logLevel: 7 },
   ),
-  (req, res, next) => {
-    req.instance = req.params.instance
-    next()
-  },
+  instanceMiddleware,
   instanceRouter,
 )
 

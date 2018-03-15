@@ -67,7 +67,8 @@ module.exports = {
                         },
                         historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
-                        app:{dialog: ${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: ${version()}, historySize: ${allMeals.length - meals.length}},
+                        app:{dialog: ${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: ${version()}, historySize: ${allMeals.length -
+              meals.length}},
                         meals:${sanitize.html(JSON.stringify(meals))},
                         signups:${sanitize.html(JSON.stringify(signups))},
                         datefinder:${sanitize.html(JSON.stringify(datefinderList))}
@@ -104,9 +105,9 @@ module.exports = {
                         instance: {
                           name: 'Mittagsplaner',
                           id: ${req.user ? req.user.instance : 0},
-                          root: '${req.headers.proxied
-                            ? req.headers.proxy_protocol + '://' + req.headers.proxy_host
-                            : req.protocol + '://' + req.headers.host}',
+                          root: '${
+                            req.headers.proxied ? req.headers.proxy_protocol + '://' + req.headers.proxy_host : req.protocol + '://' + req.headers.host
+                          }',
                           language: 'de-DE',
                           subdomain: false,
                           subdomainName: '${subdomainName}',

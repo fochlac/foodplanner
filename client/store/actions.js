@@ -549,12 +549,12 @@ export const createInstance = ({ name, mail, hash, address, company, subdomain }
       hash,
       address,
       company,
-      subdomain
+      subdomain,
     },
   },
 })
 
-export const checkDomain = (subdomain) => ({
+export const checkDomain = subdomain => ({
   type: 'CHECK_DOMAIN',
   status: 'hidden',
   busyType: 'domainCheck',
@@ -563,4 +563,3 @@ export const checkDomain = (subdomain) => ({
     method: 'get',
   },
 })
-

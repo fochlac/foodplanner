@@ -61,13 +61,13 @@ let setup = [
         \`company\`             varchar(150)    NOT NULL,
         \`subdomain\`           varchar(150)    NOT NULL,
         \`address\`             varchar(150)    NOT NULL,
-        \`sprache\`             varchar(150)    NOT NULL,
-        \`titel\`               varchar(150)    NOT NULL,
-        \`gmail_user\`          varchar(150)    NOT NULL,
-        \`gmail_pass\`          varchar(150)    NOT NULL,
+        \`sprache\`             varchar(150)    DEFAULT "de-DE",
+        \`titel\`               varchar(150),
+        \`gmail_user\`          varchar(150),
+        \`gmail_pass\`          varchar(150),
 
         PRIMARY KEY (id),
-        UNIQUE KEY \`name\` (\`name\`)
+        UNIQUE KEY \`subdomain\` (\`subdomain\`)
     );`,
   `CREATE TABLE IF NOT EXISTS \`notificationList\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,

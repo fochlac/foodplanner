@@ -75,6 +75,31 @@ export default class LandingPage extends React.Component {
     }
   }
 
+  submit() {
+    const { name, email, company, address, address2, address3, pass, pass2, subdomain } = this.state
+    const valid = userInterface.mail(email) && userInterface.name(name) && (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass)
+    if (!valid) {
+      return
+    }
+
+    generateHash(pass)
+      .then(hash => {
+        this.props.createInstance({
+          name,
+          email,
+          hash,
+          subdomain,
+          company,
+          address: JSON.stringify({
+            1: address,
+            2: address2,
+            3: address3,
+          }),
+        })
+      })
+      .catch(console.log)
+  }
+
   renderInitial() {
     const { subdomain, hiddenBusy, busyList } = this.props.app
     return [
@@ -192,7 +217,7 @@ export default class LandingPage extends React.Component {
               />
             </span>
           ) : null}
-          <button onClick={() => this.setState({ view: 'success' })} disabled={!valid} style={{ width: '100%' }}>
+          <button onClick={() => this.submit()} disabled={!valid} style={{ width: '100%' }}>
             {wording.submit}
           </button>
         </form>
