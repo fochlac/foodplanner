@@ -30,8 +30,8 @@ module.exports = {
         FROM authentication
         RIGHT JOIN users
         ON users.id = authentication.user
-        WHERE users.mail = ${mysql.escape(mail)}
-        AND users.instance = ${mysql.escape(instance)}`
+        WHERE users.mail = ${mysql.escape(mail)}`
+        // AND users.instance = ${mysql.escape(instance)}
 
     log(6, 'getting user auth data')
     return getConnection().then(myDb => {

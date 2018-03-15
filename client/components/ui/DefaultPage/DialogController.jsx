@@ -29,18 +29,7 @@ export default class DialogController extends React.Component {
 
   render() {
     const d = this.props.dialog
-    let search, queries, params, message
-
-    if (d.location) {
-      search = d.location.search.slice(1)
-      queries = search.split('&')
-      params = queries.reduce((acc, param) => {
-        let keyval = param.split('=')
-        acc[decodeURIComponent(keyval[0])] = decodeURIComponent(keyval[1])
-
-        return acc
-      }, {})
-    }
+    let message
 
     switch (d.type) {
       case 'MEAL_EDIT':
@@ -62,22 +51,20 @@ export default class DialogController extends React.Component {
         return <PriceDialog id={d.option.meal} />
 
       case 'SUBSCRIBE':
-        return <SettingsDialog predef={params} />
+        return <SettingsDialog />
 
       case 'OPEN_TRANSACTIONS':
-        return <TransactionDialog predef={params} />
+        return <TransactionDialog />
 
       case 'UNSUBSCRIBE':
-        if (params.list) {
-          message =
-            wording.unsubscribe1 + (params.list === 'deadlineReminder' ? wording.unsubscribe_deadline : wording.unsubscribe_create) + wording.unsubscribe2
-          params = Object.assign({}, d.user, { [params.list]: 0 })
-        } else {
+        if (dialog.content === 'all') {
           message = wording.unsubscribeAll
-          params = Object.assign({}, d.user, { creationNotice: 0, deadlineReminder: 0 })
+        } else {
+          message =
+            wording.unsubscribe1 + (dialog.content === 'deadlineReminder' ? wording.unsubscribe_deadline : wording.unsubscribe_create) + wording.unsubscribe2
         }
 
-        return <ConfirmationDialog message={message} action="save_settings_locally" parameter={[params]} noCancel={true} />
+        return <ConfirmationDialog message={message} action="save_settings_locally" parameter={dialog.params} noCancel={true} />
       case 'OPEN_SETTINGS':
         return <SettingsDialog />
 
@@ -100,7 +87,7 @@ export default class DialogController extends React.Component {
         return <IncomingPaymentsDialog />
 
       case 'LOGIN':
-        return <LoginDialog />
+        return <LoginDialog hideRegister={d.option.hideRegister}/>
 
       default:
         return null

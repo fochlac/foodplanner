@@ -3,6 +3,7 @@ const routes = require('express').Router(),
   meals = require('./meals'),
   notification = require('./notification'),
   mail = require('./mail'),
+  instance = require('./instance'),
   datefinder = require('./datefinder'),
   user = require('./user'),
   github = require('./github'),
@@ -37,6 +38,7 @@ routes.use('/signups', signups)
 routes.use('/meals', meals)
 routes.use('/user', user)
 routes.use('/mail', mail)
+routes.use('/instance', instance)
 routes.use('/datefinder', datefinder)
 routes.use('/notification', notification)
 

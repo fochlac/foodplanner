@@ -15,7 +15,7 @@ export const urlHandler = ({ getState }) => next => action => {
         app,
       },
       action.title,
-      state.instance.subdomain ? action.url : `/${state.instance.id}${action.url}`,
+      `${state.instance.root}${action.url}`
     )
   }
 

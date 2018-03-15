@@ -40,7 +40,7 @@ export const refresh = version => ({
   },
 })
 
-export const load_history = ({page = 1, size = 5, busy = false}) => ({
+export const load_history = ({ page = 1, size = 5, busy = false }) => ({
   type: 'LOAD_HISTORY',
   status: busy ? 'initialized' : 'hidden',
   busyType: 'history',
@@ -62,11 +62,11 @@ export const set_busy = state => ({
   state,
 })
 
-export const set_hidden_busy = (state, {final, busyType}) => ({
+export const set_hidden_busy = (state, { final, busyType }) => ({
   type: 'HIDDEN_BUSY',
   state,
   final,
-  busyType
+  busyType,
 })
 
 // service worker
@@ -436,10 +436,11 @@ export const register = ({ mail, hash, name }) => ({
   enqueue: create_settings_dialog,
 })
 
-export const start_sign_in = () => ({
+export const start_sign_in = ({ hideRegister = false }) => ({
   type: 'DIALOG',
   content: 'LOGIN',
   url: '/login',
+  option: { hideRegister },
   title: 'Mittagsplaner - Anmelden',
 })
 
@@ -535,3 +536,31 @@ export const datefinderSetDeadline = ({ datefinder, deadline }) => ({
     },
   },
 })
+
+export const createInstance = ({ name, mail, hash, address, company, subdomain }) => ({
+  type: 'CREATE_INSTANCE',
+  status: 'initialized',
+  api: {
+    url: `/api/instance`,
+    method: 'POST',
+    body: {
+      name,
+      mail,
+      hash,
+      address,
+      company,
+      subdomain
+    },
+  },
+})
+
+export const checkDomain = (subdomain) => ({
+  type: 'CHECK_DOMAIN',
+  status: 'hidden',
+  busyType: 'domainCheck',
+  api: {
+    url: `/api/instance/domain?subdomain=${subdomain}`,
+    method: 'get',
+  },
+})
+

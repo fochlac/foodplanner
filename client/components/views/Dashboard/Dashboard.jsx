@@ -1,13 +1,15 @@
 import './Dashboard.less'
 
+import DefaultPage from 'UI/DefaultPage.js'
 import Meal from 'UI/Meal.js'
 import Pager from 'UI/Pager/Pager.jsx'
 import React from 'react'
+import Topbar from 'UI/Topbar.js'
 import UserFrame from 'UI/UserFrame.js'
 
 const wording = {
   offlineWarn: 'Aufgrund fehlender Internetverbindung verwendet diese Seite aktuell gecachte (alte) Daten.',
-  loadMessage: 'Termindaten werden geladen.'
+  loadMessage: 'Termindaten werden geladen.',
 }
 
 export default class Dashboard extends React.Component {
@@ -18,7 +20,7 @@ export default class Dashboard extends React.Component {
       filter: 'meals',
     }
 
-    this.size=5
+    this.size = 5
 
     this.refreshContent = this.refreshContent.bind(this)
   }
@@ -41,7 +43,7 @@ export default class Dashboard extends React.Component {
     const { oldMealIds } = this.props
     this.setState({ filter: filter })
     if (filter === 'oldMeals' && !oldMealIds[0]) {
-      this.loadHistory(1);
+      this.loadHistory(1)
     }
   }
 
@@ -73,33 +75,35 @@ export default class Dashboard extends React.Component {
     }
 
     return (
-      <div className="dashboard">
-        {this.props.app.offline ? (
-          <div className="offlineBar">
-            <div className="warning">{wording.offlineWarn}</div>
+      <DefaultPage>
+        <Topbar />
+        <div className="dashboard">
+          {this.props.app.offline ? (
+            <div className="offlineBar">
+              <div className="warning">{wording.offlineWarn}</div>
+            </div>
+          ) : null}
+          {this.props.login && <UserFrame />}
+          <div className="filters">
+            <ul className="filterList">
+              {filters.map(filter => (
+                <li
+                  key={filter.type}
+                  className={'filter' + (this.state.filter.includes(filter.type) ? ' selected' : '')}
+                  onClick={() => this.setFilter(filter.type)}
+                >
+                  {filter.name}
+                </li>
+              ))}
+            </ul>
           </div>
-        ) : null}
-        {this.props.login && <UserFrame />}
-        <div className="filters">
-          <ul className="filterList">
-            {filters.map(filter => (
-              <li
-                key={filter.type}
-                className={'filter' + (this.state.filter.includes(filter.type) ? ' selected' : '')}
-                onClick={() => this.setFilter(filter.type)}
-              >
-                {filter.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="meals">
-          <Pager size={this.size} top={true} bottom={true} inactive={this.state.filter === 'meals'} onChange={({ page }) => this.loadHistory(page)}>
-            {mealList.map(
-              (meal, index) =>
-                meal ? (
-                  <Meal id={meal.id} key={meal.id} showPrint={this.state.filter === 'meals'} />
-                ) : (
+          <div className="meals">
+            <Pager size={this.size} top={true} bottom={true} inactive={this.state.filter === 'meals'} onChange={({ page }) => this.loadHistory(page)}>
+              {mealList.map(
+                (meal, index) =>
+                  meal ? (
+                    <Meal id={meal.id} key={meal.id} showPrint={this.state.filter === 'meals'} />
+                  ) : (
                     <div className="emptyMeal meal" key={'invalidMeal_' + index}>
                       <div className="titlebar">
                         <h4 className="title">&#9644;&#9644;&#9644;&#9644;</h4>
@@ -110,10 +114,11 @@ export default class Dashboard extends React.Component {
                       </div>
                     </div>
                   ),
-            )}
-          </Pager>
+              )}
+            </Pager>
+          </div>
         </div>
-      </div>
+      </DefaultPage>
     )
   }
 }

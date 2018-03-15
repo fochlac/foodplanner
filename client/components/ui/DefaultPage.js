@@ -1,11 +1,9 @@
-import { show_impressum } from 'STORE/actions.js'
-
 import DefaultPage from 'UI/DefaultPage/DefaultPage.jsx'
 import React from 'react'
 import { connect } from 'react-redux'
+import { show_impressum } from 'STORE/actions.js'
 
 const mapStateToProps = (state, ownProps) => ({
-  dialog: ownProps.dialog,
   app: state.app,
   errors: state.app.errors,
 })

@@ -6,7 +6,6 @@ import BusyScreen from 'UI/BusyScreen/BusyScreen.jsx'
 import DialogController from './DialogController.jsx'
 import Error from 'UI/Error.js'
 import React from 'react'
-import Topbar from 'UI/Topbar.js'
 
 export default class DefaultPage extends React.Component {
   componentDidMount() {
@@ -20,9 +19,8 @@ export default class DefaultPage extends React.Component {
   render() {
     return (
       <div>
-        <Topbar />
         {this.props.children}
-        <DialogController dialog={this.props.dialog} />
+        <DialogController dialog={this.props.app.dialog} />
         <div className="errors">{Object.keys(this.props.errors).map(error => <Error key={error} id={error} />)}</div>
         <BusyScreen show={this.props.app.busy} />
         <div className="footer">

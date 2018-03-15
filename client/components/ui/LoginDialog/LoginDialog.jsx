@@ -189,11 +189,11 @@ export default class LoginDialog extends React.Component {
               <label htmlFor="LoginDialog_pass">Passwort</label>
                 <input id="LoginDialog_pass" className="pass" type="password" placeholder="Passwort (optional)" value={pass} onChange={this.passInput}
                   autoComplete="password"/>
-              <p className="fakeLink registerLink toggleRegister" onClick={this.toggleRegister.bind(this, true)}>
+              {!this.props.hideRegister && <p className="fakeLink registerLink toggleRegister" onClick={this.toggleRegister.bind(this, true)}>
                 <span>
                   Ein neues Konto anlegen <span className="fa fa-angle-double-right" />
                 </span>
-              </p>
+              </p>}
             </div>
           )}
         </div>
