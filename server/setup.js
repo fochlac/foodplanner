@@ -52,7 +52,7 @@ let setup = [
         \`instance\`            int             NOT NULL,
 
         PRIMARY KEY (id),
-        UNIQUE KEY \`mail\` (\`mail\`, \`instance\`)
+        UNIQUE KEY \`mail\` (\`mail\`)
     );`,
 
   `CREATE TABLE IF NOT EXISTS \`instances\` (
