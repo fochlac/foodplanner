@@ -58,7 +58,7 @@ let setup = [
   `CREATE TABLE IF NOT EXISTS \`instances\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
         \`name\`                varchar(150)    NOT NULL,
-        \`company\`             varchar(150)    NOT NULL,
+        \`company\`             varchar(150),
         \`subdomain\`           varchar(150)    NOT NULL,
         \`address\`             varchar(150)    NOT NULL,
         \`sprache\`             varchar(150)    DEFAULT "de-DE",

@@ -205,7 +205,7 @@ module.exports = {
             ${mysql.escape(options.instance)},
             ${mysql.escape(options.name)},
             ${mysql.escape(options.mail)},
-            (CASE WHEN AUTO_INCREMENT = 1 THEN 1 ELSE 0 END)
+            ${options.admin ? options.admin : false}
         FROM INFORMATION_SCHEMA.TABLES
         WHERE TABLE_SCHEMA = '${process.env.FOOD_DB_NAME}'
         AND TABLE_NAME = 'users';`,

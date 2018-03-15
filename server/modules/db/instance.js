@@ -5,8 +5,8 @@ const mysql = require('mysql'),
 
 module.exports = {
   createInstance: async ({ name, address, company, subdomain }) => {
-    const datefinder_query = `
-        INSERT INTO instance (
+    const query = `
+        INSERT INTO instances (
           name,
           address,
           company,
@@ -36,7 +36,7 @@ module.exports = {
   },
 
   getAllInstances: async () => {
-    const datefinder_query = `SELECT * FROM INSTANCES;`
+    const query = `SELECT * FROM instances;`
 
     const result = await executeQuery(await getConnection(), query, true)
 

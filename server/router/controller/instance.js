@@ -1,10 +1,11 @@
-const error = require(process.env.FOOD_HOME + 'modules/error'),
-  instanceDB = require(process.env.FOOD_HOME + 'modules/db/instance'),
+const instanceDB = require(process.env.FOOD_HOME + 'modules/db/instance'),
   crypto = require(process.env.FOOD_HOME + 'modules/crypto'),
   userDB = require(process.env.FOOD_HOME + 'modules/db/user'),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   request = require('request-promise-native'),
-  proxy = `localhost:${process.env.PROXY_PORT}/proxies`
+  jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
+  proxy = `http://localhost:${process.env.PROXY_PORT}/proxies`,
+  cookieOptions = { secure: process.env.DEVELOP ? false : true, httpOnly: true, expires: new Date(Date.now() + 1000 * 3600 * 24 * 365) }
 
 let cache = caches.getCache('users'),
   mailCache = caches.getCache('mail'),
@@ -22,7 +23,7 @@ module.exports = {
     ).map(domain => domain.split('.')[0])
 
     res.status(200).send(
-      subdomains.includes(subdomain)
+      !subdomains.includes(subdomain)
         ? {
             isValid: true,
             name: subdomain,
@@ -34,7 +35,7 @@ module.exports = {
   createInstance: async (req, res) => {
     const [instance, userCrypt] = await Promise.all([instanceDB.createInstance(req.body), crypto.createUserHash(req.body.hash)])
     const [user, subdomain] = await Promise.all([
-      userDB.createUser({ ...req.body, instance: instance.id }, userCrypt.hash, userCrypt.salt),
+      userDB.createUser({ ...req.body, instance: instance.id, admin: true }, userCrypt.hash, userCrypt.salt),
       request({
         uri: proxy,
         method: 'POST',

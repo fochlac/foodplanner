@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
 
   if (!instanceCache.get(req.instance)) {
     const instanceList = await instanceDB.getAllInstances(),
-      validInstance = instanceList.some(instance => instance.id === req.instance)
+      validInstance = instanceList.some(instance => +instance.id === +req.instance)
 
     instanceCache.put(req.instance, { valid: validInstance })
   }

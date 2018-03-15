@@ -3,6 +3,7 @@ import './LandingPage.less'
 import DefaultPage from 'UI/DefaultPage.js'
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import React from 'react'
+import { generateHash } from 'UTILS/crypto.js'
 
 const wording = {
   title: 'TerminPlanner',
@@ -46,7 +47,8 @@ export default class LandingPage extends React.Component {
       pass2: '',
     }
     this.nameInput = this.handleInput('name').bind(this)
-    this.emailInput = this.handleInput('email').bind(this)
+    this.emailInput = this.handleInput('mail').bind(this)
+    this.companyInput = this.handleInput('company').bind(this)
     this.address1Input = this.handleInput('address1').bind(this)
     this.address2Input = this.handleInput('address2').bind(this)
     this.address3Input = this.handleInput('address3').bind(this)
@@ -76,8 +78,8 @@ export default class LandingPage extends React.Component {
   }
 
   submit() {
-    const { name, email, company, address, address2, address3, pass, pass2, subdomain } = this.state
-    const valid = userInterface.mail(email) && userInterface.name(name) && (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass)
+    const { name, mail, company, address, address2, address3, pass, pass2, subdomain } = this.state
+    const valid = userInterface.mail(mail) && userInterface.name(name) && (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass)
     if (!valid) {
       return
     }
@@ -86,7 +88,7 @@ export default class LandingPage extends React.Component {
       .then(hash => {
         this.props.createInstance({
           name,
-          email,
+          mail,
           hash,
           subdomain,
           company,
@@ -123,9 +125,9 @@ export default class LandingPage extends React.Component {
   }
 
   renderRegister() {
-    const { name, email, company, address, address2, address3, pass, pass2, subdomain } = this.state
+    const { name, mail, company, address, address2, address3, pass, pass2, subdomain } = this.state
 
-    const valid = userInterface.mail(email) && userInterface.name(name) && (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass)
+    const valid = userInterface.mail(mail) && userInterface.name(name) && (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass)
     const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass(pass))
 
     return (
@@ -152,7 +154,7 @@ export default class LandingPage extends React.Component {
                 {wording.mailInfo}
               </InfoBubble>
             </label>
-            <input type="text" id="Landing_email" defaultValue={email} autoComplete="email" onChange={this.emailInput} />
+            <input type="text" id="Landing_email" defaultValue={mail} autoComplete="email" onChange={this.emailInput} />
           </div>
           <div>
             <label htmlFor="Landing_company">{wording.company}</label>
@@ -178,7 +180,7 @@ export default class LandingPage extends React.Component {
             />
             <input
               type="text"
-              id="Landing_address2"
+              id="Landing_address3"
               defaultValue={address3}
               autoComplete="country"
               placeholder={wording.germany}
@@ -217,7 +219,7 @@ export default class LandingPage extends React.Component {
               />
             </span>
           ) : null}
-          <button onClick={() => this.submit()} disabled={!valid} style={{ width: '100%' }}>
+          <button type="button" onClick={() => this.submit()} disabled={!valid} style={{ width: '100%' }}>
             {wording.submit}
           </button>
         </form>
