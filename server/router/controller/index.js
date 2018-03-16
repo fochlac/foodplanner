@@ -85,7 +85,7 @@ module.exports = {
       })
   },
   administration: (req, res) => {
-    const instance = instanceDB.getInstanceById(req.instance),
+    const instance = req.instance ? instanceDB.getInstanceById(req.instance) : Promise.resolve({}),
       file = new Promise((resolve, reject) => {
         fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
           if (err) {

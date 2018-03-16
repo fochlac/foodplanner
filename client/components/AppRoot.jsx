@@ -15,26 +15,29 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if (!window.defaultStore) {
-      this.props.initial_meals()
-    }
-    initDb('food', 'userData')
-      .then(db => db.get('user'))
-      .then(user => {
-        this.props.initial_user({
-          creationNotice_notification: user.creationNotice_notification,
-          deadlineReminder_notification: user.deadlineReminder_notification,
+    if (this.props.instance.view === 'instance') {
+      if (!window.defaultStore) {
+        this.props.initial_meals()
+      }
+
+      initDb('food', 'userData')
+        .then(db => db.get('user'))
+        .then(user => {
+          this.props.initial_user({
+            creationNotice_notification: user.creationNotice_notification,
+            deadlineReminder_notification: user.deadlineReminder_notification,
+          })
         })
-      })
-      .catch(console.log)
+        .catch(console.log)
 
-    initServiceWorker()
-      .then(subscription => {
-        this.props.connect_serviceworker(subscription)
-      })
-      .catch(console.log)
+      initServiceWorker()
+        .then(subscription => {
+          this.props.connect_serviceworker(subscription)
+        })
+        .catch(console.log)
 
-    navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', this.props.convert_postmessage.bind(this))
+      navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', this.props.convert_postmessage.bind(this))
+    }
 
     window.addEventListener('popstate', evt => {
       evt.state && this.props.apply_history(evt.state)

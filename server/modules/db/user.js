@@ -31,7 +31,7 @@ module.exports = {
         RIGHT JOIN users
         ON users.id = authentication.user
         WHERE users.mail = ${mysql.escape(mail)}`
-        // AND users.instance = ${mysql.escape(instance)}
+    // AND users.instance = ${mysql.escape(instance)}
 
     log(6, 'getting user auth data')
     return getConnection().then(myDb => {
@@ -240,6 +240,7 @@ module.exports = {
               creationNotice: options.creationNotice,
               balance: 0,
               instance: options.instance,
+              admin: options.admin ? options.admin : false,
               id: result.insertId,
             })
           }
