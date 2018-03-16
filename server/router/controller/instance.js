@@ -52,7 +52,7 @@ module.exports = {
             proxy: {
               redirect: false,
               url: '/' + instance.id,
-              port: process.env.DEVELOP ? process.env.FOOD_PORT : 'FOOD_PORT',
+              port: process.env.DEVELOP ? +process.env.FOOD_PORT : 'FOOD_PORT',
             },
           },
         }),
