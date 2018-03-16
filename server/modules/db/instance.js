@@ -54,4 +54,14 @@ module.exports = {
 
     return result[0]
   },
+
+  deleteInstanceById: async id => {
+    const query = `DELETE FROM instances WHERE id = ${id};`
+
+    const result = await executeQuery(await getConnection(), query, true)
+
+    log(6, 'deleted instance ', id)
+
+    return result[0]
+  },
 }

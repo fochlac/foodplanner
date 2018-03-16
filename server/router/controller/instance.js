@@ -15,8 +15,8 @@ let cache = caches.getCache('users'),
 
 module.exports = {
   checkDomainTaken: async (req, res) => {
+    const { subdomain } = req.query
     try {
-      const { subdomain } = req.query
       const subdomains = Object.keys(
         await request({
           uri: proxy,
@@ -33,7 +33,7 @@ module.exports = {
           : { isValid: false },
       )
     } catch (err) {
-      err.router.internalError(res)(err)
+      error.router.internalError(res)(err)
     }
   },
 
@@ -73,7 +73,22 @@ module.exports = {
         },
       })
     } catch (err) {
-      err.router.internalError(res)(err)
+      error.router.internalError(res)(err)
+      try {
+        log(6, 'createInstance: trying cleanup')
+        instance && instanceDB.deleteInstanceById(instance.id)
+        user && userDB.deleteUserByProperty('id', user.id)
+        request({
+          uri: proxy,
+          method: 'DELETE',
+          json: true,
+          body: {
+            host: req.body.subdomain + '.fochlac.com',
+          },
+        })
+      } catch (err) {
+        log(3, 'createInstance: cleanup failed', err)
+      }
     }
   },
 }
