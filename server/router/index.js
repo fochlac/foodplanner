@@ -2,7 +2,6 @@ const router = require('express').Router(),
   bodyparser = require('body-parser'),
   compression = require('compression'),
   xssFilter = require('x-xss-protection'),
-  jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   timestamp = require(process.env.FOOD_HOME + 'middleware/timestamp'),
   routes = require('./routes'),
   logger = require(process.env.FOOD_HOME + 'middleware/logger')
@@ -13,7 +12,6 @@ router.use(bodyparser.urlencoded({ extended: true }))
 router.use(compression())
 router.use(xssFilter())
 router.use(timestamp)
-router.use(jwt.checkToken)
 router.use(logger)
 
 // connect routes
