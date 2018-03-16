@@ -5,6 +5,7 @@ const instanceDB = require(process.env.FOOD_HOME + 'modules/db/instance'),
   request = require('request-promise-native'),
   error = require(process.env.FOOD_HOME + 'modules/error'),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
+  log = require(process.env.FOOD_HOME + 'modules/log'),
   proxy = `http://localhost:${process.env.PROXY_PORT}/proxies`,
   cookieOptions = { secure: process.env.DEVELOP ? false : true, httpOnly: true, expires: new Date(Date.now() + 1000 * 3600 * 24 * 365) }
 
@@ -51,7 +52,7 @@ module.exports = {
             proxy: {
               redirect: false,
               url: '/' + instance.id,
-              port: 'FOOD_PORT',
+              port: process.env.DEVELOP ? process.env.FOOD_PORT : 'FOOD_PORT',
             },
           },
         }),
