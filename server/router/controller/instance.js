@@ -63,7 +63,15 @@ module.exports = {
       const token = await jwt.createToken(user)
 
       res.cookie('jwt', token, cookieOptions)
-      res.status(200).send({ user, instance })
+      res.status(200).send({
+        user,
+        instance: {
+          ...instance,
+          root: req.headers.proxied ? req.headers.proxy_protocol + '://' + req.headers.proxy_host : req.protocol + '://' + req.headers.host,
+          isSubdomain: false,
+          page: 'landing',
+        },
+      })
     } catch (err) {
       err.router.internalError(res)(err)
     }

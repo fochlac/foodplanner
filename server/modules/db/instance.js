@@ -44,4 +44,14 @@ module.exports = {
 
     return result
   },
+
+  getInstanceById: async id => {
+    const query = `SELECT * FROM instances WHERE id = ${id};`
+
+    const result = await executeQuery(await getConnection(), query, true)
+
+    log(6, 'got all instances')
+
+    return result[0]
+  },
 }

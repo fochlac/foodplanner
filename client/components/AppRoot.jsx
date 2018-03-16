@@ -56,9 +56,9 @@ class App extends React.Component {
             switch (instance.page) {
               case 'instance':
                 return [
-                  <Route key="1" path={instance.subdomain ? '/unsubscribe' : `/${instance.id}/unsubscribe`} render={({ location }) => <Dashboard />} />,
-                  <Route key="2" path={instance.subdomain ? '/' : `/${instance.id}/`} exact render={() => <Dashboard />} />,
-                  history.state && history.state.app ? null : <Redirect key="3" to={instance.subdomain ? '/' : `/${instance.id}/`} />,
+                  <Route key="1" path={instance.isSubdomain ? '/unsubscribe' : `/${instance.id}/unsubscribe`} render={({ location }) => <Dashboard />} />,
+                  <Route key="2" path={instance.isSubdomain ? '/' : `/${instance.id}/`} exact render={() => <Dashboard />} />,
+                  history.state && history.state.app ? null : <Redirect key="3" to={instance.isSubdomain ? '/' : `/${instance.id}/`} />,
                   <Route key="4" path="/" render={() => <Dashboard />} />,
                 ]
                 break

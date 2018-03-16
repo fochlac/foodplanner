@@ -1,6 +1,7 @@
 const fs = require('fs'),
   sanitize = require(process.env.FOOD_HOME + 'helper/sanitize'),
   mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals'),
+  instanceDB = require(process.env.FOOD_HOME + 'modules/db/instance'),
   signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
   datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
@@ -13,6 +14,7 @@ module.exports = {
     let meals = mealsDB.getAllMealsByInstance(req.instance),
       signups = signupsDB.getAllSignups(req.instance),
       datefinder = datefinderDB.getDatefinders(req.instance),
+      instance = instanceDB.getInstanceById(req.instance),
       file = new Promise((resolve, reject) => {
         fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
           if (err) {
@@ -22,8 +24,8 @@ module.exports = {
         })
       })
 
-    Promise.all([file, meals, signups, datefinder])
-      .then(([file, allMeals, allSignups, fullDatefinderList]) => {
+    Promise.all([file, meals, signups, datefinder, instance])
+      .then(([file, allMeals, allSignups, fullDatefinderList, instance]) => {
         let meals = allMeals.filter(meal => meal.time > startOfDay).map(meal => {
           meal.signups = allSignups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
           return meal
@@ -45,34 +47,34 @@ module.exports = {
           participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
         }))
 
-        const subdomain = req.headers.proxied && req.headers.proxy_url !== req.originalUrl
+        const isSubdomain = req.headers.proxied && req.headers.proxy_url !== req.originalUrl
 
         log(6, 'server/index.js - sending enriched index.html to user ' + (req.auth ? req.user.id : 'unknown'))
         res.status(200).send(
           file.replace(
             '<script>/**DEFAULTSTORE**/</script>',
             `<script>
-                    window.defaultStore = {
-                        instance: {
-                          name: 'Mittagsplaner',
-                          id: ${req.instance},
-                          root: '${
-                            req.headers.proxied
-                              ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + (subdomain ? '/' : '/' + req.instance)
-                              : req.protocol + '://' + req.headers.host + '/' + req.instance
-                          }',
-                          language: 'de-DE',
-                          subdomain: ${subdomain},
-                          page: 'instance'
-                        },
+            window.defaultStore = {
+                        instance: ${JSON.stringify({
+                          ...instance,
+                          root: req.headers.proxied
+                            ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + (isSubdomain ? '/' : '/' + req.instance)
+                            : req.protocol + '://' + req.headers.host + '/' + req.instance,
+                          isSubdomain,
+                          page: 'instance',
+                        })},
                         historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
-                        app:{dialog: ${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: ${version()}, historySize: ${allMeals.length -
-              meals.length}},
+                        app:{
+                          dialog: ${req.dialog ? JSON.stringify(req.dialog) : '{}'},
+                          errors:{},
+                          dataversion: ${version()},
+                          historySize: ${allMeals.length - meals.length}
+                        },
                         meals:${sanitize.html(JSON.stringify(meals))},
                         signups:${sanitize.html(JSON.stringify(signups))},
                         datefinder:${sanitize.html(JSON.stringify(datefinderList))}
-                    }
+                      }
                 </script>`,
           ),
         )
@@ -83,17 +85,18 @@ module.exports = {
       })
   },
   administration: (req, res) => {
-    const file = new Promise((resolve, reject) => {
-      fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
-        if (err) {
-          reject(err)
-        }
-        resolve(data)
+    const instance = instanceDB.getInstanceById(req.instance),
+      file = new Promise((resolve, reject) => {
+        fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
+          if (err) {
+            reject(err)
+          }
+          resolve(data)
+        })
       })
-    })
 
-    file
-      .then(file => {
+    Promise.all([file, instance])
+      .then(([file, instance]) => {
         const subdomainName = req.headers.proxied && req.headers.proxy_host.split('.')[0]
 
         log(6, 'server/index.js - sending enriched admin - index.html to user ' + (req.auth ? req.user.id : 'unknown'))
@@ -102,23 +105,18 @@ module.exports = {
             '<script>/**DEFAULTSTORE**/</script>',
             `<script>
                     window.defaultStore = {
-                        instance: {
-                          name: 'Mittagsplaner',
-                          id: ${req.user ? req.user.instance : 0},
-                          root: '${
-                            req.headers.proxied ? req.headers.proxy_protocol + '://' + req.headers.proxy_host : req.protocol + '://' + req.headers.host
-                          }',
-                          language: 'de-DE',
-                          subdomain: false,
-                          subdomainName: '${subdomainName}',
-                          page: "landing"
-                        },
-                        historyMealMap: {},
-                        user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
-                        app:{dialog:${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: 0, historySize: 0},
-                        meals: {},
-                        signups:{},
-                        datefinder:{}
+                      instance: ${JSON.stringify({
+                        ...instance,
+                        root: req.headers.proxied ? req.headers.proxy_protocol + '://' + req.headers.proxy_host : req.protocol + '://' + req.headers.host,
+                        isSubdomain: false,
+                        page: 'landing',
+                      })},
+                      historyMealMap: {},
+                      user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
+                      app:{dialog:${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: 0, historySize: 0},
+                      meals: {},
+                      signups:{},
+                      datefinder:{}
                     }
                 </script>`,
           ),
