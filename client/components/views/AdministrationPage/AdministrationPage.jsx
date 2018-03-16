@@ -3,14 +3,19 @@ import './AdministrationPage.less'
 import DefaultPage from 'UI/DefaultPage.js'
 import React from 'react'
 
-const wording = {}
+const wording = {
+  general: 'Allgemeines',
+  users: 'Nutzerverwaltung',
+  transactions: 'Transaktionen',
+  instance: 'Anmeldungsdaten',
+}
 
 export default class AdministrationPage extends React.Component {
   constructor(props) {
     super()
 
     this.state = {
-      view: 'initial',
+      settings: 'general',
     }
   }
 
@@ -43,8 +48,55 @@ export default class AdministrationPage extends React.Component {
             </ul>
           </div>
         </div>
-        <div className="dashboard landing">Hallo Welt</div>
+        <div className="dashboard landing">
+          <div className="filters">
+            <ul className="filterList">
+              <li className="filter selected" onClick={() => this.setState({ settings: 'general' })}>
+                {wording.general}
+              </li>
+              <li className="filter" onClick={() => this.setState({ settings: 'users' })}>
+                {wording.users}
+              </li>
+              <li className="filter" onClick={() => this.setState({ settings: 'transactions' })}>
+                {wording.transactions}
+              </li>
+              <li className="filter" onClick={() => this.setState({ settings: 'instance' })}>
+                {wording.instance}
+              </li>
+            </ul>
+          </div>
+          <div className="content">
+            {() => {
+              switch (this.state.settings) {
+                case 'general':
+                  return this.renderGeneral()
+                case 'users':
+                  return this.renderUsers()
+                case 'transactions':
+                  return this.renderTransactions()
+                case 'instance':
+                  return this.renderInstance()
+              }
+            }}
+          </div>
+        </div>
       </DefaultPage>
     )
+  }
+
+  renderGeneral() {
+    return <div>general</div>
+  }
+
+  renderUsers() {
+    return <div>Users</div>
+  }
+
+  renderTransactions() {
+    return <div>transactions</div>
+  }
+
+  renderInstance() {
+    return <div>instance</div>
   }
 }
