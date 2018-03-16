@@ -12,7 +12,7 @@ module.exports = {
           company,
           subdomain
         ) VALUES (
-          ${mysql.escape(name)},
+          ${mysql.escape(subdomain)},
           ${mysql.escape(address)},
           ${mysql.escape(company)},
           ${mysql.escape(subdomain)}
@@ -24,7 +24,7 @@ module.exports = {
 
     return {
       id: result.insertId,
-      name,
+      name: subdomain,
       address,
       company,
       subdomain,
