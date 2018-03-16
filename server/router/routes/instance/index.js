@@ -5,6 +5,7 @@ const express = require('express'),
   unsubscribe = require(process.env.FOOD_HOME + 'router/controller/unsubscribe'),
   index = require(process.env.FOOD_HOME + 'router/controller/index').index,
   staticRouter = require('../static'),
+  jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   instanceMiddleware = require(process.env.FOOD_HOME + 'middleware/instance'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
@@ -22,9 +23,11 @@ instance.use(
   instanceRouter,
 )
 
+instanceRouter.use(staticRouter)
+
+instanceRouter.use(jwt.checkToken)
 instanceRouter.use('/api', api)
 instanceRouter.get('/unsubscribe', unsubscribe)
-instanceRouter.use(staticRouter)
 instanceRouter.get('*', index)
 
 module.exports = instance

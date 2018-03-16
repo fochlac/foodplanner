@@ -16,16 +16,17 @@ routes.use(bodyparser.urlencoded({ extended: true }))
 routes.use(compression())
 routes.use(xssFilter())
 routes.use(timestamp)
-routes.use(jwt.checkToken)
 routes.use(logger)
+
+routes.use(staticRouter)
 
 routes.use(instance)
 
+routes.use(jwt.checkToken)
 routes.use('/api', api)
 
 // fallback for direct usage without subdomain
 routes.get('/unsubscribe', unsubscribe)
-routes.use(staticRouter)
 
 // catch-all
 routes.get('*', admin)
