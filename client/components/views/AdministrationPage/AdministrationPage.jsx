@@ -66,7 +66,7 @@ export default class AdministrationPage extends React.Component {
             </ul>
           </div>
           <div className="content">
-            {() => {
+            {(() => {
               switch (this.state.settings) {
                 case 'general':
                   return this.renderGeneral()
@@ -77,7 +77,7 @@ export default class AdministrationPage extends React.Component {
                 case 'instance':
                   return this.renderInstance()
               }
-            }}
+            })()}
           </div>
         </div>
       </DefaultPage>
