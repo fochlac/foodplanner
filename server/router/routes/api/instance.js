@@ -1,7 +1,6 @@
 const instance = require('express').Router(),
   instanceController = require(process.env.FOOD_HOME + 'router/controller/instance'),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
-  error = require(process.env.FOOD_HOME + 'modules/error'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
 instance.get(
@@ -9,7 +8,7 @@ instance.get(
   validate('query', {
     subdomain: /^[_A-Za-z0-9\-]{4,100}$/,
   }),
-  (req, res) => instanceController.checkDomainTaken(req, res).catch(error.router.internalError(res)),
+  instanceController.checkDomainTaken,
 )
 
 instance.post(
@@ -22,7 +21,7 @@ instance.post(
     company: 'utf8',
     subdomain: /^[_A-Za-z0-9\-]{4,100}$/,
   }),
-  (req, res) => instanceController.createInstance(req, res).catch(error.router.internalError(res)),
+  instanceController.createInstance,
 )
 
 module.exports = instance
