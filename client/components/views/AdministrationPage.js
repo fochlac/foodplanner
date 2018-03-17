@@ -1,4 +1,4 @@
-import { sign_out, start_sign_in } from 'STORE/actions.js'
+import { sign_out, loadAllUsers, loadAllTransactions } from 'STORE/actions.js'
 
 import AdministrationPage from 'PAGES/AdministrationPage/AdministrationPage.jsx'
 import React from 'react'
@@ -12,4 +12,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { sign_out })(AdministrationPage)
+export default connect(mapStateToProps, { sign_out, loadAllUsers, loadAllTransactions })(AdministrationPage)

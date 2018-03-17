@@ -20,4 +20,28 @@ user.post(
   controller.login,
 )
 
+user.get(
+  '/',
+  jwt.isAdmin,
+  controller.getUsersByInstance
+)
+
+user.delete(
+  '/:user',
+  jwt.isAdmin,
+  controller.deleteUser
+)
+
+user.post(
+  '/:user/admin',
+  jwt.isAdmin,
+  controller.setAdmin(true)
+)
+
+user.delete(
+  '/:user/admin',
+  jwt.isAdmin,
+  controller.setAdmin(false)
+)
+
 module.exports = user

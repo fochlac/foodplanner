@@ -63,7 +63,7 @@ module.exports = {
     )
   },
 
-  payForSignup: async function(signupId) {
+  payForSignup: async function (signupId) {
     const queryGetPrice = `
             SELECT
                 price,
@@ -108,18 +108,20 @@ module.exports = {
                 ON meals.id = signups.meal
                 WHERE signups.id = ${mysql.escape(signupId)}
             );`,
-      queryCreateTransaction = price => `
+      queryCreateTransaction = (price) => `
             INSERT INTO transactions (
                 \`source\`,
                 \`target\`,
                 \`amount\`,
                 \`reason\`,
+                \`instance\`,
                 \`time\`
             ) SELECT
                 signups.userId,
                 meals.creatorId,
                 (CASE WHEN ${mysql.escape(price)} IS NULL THEN 0 ELSE ${mysql.escape(price)} END),
                 meals.name,
+                meals.instance,
                 ${Date.now()}
             FROM signups
             LEFT JOIN meals
@@ -169,36 +171,36 @@ module.exports = {
         }
       })
       .then(
-        () =>
-          new Promise((resolve, reject) =>
-            myDb.commit(err => {
-              if (err) {
-                log(2, 'modules/db/payment:payForSignup', 'error commiting transaction')
-                reject({ status: 500, message: 'Unable to commit transaction.' })
-              } else {
-                log(6, 'modules/db/payment:payForSignup', 'commited transaction')
-                myDb.release()
-                resolve()
-              }
-            }),
-          ),
-      )
-      .catch(
-        err =>
-          new Promise((resolve, reject) =>
-            myDb.rollback(rbErr => {
-              if (rbErr) {
-                log(2, 'rollback failed for errors: ', err, rbErr)
-              }
+      () =>
+        new Promise((resolve, reject) =>
+          myDb.commit(err => {
+            if (err) {
+              log(2, 'modules/db/payment:payForSignup', 'error commiting transaction')
+              reject({ status: 500, message: 'Unable to commit transaction.' })
+            } else {
+              log(6, 'modules/db/payment:payForSignup', 'commited transaction')
               myDb.release()
-              if (err.type === 1) {
-                return resolve(err)
-              } else {
-                return reject(err)
-              }
-            }),
-          ),
-      )
+              resolve()
+            }
+          }),
+        ),
+    )
+      .catch(
+      err =>
+        new Promise((resolve, reject) =>
+          myDb.rollback(rbErr => {
+            if (rbErr) {
+              log(2, 'rollback failed for errors: ', err, rbErr)
+            }
+            myDb.release()
+            if (err.type === 1) {
+              return resolve(err)
+            } else {
+              return reject(err)
+            }
+          }),
+        ),
+    )
   },
 
   lockMealPrices: mealId => {
@@ -254,12 +256,12 @@ module.exports = {
             SET ${mysql.escapeId(db)}.price = ${mysql.escape(price)}
             WHERE ${mysql.escapeId(db)}.id = ${mysql.escape(id)}
             AND NOT 1 = ${
-              db === 'meals'
-                ? 'meals.locked'
-                : db === 'mealOptions'
-                  ? `(SELECT meals.locked from meals WHERE mealOptions.mealId = meals.id)`
-                  : `(SELECT meals.locked from meals WHERE mealOptionValues.mealId = meals.id)`
-            };`
+      db === 'meals'
+        ? 'meals.locked'
+        : db === 'mealOptions'
+          ? `(SELECT meals.locked from meals WHERE mealOptions.mealId = meals.id)`
+          : `(SELECT meals.locked from meals WHERE mealOptionValues.mealId = meals.id)`
+      };`
 
     return getConnection().then(myDb => {
       return new Promise((resolve, reject) =>
@@ -273,31 +275,31 @@ module.exports = {
       )
         .then(() => Promise.all(prices.map(priceObj => executeQuery(myDb, mealQuery(priceObj.db, priceObj.id, priceObj.price)))))
         .then(
-          () =>
-            new Promise((resolve, reject) =>
-              myDb.commit(err => {
-                if (err) {
-                  log(2, 'modules/db/payment:setPrices', 'error commiting transaction')
-                  reject({ status: 500, message: 'Unable to commit transaction.' })
-                } else {
-                  myDb.release()
-                  resolve(prices)
-                }
-              }),
-            ),
-        )
-        .catch(
-          err =>
-            new Promise((resolve, reject) =>
-              myDb.rollback(rbErr => {
-                if (rbErr) {
-                  log(2, 'rollback failed for errors: ', err, rbErr)
-                }
+        () =>
+          new Promise((resolve, reject) =>
+            myDb.commit(err => {
+              if (err) {
+                log(2, 'modules/db/payment:setPrices', 'error commiting transaction')
+                reject({ status: 500, message: 'Unable to commit transaction.' })
+              } else {
                 myDb.release()
-                return reject(err)
-              }),
-            ),
-        )
+                resolve(prices)
+              }
+            }),
+          ),
+      )
+        .catch(
+        err =>
+          new Promise((resolve, reject) =>
+            myDb.rollback(rbErr => {
+              if (rbErr) {
+                log(2, 'rollback failed for errors: ', err, rbErr)
+              }
+              myDb.release()
+              return reject(err)
+            }),
+          ),
+      )
     })
   },
 
@@ -320,14 +322,16 @@ module.exports = {
                     \`target\`,
                     \`amount\`,
                     \`reason\`,
+                    \`instance\`,
                     \`time\`
-                ) Values (
+                ) SELECT
                     ${mysql.escape(source)},
                     ${mysql.escape(target)},
                     ${mysql.escape(amount)},
                     ${mysql.escape('Private Transaction')},
+                    instance,
                     ${Date.now()}
-                );`,
+                FROM users WHERE id = ${mysql.escape(source)};`,
       queryGetTotal = `SELECT SUM(users.balance) AS total FROM users;`
 
     return getConnection().then(myDb => {
@@ -359,36 +363,36 @@ module.exports = {
           }
         })
         .then(
-          () =>
-            new Promise((resolve, reject) =>
-              myDb.commit(err => {
-                if (err) {
-                  log(2, 'modules/db/payment:sendMoney', 'error commiting transaction')
-                  reject({ status: 500, message: 'Unable to commit transaction.' })
-                } else {
-                  log(6, 'modules/db/payment:sendMoney', 'commited transaction')
-                  myDb.release()
-                  resolve()
-                }
-              }),
-            ),
-        )
-        .catch(
-          err =>
-            new Promise((resolve, reject) =>
-              myDb.rollback(rbErr => {
-                if (rbErr) {
-                  log(2, 'rollback failed for errors: ', err, rbErr)
-                }
+        () =>
+          new Promise((resolve, reject) =>
+            myDb.commit(err => {
+              if (err) {
+                log(2, 'modules/db/payment:sendMoney', 'error commiting transaction')
+                reject({ status: 500, message: 'Unable to commit transaction.' })
+              } else {
+                log(6, 'modules/db/payment:sendMoney', 'commited transaction')
                 myDb.release()
-                if (err.type === 1) {
-                  return resolve(err)
-                } else {
-                  return reject(err)
-                }
-              }),
-            ),
-        )
+                resolve()
+              }
+            }),
+          ),
+      )
+        .catch(
+        err =>
+          new Promise((resolve, reject) =>
+            myDb.rollback(rbErr => {
+              if (rbErr) {
+                log(2, 'rollback failed for errors: ', err, rbErr)
+              }
+              myDb.release()
+              if (err.type === 1) {
+                return resolve(err)
+              } else {
+                return reject(err)
+              }
+            }),
+          ),
+      )
     })
   },
 
@@ -406,7 +410,7 @@ module.exports = {
             AND NOT transactions.target = transactions.source;`
 
     return getConnection().then(myDb =>
-      executeQuery(myDb, mealQuery).catch(err => {
+      executeQuery(myDb, mealQuery, true).catch(err => {
         if (err) {
           log(4, 'error getting history for user ' + userId)
         }
@@ -415,4 +419,19 @@ module.exports = {
       }),
     )
   },
+
+  getTransactionsByInstance: async instance => {
+    const query = `
+      SELECT
+        amount ,
+        (SELECT name FROM users WHERE id = transactions.source) AS source
+        (SELECT name FROM users WHERE id = transactions.target) AS target
+        reason,
+        time
+      FROM transactions
+      WHERE instance = ${instance}
+      AND NOT transactions.target = transactions.source;`
+
+    return await executeQuery(await getConnection, query, true)
+  }
 }

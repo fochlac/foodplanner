@@ -79,7 +79,7 @@ module.exports = {
   getUser: (req, res) => {
     if (+req.params.id !== +req.user.id) {
       log(4, `User ${req.user.id} tried to access user ${req.params.id}'s user data`)
-      return res.status(403).send({ type: 'FORBIDDEN' })
+      return res.status(403).send({ status: 403, type: 'FORBIDDEN' })
     }
 
     handleGetUserById(req.user.id, res)
@@ -97,7 +97,7 @@ module.exports = {
   sendMoney: (req, res) => {
     if (+req.body.source !== +req.user.id) {
       log(4, `User ${req.user.id} tried to access user ${req.body.source}'s money`)
-      return res.status(403).send({ type: 'FORBIDDEN' })
+      return res.status(403).send({ status: 403, type: 'FORBIDDEN' })
     }
 
     paymentDB
@@ -112,6 +112,54 @@ module.exports = {
         res.status(200).send({ success: true })
       })
       .catch(error.router.internalError(res))
+  },
+
+  deleteUser: async (req, res) => {
+    try {
+      const [user] = await userDB.getUserByProperty('id', req.params.user)
+
+      if (req.user.instance !== user.instance) {
+        return res.status(403).json({ status: 403, type: 'FORBIDDEN' })
+      }
+
+      await userDB.deleteUserByProperty('id', req.params.user)
+      log(6, `controller/user.js-deleteUser: ${req.user.id} deleted user ${user.id}`)
+
+      res.status(200).send({status:200, type: 'SUCCESS'})
+
+    } catch (err) {
+      return error.router.internalError(res)(err)
+    }
+  },
+
+  setAdmin: (del) => async (req, res) => {
+    try {
+      const [user] = await userDB.getUserByProperty('id', req.params.user)
+
+      if (req.user.instance !== user.instance) {
+        return res.status(403).json({ status: 403, type: 'FORBIDDEN' })
+      }
+
+      await userDB.setUserPropertyById(req.params.user, 'admin', del)
+
+      log(6, `controller/user.js-setAdmin: set admin for user ${user.id} to ${del}`)
+
+      res.status(200).send({...user, admin: del})
+
+    } catch (err) {
+      return error.router.internalError(res)(err)
+    }
+  },
+
+  getUsersByInstance: (req,res) => {
+    try {
+      const users = await userDB.getUsersByProperty(req.user.instance, 'id', 'id')
+
+      res.status(200).send(users)
+
+    } catch (err) {
+      return error.router.internalError(res)(err)
+    }
   },
 
   transactions: (req, res) => {

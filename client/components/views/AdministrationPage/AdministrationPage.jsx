@@ -7,7 +7,7 @@ const wording = {
   general: 'Allgemeines',
   users: 'Nutzerverwaltung',
   transactions: 'Transaktionen',
-  instance: 'Anmeldungsdaten',
+  instance: 'Konto',
 }
 
 export default class AdministrationPage extends React.Component {
@@ -24,6 +24,21 @@ export default class AdministrationPage extends React.Component {
       this.setState({
         [field]: evt.target.value,
       })
+    }
+  }
+
+  handleFilter(type) {
+    return () => {
+      this.setState({settings: type})
+
+      switch(type) {
+        case 'users':
+          this.props.loadAllUsers()
+        break
+        case 'transactions':
+          this.props.loadAllTransactions()
+        break
+      }
     }
   }
 

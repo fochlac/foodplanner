@@ -149,6 +149,7 @@ let setup = [
         \`amount\`              FLOAT(10, 2)    NOT NULL,
         \`reason\`              varchar(255)    NOT NULL,
         \`time\`                bigint          NOT NULL,
+        \`instance\`            int             NOT NULL,
 
         PRIMARY KEY (id)
       );`,

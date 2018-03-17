@@ -108,6 +108,17 @@ module.exports = {
       .then(() => paymentDB.setPrices(req.body.prices))
       .then(result => res.status(200).send(result))
       .catch(error.router.internalError(res));
-  }
+  },
+
+  getTransactionsByInstance: (req, res) => {
+    try {
+      const transactions = await paymentDB.getTransactionsByInstance(req.transactions.instance)
+
+      res.status(200).send(transactions)
+
+    } catch (err) {
+      return error.router.internalError(res)(err)
+    }
+  },
 }
 

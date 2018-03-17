@@ -563,3 +563,40 @@ export const checkDomain = subdomain => ({
     method: 'get',
   },
 })
+
+export const loadAllUsers = () => ({
+  type: 'LOAD_ALL_USERS',
+  status: 'initialized',
+  api: {
+    url: `/api/users`,
+    method: 'get',
+  },
+})
+
+export const setAdmin = ({ id, admin }) => ({
+  type: 'SET_ADMIN',
+  status: 'initialized',
+  api: {
+    url: `/api/users/${id}/admin`,
+    method: admin ? 'post' : 'delete',
+  },
+})
+
+export const deleteUser = ({ id, admin }) => ({
+  type: 'DELETE_USER',
+  status: 'initialized',
+  api: {
+    url: `/api/users/${id}`,
+    method: 'delete',
+  },
+})
+
+export const loadAllTransactions = () => ({
+  type: 'LOAD_ALL_TRANSACTIONS',
+  status: 'initialized',
+  api: {
+    url: `/api/payment/transactions`,
+    method: 'get',
+  },
+})
+
