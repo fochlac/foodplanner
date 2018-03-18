@@ -11,7 +11,51 @@
       padding: 1em;
       flex-wrap: wrap;
       display: inline-flex;
+
+      li {
+        margin-top: 5px;
+      }
     }
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    margin-left: -10px;
+
+    > * {
+      margin-left: 10px
+    }
+  }
+
+  .settings {
+    border: solid 1px green;
+    padding: 10px;
+    border-radius: 3px;
+    margin-top: 10px;
+  }
+
+  .gmail {
+    border: solid 1px green;
+    padding: 10px;
+    border-radius: 3px;
+    margin-top: 10px;
+    flex-basis: 450px;
+  }
+
+  .gmailInfo {
+    margin-bottom: 10px;
+  }
+
+  .blockList {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .emptyMessage {
+    margin-top: 25px;
   }
 
   .transactions,

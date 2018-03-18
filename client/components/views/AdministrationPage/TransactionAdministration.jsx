@@ -8,6 +8,7 @@ const wording = {
   payee: 'Zahlungs\u00ADempfänger',
   payer: 'Zahlungs\u00ADpflichtiger',
   amount: 'Betrag',
+  empty: 'Noch keine Transaktionen vorhanden.',
 }
 
 export default class TransactionAdministration extends React.Component {
@@ -35,24 +36,16 @@ export default class TransactionAdministration extends React.Component {
   render() {
     const {transactions} = this.props
 
-    return (
-      <div>
-        {transactions && transactions.length ? (
-          <Pager wrapper={this.renderWrapper} size={20} bottom={true}>
-            {transactions.sort((a, b) => b.time - a.time).map((transaction) => (
-              <tr key={transaction.id}>
+    return <div>
+        {transactions && transactions.length ? <Pager wrapper={this.renderWrapper} size={20} bottom={true}>
+            {transactions.sort((a, b) => b.time - a.time).map(transaction => <tr key={transaction.id}>
                 <td>{formatDate(transaction.time)}</td>
                 <td>{transaction.reason}</td>
                 <td data-type={wording.payee + ':'}>{transaction.target}</td>
                 <td data-type={wording.payer + ':'}>{transaction.source}</td>
                 <td data-type={wording.amount + ':'}> {transaction.amount.toFixed(2)}</td>
-              </tr>
-            ))}
-          </Pager>
-        ) : (
-          <p>Noch keine Transaktionen vorhanden.</p>
-        )}
+              </tr>)}
+          </Pager> : <p className="textAlignCenter emptyMessage">{wording.empty}</p>}
       </div>
-    )
   }
 }
