@@ -5,6 +5,8 @@ const user = require('express').Router(),
 
 const { sendMoney, editUser, transactions, getUser, createUser, login } = controller
 
+user.get('/', jwt.requireAdmin, controller.getUsersByInstance)
+
 user.post(
   '/:id/logout',
   validate('params', {

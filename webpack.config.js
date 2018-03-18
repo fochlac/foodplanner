@@ -7,6 +7,8 @@ const path = require('path'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin'),
   GoogleFontsPlugin = require('google-fonts-webpack-plugin')
+  // , PreloadWebpackPlugin = require('preload-webpack-plugin'),
+  // HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
 
 module.exports = {
   entry: ['./client/index.js'],
@@ -114,14 +116,21 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './client/index.html',
       filename: 'index.html',
+      // excludeAssets: [/\.css/],
       inject: 'body',
       minify: {
         removeComments: true,
         collapseWhitespace: true,
       },
     }),
+    // new HtmlWebpackExcludeAssetsPlugin(),
     new GoogleFontsPlugin({
       fonts: [{ family: 'Raleway', variants: ['400', '600'] }],
     }),
+    // new PreloadWebpackPlugin({
+    //   rel: 'preload',
+    //   include: 'allAssets',
+    //   fileWhitelist: [/\.css/],
+    // }),
   ],
 }

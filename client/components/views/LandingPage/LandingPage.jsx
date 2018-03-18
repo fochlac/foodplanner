@@ -235,7 +235,7 @@ export default class LandingPage extends React.Component {
       <DefaultPage>
         <div className="topbar">
           <div className="spacer">
-            <span className="fa fa-calender fa-lg" />
+            <span className="fa fa-calendar fa-lg" />
             <ul className="quicklinks">
               {app.hiddenBusy && app.dialog === '' ? (
                 <li>

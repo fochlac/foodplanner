@@ -20,27 +20,21 @@ user.post(
   controller.login,
 )
 
-user.get(
-  '/',
-  jwt.isAdmin,
-  controller.getUsersByInstance
-)
-
 user.delete(
   '/:user',
-  jwt.isAdmin,
+  jwt.requireAdmin,
   controller.deleteUser
 )
 
 user.post(
   '/:user/admin',
-  jwt.isAdmin,
+  jwt.requireAdmin,
   controller.setAdmin(true)
 )
 
 user.delete(
   '/:user/admin',
-  jwt.isAdmin,
+  jwt.requireAdmin,
   controller.setAdmin(false)
 )
 

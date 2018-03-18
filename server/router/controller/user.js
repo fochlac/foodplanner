@@ -11,6 +11,7 @@ const user = require('express').Router(),
 
 let cache = caches.getCache('users'),
   mailCache = caches.getCache('mail'),
+  historyCache = caches.getCache('history'),
   authCache = caches.getCache('userAuth'),
   userListCache = caches.getCache('userList')
 
@@ -28,7 +29,7 @@ const handleGetUserById = (id, res) => {
           return res.status(200).send({})
         }
         return jwt.createToken(result).then(token => {
-          result.token = token;
+          result.token = token
           res.cookie('jwt', token, cookieOptions)
           cache.put('user_' + id, result ? result : undefined)
           res.status(200).send(result)
@@ -42,7 +43,7 @@ module.exports = {
   createUser: async (req, res) => {
     crypto
       .createUserHash(req.body.hash)
-      .then(({ hash, salt }) => userDB.createUser({...req.body, instance: req.instance }, hash, salt))
+      .then(({ hash, salt }) => userDB.createUser({ ...req.body, instance: req.instance }, hash, salt))
       .then(user => {
         mailCache.deleteAll()
         userListCache.deleteAll()
@@ -62,8 +63,8 @@ module.exports = {
 
     crypto
       .createUserHash(req.body.hash)
-      .then(({ hash, salt }) => userDB.setUserById(req.params.id, req.body, {hash, salt}))
-      .then((user) => {
+      .then(({ hash, salt }) => userDB.setUserById(req.params.id, req.body, { hash, salt }))
+      .then(user => {
         cache.delete('user_' + req.params.id)
         mailCache.deleteAll()
         userListCache.deleteAll()
@@ -107,6 +108,7 @@ module.exports = {
         cache.delete('history_' + req.params.id)
         cache.delete('user_' + req.body.source)
         cache.delete('history_' + req.body.source)
+        historyCache.delete(req.instance)
         userListCache.deleteAll()
 
         res.status(200).send({ success: true })
@@ -116,7 +118,7 @@ module.exports = {
 
   deleteUser: async (req, res) => {
     try {
-      const [user] = await userDB.getUserByProperty('id', req.params.user)
+      const user = await userDB.getUserByProperty('id', req.params.user)
 
       if (req.user.instance !== user.instance) {
         return res.status(403).json({ status: 403, type: 'FORBIDDEN' })
@@ -125,16 +127,15 @@ module.exports = {
       await userDB.deleteUserByProperty('id', req.params.user)
       log(6, `controller/user.js-deleteUser: ${req.user.id} deleted user ${user.id}`)
 
-      res.status(200).send({status:200, type: 'SUCCESS'})
-
+      res.status(200).send({ status: 200, type: 'SUCCESS' })
     } catch (err) {
       return error.router.internalError(res)(err)
     }
   },
 
-  setAdmin: (del) => async (req, res) => {
+  setAdmin: del => async (req, res) => {
     try {
-      const [user] = await userDB.getUserByProperty('id', req.params.user)
+      const user = await userDB.getUserByProperty('id', req.params.user)
 
       if (req.user.instance !== user.instance) {
         return res.status(403).json({ status: 403, type: 'FORBIDDEN' })
@@ -144,21 +145,30 @@ module.exports = {
 
       log(6, `controller/user.js-setAdmin: set admin for user ${user.id} to ${del}`)
 
-      res.status(200).send({...user, admin: del})
-
+      res.status(200).send({ ...user, admin: del })
     } catch (err) {
       return error.router.internalError(res)(err)
     }
   },
 
-  getUsersByInstance: (req,res) => {
+  getUsersByInstance: async (req, res) => {
+    log(6, 'getting user list for instance', req.instance)
     try {
-      const users = await userDB.getUsersByProperty(req.user.instance, 'id', 'id')
+      if (+req.instance !== +req.user.instance) {
+        log(4, `User ${req.user.id} tried to access instance ${req.instance} without access rights`)
+        return res.status(403).send({ type: 'FORBIDDEN' })
+      }
 
-      res.status(200).send(users)
+      let userList = userListCache.get('instance_' + req.instance)
+      if (!userList) {
+        userList = await userDB.getUsersByProperty(req.user.instance, 'instance', req.user.instance)
+        userListCache.put('instance_' + req.instance, userList)
+      }
 
+      log(6, 'got transaction list')
+      res.status(200).send(userList)
     } catch (err) {
-      return error.router.internalError(res)(err)
+      error.router.internalError(res)(err)
     }
   },
 

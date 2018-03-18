@@ -11,6 +11,16 @@ instance.get(
   instanceController.checkDomainTaken,
 )
 
+instance.get(
+  '/:instance',
+  validate('params', {
+    instance: /^[0-9]*$/,
+  }),
+  jwt.requireAdmin,
+  instanceController.getInstance,
+)
+
+
 instance.post(
   '/',
   validate('body', {

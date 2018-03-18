@@ -12,6 +12,7 @@ const instanceDB = require(process.env.FOOD_HOME + 'modules/db/instance'),
 let cache = caches.getCache('users'),
   mailCache = caches.getCache('mail'),
   authCache = caches.getCache('userAuth'),
+  instanceCache = caches.getCache('instance'),
   userListCache = caches.getCache('userList')
 
 module.exports = {
@@ -92,4 +93,24 @@ module.exports = {
       }
     }
   },
+
+  getInstance: async (req,res) => {
+    log(6, 'getting instance data')
+    try {
+      if (+req.params.instance !== +req.user.instance) {
+        log(4, `User ${req.user.id} tried to access instance ${req.instance} without access rights`)
+        return res.status(403).send({ type: 'FORBIDDEN' })
+      }
+      let instanceData = instanceCache.get(req.params.instance)
+      if (!instanceData) {
+        instanceData = await instanceDB.getInstanceById(req.params.instance)
+        instanceCache.put(req.params.instance, instanceData)
+      }
+      log(6, 'got instance data')
+      res.status(200).send(instanceData)
+
+    } catch (err) {
+      error.router.internalError(res)(err)
+    }
+  }
 }

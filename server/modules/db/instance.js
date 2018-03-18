@@ -8,10 +8,12 @@ module.exports = {
     const query = `
         INSERT INTO instances (
           name,
+          title,
           address,
           company,
           subdomain
         ) VALUES (
+          ${mysql.escape(name)},
           ${mysql.escape(subdomain)},
           ${mysql.escape(address)},
           ${mysql.escape(company)},
@@ -24,14 +26,15 @@ module.exports = {
 
     return {
       id: result.insertId,
-      name: subdomain,
+      name,
       address,
       company,
       subdomain,
       sprache: 'de-DE',
-      titel: '',
+      title: subdomain,
       gmail_user: '',
       gmail_pass: '',
+      icon: 'fa-calendar',
     }
   },
 

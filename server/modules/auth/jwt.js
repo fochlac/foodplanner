@@ -98,11 +98,13 @@ module.exports = {
   },
 
   checkToken: (req, res, next) => {
+    log(6, 'checking for user token')
     jwtVerify(req)
       .then(jwtGetUser)
       .then(userObject => {
         req.auth = true
-        req.user = { ...userObject, admin: req.instance === userObject.instance || !req.instance ? userObject.admin : false }
+        req.user = { ...userObject, admin: +req.instance === +userObject.instance || !req.instance ? userObject.admin : false }
+
         next()
       })
       .catch(err => {
@@ -112,14 +114,13 @@ module.exports = {
       })
   },
 
-  requireAdmin: () => {
-    return (req, res, next) => {
-      if (req.user.admin) {
-        next()
-      } else {
-        log(4, `User ${req.user.id} from instance ${req.user.instance} tried to access call restricted to role "admin"`)
-        res.status(403).send({ type: 'FORBIDDEN' })
-      }
+  requireAdmin: (req, res, next) => {
+    log(6, 'Checking if user is admin')
+    if (req.user.admin) {
+      next()
+    } else {
+      log(4, `User ${req.user.id} from instance ${req.user.instance} tried to access call restricted to role "admin"`)
+      res.status(403).send({ type: 'FORBIDDEN' })
     }
   },
 

@@ -315,7 +315,7 @@ module.exports = {
       queryAddBalance = `
                 UPDATE users
                 SET users.balance = (users.balance + CASE WHEN ${mysql.escape(amount)} IS NULL THEN 0 ELSE ${mysql.escape(amount)} END)
-               WHERE users.id = ${mysql.escape(target)};`,
+                WHERE users.id = ${mysql.escape(target)};`,
       queryCreateTransaction = `
                 INSERT INTO transactions (
                     \`source\`,
@@ -398,16 +398,17 @@ module.exports = {
 
   getHistoryByUserId: userId => {
     const mealQuery = `
-            SELECT
-                (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.amount ELSE -1 * transactions.amount END) AS diff,
-                users.name AS user,
-                transactions.reason,
-                transactions.time
-            FROM transactions
-            LEFT JOIN users
-            ON users.id = (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.source ELSE transactions.target END)
-            WHERE ${mysql.escape(userId)} in (transactions.target, transactions.source)
-            AND NOT transactions.target = transactions.source;`
+      SELECT
+        id,
+        (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.amount ELSE -1 * transactions.amount END) AS diff,
+        users.name AS user,
+        transactions.reason,
+        transactions.time
+      FROM transactions
+      LEFT JOIN users
+      ON users.id = (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.source ELSE transactions.target END)
+      WHERE ${mysql.escape(userId)} in (transactions.target, transactions.source)
+      AND NOT transactions.target = transactions.source;`
 
     return getConnection().then(myDb =>
       executeQuery(myDb, mealQuery, true).catch(err => {
@@ -423,15 +424,16 @@ module.exports = {
   getTransactionsByInstance: async instance => {
     const query = `
       SELECT
-        amount ,
-        (SELECT name FROM users WHERE id = transactions.source) AS source
-        (SELECT name FROM users WHERE id = transactions.target) AS target
+        id,
+        amount,
+        (SELECT name FROM users WHERE id = transactions.source) AS source,
+        (SELECT name FROM users WHERE id = transactions.target) AS target,
         reason,
         time
       FROM transactions
       WHERE instance = ${instance}
       AND NOT transactions.target = transactions.source;`
 
-    return await executeQuery(await getConnection, query, true)
+    return await executeQuery(await getConnection(), query, true)
   }
 }

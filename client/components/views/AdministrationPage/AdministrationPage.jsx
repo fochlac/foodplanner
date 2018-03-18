@@ -1,11 +1,15 @@
 import './AdministrationPage.less'
 
 import DefaultPage from 'UI/DefaultPage.js'
+import GeneralAdministration from './GeneralAdministration'
+import InstanceAdministration from './InstanceAdministration.jsx'
+import TransactionAdministration from './TransactionAdministration.jsx'
+import UserAdministration from './UserAdministration.jsx'
 import React from 'react'
 
 const wording = {
   general: 'Allgemeines',
-  users: 'Nutzerverwaltung',
+  users: 'Benutzer',
   transactions: 'Transaktionen',
   instance: 'Konto',
 }
@@ -19,6 +23,10 @@ export default class AdministrationPage extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.props.loadInstance(this.props.user.instance)
+  }
+
   handleInput(field) {
     return evt => {
       this.setState({
@@ -29,27 +37,31 @@ export default class AdministrationPage extends React.Component {
 
   handleFilter(type) {
     return () => {
-      this.setState({settings: type})
+      this.setState({ settings: type })
 
-      switch(type) {
+      switch (type) {
         case 'users':
-          this.props.loadAllUsers()
-        break
+          this.props.loadAllUsers(this.props.user.instance)
+          break
         case 'transactions':
-          this.props.loadAllTransactions()
-        break
+          this.props.loadAllTransactions(this.props.user.instance)
+          break
       }
     }
   }
 
   render() {
-    const { app, user, sign_out } = this.props
+    const { app, user, sign_out, instance, setAdmin, deleteUser } = this.props
+    const { settings } = this.state
 
     return (
       <DefaultPage>
         <div className="topbar">
           <div className="spacer">
-            <span className="fa fa-calender fa-lg" />
+            <span>
+              <span className={'instanceIcon fa fa-lg ' + instance.icon} />
+            </span>
+            <h3>{instance.title}</h3>
             <ul className="quicklinks">
               {app.hiddenBusy && app.dialog === '' ? (
                 <li>
@@ -64,54 +76,38 @@ export default class AdministrationPage extends React.Component {
           </div>
         </div>
         <div className="dashboard landing">
-          <div className="filters">
-            <ul className="filterList">
-              <li className="filter selected" onClick={() => this.setState({ settings: 'general' })}>
-                {wording.general}
-              </li>
-              <li className="filter" onClick={() => this.setState({ settings: 'users' })}>
-                {wording.users}
-              </li>
-              <li className="filter" onClick={() => this.setState({ settings: 'transactions' })}>
-                {wording.transactions}
-              </li>
-              <li className="filter" onClick={() => this.setState({ settings: 'instance' })}>
-                {wording.instance}
-              </li>
-            </ul>
-          </div>
           <div className="content">
+            <div className="filters">
+              <ul className="filterList">
+                <li className={'filter' + (settings === 'general' ? ' selected' : '')} onClick={this.handleFilter('general')}>
+                  {wording.general}
+                </li>
+                <li className={'filter' + (settings === 'users' ? ' selected' : '')} onClick={this.handleFilter('users')}>
+                  {wording.users}
+                </li>
+                <li className={'filter' + (settings === 'transactions' ? ' selected' : '')} onClick={this.handleFilter('transactions')}>
+                  {wording.transactions}
+                </li>
+                <li className={'filter' + (settings === 'instance' ? ' selected' : '')} onClick={this.handleFilter('instance')}>
+                  {wording.instance}
+                </li>
+              </ul>
+            </div>
             {(() => {
               switch (this.state.settings) {
                 case 'general':
-                  return this.renderGeneral()
+                  return <GeneralAdministration instance={instance} />
                 case 'users':
-                  return this.renderUsers()
+                  return <UserAdministration users={instance.users} self={user.id} setAdmin={setAdmin} deleteUser={deleteUser} />
                 case 'transactions':
-                  return this.renderTransactions()
+                  return <TransactionAdministration transactions={instance.transactions} />
                 case 'instance':
-                  return this.renderInstance()
+                  return <InstanceAdministration instance={instance} />
               }
             })()}
           </div>
         </div>
       </DefaultPage>
     )
-  }
-
-  renderGeneral() {
-    return <div>general</div>
-  }
-
-  renderUsers() {
-    return <div>Users</div>
-  }
-
-  renderTransactions() {
-    return <div>transactions</div>
-  }
-
-  renderInstance() {
-    return <div>instance</div>
   }
 }

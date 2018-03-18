@@ -564,39 +564,50 @@ export const checkDomain = subdomain => ({
   },
 })
 
-export const loadAllUsers = () => ({
-  type: 'LOAD_ALL_USERS',
-  status: 'initialized',
-  api: {
-    url: `/api/users`,
-    method: 'get',
-  },
-})
-
-export const setAdmin = ({ id, admin }) => ({
+export const setAdmin = ({ user, admin }) => ({
   type: 'SET_ADMIN',
   status: 'initialized',
+  user,
+  admin,
   api: {
-    url: `/api/users/${id}/admin`,
+    url: `/api/user/${user}/admin`,
     method: admin ? 'post' : 'delete',
   },
 })
 
-export const deleteUser = ({ id, admin }) => ({
+export const deleteUser = ({ user }) => ({
   type: 'DELETE_USER',
   status: 'initialized',
+  user,
   api: {
-    url: `/api/users/${id}`,
+    url: `/api/user/${user}`,
     method: 'delete',
   },
 })
 
-export const loadAllTransactions = () => ({
-  type: 'LOAD_ALL_TRANSACTIONS',
+export const loadAllUsers = instance => ({
+  type: 'LOAD_ALL_USERS',
   status: 'initialized',
   api: {
-    url: `/api/payment/transactions`,
+    url: `/${instance}/api/user`,
     method: 'get',
   },
 })
 
+export const loadAllTransactions = instance => ({
+  type: 'LOAD_ALL_TRANSACTIONS',
+  status: 'initialized',
+  api: {
+    url: `/${instance}/api/payment/transactions`,
+    method: 'get',
+  },
+})
+
+export const loadInstance = instance => ({
+  type: 'LOAD_INSTANCE',
+  status: 'initialized',
+  api: {
+    url: `/api/instance/${instance}`,
+    method: 'get',
+  },
+})
