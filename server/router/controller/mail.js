@@ -44,7 +44,11 @@ module.exports = {
 
   validateLoginData: async (req, res) => {
     try {
-      const valid = await mailer.validateLoginData(req.body)
+      const { gmail_user, gmail_pass } = await instanceDB.getInstanceById(req.instance)
+      const valid = await mailer.validateLoginData(req.instance, {
+        gmail_user,
+        gmail_pass,
+      })
 
       res.status(200).json({ valid })
     } catch (err) {
@@ -57,6 +61,8 @@ module.exports = {
       const valid = await mailer.validateLoginData(req.body)
 
       if (valid) {
+        const { gmail_user, gmail_pass } = req.body
+
         const instance = await instanceDB.setPropsById(req.instance, {
           gmail_user,
           gmail_pass,

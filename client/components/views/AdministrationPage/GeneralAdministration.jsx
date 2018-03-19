@@ -44,16 +44,12 @@ export default class GeneralAdministration extends React.Component {
 
   componentWillReceiveProps({ instance }) {
     this.setState({
-      title: instance.title || '',
-      icon: instance.icon || '',
-      gmail_user: instance.gmail_user || '',
-      gmail_pass: instance.gmail_pass || '',
       gmail_state: instance.gmail_state || true,
     })
   }
 
   componentDidMount() {
-    if (gmail_user.length) {
+    if (this.state.gmail_user.length) {
       this.props.validateGmail(this.props.instance.id)
     }
   }
@@ -76,8 +72,9 @@ export default class GeneralAdministration extends React.Component {
 
   render() {
     const { title, icon, gmail_user, gmail_pass, gmail_edit, gmail_state } = this.state
-    const { saveInstanceData } = this.props
+    const { saveInstanceData, hiddenBusy, busyType } = this.props
     const valid = true
+    const gmailBusy = hiddenBusy && busyType.includes('gmail:validate')
 
     return (
       <div className="blockList">
@@ -112,7 +109,15 @@ export default class GeneralAdministration extends React.Component {
         </div>
         <div className="gmail">
           <h4 className="title">{wording.gmail}</h4>
-          {!gmail_edit ? this.renderGmailConnection() : this.renderGmailForm()}
+          {gmailBusy && (
+            <div>
+              <p className="bold">
+                <span className="fa fa-spin fa-circle-notch" />
+                <span>{wording.gmailCheckConnection}</span>
+              </p>
+            </div>
+          )}
+          {!gmailBusy && (!gmail_edit ? this.renderGmailConnection() : this.renderGmailForm())}
         </div>
       </div>
     )
@@ -133,7 +138,7 @@ export default class GeneralAdministration extends React.Component {
               autofill="eventplanner_gmail_user"
               value={gmail_user}
               onChange={this.guserInput}
-              className={gmailInterface.user(gmail_user) ? '' : 'invalid'}
+              className={gmailInterface.user(gmail_user) || !gmail_user.length ? '' : 'invalid'}
             />
           </div>
           <div>
@@ -143,7 +148,7 @@ export default class GeneralAdministration extends React.Component {
               autofill="eventplanner_gmail_pass"
               value={gmail_pass}
               onChange={this.gpassInput}
-              className={gmailInterface.pass(gmail_pass) ? '' : 'invalid'}
+              className={gmailInterface.pass(gmail_pass) || !gmail_pass.length ? '' : 'invalid'}
             />
           </div>
         </div>
@@ -161,7 +166,6 @@ export default class GeneralAdministration extends React.Component {
 
   renderGmailConnection() {
     const { gmail_user, gmail_state } = this.state
-    const { hiddenBusy, busyType } = this.props.app
     const gmail_valid = true
 
     if (!gmail_user.length) {
@@ -171,17 +175,6 @@ export default class GeneralAdministration extends React.Component {
           <span className="fakeLink" onClick={() => this.setState({ gmail_edit: true })}>
             {wording.connectNow}
           </span>
-        </div>
-      )
-    }
-
-    if (hiddenBusy && busyType.includes('gmail:validate')) {
-      return (
-        <div>
-          <p className="bold">
-            <span className="fa fa-spin fa-circle-notch" />
-            <span>{wording.gmailCheckConnection}</span>
-          </p>
         </div>
       )
     }
