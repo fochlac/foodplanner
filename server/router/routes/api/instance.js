@@ -33,7 +33,7 @@ instance.post(
   instanceController.createInstance,
 )
 
-instance.post(
+instance.put(
   '/:instance',
   validate('params', {
     instance: /^[0-9]*$/,
