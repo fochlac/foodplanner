@@ -20,7 +20,6 @@ instance.get(
   instanceController.getInstance,
 )
 
-
 instance.post(
   '/',
   validate('body', {
@@ -32,6 +31,21 @@ instance.post(
     subdomain: /^[_A-Za-z0-9\-]{4,100}$/,
   }),
   instanceController.createInstance,
+)
+
+instance.post(
+  '/:instance',
+  validate('params', {
+    instance: /^[0-9]*$/,
+  }),
+  validate('body', {
+    title: /^([ÄÜÖäöüA-Za-z0-9.\-,\s]{0,100}|undefined)$/,
+    icon: /^(fa-[A-Za-z0-9-]{0,50}|undefined)$/,
+    /*     address: 'jsonString',
+    company: 'utf8', */
+    lang: /^([_-A-Za-z0-9\-]{0,100}|undefined)$/,
+  }),
+  instanceController.updateInstance,
 )
 
 module.exports = instance

@@ -95,7 +95,7 @@ module.exports = {
     }
   },
 
-  getInstance: async (req,res) => {
+  getInstance: async (req, res) => {
     log(6, 'getting instance data')
     try {
       if (+req.params.instance !== +req.user.instance) {
@@ -109,9 +109,25 @@ module.exports = {
       }
       log(6, 'got instance data')
       res.status(200).send(instanceData)
-
     } catch (err) {
       error.router.internalError(res)(err)
     }
-  }
+  },
+
+  updateInstance: async (req, res) => {
+    log(6, 'setting instance data')
+    try {
+      if (+req.params.instance !== +req.user.instance) {
+        log(4, `User ${req.user.id} tried to access instance ${req.instance} without access rights`)
+        return res.status(403).send({ type: 'FORBIDDEN' })
+      }
+      const { title, icon, address, company, lang } = req.body
+      const instanceData = await instanceDB.setPropsById(req.params.instance, { title, icon, address, company, lang })
+
+      log(6, 'done setting instance data')
+      res.status(200).send(instanceData)
+    } catch (err) {
+      error.router.internalError(res)(err)
+    }
+  },
 }
