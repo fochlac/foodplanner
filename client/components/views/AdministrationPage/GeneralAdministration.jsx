@@ -49,8 +49,10 @@ export default class GeneralAdministration extends React.Component {
   }
 
   componentDidMount() {
-    if (this.state.gmail_user.length) {
-      this.props.validateGmail(this.props.instance.id)
+    const { instance, validateGmail } = this.props
+
+    if (this.state.gmail_user.length && instance.gmail_state === undefined) {
+      validateGmail(instance.id)
     }
   }
 
@@ -72,7 +74,7 @@ export default class GeneralAdministration extends React.Component {
 
   render() {
     const { title, icon, gmail_user, gmail_pass, gmail_edit, gmail_state } = this.state
-    const { saveInstanceData, hiddenBusy, busyType } = this.props
+    const { saveInstanceData, hiddenBusy, busyType, instance } = this.props
     const valid = true
     const gmailBusy = hiddenBusy && busyType.includes('gmail:validate')
 
@@ -87,7 +89,7 @@ export default class GeneralAdministration extends React.Component {
               autofill="eventplanner_title"
               value={title}
               onChange={this.titleInput}
-              onBlur={() => title !== this.props.title && saveInstanceData({ title })}
+              onBlur={() => title !== instance.title && saveInstanceData(instance.id, { title })}
             />
           </div>
           <div>
@@ -103,7 +105,7 @@ export default class GeneralAdministration extends React.Component {
               autofill="eventplanner_icon"
               value={icon}
               onChange={this.iconInput}
-              onBlur={() => icon !== this.props.icon && saveInstanceData({ icon })}
+              onBlur={() => icon !== instance.icon && saveInstanceData(instance.id, { icon })}
             />
           </div>
         </div>
@@ -166,13 +168,23 @@ export default class GeneralAdministration extends React.Component {
 
   renderGmailConnection() {
     const { gmail_user, gmail_state } = this.state
+    const { instance } = this.props
     const gmail_valid = true
 
     if (!gmail_user.length) {
       return (
         <div className="noConnection">
           <p className="info">{wording.noConnection}</p>
-          <span className="fakeLink" onClick={() => this.setState({ gmail_edit: true })}>
+          <span
+            className="fakeLink"
+            onClick={() =>
+              this.setState({
+                gmail_edit: true,
+                gmail_user: instance.gmail_user || '',
+                gmail_pass: instance.gmail_pass || '',
+              })
+            }
+          >
             {wording.connectNow}
           </span>
         </div>
