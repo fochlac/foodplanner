@@ -74,9 +74,9 @@ export default class GeneralAdministration extends React.Component {
 
   render() {
     const { title, icon, gmail_user, gmail_pass, gmail_edit, gmail_state } = this.state
-    const { saveInstanceData, hiddenBusy, busyType, instance } = this.props
+    const { saveInstanceData, app, instance } = this.props
     const valid = true
-    const gmailBusy = hiddenBusy && busyType.includes('gmail:validate')
+    const gmailBusy = app.hiddenBusy && app.busyType.includes('gmail:validate')
 
     return (
       <div className="blockList">
@@ -126,11 +126,16 @@ export default class GeneralAdministration extends React.Component {
   }
 
   renderGmailForm() {
-    const { gmail_user, gmail_pass } = this.state
+    const { gmail_user, gmail_pass, gmail_state } = this.state
     const gmail_valid = gmailInterface.user(gmail_user) && gmailInterface.pass(gmail_pass)
 
     return (
       <div>
+        {!gmail_state && (
+          <p className="col_red bold">
+            <span className="fa fa-lg fa-times-circle-o" /> {wording.gmailConnectionError}
+          </p>
+        )}
         <p className="gmailInfo">{wording.gmailInfo}</p>
         <div className="row">
           <div>
@@ -192,7 +197,7 @@ export default class GeneralAdministration extends React.Component {
     }
 
     return (
-      <div>
+      <div className="textAlignCenter">
         {gmail_state ? (
           <p className="col_green bold">
             <span className="fa fa-lg fa-check-circle-o" /> {wording.gmailConnectionSuccess}

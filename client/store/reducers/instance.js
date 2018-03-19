@@ -39,6 +39,14 @@ const instance = (state = {}, action) => {
       }
       return state
 
+    case 'VALIDATE_MAIL':
+    case 'SAVE_MAIL':
+    case 'SAVE_INSTANCE':
+      if (action.status === 'complete') {
+        return { ...state, ...action.data }
+      }
+      return state
+
     default:
       return state
   }

@@ -45,12 +45,12 @@ module.exports = {
   validateLoginData: async (req, res) => {
     try {
       const { gmail_user, gmail_pass } = await instanceDB.getInstanceById(req.instance)
-      const valid = await mailer.validateLoginData({
+      const gmail_state = await mailer.validateLoginData({
         gmail_user,
         gmail_pass,
       })
 
-      res.status(200).json({ valid })
+      res.status(200).json({ gmail_state })
     } catch (err) {
       error.router.internalError(res)(err)
     }
@@ -58,9 +58,9 @@ module.exports = {
 
   validateAndSaveLoginData: async (req, res) => {
     try {
-      const valid = await mailer.validateLoginData(req.body)
+      const gmail_state = await mailer.validateLoginData(req.body)
 
-      if (valid) {
+      if (gmail_state) {
         const { gmail_user, gmail_pass } = req.body
 
         const instance = await instanceDB.setPropsById(req.instance, {
@@ -70,9 +70,9 @@ module.exports = {
 
         instanceCache.put(req.instance, instance)
 
-        res.status(200).json({ valid, instance })
+        res.status(200).json({ gmail_state, instance })
       } else {
-        res.status(200).json({ valid })
+        res.status(200).json({ gmail_state })
       }
     } catch (err) {
       error.router.internalError(res)(err)

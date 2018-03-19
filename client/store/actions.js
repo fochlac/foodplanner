@@ -615,7 +615,8 @@ export const loadInstance = instance => ({
 export const validateGmail = instance => ({
   type: 'VALIDATE_MAIL',
   status: 'hidden',
-  busyType: 'gmail:validate',
+  busyType: 'gmail',
+  instance,
   api: {
     url: `/${instance}/api/mail/validate`,
     method: 'get',
@@ -625,7 +626,8 @@ export const validateGmail = instance => ({
 export const saveGmail = (instance, { gmail_user, gmail_pass }) => ({
   type: 'SAVE_MAIL',
   status: 'hidden',
-  busyType: 'gmail:save',
+  busyType: 'gmail',
+  instance,
   api: {
     url: `/${instance}/api/mail/`,
     method: 'post',
@@ -639,7 +641,8 @@ export const saveGmail = (instance, { gmail_user, gmail_pass }) => ({
 export const saveInstanceData = (instance, { icon, title, company, address, lang }) => ({
   type: 'SAVE_INSTANCE',
   status: 'hidden',
-  busyType: 'instance',
+  busyType: 'saveInstance',
+  instance,
   api: {
     url: `/api/instance/${instance}`,
     method: 'put',

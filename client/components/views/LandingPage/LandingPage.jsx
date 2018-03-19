@@ -111,10 +111,12 @@ export default class LandingPage extends React.Component {
         <h3 className="title">{wording.intro}</h3>
         <div className="domainFinder">
           <h3>{wording.domainFinderTitle}</h3>
-          <div className="spinnerInside domainInput">
-            <input type="text" onChange={this.subdomainInput} />
+          <div className="domainInput">
+            <span className="spinnerInside">
+              <input type="text" onChange={this.subdomainInput} />
+              {hiddenBusy && busyList.includes('domainCheck') && <div className="fa fa-spin fa-spinner fa-lg" />}
+            </span>
             <span>.fochlac.com</span>
-            {hiddenBusy && busyList.includes('domainCheck') && <div className="fa fa-spin fa-spinner fa-lg" />}
           </div>
           <button onClick={() => this.setState({ view: 'register' })} disabled={!(subdomain && subdomain.isValid && subdomain.name === this.state.subdomain)}>
             {wording.findDomain}
