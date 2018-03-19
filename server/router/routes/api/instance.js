@@ -40,10 +40,10 @@ instance.post(
   }),
   validate('body', {
     title: /^([ÄÜÖäöüA-Za-z0-9.\-,\s]{0,100}|undefined)$/,
-    icon: /^(fa-[A-Za-z0-9-]{0,50}|undefined)$/,
+    icon: /^(fa-[A-Za-z0-9\-]{0,50}|undefined)$/,
     /*     address: 'jsonString',
     company: 'utf8', */
-    lang: /^([_-A-Za-z0-9\-]{0,100}|undefined)$/,
+    lang: /^([_A-Za-z0-9\-]{0,100}|undefined)$/,
   }),
   instanceController.updateInstance,
 )
