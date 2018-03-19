@@ -1,7 +1,9 @@
 const routes = require('express').Router(),
   instance = require('./instance.js'),
+  mail = require('./mail.js'),
   user = require('./user.js')
 
+routes.use('/mail', mail)
 routes.use('/instance', instance)
 routes.use('/user', user)
 

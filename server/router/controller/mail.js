@@ -35,5 +35,15 @@ module.exports = {
       res.status(200).send(meal);
     })
     .catch(error.router.internalError(res));
+  },
+
+  validateLoginData: async (req, res) => {
+    try {
+      const valid = await mailer.validateLoginData(req.body)
+
+      res.status(200).json({valid})
+    } catch(err) {
+      error.router.internalError(res)(err)
+    }
   }
 }

@@ -8,8 +8,7 @@ const wording = {
   noConnection: 'Sie sind aktuell nicht mit G-Mail verbunden.',
   connectNow: 'Jetzt mit G-Mail verbinden.',
   connect: 'Verbinden',
-  gmailInfo:
-    'Um Emails mit dem Terminplaner versenden zu können, geben Sie bitte Nutzername und Passwort für den dazu zu verwendenden G-Mail Account ein.',
+  gmailInfo: 'Um Emails mit dem Terminplaner versenden zu können, geben Sie bitte Nutzername und Passwort für den dazu zu verwendenden G-Mail Account ein.',
   password: 'Passwort',
   user: 'Benutzername',
   icon: 'Icon',
@@ -79,7 +78,8 @@ export default class GeneralAdministration extends React.Component {
     const { gmail_user, gmail_pass } = this.state
     const gmail_valid = true
 
-    return <div>
+    return (
+      <div>
         <p className="gmailInfo">{wording.gmailInfo}</p>
         <div className="row">
           <div>
@@ -91,15 +91,16 @@ export default class GeneralAdministration extends React.Component {
             <input type="password" autofill="eventplanner_gmail_pass" value={gmail_pass} onChange={this.gpassInput} />
           </div>
         </div>
-        <div className="row">
-          <button type="button" className="push-right" onClick={() => this.setState({ gmail_edit: false })}>
+        <div className="row right">
+          <button type="button" onClick={() => this.setState({ gmail_edit: false })}>
             {wording.cancel}
           </button>
-          <button type="button" className="push-right" onClick={() => this.connectGmail()} disabled={!gmail_valid}>
+          <button type="button" onClick={() => this.connectGmail()} disabled={!gmail_valid}>
             {wording.connect}
           </button>
         </div>
       </div>
+    )
   }
 
   renderGmailConnection() {
@@ -119,12 +120,20 @@ export default class GeneralAdministration extends React.Component {
 
     return (
       <div>
-        {gmail_state ? <p className="success">{wording.gmailConnectionSuccess}</p> : <p className="error">{wording.gmailConnectionError}</p>}
+        {gmail_state ? (
+          <p className="col_green bold">
+            <span className="fa fa-lg fa-check-circle-o" /> {wording.gmailConnectionSuccess}
+          </p>
+        ) : (
+          <p className="col_red bold">
+            <span className="fa fa-lg fa-times-circle-o" /> {wording.gmailConnectionError}
+          </p>
+        )}
         <p>
           <span>
-            {wording.user}: {gmail_user}
+            {wording.user}: <b className="noWrap">{gmail_user}<span className="fa fa-pencil edit marginLeft fakeLink" onClick={() => this.setState({ gmail_edit: true })} /></b>
           </span>
-          <span className="fa fa-pencil edit" onClick={() => this.setState({ gmail_edit: true })} />
+
         </p>
       </div>
     )

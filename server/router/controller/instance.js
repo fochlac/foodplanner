@@ -61,6 +61,7 @@ module.exports = {
 
       mailCache.deleteAll()
       userListCache.deleteAll()
+      instanceCache.deleteAll()
 
       const token = await jwt.createToken(user)
 

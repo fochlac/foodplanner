@@ -102,12 +102,14 @@ module.exports = {
     jwtVerify(req)
       .then(jwtGetUser)
       .then(userObject => {
+        log(6, 'found user: ', userObject.name)
         req.auth = true
         req.user = { ...userObject, admin: +req.instance === +userObject.instance || !req.instance ? userObject.admin : false }
 
         next()
       })
       .catch(err => {
+        log(6, 'anonymous user')
         req.auth = false
         req.user = undefined
         next()
@@ -116,10 +118,13 @@ module.exports = {
 
   requireAdmin: (req, res, next) => {
     log(6, 'Checking if user is admin')
-    if (req.user.admin) {
+    if (req.auth && req.user.admin) {
       next()
     } else {
-      log(4, `User ${req.user.id} from instance ${req.user.instance} tried to access call restricted to role "admin"`)
+      log(4, req.auth
+        ? `User ${req.user.id} from instance ${req.user.instance} tried to access call restricted to role "admin"`
+        : `Anonymous user from ${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} tried to access call restricted to role "admin"`
+      )
       res.status(403).send({ type: 'FORBIDDEN' })
     }
   },

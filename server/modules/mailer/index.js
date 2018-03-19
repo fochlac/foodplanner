@@ -69,7 +69,21 @@ module.exports = {
         data.forEach(user => {
             mail(invitation(user[0], user[1]), error.checkError(3, 'Error sending invitation.'), user[0], 'invitation');
         });
-    }
+    },
+    validateLoginData({gmail_user, gmail_pass}) {
+      return new Promise((resolve, reject) => {
+        gmail({
+          user: gmail_user,
+          pass: gmail_pass,
+          to: gmail_user,
+          subject: 'test subject',
+          text: 'gmail-send example 1',
+        }, (err) => {
+          if (err) return resolve(false);
+          if (!err) return resolve(true);
+        })
+      })
+    },
 }
 
 
