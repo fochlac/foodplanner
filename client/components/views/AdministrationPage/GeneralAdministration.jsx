@@ -49,7 +49,10 @@ export default class GeneralAdministration extends React.Component {
   }
 
   componentDidMount() {
-    this.props.validateGmail(this.props.instance.id)
+    const { gmail_user, id } = this.props.instance
+    if (gmail_user && gmailInterface.user(gmail_user)) {
+      this.props.validateGmail(id)
+    }
   }
 
   handleInput(field) {
@@ -157,14 +160,19 @@ export default class GeneralAdministration extends React.Component {
           </div>
         </div>
         <div className="row right">
-          <button type="button" onClick={() => {
-            this.setState({
-              gmail_edit: false,
-              gmail_user: instance.gmail_user || '',
-              gmail_pass: instance.gmail_pass || '',
-            });
-            validateGmail(this.props.instance.id)
-          }}>
+          <button
+            type="button"
+            onClick={() => {
+              this.setState({
+                gmail_edit: false,
+                gmail_user: instance.gmail_user || '',
+                gmail_pass: instance.gmail_pass || '',
+              })
+              if (instance.gmail_user && gmailInterface.user(instance.gmail_user)) {
+                validateGmail(this.props.instance.id)
+              }
+            }}
+          >
             {wording.cancel}
           </button>
           <button type="button" onClick={() => this.saveGmail()} disabled={!gmail_valid}>
@@ -184,12 +192,7 @@ export default class GeneralAdministration extends React.Component {
       return (
         <div className="noConnection">
           <p className="info">{wording.noConnection}</p>
-          <span
-            className="fakeLink"
-            onClick={() =>
-              this.setState({ gmail_edit: true, originalGmail_state: gmail_state })
-            }
-          >
+          <span className="fakeLink" onClick={() => this.setState({ gmail_edit: true, originalGmail_state: gmail_state })}>
             {wording.connectNow}
           </span>
         </div>
