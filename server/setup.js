@@ -61,7 +61,7 @@ let setup = [
         \`company\`             varchar(150),
         \`subdomain\`           varchar(150)    NOT NULL,
         \`address\`             varchar(150)    NOT NULL,
-        \`sprache\`             varchar(150)                DEFAULT "de-DE",
+        \`lang\`                varchar(150)                DEFAULT "de-DE",
         \`title\`               varchar(150),
         \`gmail_user\`          varchar(150),
         \`gmail_pass\`          varchar(150),

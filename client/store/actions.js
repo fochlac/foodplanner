@@ -611,3 +611,45 @@ export const loadInstance = instance => ({
     method: 'get',
   },
 })
+
+export const validateGmail = instance => ({
+  type: 'VALIDATE_MAIL',
+  status: 'hidden',
+  busyType: 'gmail:validate',
+  api: {
+    url: `/${instance}/api/mail/validate`,
+    method: 'get',
+  },
+})
+
+export const saveGmail = (instance, { gmail_user, gmail_pass }) => ({
+  type: 'SAVE_MAIL',
+  status: 'hidden',
+  busyType: 'gmail:save',
+  api: {
+    url: `/${instance}/api/mail/`,
+    method: 'post',
+    body: {
+      gmail_user,
+      gmail_pass,
+    },
+  },
+})
+
+export const saveInstanceData = (instance, { icon, title, company, address, lang }) => ({
+  type: 'SAVE_INSTANCE',
+  status: 'hidden',
+  busyType: 'instance',
+  api: {
+    url: `/api/instance/${instance}`,
+    method: 'put',
+    body: {
+      instance,
+      icon,
+      title,
+      company,
+      address,
+      lang,
+    },
+  },
+})

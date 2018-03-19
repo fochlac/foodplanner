@@ -3,9 +3,9 @@ import './AdministrationPage.less'
 import DefaultPage from 'UI/DefaultPage.js'
 import GeneralAdministration from './GeneralAdministration'
 import InstanceAdministration from './InstanceAdministration.jsx'
+import React from 'react'
 import TransactionAdministration from './TransactionAdministration.jsx'
 import UserAdministration from './UserAdministration.jsx'
-import React from 'react'
 
 const wording = {
   general: 'Allgemeines',
@@ -51,8 +51,12 @@ export default class AdministrationPage extends React.Component {
   }
 
   render() {
-    const { app, user, sign_out, instance, setAdmin, deleteUser } = this.props
+    const { app, user, sign_out, instance, setAdmin, deleteUser, validateGmail, saveGmail, saveInstanceData } = this.props
     const { settings } = this.state
+
+    const userActions = { setAdmin, deleteUser }
+    const generalActions = { validateGmail, saveGmail, saveInstanceData }
+    const instanceActions = { saveInstanceData }
 
     return (
       <DefaultPage>
@@ -93,18 +97,19 @@ export default class AdministrationPage extends React.Component {
                 </li>
               </ul>
             </div>
-            {(() => {
-              switch (this.state.settings) {
-                case 'general':
-                  return <GeneralAdministration instance={instance} />
-                case 'users':
-                  return <UserAdministration users={instance.users} self={user.id} setAdmin={setAdmin} deleteUser={deleteUser} />
-                case 'transactions':
-                  return <TransactionAdministration transactions={instance.transactions} />
-                case 'instance':
-                  return <InstanceAdministration instance={instance} />
-              }
-            })()}
+            {instance.id &&
+              (() => {
+                switch (this.state.settings) {
+                  case 'general':
+                    return <GeneralAdministration instance={instance} app={app} {...generalActions} />
+                  case 'users':
+                    return <UserAdministration users={instance.users} self={user.id} {...userActions} />
+                  case 'transactions':
+                    return <TransactionAdministration transactions={instance.transactions} />
+                  case 'instance':
+                    return <InstanceAdministration instance={instance} {...instanceActions} />
+                }
+              })()}
           </div>
         </div>
       </DefaultPage>

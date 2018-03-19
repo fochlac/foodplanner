@@ -30,7 +30,7 @@ module.exports = {
       address,
       company,
       subdomain,
-      sprache: 'de-DE',
+      lang: 'de-DE',
       title: subdomain,
       gmail_user: '',
       gmail_pass: '',
@@ -66,5 +66,22 @@ module.exports = {
     log(6, 'deleted instance ', id)
 
     return result[0]
+  },
+
+  setPropsById: async (id, props) => {
+    const updateList = Object.keys(props)
+      .map(prop => `${mysql.escapeId(prop)} = ${mysql.escape(props[prop])}`)
+      .join(', ')
+    const queryUpdate = `UPDATE instances SET ${updateList} WHERE id = ${id};`
+    const queryInstance = `SELECT * FROM instances WHERE id = ${id};`
+
+    const dbActions = async myDb => {
+      await executeQuery(myDb, queryUpdate)
+      const [result] = await executeQuery(myDb, queryInstance)
+
+      return result
+    }
+
+    return createTransaction({ dbActions, ident: 'db/instance.js:setPropsById' })
   },
 }
