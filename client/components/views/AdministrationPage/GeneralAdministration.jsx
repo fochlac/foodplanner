@@ -33,7 +33,7 @@ export default class GeneralAdministration extends React.Component {
       icon: instance.icon || '',
       gmail_user: instance.gmail_user || '',
       gmail_pass: instance.gmail_pass || '',
-      gmail_state: instance.gmail_state || true,
+      gmail_state: instance.gmail_state !== undefined ? instance.gmail_state : true,
     }
 
     this.titleInput = this.handleInput('title').bind(this)
@@ -44,16 +44,12 @@ export default class GeneralAdministration extends React.Component {
 
   componentWillReceiveProps({ instance }) {
     this.setState({
-      gmail_state: instance.gmail_state || true,
+      gmail_state: instance.gmail_state !== undefined ? instance.gmail_state : true,
     })
   }
 
   componentDidMount() {
-    const { instance, validateGmail } = this.props
-
-    if (this.state.gmail_user.length && instance.gmail_state === undefined) {
-      validateGmail(instance.id)
-    }
+    this.props.validateGmail(this.props.instance.id)
   }
 
   handleInput(field) {
@@ -76,7 +72,7 @@ export default class GeneralAdministration extends React.Component {
     const { title, icon, gmail_user, gmail_pass, gmail_edit, gmail_state } = this.state
     const { saveInstanceData, app, instance } = this.props
     const valid = true
-    const gmailBusy = app.hiddenBusy && app.busyType.includes('gmail:validate')
+    const gmailBusy = app.hiddenBusy && app.busyList.includes('gmail')
 
     return (
       <div className="blockList">
@@ -113,8 +109,8 @@ export default class GeneralAdministration extends React.Component {
           <h4 className="title">{wording.gmail}</h4>
           {gmailBusy && (
             <div>
-              <p className="bold">
-                <span className="fa fa-spin fa-circle-notch" />
+              <p className="bold textAlignCenter col_green">
+                <span className="fa fa-spin fa-spinner marginRight" />
                 <span>{wording.gmailCheckConnection}</span>
               </p>
             </div>
@@ -126,8 +122,9 @@ export default class GeneralAdministration extends React.Component {
   }
 
   renderGmailForm() {
-    const { gmail_user, gmail_pass, gmail_state } = this.state
+    const { gmail_user, gmail_pass, gmail_state, originalGmail_state } = this.state
     const gmail_valid = gmailInterface.user(gmail_user) && gmailInterface.pass(gmail_pass)
+    const { instance, validateGmail } = this.props
 
     return (
       <div>
@@ -160,7 +157,14 @@ export default class GeneralAdministration extends React.Component {
           </div>
         </div>
         <div className="row right">
-          <button type="button" onClick={() => this.setState({ gmail_edit: false })}>
+          <button type="button" onClick={() => {
+            this.setState({
+              gmail_edit: false,
+              gmail_user: instance.gmail_user || '',
+              gmail_pass: instance.gmail_pass || '',
+            });
+            validateGmail(this.props.instance.id)
+          }}>
             {wording.cancel}
           </button>
           <button type="button" onClick={() => this.saveGmail()} disabled={!gmail_valid}>
@@ -183,11 +187,7 @@ export default class GeneralAdministration extends React.Component {
           <span
             className="fakeLink"
             onClick={() =>
-              this.setState({
-                gmail_edit: true,
-                gmail_user: instance.gmail_user || '',
-                gmail_pass: instance.gmail_pass || '',
-              })
+              this.setState({ gmail_edit: true, originalGmail_state: gmail_state })
             }
           >
             {wording.connectNow}
@@ -212,7 +212,7 @@ export default class GeneralAdministration extends React.Component {
             {wording.user}:{' '}
             <b className="noWrap">
               {gmail_user}
-              <span className="fa fa-pencil edit marginLeft fakeLink" onClick={() => this.setState({ gmail_edit: true })} />
+              <span className="fa fa-pencil edit marginLeft fakeLink" onClick={() => this.setState({ gmail_edit: true, originalGmail_state: gmail_state })} />
             </b>
           </span>
         </p>
