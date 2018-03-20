@@ -45,6 +45,7 @@ export default class GeneralAdministration extends React.Component {
   componentWillReceiveProps({ instance }) {
     this.setState({
       gmail_state: instance.gmail_state !== undefined ? instance.gmail_state : true,
+      edit: instance.gmail_user !== this.props.instance.gmail_user ? false : this.state.edit,
     })
   }
 
