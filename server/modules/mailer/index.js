@@ -13,13 +13,19 @@ const gmail = require('gmail-send')
     , creationNotice_df = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice_datefinder.tmpl.js')
     , invitation = require(process.env.FOOD_HOME + 'modules/mailer/invitation.tmpl.js')
 
-    , mail = (tmpl, cb, user, type, instance) => {
+    , mail = async (tmpl, cb, user, type, instance) => {
+        try{
+            const sendEmail = await getMailer(instance)
+        } catch (err) {
+            log(3, 'error getting mailer', err)
+            return
+        }
         stash.push({ tmpl, cb, user, type });
         if (!stashTimer) {
             stashTimer = setInterval(() => {
                 let mail = stash.shift();
 
-                getMailer(instance)(mail.tmpl, (err) => {
+                sendEmail(mail.tmpl, (err) => {
                     if (!err) {
                         log(5, `sent ${mail.type}-mail to ${mail.user}`);
                     }
