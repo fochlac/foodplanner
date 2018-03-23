@@ -6,7 +6,8 @@ const userDB = require(process.env.FOOD_HOME + 'modules/db/user'),
   mailer = require(process.env.FOOD_HOME + 'modules/mailer')
 
 let cache = caches.getCache('mail'),
-  instanceCache = caches.getCache('instance')
+  instanceCache = caches.getCache('instance'),
+  mailerCache = caches.getCache('mailer')
 
 module.exports = {
   findMail: (req, res) => {
@@ -68,6 +69,7 @@ module.exports = {
           gmail_pass,
         })
 
+        mailerCache.delete(req.instance)
         instanceCache.put(req.instance, instance)
 
         res.status(200).json({ gmail_state, instance })

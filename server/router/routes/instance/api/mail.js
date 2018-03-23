@@ -11,15 +11,6 @@ mail.get(
   mailController.findMail,
 )
 
-mail.post(
-  '/invite',
-  jwt.requireAdmin,
-  validate('body', {
-    mail: 'array',
-  }),
-  mailController.sendInvitation,
-)
-
 mail.get('/validate', jwt.requireAdmin, mailController.validateLoginData)
 
 mail.post(
