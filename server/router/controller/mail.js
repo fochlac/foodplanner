@@ -72,7 +72,7 @@ module.exports = {
         mailerCache.delete(req.instance)
         instanceCache.put(req.instance, instance)
 
-        res.status(200).json({ gmail_state, instance })
+        res.status(200).json({ gmail_state, ...instance })
       } else {
         res.status(200).json({ gmail_state })
       }

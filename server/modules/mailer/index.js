@@ -16,38 +16,41 @@ const gmail = require('gmail-send')
     , mail = async (tmpl, cb, user, type, instance) => {
         try{
             const sendEmail = await getMailer(instance)
+            stash.push({ tmpl, cb, user, type });
+            if (!stashTimer) {
+                stashTimer = setInterval(() => {
+                    let mail = stash.shift();
+    
+                    sendEmail(mail.tmpl, (err) => {
+                        if (!err) {
+                            log(5, `sent ${mail.type}-mail to ${mail.user}`);
+                        }
+                        mail.cb(err);
+                    });
+    
+                    if (!stash.length) {
+                        clearInterval(stashTimer);
+                        stashTimer = false;
+                    }
+                }, 1000);
+            }
         } catch (err) {
             log(3, 'error getting mailer', err)
-            return
-        }
-        stash.push({ tmpl, cb, user, type });
-        if (!stashTimer) {
-            stashTimer = setInterval(() => {
-                let mail = stash.shift();
-
-                sendEmail(mail.tmpl, (err) => {
-                    if (!err) {
-                        log(5, `sent ${mail.type}-mail to ${mail.user}`);
-                    }
-                    mail.cb(err);
-                });
-
-                if (!stash.length) {
-                    clearInterval(stashTimer);
-                    stashTimer = false;
-                }
-            }, 1000);
         }
     };
 
 let mailerCache = caches.getCache('mailer')
 
 const getMailer = async (instance) => {
-    const mailer = mailerCache.get(instance)
+    let mailer = mailerCache.get(instance)
 
     if (!mailer)  {
         const { gmail_pass, gmail_user } = await instanceDb.getInstanceById(instance)
-        mailer = gmail({user: gmail_user, pass: gmail_pass})
+        if (gmail_pass && gmail_user) {
+            mailer = gmail({user: gmail_user, pass: gmail_pass})
+        } else {
+            mailer = () => log(5, `Did not send mail for instance ${instance} due to missing login data`)
+        }
         mailerCache.put(instance, mailer)
     }
 
@@ -92,11 +95,15 @@ module.exports = {
             gmail({
                 user: gmail_user,
                 pass: gmail_pass,
+            })({
                 to: gmail_user,
                 subject: 'test subject',
                 text: 'gmail-send example 1',
             }, (err) => {
-                if (err) return resolve(false);
+                if (err)  {
+                    log(5, 'mail validation failed due to error: ', err)
+                    return resolve(false);
+                }
                 if (!err) return resolve(true);
             })
         })

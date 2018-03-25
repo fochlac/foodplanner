@@ -68,6 +68,7 @@ module.exports = {
                         app:{
                           dialog: ${req.dialog ? JSON.stringify(req.dialog) : '{}'},
                           errors:{},
+                          busyList: [],
                           dataversion: ${version()},
                           historySize: ${allMeals.length - meals.length}
                         },
@@ -113,7 +114,7 @@ module.exports = {
                       })},
                       historyMealMap: {},
                       user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
-                      app:{dialog:${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: 0, historySize: 0},
+                      app:{dialog:${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: 0, historySize: 0, busyList: []},
                       meals: {},
                       signups:{},
                       datefinder:{}

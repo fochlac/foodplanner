@@ -45,7 +45,7 @@ export default class GeneralAdministration extends React.Component {
   componentWillReceiveProps({ instance }) {
     this.setState({
       gmail_state: instance.gmail_state !== undefined ? instance.gmail_state : true,
-      edit: instance.gmail_user !== this.props.instance.gmail_user ? false : this.state.edit,
+      gmail_edit: instance.gmail_state ? false : this.state.edit,
     })
   }
 
@@ -80,46 +80,50 @@ export default class GeneralAdministration extends React.Component {
 
     return (
       <div className="blockList">
-        <div className="settings">
-          <div>
-            <label htmlFor="General_Admin_title">{wording.title}</label>
-            <input
-              type="text"
-              id="General_Admin_title"
-              autofill="eventplanner_title"
-              value={title}
-              onChange={this.titleInput}
-              onBlur={() => title !== instance.title && saveInstanceData(instance.id, { title })}
-            />
-          </div>
-          <div>
-            <label htmlFor="General_Admin_icon">
-              {wording.icon}
-              <InfoBubble style={{ bottom: '26px', right: '-110px', width: '210px' }} arrow="top">
-                {wording.iconInfo}
-              </InfoBubble>
-            </label>
-            <input
-              type="text"
-              id="General_Admin_icon"
-              autofill="eventplanner_icon"
-              value={icon}
-              onChange={this.iconInput}
-              onBlur={() => icon !== instance.icon && saveInstanceData(instance.id, { icon })}
-            />
-          </div>
-        </div>
-        <div className="gmail">
-          <h4 className="title">{wording.gmail}</h4>
-          {gmailBusy && (
-            <div>
-              <p className="bold textAlignCenter col_green">
-                <span className="fa fa-spin fa-spinner marginRight" />
-                <span>{wording.gmailCheckConnection}</span>
-              </p>
+        <div className="colRowGrid">
+          <div className="row wrap alignStart">
+            <div className="col settings">
+              <div className="fullWidth">
+                <label htmlFor="General_Admin_title">{wording.title}</label>
+                <input
+                  type="text"
+                  id="General_Admin_title"
+                  autofill="eventplanner_title"
+                  value={title}
+                  onChange={this.titleInput}
+                  onBlur={() => title !== instance.title && saveInstanceData(instance.id, { title })}
+                />
+              </div>
+              <div className="fullWidth">
+                <label htmlFor="General_Admin_icon">
+                  {wording.icon}
+                  <InfoBubble style={{ bottom: '26px', right: '-80px', width: '140px' }} arrow="top">
+                    {wording.iconInfo}
+                  </InfoBubble>
+                </label>
+                <input
+                  type="text"
+                  id="General_Admin_icon"
+                  autofill="eventplanner_icon"
+                  value={icon}
+                  onChange={this.iconInput}
+                  onBlur={() => icon !== instance.icon && saveInstanceData(instance.id, { icon })}
+                />
+              </div>
             </div>
-          )}
-          {!gmailBusy && (!gmail_edit ? this.renderGmailConnection() : this.renderGmailForm())}
+            <div className="col gmail">
+              <h4 className="title">{wording.gmail}</h4>
+              {gmailBusy && (
+                <div>
+                  <p className="bold textAlignCenter col_green">
+                    <span className="fa fa-spin fa-spinner marginRight" />
+                    <span>{wording.gmailCheckConnection}</span>
+                  </p>
+                </div>
+              )}
+              {!gmailBusy && (!gmail_edit ? this.renderGmailConnection() : this.renderGmailForm())}
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -131,36 +135,38 @@ export default class GeneralAdministration extends React.Component {
     const { instance, validateGmail } = this.props
 
     return (
-      <div>
-        {!gmail_state && (
-          <p className="col_red bold">
-            <span className="fa fa-lg fa-times-circle-o" /> {wording.gmailConnectionError}
-          </p>
-        )}
-        <p className="gmailInfo">{wording.gmailInfo}</p>
-        <div className="row">
-          <div>
-            <label>{wording.user}</label>
-            <input
-              type="text"
-              autofill="eventplanner_gmail_user"
-              value={gmail_user}
-              onChange={this.guserInput}
-              className={gmailInterface.user(gmail_user) || !gmail_user.length ? '' : 'invalid'}
-            />
-          </div>
-          <div>
-            <label>{wording.password}</label>
-            <input
-              type="password"
-              autofill="eventplanner_gmail_pass"
-              value={gmail_pass}
-              onChange={this.gpassInput}
-              className={gmailInterface.pass(gmail_pass) || !gmail_pass.length ? '' : 'invalid'}
-            />
+      <div className="colRowGrid">
+        <div className="col">
+          {!gmail_state && (
+            <p className="col_red bold">
+              <span className="fa fa-lg fa-times-circle-o" /> {wording.gmailConnectionError}
+            </p>
+          )}
+          <p className="gmailInfo">{wording.gmailInfo}</p>
+          <div className="row">
+            <div className="fullWidth">
+              <label>{wording.user}</label>
+              <input
+                type="text"
+                autofill="eventplanner_gmail_user"
+                value={gmail_user}
+                onChange={this.guserInput}
+                className={gmailInterface.user(gmail_user) || !gmail_user.length ? '' : 'invalid'}
+              />
+            </div>
+            <div className="fullWidth">
+              <label>{wording.password}</label>
+              <input
+                type="password"
+                autofill="eventplanner_gmail_pass"
+                value={gmail_pass}
+                onChange={this.gpassInput}
+                className={gmailInterface.pass(gmail_pass) || !gmail_pass.length ? '' : 'invalid'}
+              />
+            </div>
           </div>
         </div>
-        <div className="row right">
+        <div className="row justifyEnd">
           <button
             type="button"
             onClick={() => {
@@ -207,10 +213,10 @@ export default class GeneralAdministration extends React.Component {
             <span className="fa fa-lg fa-check-circle-o" /> {wording.gmailConnectionSuccess}
           </p>
         ) : (
-          <p className="col_red bold">
-            <span className="fa fa-lg fa-times-circle-o" /> {wording.gmailConnectionError}
-          </p>
-        )}
+            <p className="col_red bold">
+              <span className="fa fa-lg fa-times-circle-o" /> {wording.gmailConnectionError}
+            </p>
+          )}
         <p>
           <span>
             {wording.user}:{' '}

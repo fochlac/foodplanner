@@ -79,7 +79,7 @@ export default class AdministrationPage extends React.Component {
             </ul>
           </div>
         </div>
-        <div className="dashboard landing">
+        <div className="dashboard landing admin">
           <div className="content">
             <div className="filters">
               <ul className="filterList">

@@ -20,7 +20,7 @@ export default class Topbar extends React.Component {
           </h3>
           <ul className="quicklinks">
             {app.hiddenBusy &&
-              app.busyType.includes('default') && (
+              app.busyList.includes('refresh') && (
                 <li>
                   <span className="fa fa-refresh fa-spin fa-lg" />
                 </li>

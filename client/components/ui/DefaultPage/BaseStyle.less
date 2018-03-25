@@ -175,6 +175,9 @@ input[type='number']::-webkit-outer-spin-button {
   &Top {
     margin-top: 5px !important;
   }
+  &Bottom {
+    margin-bottom: 5px !important;
+  }
 }
 .bold {
   font-weight: 600;
@@ -186,5 +189,73 @@ input[type='number']::-webkit-outer-spin-button {
     position: absolute;
     top: 13px;
     right: 5px;
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.colRowGrid {
+  width: 100%;
+
+  .row {
+    display: flex;
+    justify-content: space-around;
+    width: calc(100% ~"+" 10px);
+    align-items: center;
+    flex-direction: row;
+    margin-left: -10px;
+    margin-right: 10px;
+    & > * {
+      margin-left: 10px;
+    }
+  }
+  
+
+  .col {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: -10px;
+    & > * {
+      margin-top: 10px;
+    }
+    margin-bottom: 10px;
+  }
+
+  .col, .row {
+    &.justifyStart {
+      justify-content: flex-start;
+    }
+    
+    &.justifyCenter {
+      justify-content: center;
+    }
+
+    &.justifyEnd {
+      justify-content: flex-end;
+    }
+
+    &.wrap {
+      flex-wrap: wrap;
+    }
+
+    &.alignStart {
+      align-items: flex-start;
+    }
+    
+    .basis33 {
+      flex-basis: 33%;
+    }
+    
+    .basis66 {
+      flex-basis: 66%;
+    }
+
+    .basis300 {
+      flex-basis: 300px;
+    }
   }
 }
