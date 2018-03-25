@@ -11,18 +11,20 @@ const actions = {
   sign_out: () => (output = 'sign_out'),
   start_sign_in: () => (output = 'start_sign_in'),
   instance: {
-    name: 'test',
+    title: 'test',
+    icon: 'testicon',
     root: 'test123',
   },
 }
 
 describe('Topbar', () => {
   test('should render all elements', () => {
-    const wrapper = shallow(<Topbar user={{ id: 1 }} app={{ hiddenBusy: true, dialog: '' }} {...actions} />)
+    const wrapper = shallow(<Topbar user={{ id: 1 }} app={{ hiddenBusy: true, busyList: ['test2', 'refresh', 'test'], dialog: '' }} {...actions} />)
 
     expect(wrapper.find('.topbar')).toHaveLength(1)
     expect(wrapper.find('h3')).toHaveLength(1)
     expect(wrapper.find('h3').text()).toEqual('test')
+    expect(wrapper.find('.testicon')).toHaveLength(1)
     expect(wrapper.find('.quicklinks')).toHaveLength(1)
     expect(wrapper.find('.quicklinks > li')).toHaveLength(4)
     expect(wrapper.find('.quicklinks .fa-refresh')).toHaveLength(1)
@@ -33,6 +35,13 @@ describe('Topbar', () => {
 
   test('should not render busy if not busy', () => {
     const wrapper = shallow(<Topbar user={{ id: 1 }} app={{ hiddenBusy: false, dialog: '' }} {...actions} />)
+
+    expect(wrapper.find('.quicklinks > li')).toHaveLength(3)
+    expect(wrapper.find('.quicklinks .fa-refresh')).toHaveLength(0)
+  })
+
+  test('should not render busy if busy but not with refresh', () => {
+    const wrapper = shallow(<Topbar user={{ id: 1 }} app={{ hiddenBusy: true, busyList: ['test2', 'reasdwfresh', 'test'], dialog: '' }} {...actions} />)
 
     expect(wrapper.find('.quicklinks > li')).toHaveLength(3)
     expect(wrapper.find('.quicklinks .fa-refresh')).toHaveLength(0)

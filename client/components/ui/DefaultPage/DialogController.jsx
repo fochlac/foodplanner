@@ -57,14 +57,13 @@ export default class DialogController extends React.Component {
         return <TransactionDialog />
 
       case 'UNSUBSCRIBE':
-        if (dialog.content === 'all') {
+        if (d.content === 'all') {
           message = wording.unsubscribeAll
         } else {
-          message =
-            wording.unsubscribe1 + (dialog.content === 'deadlineReminder' ? wording.unsubscribe_deadline : wording.unsubscribe_create) + wording.unsubscribe2
+          message = wording.unsubscribe1 + (d.content === 'deadlineReminder' ? wording.unsubscribe_deadline : wording.unsubscribe_create) + wording.unsubscribe2
         }
 
-        return <ConfirmationDialog message={message} action="save_settings_locally" parameter={dialog.params} noCancel={true} />
+        return <ConfirmationDialog message={message} action="save_settings_locally" parameter={d.params} noCancel={true} />
       case 'OPEN_SETTINGS':
         return <SettingsDialog />
 
@@ -87,7 +86,7 @@ export default class DialogController extends React.Component {
         return <IncomingPaymentsDialog />
 
       case 'LOGIN':
-        return <LoginDialog hideRegister={d.option.hideRegister}/>
+        return <LoginDialog hideRegister={d.option.hideRegister} />
 
       default:
         return null

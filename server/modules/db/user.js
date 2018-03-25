@@ -28,7 +28,7 @@ module.exports = {
     const query = `
         SELECT authentication.*
         FROM authentication
-        RIGHT JOIN users
+        LEFT JOIN users
         ON users.id = authentication.user
         WHERE users.mail = ${mysql.escape(mail)}`
     // AND users.instance = ${mysql.escape(instance)}
@@ -40,7 +40,7 @@ module.exports = {
         myDb.query(query, (err, result) => {
           log(6, 'getting user data : query complete')
           myDb.release()
-          if (err) {
+          if (err || !result.length) {
             log(2, 'modules/db/user:getUserByProperty', err, query)
             reject({ status: 500, message: 'Unable to find user.' })
           } else {

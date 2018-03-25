@@ -44,15 +44,15 @@ describe('DialogController', () => {
     wrapper.setProps({ dialog: { type: 'OPEN_TRANSACTIONS', option: {} } })
     expect(wrapper.find(TransactionDialog)).toHaveLength(1)
 
-    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?list=deadlineReminder' }, user: {} } })
+    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, content: 'deadlineReminder' } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
     expect(wrapper.find(ConfirmationDialog).prop('message')).toContain('Anmeldefrist')
 
-    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?list=creationNotice' }, user: {} } })
+    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, content: 'createMeal' } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
     expect(wrapper.find(ConfirmationDialog).prop('message')).toContain('neuem Angebot')
 
-    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?' }, user: {} } })
+    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, content: 'all' } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
 
     wrapper.setProps({ dialog: { type: 'OPEN_SETTINGS', option: {} } })

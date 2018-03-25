@@ -39,7 +39,7 @@ describe('api', () => {
       }
 
     global.fetch = (url, options) => {
-      expect(url).toBe(act.api.url)
+      expect(url).toBe('test/' + act.api.url)
       expect(options.method).toBe(act.api.method)
       expect(options.headers.Accept).toBe('application/json')
       expect(options.headers['Content-Type']).toBe('application/json')
@@ -66,6 +66,7 @@ describe('api', () => {
         getState: () => ({
           instance: {
             subdomain: true,
+            root: 'test/',
           },
         }),
       })(action => {
@@ -74,7 +75,7 @@ describe('api', () => {
     })
 
     global.fetch = (url, options) => {
-      expect(url).toBe('/3' + act2.api.url)
+      expect(url).toBe(act2.api.url)
       expect(options.method).toBe(act2.api.method)
       expect(options.body).toEqual(act2.api.body)
       expect(options.headers.Accept).toBe('application/json')
@@ -96,8 +97,7 @@ describe('api', () => {
         },
         getState: () => ({
           instance: {
-            subdomain: false,
-            id: 3,
+            root: '',
           },
         }),
       })(action => {
@@ -120,6 +120,7 @@ describe('api', () => {
         getState: () => ({
           instance: {
             subdomain: true,
+            root: '',
           },
         }),
       })(action => {
@@ -147,6 +148,7 @@ describe('api', () => {
         getState: () => ({
           instance: {
             subdomain: true,
+            root: '',
           },
         }),
       })(action => {
@@ -159,6 +161,7 @@ describe('api', () => {
         getState: () => ({
           instance: {
             subdomain: true,
+            root: '',
           },
         }),
       })(action => {

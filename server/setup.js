@@ -191,7 +191,43 @@ let setup = [
 
         UNIQUE KEY \`user\` (\`user\`, \`datefinder\`)
     );`,
-]
+].concat(
+  process.argv.includes('-test')
+    ? [
+        `INSERT INTO instances (
+          name,
+          title,
+          address,
+          company,
+          subdomain
+        ) VALUES (
+          "testname",
+          "testtitle",
+          "",
+          "testcompany",
+          "testsubdomain"
+        );`,
+        `INSERT INTO users (
+          name,
+          admin,
+          mail,
+          balance,
+          instance
+        ) VALUES (
+          "admin",
+          1,
+          "admin@test.de",
+          0,
+          1
+        );`,
+        `INSERT INTO authentication (
+          user
+        ) VALUES (
+          1
+        );`,
+      ]
+    : [],
+)
 
 function setupDB() {
   myDb.query(setup[0], err => {

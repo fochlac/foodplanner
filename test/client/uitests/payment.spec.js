@@ -196,6 +196,7 @@ describe('payment dialog', () => {
     expect(await rows[2].findElement(S.pd.price).getText()).to.include('2.70')
     expect(await rows[2].findElement(S.pd.state).findElements(S.pd.unpaid)).to.have.lengthOf(1)
     await this.driver.findElement(S.pd.finalize).click()
+    await this.driver.awaitBusyComplete()
     rows = await this.driver.findElements(S.pd.signups)
     expect(await rows[1].findElement(S.pd.state).findElements(S.pd.paid)).to.have.lengthOf(1)
     expect(await rows[2].findElement(S.pd.state).findElements(S.pd.paid)).to.have.lengthOf(1)
