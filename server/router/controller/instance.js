@@ -29,9 +29,9 @@ module.exports = {
       res.status(200).send(
         !subdomains.includes(subdomain)
           ? {
-              isValid: true,
-              name: subdomain,
-            }
+            isValid: true,
+            name: subdomain,
+          }
           : { isValid: false },
       )
     } catch (err) {
@@ -121,8 +121,15 @@ module.exports = {
         log(4, `User ${req.user.id} tried to access instance ${req.instance} without access rights`)
         return res.status(403).send({ type: 'FORBIDDEN' })
       }
-      const { title, icon, address, company, lang } = req.body
-      const instanceData = await instanceDB.setPropsById(req.params.instance, { title, icon, address, company, lang })
+      const { title, icon, address, company, lang, name } = req.body
+      const data = { title, icon, address, company, lang, name }
+
+      if (!Object.keys(data).filter(prop => data[prop] !== undefined).length) {
+        log(4, `User ${req.user.id} tried to save no data`)
+        return res.status(400).send({ type: 'BAD_REQUEST' })
+      }
+      const instanceData = await instanceDB.setPropsById(req.params.instance, data)
+      instanceCache.put(req.params.instance, instanceData)
 
       log(6, 'done setting instance data')
       res.status(200).send(instanceData)

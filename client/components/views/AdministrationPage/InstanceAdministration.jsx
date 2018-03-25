@@ -2,6 +2,7 @@ import React from 'react'
 
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import AddressBlock from 'UI/AddressBlock/AddressBlock.jsx'
+import InputRow from 'UI/InputRow/InputRow.jsx'
 
 const wording = {
   submit: 'Abschicken',
@@ -13,62 +14,36 @@ const wording = {
 }
 
 export const userInterface = {
-  name: name => /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/.test(name),
+  name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/,
+  company: /^[ÄÜÖäöüA-Za-z0-9.\-,\s\_]{0,100}$/,
 }
 
 export default class InstanceAdministration extends React.Component {
-  constructor({ instance }) {
-    super()
-
-    this.state = {}
-
-    this.nameInput = this.handleInput('name').bind(this)
-    this.companyInput = this.handleInput('company').bind(this)
-  }
-
-  componentWillReceiveProps({ instance }) {
-    this.setState({
-      title: instance.title,
-      icon: instance.icon,
-      gmail_user: instance.gmail_user,
-      gmail_pass: instance.gmail_pass,
-    })
-  }
-
-  handleInput(field) {
-    return evt => {
-      this.setState({ [field]: evt.target.value })
-    }
-  }
-
   render() {
-    const { name, company, address, addressValid } = this.state
+    const { saveInstanceData, instance } = this.props
+    const { address, name, company } = instance
+    const nameLabel = [
+      wording.name,
+      <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top" key="infobubble">
+        {wording.nameInfo}
+      </InfoBubble>
+    ]
+    let defaultAddress = {}
+
+    try {
+      defaultAddress = JSON.parse(address) 
+    }
+    catch(err) {}
 
     return (
       <div className="colRowGrid">
         <div className="row justifyCenter">
           <div className="col basis300">
             <h4>{wording.address}</h4>
-            <div className="fullWidth">
-              <label htmlFor="Landing_name">
-                {wording.name}
-                <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
-                  {wording.nameInfo}
-                </InfoBubble>
-              </label>
-              <input type="text" id="Landing_name" defaultValue={name} autoComplete="name" onChange={this.nameInput} />
-            </div>
-            <div className="fullWidth">
-              <label htmlFor="Landing_company">{wording.company}</label>
-              <input type="text" id="Landing_company" defaultValue={company} autoComplete="company" onChange={this.companyInput} />
-            </div>
+            <InputRow defaultValue={name} label={nameLabel} required={false} autoComplete="name" userInterface={userInterface.name} onBlur={(name, isValid) => isValid && saveInstanceData(instance.id, { name })} />
+            <InputRow defaultValue={company} label={wording.company} required={false} autoComplete="company" userInterface={userInterface.company} onBlur={(company, isValid) => isValid && saveInstanceData(instance.id, { company })} />
             <div>
-              <AddressBlock onChange={(address, isValid) => this.setState({ address, addressValid: isValid })} value={{}} />
-            </div>
-            <div className="row">
-              <button type="button" onClick={() => this.submit()} disabled={!(addressValid)} className="submit">
-                {wording.submit}
-              </button>
+              <AddressBlock onBlur={(address, isValid) => isValid && saveInstanceData(instance.id, { address: JSON.stringify(address) })} value={defaultAddress} required={false} />
             </div>
           </div>
         </div>

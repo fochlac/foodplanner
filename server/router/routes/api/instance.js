@@ -39,10 +39,11 @@ instance.put(
     instance: /^[0-9]*$/,
   }),
   validate('body', {
+    name: /^([ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}|undefined)$/,
+    company: /^([ÄÜÖäöüA-Za-z0-9.\-,\s]{0,100}|undefined)$/,
     title: /^([ÄÜÖäöüA-Za-z0-9.\-,\s]{0,100}|undefined)$/,
     icon: /^(fa-[A-Za-z0-9\-]{0,50}|undefined)$/,
-    /*     address: 'jsonString',
-    company: 'utf8', */
+    /*     address: 'jsonString',*/
     lang: /^([_A-Za-z0-9\-]{0,100}|undefined)$/,
   }),
   instanceController.updateInstance,

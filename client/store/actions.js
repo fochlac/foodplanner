@@ -638,7 +638,7 @@ export const saveGmail = (instance, { gmail_user, gmail_pass }) => ({
   },
 })
 
-export const saveInstanceData = (instance, { icon, title, company, address, lang }) => ({
+export const saveInstanceData = (instance, { icon, title, company, address, lang, name }) => ({
   type: 'SAVE_INSTANCE',
   status: 'hidden',
   busyType: 'saveInstance',
@@ -653,6 +653,7 @@ export const saveInstanceData = (instance, { icon, title, company, address, lang
       company,
       address,
       lang,
+      name,
     },
   },
 })

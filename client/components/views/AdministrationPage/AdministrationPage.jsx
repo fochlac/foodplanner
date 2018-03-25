@@ -62,10 +62,10 @@ export default class AdministrationPage extends React.Component {
       <DefaultPage>
         <div className="topbar">
           <div className="spacer">
-            <span>
+            <span className="pointer noWrap flexCenter" onClick={() => window.location.href = (instance.subdomain ? ('https://' + instance.subdomain + '.fochlac.com/') : (instance.root + '/' + instance.id))} >
               <span className={'instanceIcon fa fa-lg ' + instance.icon} />
+              <b className="font12">{instance.title}</b>
             </span>
-            <h3>{instance.title}</h3>
             <ul className="quicklinks">
               {app.hiddenBusy && app.dialog === '' ? (
                 <li>

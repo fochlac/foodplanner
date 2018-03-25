@@ -70,9 +70,10 @@ module.exports = {
 
   setPropsById: async (id, props) => {
     const updateList = Object.keys(props)
-      .filter(prop => props[prop])
+      .filter(prop => props[prop] !== undefined)
       .map(prop => `${mysql.escapeId(prop)} = ${mysql.escape(props[prop])}`)
       .join(', ')
+
     const queryUpdate = `UPDATE instances SET ${updateList} WHERE id = ${id};`
     const queryInstance = `SELECT * FROM instances WHERE id = ${id};`
 

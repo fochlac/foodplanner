@@ -5,8 +5,7 @@ const path = require('path'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   webpack = require('webpack'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
-  ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin'),
-  GoogleFontsPlugin = require('google-fonts-webpack-plugin')
+  ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin')
   // , PreloadWebpackPlugin = require('preload-webpack-plugin'),
   // HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
 
@@ -124,9 +123,6 @@ module.exports = {
       },
     }),
     // new HtmlWebpackExcludeAssetsPlugin(),
-    new GoogleFontsPlugin({
-      fonts: [{ family: 'Raleway', variants: ['400', '600'] }],
-    }),
     // new PreloadWebpackPlugin({
     //   rel: 'preload',
     //   include: 'allAssets',
