@@ -1,4 +1,5 @@
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
+import InputRow from 'UI/InputRow/InputRow.jsx'
 import React from 'react'
 
 const wording = {
@@ -19,9 +20,11 @@ const wording = {
   cancel: 'Abbrechen',
 }
 
-const gmailInterface = {
-  user: user => /^[\_A-Za-z0-9.\-]{1,50}@gmail\.[A-Za-z]{1,6}$/.test(user),
-  pass: pass => /^[^%]{1,100}$/.test(pass),
+const userInterface = {
+  user: /^[\_A-Za-z0-9.\-]{1,50}@gmail\.[A-Za-z]{1,6}$/,
+  pass: /^[^%]{1,100}$/,
+  title: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,100}$/,
+  icon: /^fa-[A-Za-z0-9\-]{0,50}$/,
 }
 
 export default class GeneralAdministration extends React.Component {
@@ -29,17 +32,10 @@ export default class GeneralAdministration extends React.Component {
     super()
 
     this.state = {
-      title: instance.title || '',
-      icon: instance.icon || '',
       gmail_user: instance.gmail_user || '',
       gmail_pass: instance.gmail_pass || '',
       gmail_state: instance.gmail_state !== undefined ? instance.gmail_state : true,
     }
-
-    this.titleInput = this.handleInput('title').bind(this)
-    this.iconInput = this.handleInput('icon').bind(this)
-    this.guserInput = this.handleInput('gmail_user').bind(this)
-    this.gpassInput = this.handleInput('gmail_pass').bind(this)
   }
 
   componentWillReceiveProps({ instance }) {
@@ -51,20 +47,14 @@ export default class GeneralAdministration extends React.Component {
 
   componentDidMount() {
     const { gmail_user, id } = this.props.instance
-    if (gmail_user && gmailInterface.user(gmail_user)) {
+    if (gmail_user && userInterface.user.test(gmail_user)) {
       this.props.validateGmail(id)
-    }
-  }
-
-  handleInput(field) {
-    return evt => {
-      this.setState({ [field]: evt.target.value })
     }
   }
 
   saveGmail() {
     const { gmail_user, gmail_pass } = this.state
-    if (gmailInterface.user(gmail_user) && gmailInterface.pass(gmail_pass)) {
+    if (userInterface.user.test(gmail_user) && userInterface.pass.test(gmail_pass)) {
       this.props.saveGmail(this.props.instance.id, {
         gmail_user,
         gmail_pass,
@@ -73,9 +63,8 @@ export default class GeneralAdministration extends React.Component {
   }
 
   render() {
-    const { title, icon, gmail_user, gmail_pass, gmail_edit, gmail_state } = this.state
+    const { gmail_edit } = this.state
     const { saveInstanceData, app, instance } = this.props
-    const valid = true
     const gmailBusy = app.hiddenBusy && app.busyList.includes('gmail')
 
     return (
@@ -83,33 +72,25 @@ export default class GeneralAdministration extends React.Component {
         <div className="colRowGrid">
           <div className="row wrap alignStart">
             <div className="col settings">
-              <div className="fullWidth">
-                <label htmlFor="General_Admin_title">{wording.title}</label>
-                <input
-                  type="text"
-                  id="General_Admin_title"
-                  autofill="eventplanner_title"
-                  value={title}
-                  onChange={this.titleInput}
-                  onBlur={() => title !== instance.title && saveInstanceData(instance.id, { title })}
-                />
-              </div>
-              <div className="fullWidth">
-                <label htmlFor="General_Admin_icon">
-                  {wording.icon}
-                  <InfoBubble style={{ bottom: '26px', right: '-80px', width: '140px' }} arrow="top">
+              <InputRow
+                defaultValue={instance.title}
+                autoComplete="eventplanner_title"
+                userInterface={userInterface.title}
+                onBlur={(title, isValid) => title !== instance.title && isValid && saveInstanceData(instance.id, { title })}
+                label={wording.title}
+              />
+              <InputRow
+                defaultValue={instance.icon}
+                autoComplete="eventplanner_icon"
+                userInterface={userInterface.icon}
+                onBlur={(icon, isValid) => icon !== instance.icon && isValid && saveInstanceData(instance.id, { icon })}
+                label={[
+                  wording.icon,
+                  <InfoBubble key="1" style={{ bottom: '26px', right: '-80px', width: '140px' }} arrow="top">
                     {wording.iconInfo}
-                  </InfoBubble>
-                </label>
-                <input
-                  type="text"
-                  id="General_Admin_icon"
-                  autofill="eventplanner_icon"
-                  value={icon}
-                  onChange={this.iconInput}
-                  onBlur={() => icon !== instance.icon && saveInstanceData(instance.id, { icon })}
-                />
-              </div>
+                  </InfoBubble>,
+                ]}
+              />
             </div>
             <div className="col gmail">
               <h4 className="title">{wording.gmail}</h4>
@@ -130,8 +111,8 @@ export default class GeneralAdministration extends React.Component {
   }
 
   renderGmailForm() {
-    const { gmail_user, gmail_pass, gmail_state, originalGmail_state } = this.state
-    const gmail_valid = gmailInterface.user(gmail_user) && gmailInterface.pass(gmail_pass)
+    const { gmail_user, gmail_pass, gmail_state, originalGmail_state, user_valid, pass_valid } = this.state
+    const gmail_valid = userInterface.user.test(gmail_user) && userInterface.pass.test(gmail_pass)
     const { instance, validateGmail } = this.props
 
     return (
@@ -144,26 +125,21 @@ export default class GeneralAdministration extends React.Component {
           )}
           <p className="gmailInfo">{wording.gmailInfo}</p>
           <div className="row">
-            <div className="fullWidth">
-              <label>{wording.user}</label>
-              <input
-                type="text"
-                autofill="eventplanner_gmail_user"
-                value={gmail_user}
-                onChange={this.guserInput}
-                className={gmailInterface.user(gmail_user) || !gmail_user.length ? '' : 'invalid'}
-              />
-            </div>
-            <div className="fullWidth">
-              <label>{wording.password}</label>
-              <input
-                type="password"
-                autofill="eventplanner_gmail_pass"
-                value={gmail_pass}
-                onChange={this.gpassInput}
-                className={gmailInterface.pass(gmail_pass) || !gmail_pass.length ? '' : 'invalid'}
-              />
-            </div>
+            <InputRow
+              defaultValue={gmail_user}
+              autoComplete="eventplanner_gmail_user"
+              userInterface={userInterface.user}
+              onChange={(gmail_user, user_valid) => this.setState({ gmail_user })}
+              label={wording.user}
+            />
+            <InputRow
+              defaultValue={gmail_pass}
+              autoComplete="eventplanner_gmail_user"
+              userInterface={userInterface.pass}
+              onChange={(gmail_pass, pass_valid) => this.setState({ gmail_pass })}
+              label={wording.password}
+              type="password"
+            />
           </div>
         </div>
         <div className="row justifyEnd">
@@ -175,7 +151,7 @@ export default class GeneralAdministration extends React.Component {
                 gmail_user: instance.gmail_user || '',
                 gmail_pass: instance.gmail_pass || '',
               })
-              if (instance.gmail_user && gmailInterface.user(instance.gmail_user)) {
+              if (instance.gmail_user && userInterface.user.test(instance.gmail_user)) {
                 validateGmail(this.props.instance.id)
               }
             }}
@@ -213,10 +189,10 @@ export default class GeneralAdministration extends React.Component {
             <span className="fa fa-lg fa-check-circle-o" /> {wording.gmailConnectionSuccess}
           </p>
         ) : (
-            <p className="col_red bold">
-              <span className="fa fa-lg fa-times-circle-o" /> {wording.gmailConnectionError}
-            </p>
-          )}
+          <p className="col_red bold">
+            <span className="fa fa-lg fa-times-circle-o" /> {wording.gmailConnectionError}
+          </p>
+        )}
         <p>
           <span>
             {wording.user}:{' '}

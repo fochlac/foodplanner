@@ -1,8 +1,7 @@
-import React from 'react'
-
-import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import AddressBlock from 'UI/AddressBlock/AddressBlock.jsx'
+import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
 import InputRow from 'UI/InputRow/InputRow.jsx'
+import React from 'react'
 
 const wording = {
   submit: 'Abschicken',
@@ -26,24 +25,41 @@ export default class InstanceAdministration extends React.Component {
       wording.name,
       <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top" key="infobubble">
         {wording.nameInfo}
-      </InfoBubble>
+      </InfoBubble>,
     ]
     let defaultAddress = {}
 
     try {
-      defaultAddress = JSON.parse(address) 
-    }
-    catch(err) {}
+      defaultAddress = JSON.parse(address)
+    } catch (err) {}
 
     return (
       <div className="colRowGrid">
         <div className="row justifyCenter">
           <div className="col basis300">
             <h4>{wording.address}</h4>
-            <InputRow defaultValue={name} label={nameLabel} required={false} autoComplete="name" userInterface={userInterface.name} onBlur={(name, isValid) => isValid && saveInstanceData(instance.id, { name })} />
-            <InputRow defaultValue={company} label={wording.company} required={false} autoComplete="company" userInterface={userInterface.company} onBlur={(company, isValid) => isValid && saveInstanceData(instance.id, { company })} />
+            <InputRow
+              defaultValue={name}
+              label={nameLabel}
+              required={false}
+              autoComplete="name"
+              userInterface={userInterface.name}
+              onBlur={(name, isValid) => isValid && saveInstanceData(instance.id, { name })}
+            />
+            <InputRow
+              defaultValue={company}
+              label={wording.company}
+              required={false}
+              autoComplete="company"
+              userInterface={userInterface.company}
+              onBlur={(company, isValid) => isValid && saveInstanceData(instance.id, { company })}
+            />
             <div>
-              <AddressBlock onBlur={(address, isValid) => isValid && saveInstanceData(instance.id, { address: JSON.stringify(address) })} value={defaultAddress} required={false} />
+              <AddressBlock
+                onBlur={(address, isValid) => isValid && saveInstanceData(instance.id, { address: JSON.stringify(address) })}
+                value={defaultAddress}
+                required={false}
+              />
             </div>
           </div>
         </div>

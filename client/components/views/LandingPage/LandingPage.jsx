@@ -1,14 +1,18 @@
 import './LandingPage.less'
 
+import AddressBlock from 'UI/AddressBlock/AddressBlock.jsx'
 import DefaultPage from 'UI/DefaultPage.js'
 import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
-import AddressBlock from 'UI/AddressBlock/AddressBlock.jsx'
+import InputRow from 'UI/InputRow/InputRow.jsx'
 import React from 'react'
 import { generateHash } from 'UTILS/crypto.js'
 
 const wording = {
-  title: 'TerminPlanner',
+  planner: 'TerminPlanner',
   intro: 'Sichern sie sich jetzt ihren Wunschnamen!',
+  title: 'Überschrift',
+  cancel: 'Zurück',
+  instance: 'Allgemein',
   text: [],
   findDomain: 'Domain sichern',
   submit: 'Abschicken',
@@ -29,10 +33,11 @@ const wording = {
     "Bit\u00ADte geb\u00ADen Sie ein val\u00ADides Pass\u00ADwort ein. Neben Buch\u00ADsta\u00ADben und Zahl\u00ADen sind fol\u00ADgen\u00ADde Son\u00ADder\u00ADzei\u00ADchen er\u00ADlaubt: .-,|;:_#'+*~?=(/&%$§!)",
 }
 export const userInterface = {
-  name: name => /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/.test(name),
-  subdomain: subdomain => /^[A-Za-z0-9-_]{4,100}$/.test(subdomain),
-  mail: mail => /^[\_A-Za-z0-9.\-]{1,70}@[\_A-Za-z0-9.\-]{1,70}\.[A-Za-z]{1,10}$/.test(mail),
-  pass: pass => /^[ÄÜÖäöüA-Za-z0-9.\-,|;:_#'+*~?=\(/&%$§!\)]{3,100}$/.test(pass),
+  name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/,
+  subdomain: /^[A-Za-z0-9-_]{4,100}$/,
+  company: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{0,100}$/,
+  mail: /^[\_A-Za-z0-9.\-]{1,70}@[\_A-Za-z0-9.\-]{1,70}\.[A-Za-z]{1,10}$/,
+  pass: /^[ÄÜÖäöüA-Za-z0-9.\-,|;:_#'+*~?=\(/&%$§!\)]{3,100}$/,
 }
 
 export default class LandingPage extends React.Component {
@@ -40,8 +45,9 @@ export default class LandingPage extends React.Component {
     super()
 
     this.state = {
-      view: 'initial',
+      view: props.instance.usesProxy ? 'initial' : 'register',
       subdomain: '',
+      company: '',
       pass: '',
       pass2: '',
     }
@@ -66,7 +72,7 @@ export default class LandingPage extends React.Component {
     const subdomain = evt.target.value
     clearTimeout(this.subdomainCheck)
     this.setState({ subdomain })
-    if (userInterface.subdomain(subdomain)) {
+    if (userInterface.subdomain.test(subdomain)) {
       this.subdomainCheck = setTimeout(() => {
         this.props.checkDomain(subdomain)
       }, 300)
@@ -75,7 +81,7 @@ export default class LandingPage extends React.Component {
 
   submit() {
     const { name, mail, company, address, pass, pass2, subdomain } = this.state
-    const valid = userInterface.mail(mail) && userInterface.name(name) && (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass)
+    const valid = userInterface.mail.test(mail) && userInterface.name.test(name) && (userInterface.pass.test(pass) && pass2 === pass)
     if (!valid) {
       return
     }
@@ -99,7 +105,7 @@ export default class LandingPage extends React.Component {
     return [
       <div key="1" className="SliderGallery" />,
       <div key="2" className="content">
-        <h2 className="title">{wording.title}</h2>
+        <h2 className="title">{wording.planner}</h2>
         <h3 className="title">{wording.intro}</h3>
         <div className="domainFinder">
           <h3>{wording.domainFinderTitle}</h3>
@@ -121,84 +127,112 @@ export default class LandingPage extends React.Component {
 
   renderRegister() {
     const { name, mail, company, address, pass, pass2, subdomain, addressValid } = this.state
+    const { instance } = this.props
 
-    const valid = userInterface.mail(mail) && userInterface.name(name) && (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass) && addressValid
-    const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass(pass))
+    const valid = userInterface.mail.test(mail) && userInterface.name.test(name) && (userInterface.pass.test(pass) && pass2 === pass) && addressValid
+    const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass.test(pass))
+
+    console.log(pass2 === pass.slice(0, pass2.length))
 
     return (
       <div className="content">
-        <h2 className="title">{wording.title}</h2>
-        <h3 className="title">
-          <u>https://{subdomain}.fochlac.com</u>
-          <span> {wording.isFree}</span>
-        </h3>
+        <h2 className="title">{wording.planner}</h2>
+        {instance.usesProxy && (
+          <h3 className="title">
+            <u>https://{subdomain}.fochlac.com</u>
+            <span> {wording.isFree}</span>
+          </h3>
+        )}
         <div className="colRowGrid">
           <div className="row wrap alignStart">
             <div className="col basis300">
               <h4>{wording.address}</h4>
-              <div className="fullWidth">
-                <label htmlFor="Landing_name">
-                  {wording.name}
+              <InputRow
+                defaultValue={name}
+                required={false}
+                autoComplete="name"
+                userInterface={userInterface.name}
+                onChange={(name, isValid) => isValid && this.setState({ name })}
+                label={[
+                  wording.name,
                   <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
                     {wording.nameInfo}
-                  </InfoBubble>
-                </label>
-                <input type="text" id="Landing_name" defaultValue={name} autoComplete="name" onChange={this.nameInput} />
-              </div>
-              <div className="fullWidth">
-                <label htmlFor="Landing_company">{wording.company}</label>
-                <input type="text" id="Landing_company" defaultValue={company} autoComplete="company" onChange={this.companyInput} />
-              </div>
+                  </InfoBubble>,
+                ]}
+              />
+              <InputRow
+                defaultValue={company}
+                autoComplete="company"
+                userInterface={userInterface.company}
+                required={false}
+                onChange={(company, isValid) => isValid && this.setState({ company })}
+                label={wording.company}
+              />
               <div>
                 <AddressBlock onChange={(address, isValid) => this.setState({ address, addressValid: isValid })} value={{}} />
               </div>
             </div>
             <div className="col basis300">
+              {!instance.usesProxy && <h4>{wording.instance}</h4>}
+              {!instance.usesProxy && (
+                <InputRow
+                  defaultValue={subdomain}
+                  autoComplete="subdomain"
+                  userInterface={userInterface.subdomain}
+                  onChange={(subdomain, isValid) => isValid && this.setState({ subdomain })}
+                  label={wording.title}
+                />
+              )}
               <h4>{wording.userData}</h4>
-              <div className="fullWidth">
-                <label htmlFor="Landing_email">
-                  {wording.email}
+              <InputRow
+                defaultValue={mail}
+                required={false}
+                autoComplete="email"
+                userInterface={userInterface.mail}
+                onChange={(mail, isValid) => isValid && this.setState({ mail })}
+                label={[
+                  wording.email,
                   <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
                     {wording.mailInfo}
-                  </InfoBubble>
-                </label>
-                <input type="text" id="Landing_email" defaultValue={mail} autoComplete="email" onChange={this.emailInput} />
-              </div>
-              <div className="fullWidth">
-                <label htmlFor="Landing_pass">
-                  {wording.password}
+                  </InfoBubble>,
+                ]}
+              />
+              <InputRow
+                defaultValue={pass}
+                required={false}
+                onChange={(pass, isValid) => this.setState({ pass })}
+                autoComplete="new-password"
+                type="password"
+                label={[
+                  wording.password,
                   <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
                     {wording.passInfo}
-                  </InfoBubble>
-                </label>
-                <input
-                  id="Landing_pass"
-                  className={'pass' + (!passwordValid ? ' invalid' : '')}
-                  type="password"
-                  onChange={this.passInput}
-                  defaultValue={pass}
-                  autoComplete="new-password"
-                />
-              </div>
-              <div className="fullWidth">
-                <label htmlFor="Landing_pass2">
-                  {wording.passwordRepeat}
-                  <InfoBubble style={{ bottom: '28px', left: '-80px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
+                  </InfoBubble>,
+                ]}
+                valid={passwordValid}
+              />
+              <InputRow
+                defaultValue={pass}
+                required={false}
+                onChange={(pass2, isValid) => this.setState({ pass2 })}
+                autoComplete="new-password"
+                type="password"
+                label={[
+                  wording.password,
+                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
                     {wording.passInfo}
-                  </InfoBubble>
-                </label>
-                <input
-                  id="Landing_pass2"
-                  className={'pass' + (!passwordValid ? ' invalid' : '')}
-                  type="password"
-                  onChange={this.pass2Input}
-                  defaultValue={pass2}
-                  autoComplete="new-password"
-                />
-              </div>
+                  </InfoBubble>,
+                ]}
+                valid={passwordValid}
+              />
             </div>
           </div>
-          <div className="row">
+          <div className="row justifyCenter">
+            {instance.usesProxy && (
+              <button type="button" onClick={() => this.setState({ view: 'initial' })} className="submit">
+                {wording.cancel}
+              </button>
+            )}
             <button type="button" onClick={() => this.submit()} disabled={!valid} className="submit">
               {wording.submit}
             </button>
@@ -229,11 +263,11 @@ export default class LandingPage extends React.Component {
                   <span className="fa fa-sign-out fa-lg" title="Abmelden" />
                 </li>
               ) : (
-                  <li onClick={start_sign_in.bind(this, { hideRegister: true })}>
-                    <span className="symbolExplanation">Anmelden</span>
-                    <span className="fa fa-sign-in fa-flip-horizontal fa-lg" title="Anmelden" />
-                  </li>
-                )}
+                <li onClick={start_sign_in.bind(this, { hideRegister: true })}>
+                  <span className="symbolExplanation">Anmelden</span>
+                  <span className="fa fa-sign-in fa-flip-horizontal fa-lg" title="Anmelden" />
+                </li>
+              )}
             </ul>
           </div>
         </div>

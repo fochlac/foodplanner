@@ -111,6 +111,7 @@ module.exports = {
                         root: req.headers.proxied ? req.headers.proxy_protocol + '://' + req.headers.proxy_host : req.protocol + '://' + req.headers.host,
                         isSubdomain: false,
                         page: 'landing',
+                        usesProxy: req.headers.proxied,
                       })},
                       historyMealMap: {},
                       user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},

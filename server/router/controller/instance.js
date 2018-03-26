@@ -29,9 +29,9 @@ module.exports = {
       res.status(200).send(
         !subdomains.includes(subdomain)
           ? {
-            isValid: true,
-            name: subdomain,
-          }
+              isValid: true,
+              name: subdomain,
+            }
           : { isValid: false },
       )
     } catch (err) {
@@ -44,19 +44,21 @@ module.exports = {
       const [instance, userCrypt] = await Promise.all([instanceDB.createInstance(req.body), crypto.createUserHash(req.body.hash)])
       const [user, subdomain] = await Promise.all([
         userDB.createUser({ ...req.body, instance: instance.id, admin: true }, userCrypt.hash, userCrypt.salt),
-        request({
-          uri: proxy,
-          method: 'POST',
-          json: true,
-          body: {
-            host: req.body.subdomain + '.fochlac.com',
-            proxy: {
-              redirect: false,
-              url: '/' + instance.id,
-              port: process.env.DEVELOP ? +process.env.FOOD_PORT : 'FOOD_PORT',
-            },
-          },
-        }),
+        req.headers.proxied
+          ? request({
+              uri: proxy,
+              method: 'POST',
+              json: true,
+              body: {
+                host: req.body.subdomain + '.fochlac.com',
+                proxy: {
+                  redirect: false,
+                  url: '/' + instance.id,
+                  port: process.env.DEVELOP ? +process.env.FOOD_PORT : 'FOOD_PORT',
+                },
+              },
+            })
+          : Promise.resolve(),
       ])
 
       mailCache.deleteAll()
@@ -81,14 +83,17 @@ module.exports = {
         log(6, 'createInstance: trying cleanup')
         instance && instanceDB.deleteInstanceById(instance.id)
         user && userDB.deleteUserByProperty('id', user.id)
-        request({
-          uri: proxy,
-          method: 'DELETE',
-          json: true,
-          body: {
-            host: req.body.subdomain + '.fochlac.com',
-          },
-        })
+
+        // try to delete subdomain if reverse proxy is used
+        req.headers.proxied &&
+          request({
+            uri: proxy,
+            method: 'DELETE',
+            json: true,
+            body: {
+              host: req.body.subdomain + '.fochlac.com',
+            },
+          })
       } catch (err) {
         log(3, 'createInstance: cleanup failed', err)
       }

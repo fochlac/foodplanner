@@ -1,50 +1,78 @@
 import React from 'react'
 
 export default class InputRow extends React.Component {
-    constructor(props) {
-        super()
+  constructor(props) {
+    super()
 
-        this.state = {
-            value: props.defaultValue || '',
-            dirty: false,
-            isValid: true,
-        }
-        this.handleInput = this.handleInput.bind(this)
-        this.handleBlur = this.handleBlur.bind(this)
+    this.state = {
+      value: props.defaultValue || '',
+      dirty: false,
+      isValid: true,
     }
+    this.handleInput = this.handleInput.bind(this)
+    this.handleBlur = this.handleBlur.bind(this)
+  }
 
-    handleInput({ target }) {
-        const { onChange, userInterface } = this.props
-        
-        this.setState({ value: target.value }, () => {
-            if (onChange) {
-                const { value } = this.state
-                const isValid = userInterface.test(value)
-                onChange(value, isValid)
-            }
-        })
+  handleInput({ target }) {
+    const { onChange, userInterface } = this.props
+
+    this.setState({ value: target.value }, () => {
+      if (onChange) {
+        const { value } = this.state
+        const { valid } = this.props
+        const isValid = valid !== undefined ? valid : userInterface.test(value)
+
+        onChange(value, isValid)
+      }
+    })
+  }
+
+  handleBlur(evt) {
+    const { onBlur, userInterface } = this.props
+
+    if (this.state.value.length || !this.state.dirty) {
+      this.setState({ dirty: true })
     }
-    
-    handleBlur(evt) {
-        const { onBlur, userInterface } = this.props
+    if (onBlur) {
+      const { value } = this.state
+      const { valid } = this.props
+      const isValid = valid !== undefined ? valid : userInterface.test(value)
 
-        if (this.state.value.length || !this.state.dirty) {
-            this.setState({ dirty: true })
-        }
-        if (onBlur) {
-            const { value } = this.state
-            const isValid = userInterface.test(value)
-            onBlur(value, isValid)
-        }
+      onBlur(value, isValid)
     }
+  }
 
-    render() {
-        const { dirty, value } = this.state
-        const { className = 'fullWidth', required = true, userInterface = /.*/, autoComplete, id = `input_${Math.floor(Date.now() * Math.random())}`, label } = this.props
+  render() {
+    const { dirty, value } = this.state
+    const {
+      className = 'fullWidth',
+      required = true,
+      userInterface = /.*/,
+      autoComplete,
+      id = `input_${Math.floor(Date.now() * Math.random())}`,
+      label,
+      type = 'text',
+      valid,
+    } = this.props
 
-        return <div className={className}>
-            {label && <label className="noWrap" htmlFor={id}>{label}{required && <span className="fa fa-asterisk required"></span>}</label>}
-            <input type="text" id={id} autoComplete={autoComplete} value={value} onChange={this.handleInput} className={dirty && !userInterface.test(value) ? 'invalid' : ''} onBlur={this.handleBlur} />
-        </div>
-    }
+    return (
+      <div className={className}>
+        {label && (
+          <label className="noWrap" htmlFor={id}>
+            {label}
+            {required && <span className="fa fa-asterisk required" />}
+          </label>
+        )}
+        <input
+          type={type}
+          id={id}
+          autoComplete={autoComplete}
+          value={value}
+          onChange={this.handleInput}
+          className={(valid !== undefined ? !valid : dirty && !userInterface.test(value)) ? 'invalid' : ''}
+          onBlur={this.handleBlur}
+        />
+      </div>
+    )
+  }
 }
