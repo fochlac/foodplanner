@@ -14,7 +14,7 @@ export default class InputRow extends React.Component {
   }
 
   handleInput({ target }) {
-    const { onChange, userInterface } = this.props
+    const { onChange, userInterface = /.*/ } = this.props
 
     this.setState({ value: target.value }, () => {
       if (onChange) {
@@ -27,8 +27,8 @@ export default class InputRow extends React.Component {
     })
   }
 
-  handleBlur(evt) {
-    const { onBlur, userInterface } = this.props
+  handleBlur() {
+    const { onBlur, userInterface = /.*/ } = this.props
 
     if (this.state.value.length || !this.state.dirty) {
       this.setState({ dirty: true })
