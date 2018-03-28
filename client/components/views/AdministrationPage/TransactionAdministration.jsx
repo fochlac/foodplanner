@@ -1,5 +1,5 @@
 import React from 'react'
-import Pager from 'UI/Pager/Pager.jsx'
+import Pager from 'RAW/Pager.jsx'
 import { formatDate } from 'UTILS/date.js'
 
 const wording = {

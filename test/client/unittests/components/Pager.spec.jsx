@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import Pager from 'UI/Pager/Pager.jsx';
+import Pager from 'RAW/Pager.jsx';
 
 const generateChildren = (count) => {
   return Array.from(Array(count).keys()).map(val => <div key={val} className={"child child-" + val}></div>)

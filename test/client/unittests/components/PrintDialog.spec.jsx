@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import PrintDialog from 'UI/PrintDialog/PrintDialog.jsx';
+import PrintDialog from 'DIALOG/PrintDialog/PrintDialog.jsx';
 
 const meals = [
   {

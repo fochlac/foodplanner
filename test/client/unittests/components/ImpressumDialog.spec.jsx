@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import ImpressumDialog from 'UI/ImpressumDialog/ImpressumDialog.jsx';
+import ImpressumDialog from 'DIALOG/ImpressumDialog/ImpressumDialog.jsx';
 
 describe('ImpressumDialog', () => {
   test('should render all elements', () => {

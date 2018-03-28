@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme'
 
 import React from 'react'
-import Topbar from 'UI/Topbar/Topbar.jsx'
+import Topbar from 'CONNECTED/Topbar/Topbar.jsx'
 
 let output
 

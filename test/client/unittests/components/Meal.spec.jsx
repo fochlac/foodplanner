@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme'
 
-import DateFinder from 'UI/DateFinder.js'
-import Meal from 'UI/Meal/Meal.jsx'
+import DateFinder from 'CONNECTED/DateFinder.js'
+import Meal from 'CONNECTED/Meal/Meal.jsx'
 import React from 'react'
 
 function mergeById(arr1, arr2) {

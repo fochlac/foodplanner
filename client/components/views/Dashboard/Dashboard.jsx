@@ -1,11 +1,11 @@
 import './Dashboard.less'
 
-import DefaultPage from 'UI/DefaultPage.js'
-import Meal from 'UI/Meal.js'
-import Pager from 'UI/Pager/Pager.jsx'
+import DefaultPage from 'CONNECTED/DefaultPage.js'
+import Meal from 'CONNECTED/Meal.js'
+import Pager from 'RAW/Pager.jsx'
 import React from 'react'
-import Topbar from 'UI/Topbar.js'
-import UserFrame from 'UI/UserFrame.js'
+import Topbar from 'CONNECTED/Topbar.js'
+import UserFrame from 'CONNECTED/UserFrame.js'
 
 const wording = {
   offlineWarn: 'Aufgrund fehlender Internetverbindung verwendet diese Seite aktuell gecachte (alte) Daten.',

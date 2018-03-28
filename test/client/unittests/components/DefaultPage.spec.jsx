@@ -1,11 +1,11 @@
 import { mount, shallow } from 'enzyme'
 
-import BusyScreen from 'UI/BusyScreen/BusyScreen.jsx'
-import DefaultPage from 'UI/DefaultPage/DefaultPage.jsx'
-import DialogController from 'UI/DefaultPage/DialogController.jsx'
-import Error from 'UI/Error.js'
+import BusyScreen from 'RAW/BusyScreen.jsx'
+import DefaultPage from 'CONNECTED/DefaultPage/DefaultPage.jsx'
+import DialogController from 'DIALOG/DefaultPage/DialogController.jsx'
+import Error from 'CONNECTED/Error.js'
 import React from 'react'
-import Topbar from 'UI/Topbar.js'
+import Topbar from 'CONNECTED/Topbar.js'
 
 let output
 

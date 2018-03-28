@@ -1,9 +1,9 @@
 import './LandingPage.less'
 
-import AddressBlock from 'UI/AddressBlock/AddressBlock.jsx'
-import DefaultPage from 'UI/DefaultPage.js'
-import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
-import InputRow from 'UI/InputRow/InputRow.jsx'
+import AddressBlock from 'RAW/AddressBlock.jsx'
+import DefaultPage from 'CONNECTED/DefaultPage.js'
+import InfoBubble from 'RAW/InfoBubble.jsx'
+import InputRow from 'RAW/InputRow.jsx'
 import React from 'react'
 import { generateHash } from 'UTILS/crypto.js'
 

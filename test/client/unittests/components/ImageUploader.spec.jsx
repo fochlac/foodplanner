@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx';
+import ImageUploader from 'RAW/ImageUploader.jsx';
 import { File } from 'file-api';
 const image = new File('./test/client/resources/testimage.jpg');
 

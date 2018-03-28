@@ -1,6 +1,6 @@
 import { mount, shallow } from 'enzyme'
 
-import InputRow from 'UI/InputRow/InputRow.jsx'
+import InputRow from 'RAW/InputRow.jsx'
 import React from 'react'
 
 describe('InputRow', () => {

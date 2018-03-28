@@ -60,7 +60,9 @@ module.exports = {
     extensions: ['.js', '.jsx', 'less'],
     alias: {
       COMPONENTS: path.resolve('./client/components'),
-      UI: path.resolve('./client/components/ui'),
+      RAW: path.resolve('./client/components/raw'),
+      DIALOG: path.resolve('./client/components/dialog'),
+      CONNECTED: path.resolve('./client/components/connected'),
       UTILS: path.resolve('./client/utils'),
       PAGES: path.resolve('./client/components/views'),
       STORE: path.resolve('./client/store'),

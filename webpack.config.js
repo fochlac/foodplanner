@@ -6,8 +6,8 @@ const path = require('path'),
   webpack = require('webpack'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin')
-  // , PreloadWebpackPlugin = require('preload-webpack-plugin'),
-  // HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
+// , PreloadWebpackPlugin = require('preload-webpack-plugin'),
+// HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
 
 module.exports = {
   entry: ['./client/index.js'],
@@ -92,7 +92,9 @@ module.exports = {
     extensions: ['.js', '.jsx', 'less'],
     alias: {
       COMPONENTS: path.resolve('./client/components'),
-      UI: path.resolve('./client/components/ui'),
+      RAW: path.resolve('./client/components/raw'),
+      DIALOG: path.resolve('./client/components/dialog'),
+      CONNECTED: path.resolve('./client/components/connected'),
       PAGES: path.resolve('./client/components/views'),
       UTILS: path.resolve('./client/utils'),
       STORE: path.resolve('./client/store'),

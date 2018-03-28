@@ -1,8 +1,8 @@
 import { mount, shallow } from 'enzyme'
 
-import Pager from 'UI/Pager/Pager.jsx'
+import Pager from 'RAW/Pager.jsx'
 import React from 'react'
-import TransactionDialog from 'UI/TransactionDialog/TransactionDialog.jsx'
+import TransactionDialog from 'DIALOG/TransactionDialog/TransactionDialog.jsx'
 import { formatDate } from 'UTILS/date.js'
 
 describe('TransactionDialog', () => {

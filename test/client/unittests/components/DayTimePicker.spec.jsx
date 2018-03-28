@@ -2,7 +2,7 @@ import { formatDate, formatTime, round } from 'UTILS/date.js'
 import { mount, shallow } from 'enzyme'
 
 import DatePicker from '@reaktor/react-pikaday-component'
-import DayTimePicker from 'UI/DayTimePicker/DayTimePicker.jsx'
+import DayTimePicker from 'RAW/DayTimePicker.jsx'
 import React from 'react'
 
 describe('DayTimePicker', () => {

@@ -1,6 +1,6 @@
 import './AdministrationPage.less'
 
-import DefaultPage from 'UI/DefaultPage.js'
+import DefaultPage from 'CONNECTED/DefaultPage.js'
 import GeneralAdministration from './GeneralAdministration'
 import InstanceAdministration from './InstanceAdministration.jsx'
 import React from 'react'

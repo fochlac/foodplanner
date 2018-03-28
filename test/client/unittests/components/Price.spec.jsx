@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import Price from 'UI/PriceDialog/Price.jsx';
+import Price from 'DIALOG/PriceDialog/Price.jsx';
 
 const meal = {
     options: [{

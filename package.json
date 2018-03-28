@@ -21,7 +21,9 @@
     "moduleDirectories": ["node_modules"],
     "moduleNameMapper": {
       "^COMPONENTS(.*)$": "<rootDir>/client/components$1",
-      "^UI(.*)$": "<rootDir>/client/components/ui$1",
+      "^RAW(.*)$": "<rootDir>/client/components/raw$1",
+      "^DIALOG(.*)$": "<rootDir>/client/components/dialog$1",
+      "^CONNECTED(.*)$": "<rootDir>/client/components/connected$1",
       "^UTILS(.*)$": "<rootDir>/client/utils$1",
       "^PAGES(.*)$": "<rootDir>/client/components/views$1",
       "^STORE(.*)$": "<rootDir>/client/store$1",

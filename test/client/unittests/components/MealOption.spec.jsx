@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import MealOption from 'UI/CreateMealDialog/MealOption.jsx';
+import MealOption from 'DIALOG/CreateMealDialog/MealOption.jsx';
 
 describe('CreateMealDialog - MealOption', () => {
   test(

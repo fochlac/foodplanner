@@ -1,5 +1,5 @@
-import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx'
-import InputRow from 'UI/InputRow/InputRow.jsx'
+import InfoBubble from 'RAW/InfoBubble.jsx'
+import InputRow from 'RAW/InputRow.jsx'
 import React from 'react'
 
 const wording = {

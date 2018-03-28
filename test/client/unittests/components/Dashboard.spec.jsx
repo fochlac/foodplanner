@@ -1,10 +1,10 @@
 import { mount, shallow } from 'enzyme'
 
 import Dashboard from 'PAGES/Dashboard/Dashboard.jsx'
-import Meal from 'UI/Meal.js'
-import Pager from 'UI/Pager/Pager.jsx'
+import Meal from 'CONNECTED/Meal.js'
+import Pager from 'RAW/Pager.jsx'
 import React from 'react'
-import UserFrame from 'UI/UserFrame.js'
+import UserFrame from 'CONNECTED/UserFrame.js'
 
 let output
 
