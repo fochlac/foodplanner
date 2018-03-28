@@ -2,7 +2,7 @@ import { mount, shallow } from 'enzyme'
 
 import BusyScreen from 'RAW/BusyScreen.jsx'
 import DefaultPage from 'CONNECTED/DefaultPage/DefaultPage.jsx'
-import DialogController from 'DIALOG/DefaultPage/DialogController.jsx'
+import DialogController from 'CONNECTED/DefaultPage/DialogController.jsx'
 import Error from 'CONNECTED/Error.js'
 import React from 'react'
 import Topbar from 'CONNECTED/Topbar.js'
