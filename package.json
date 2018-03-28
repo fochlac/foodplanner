@@ -14,7 +14,7 @@
   },
   "jest": {
     "coverageDirectory": "./coverage/",
-    "coveragePathIgnorePatterns": ["<rootDir>/test/", "<rootDir>/node_modules/", "components/ui/[^/]*.js$"],
+    "coveragePathIgnorePatterns": ["<rootDir>/test/", "<rootDir>/node_modules/", "components/(raw|dialog|connected)/[^/]*.js$"],
     "collectCoverageFrom": ["client/components/**/*.{js,jsx}", "client/store/**/*.{js,jsx}", "client/utils/**/*.{js,jsx}"],
     "setupFiles": ["./test/client/unittests/setup.js"],
     "moduleFileExtensions": ["js", "jsx"],
