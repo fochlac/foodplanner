@@ -1,23 +1,23 @@
 const users = (state = {}, action) => {
   switch (action.type) {
     case 'INITIAL_USER':
-      return Object.assign({}, state, action.localSettings)
+      return { ...state, ...action.localSettings }
 
     case 'SIGNIN':
     case 'REGISTER':
       if (action.status === 'complete') {
-        return Object.assign({}, state, action.data)
+        return { ...state, ...action.data }
       }
       return state
     case 'SAVE_SETTINGS':
       if (action.status === 'complete') {
-        return Object.assign({}, state, action.data, action.locally)
+        return { ...state, ...action.data, ...action.locally }
       }
       return state
 
     case 'TRANSACTIONS':
       if (action.status === 'complete') {
-        return Object.assign({}, state, { transactions: action.data })
+        return { ...state, transactions: action.data }
       }
       return state
 
