@@ -98,7 +98,7 @@ describe('login area', () => {
     await this.driver.loginUser(testmail)
     await this.driver.awaitBusyComplete()
 
-    return this.checkLoggedin()
+    return this.checkLoggedin(testname)
   })
 
   it('should remain logged in on page refresh', async function() {
@@ -106,7 +106,7 @@ describe('login area', () => {
 
     await this.driver.refresh()
 
-    await this.checkLoggedin()
+    await this.checkLoggedin(testname)
   })
 
   it('should be able to login with admin email', async function() {
