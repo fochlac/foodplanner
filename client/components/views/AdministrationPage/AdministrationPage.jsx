@@ -27,14 +27,6 @@ export default class AdministrationPage extends React.Component {
     this.props.loadInstance(this.props.user.instance)
   }
 
-  handleInput(field) {
-    return evt => {
-      this.setState({
-        [field]: evt.target.value,
-      })
-    }
-  }
-
   handleFilter(type) {
     return () => {
       this.setState({ settings: type })
@@ -62,16 +54,11 @@ export default class AdministrationPage extends React.Component {
       <DefaultPage>
         <div className="topbar">
           <div className="spacer">
-            <span className="pointer noWrap flexCenter" onClick={() => window.location.href = (instance.subdomain ? ('https://' + instance.subdomain + '.fochlac.com/') : (instance.root + '/' + instance.id))} >
+            <span className="pointer noWrap flexCenter instanceTitle" onClick={() => window.location.assign(instance.subdomain && instance.subdomain.length ? ('https://' + instance.subdomain + '.fochlac.com/') : (instance.root + '/' + instance.id))} >
               <span className={'instanceIcon fa fa-lg ' + instance.icon} />
               <b className="font12">{instance.title}</b>
             </span>
             <ul className="quicklinks">
-              {app.hiddenBusy && app.dialog === '' ? (
-                <li>
-                  <span className="fa fa-refresh fa-spin fa-lg" />
-                </li>
-              ) : null}
               <li onClick={sign_out.bind(this, user.id)}>
                 <span className="symbolExplanation">Abmelden</span>
                 <span className="fa fa-sign-out fa-lg" title="Abmelden" />
