@@ -41,12 +41,13 @@ export default class GeneralAdministration extends React.Component {
   componentWillReceiveProps({ instance }) {
     this.setState({
       gmail_state: instance.gmail_state !== undefined ? instance.gmail_state : true,
-      gmail_edit: instance.gmail_state ? false : this.state.edit,
+      gmail_edit: instance.gmail_state ? false : this.state.gmail_edit,
     })
   }
 
   componentDidMount() {
     const { gmail_user, id } = this.props.instance
+
     if (gmail_user && userInterface.user.test(gmail_user)) {
       this.props.validateGmail(id)
     }
@@ -54,6 +55,7 @@ export default class GeneralAdministration extends React.Component {
 
   saveGmail() {
     const { gmail_user, gmail_pass } = this.state
+
     if (userInterface.user.test(gmail_user) && userInterface.pass.test(gmail_pass)) {
       this.props.saveGmail(this.props.instance.id, {
         gmail_user,

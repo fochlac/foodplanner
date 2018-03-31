@@ -20,7 +20,7 @@ export const userInterface = {
 export default class InstanceAdministration extends React.Component {
   render() {
     const { saveInstanceData, instance } = this.props
-    const { address, name, company } = instance
+    const { id, address, name, company } = instance
     const nameLabel = [
       wording.name,
       <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top" key="infobubble">
@@ -44,7 +44,7 @@ export default class InstanceAdministration extends React.Component {
               required={false}
               autoComplete="name"
               userInterface={userInterface.name}
-              onBlur={(name, isValid) => isValid && saveInstanceData(instance.id, { name })}
+              onBlur={(name, isValid) => isValid && saveInstanceData(id, { name })}
             />
             <InputRow
               defaultValue={company}
@@ -52,11 +52,11 @@ export default class InstanceAdministration extends React.Component {
               required={false}
               autoComplete="company"
               userInterface={userInterface.company}
-              onBlur={(company, isValid) => isValid && saveInstanceData(instance.id, { company })}
+              onBlur={(company, isValid) => isValid && saveInstanceData(id, { company })}
             />
             <div>
               <AddressBlock
-                onBlur={(address, isValid) => isValid && saveInstanceData(instance.id, { address: JSON.stringify(address) })}
+                onBlur={(address, isValid) => isValid && saveInstanceData(id, { address: JSON.stringify(address) })}
                 value={defaultAddress}
                 required={false}
               />
