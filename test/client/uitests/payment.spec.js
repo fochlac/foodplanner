@@ -182,6 +182,7 @@ describe('payment dialog', () => {
     await this.driver.findElement(S.db.m.edit).click()
     await this.driver.waitElementLocated(S.dialog.meal)
     await this.driver.findElement(S.cm.deadline).click()
+    await this.driver.waitElementLocated(S.cm.today)
     await this.driver.findElement(S.cm.today).click()
     await this.driver
       .findElement(S.cm.deadlineTime)
