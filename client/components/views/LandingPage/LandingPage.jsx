@@ -13,7 +13,6 @@ const wording = {
   title: 'Überschrift',
   cancel: 'Zurück',
   instance: 'Allgemein',
-  text: [],
   findDomain: 'Domain sichern',
   submit: 'Abschicken',
   domainFinderTitle: 'Wunschdomain',
@@ -51,22 +50,10 @@ export default class LandingPage extends React.Component {
       pass: '',
       pass2: '',
     }
-    this.nameInput = this.handleInput('name').bind(this)
-    this.emailInput = this.handleInput('mail').bind(this)
-    this.companyInput = this.handleInput('company').bind(this)
-    this.passInput = this.handleInput('pass').bind(this)
-    this.pass2Input = this.handleInput('pass2').bind(this)
 
     this.subdomainInput = this.handleSubdomain.bind(this)
   }
 
-  handleInput(field) {
-    return evt => {
-      this.setState({
-        [field]: evt.target.value,
-      })
-    }
-  }
 
   handleSubdomain(evt) {
     const subdomain = evt.target.value
@@ -80,8 +67,8 @@ export default class LandingPage extends React.Component {
   }
 
   submit() {
-    const { name, mail, company, address, pass, pass2, subdomain } = this.state
-    const valid = userInterface.mail.test(mail) && userInterface.name.test(name) && (userInterface.pass.test(pass) && pass2 === pass)
+    const { name, mail, company, address, pass, pass2, subdomain, addressValid } = this.state
+    const valid = userInterface.mail.test(mail) && userInterface.name.test(name) && (userInterface.pass.test(pass) && pass2 === pass) && addressValid
     if (!valid) {
       return
     }
@@ -120,7 +107,6 @@ export default class LandingPage extends React.Component {
             {wording.findDomain}
           </button>
         </div>
-        {wording.text.map((text, index) => <p key={index}>{text}</p>)}
       </div>,
     ]
   }
@@ -131,8 +117,6 @@ export default class LandingPage extends React.Component {
 
     const valid = userInterface.mail.test(mail) && userInterface.name.test(name) && (userInterface.pass.test(pass) && pass2 === pass) && addressValid
     const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass.test(pass))
-
-    console.log(pass2 === pass.slice(0, pass2.length))
 
     return (
       <div className="content">
@@ -155,7 +139,7 @@ export default class LandingPage extends React.Component {
                 onChange={(name, isValid) => isValid && this.setState({ name })}
                 label={[
                   wording.name,
-                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
+                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top" key="info">
                     {wording.nameInfo}
                   </InfoBubble>,
                 ]}
@@ -192,7 +176,7 @@ export default class LandingPage extends React.Component {
                 onChange={(mail, isValid) => isValid && this.setState({ mail })}
                 label={[
                   wording.email,
-                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
+                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top" key="info">
                     {wording.mailInfo}
                   </InfoBubble>,
                 ]}
@@ -205,7 +189,7 @@ export default class LandingPage extends React.Component {
                 type="password"
                 label={[
                   wording.password,
-                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
+                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top" key="info">
                     {wording.passInfo}
                   </InfoBubble>,
                 ]}
@@ -219,7 +203,7 @@ export default class LandingPage extends React.Component {
                 type="password"
                 label={[
                   wording.password,
-                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
+                  <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk required" arrow="top" key="info">
                     {wording.passInfo}
                   </InfoBubble>,
                 ]}
@@ -229,7 +213,7 @@ export default class LandingPage extends React.Component {
           </div>
           <div className="row justifyCenter">
             {instance.usesProxy && (
-              <button type="button" onClick={() => this.setState({ view: 'initial' })} className="submit">
+              <button type="button" onClick={() => this.setState({ view: 'initial' })} className="cancel">
                 {wording.cancel}
               </button>
             )}
@@ -251,12 +235,6 @@ export default class LandingPage extends React.Component {
           <div className="spacer">
             <span className="fa fa-calendar fa-lg" />
             <ul className="quicklinks">
-              {app.hiddenBusy && app.dialog === '' ? (
-                <li>
-                  <span className="fa fa-refresh fa-spin fa-lg" />
-                </li>
-              ) : null}
-
               {user.id ? (
                 <li onClick={sign_out.bind(this, user.id)}>
                   <span className="symbolExplanation">Abmelden</span>
