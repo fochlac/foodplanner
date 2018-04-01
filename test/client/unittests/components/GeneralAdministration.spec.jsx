@@ -81,9 +81,7 @@ describe('TransactionAdministration', () => {
   })
 
   test('should reset data on cancel edit gmail data', () => {
-    const wrapper = shallow(
-      <GeneralAdministration instance={instance} app={{ hiddenBusy: false, busyList: [] }} {...generalActions} />,
-    )
+    const wrapper = shallow(<GeneralAdministration instance={instance} app={{ hiddenBusy: false, busyList: [] }} {...generalActions} />)
 
     expect(wrapper.find('.fa-pencil')).toHaveLength(1)
     wrapper.find('.fa-pencil').simulate('click')
@@ -91,19 +89,22 @@ describe('TransactionAdministration', () => {
 
     expect(wrapper.find('.gmail').find(InputRow)).toHaveLength(2)
 
-    wrapper.find('.gmail')
+    wrapper
+      .find('.gmail')
       .find(InputRow)
       .at(0)
       .prop('onChange')('test1')
 
-    wrapper.find('.gmail')
+    wrapper
+      .find('.gmail')
       .find(InputRow)
       .at(1)
       .prop('onChange')('test2')
 
     wrapper.update()
 
-    wrapper.find('.gmail')
+    wrapper
+      .find('.gmail')
       .find('button')
       .at(0)
       .simulate('click')
@@ -113,10 +114,42 @@ describe('TransactionAdministration', () => {
     expect(wrapper.state()).toMatchObject({ gmail_user: 'test123@gmail.com', gmail_pass: 'pass123' })
   })
 
+  test('should reset data on cancel edit gmail data', () => {
+    const wrapper = shallow(<GeneralAdministration instance={{}} app={{ hiddenBusy: false, busyList: [] }} {...generalActions} />)
+
+    expect(wrapper.find('.noConnection .fakeLink')).toHaveLength(1)
+    wrapper.find('.noConnection .fakeLink').simulate('click')
+    wrapper.update()
+
+    expect(wrapper.find('.gmail').find(InputRow)).toHaveLength(2)
+
+    wrapper
+      .find('.gmail')
+      .find(InputRow)
+      .at(0)
+      .prop('onChange')('test1')
+
+    wrapper
+      .find('.gmail')
+      .find(InputRow)
+      .at(1)
+      .prop('onChange')('test2')
+
+    wrapper.update()
+
+    wrapper
+      .find('.gmail')
+      .find('button')
+      .at(0)
+      .simulate('click')
+
+    wrapper.update()
+
+    expect(wrapper.state()).toMatchObject({ gmail_user: '', gmail_pass: '' })
+  })
+
   test('should handle update', () => {
-    const wrapper = shallow(
-      <GeneralAdministration instance={instance} app={{ hiddenBusy: false, busyList: [] }} {...generalActions} />,
-    )
+    const wrapper = shallow(<GeneralAdministration instance={instance} app={{ hiddenBusy: false, busyList: [] }} {...generalActions} />)
 
     wrapper.setProps({ instance: { ...instance, gmail_state: undefined } })
     wrapper.update()
@@ -126,12 +159,37 @@ describe('TransactionAdministration', () => {
     wrapper.update()
 
     expect(wrapper.state('gmail_state')).toBeFalsy()
+
+    wrapper.find('.fa-pencil').simulate('click')
+    wrapper.update()
+    expect(wrapper.state('gmail_edit')).toBeTruthy()
+
+    wrapper.setProps({ instance: { ...instance, gmail_state: false } })
+    wrapper.update()
+
+    expect(wrapper.state('gmail_edit')).toBeTruthy()
+
+    wrapper.setProps({ instance: { ...instance, gmail_state: true } })
+    wrapper.update()
+
+    expect(wrapper.state('gmail_edit')).toBeFalsy()
+  })
+
+  test('should show busy', () => {
+    const wrapper = shallow(<GeneralAdministration instance={instance} app={{ hiddenBusy: true, busyList: ['gmail'] }} {...generalActions} />)
+
+    expect(wrapper.find('.textAlignCenter .col_green')).toHaveLength(1)
+  })
+
+  test('should use default value for instance', () => {
+    const wrapper = shallow(<GeneralAdministration instance={{}} app={{ hiddenBusy: false, busyList: [''] }} {...generalActions} />)
+
+    expect(wrapper.state('gmail_user')).toEqual('')
+    expect(wrapper.state('gmail_pass')).toEqual('')
   })
 
   test('should save data', () => {
-    const wrapper = shallow(
-      <GeneralAdministration instance={instance} app={{ hiddenBusy: false, busyList: [] }} {...generalActions} />,
-    )
+    const wrapper = shallow(<GeneralAdministration instance={instance} app={{ hiddenBusy: false, busyList: [] }} {...generalActions} />)
 
     expect(wrapper.find('.fa-pencil')).toHaveLength(1)
     wrapper.find('.fa-pencil').simulate('click')
@@ -139,19 +197,46 @@ describe('TransactionAdministration', () => {
 
     expect(wrapper.find('.gmail').find(InputRow)).toHaveLength(2)
 
-    wrapper.find('.gmail')
+    wrapper
+      .find('.gmail')
+      .find(InputRow)
+      .at(0)
+      .prop('onChange')('test1@gm')
+
+    wrapper
+      .find('.gmail')
+      .find(InputRow)
+      .at(1)
+      .prop('onChange')('')
+
+    wrapper.update()
+
+    wrapper
+      .find('.gmail')
+      .find('button')
+      .at(1)
+      .simulate('click')
+
+    wrapper.update()
+
+    expect(generalActions.saveGmail.calledOnce).toBeFalsy()
+
+    wrapper
+      .find('.gmail')
       .find(InputRow)
       .at(0)
       .prop('onChange')('test1@gmail.com')
 
-    wrapper.find('.gmail')
+    wrapper
+      .find('.gmail')
       .find(InputRow)
       .at(1)
       .prop('onChange')('test2')
 
     wrapper.update()
 
-    wrapper.find('.gmail')
+    wrapper
+      .find('.gmail')
       .find('button')
       .at(1)
       .simulate('click')
