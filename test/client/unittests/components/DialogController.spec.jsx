@@ -1,19 +1,19 @@
 import { mount, shallow } from 'enzyme'
 
-import AddDateDialog from 'UI/AddDateDialog.js'
-import ConfirmationDialog from 'UI/ConfirmationDialog.js'
-import CreateMealDialog from 'UI/CreateMealDialog.js'
-import DialogController from 'UI/DefaultPage/DialogController.jsx'
-import ImpressumDialog from 'UI/ImpressumDialog.js'
-import IncomingPaymentsDialog from 'UI/IncomingPaymentsDialog.js'
-import LoginDialog from 'UI/LoginDialog.js'
-import PriceDialog from 'UI/PriceDialog.js'
-import PrintDialog from 'UI/PrintDialog.js'
+import AddDateDialog from 'DIALOG/AddDateDialog.js'
+import ConfirmationDialog from 'DIALOG/ConfirmationDialog.js'
+import CreateMealDialog from 'DIALOG/CreateMealDialog.js'
+import DialogController from 'CONNECTED/DefaultPage/DialogController.jsx'
+import ImpressumDialog from 'DIALOG/ImpressumDialog.js'
+import IncomingPaymentsDialog from 'DIALOG/IncomingPaymentsDialog.js'
+import LoginDialog from 'DIALOG/LoginDialog.js'
+import PriceDialog from 'DIALOG/PriceDialog.js'
+import PrintDialog from 'DIALOG/PrintDialog.js'
 import React from 'react'
-import SendMoneyDialog from 'UI/SendMoneyDialog.js'
-import SettingsDialog from 'UI/SettingsDialog.js'
-import SignUpDialog from 'UI/SignUpDialog.js'
-import TransactionDialog from 'UI/TransactionDialog.js'
+import SendMoneyDialog from 'DIALOG/SendMoneyDialog.js'
+import SettingsDialog from 'DIALOG/SettingsDialog.js'
+import SignUpDialog from 'DIALOG/SignUpDialog.js'
+import TransactionDialog from 'DIALOG/TransactionDialog.js'
 
 describe('DialogController', () => {
   test('should render correct dialog', () => {
@@ -44,15 +44,15 @@ describe('DialogController', () => {
     wrapper.setProps({ dialog: { type: 'OPEN_TRANSACTIONS', option: {} } })
     expect(wrapper.find(TransactionDialog)).toHaveLength(1)
 
-    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?list=deadlineReminder' }, user: {} } })
+    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, content: 'deadlineReminder' } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
     expect(wrapper.find(ConfirmationDialog).prop('message')).toContain('Anmeldefrist')
 
-    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?list=creationNotice' }, user: {} } })
+    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, content: 'createMeal' } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
     expect(wrapper.find(ConfirmationDialog).prop('message')).toContain('neuem Angebot')
 
-    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, location: { search: '?' }, user: {} } })
+    wrapper.setProps({ dialog: { type: 'UNSUBSCRIBE', option: {}, content: 'all' } })
     expect(wrapper.find(ConfirmationDialog)).toHaveLength(1)
 
     wrapper.setProps({ dialog: { type: 'OPEN_SETTINGS', option: {} } })

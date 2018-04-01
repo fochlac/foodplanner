@@ -257,11 +257,13 @@ module.exports = {
 
     createSignUp: (options) => {
         const query = `INSERT INTO signups (
+                \`instance\`,
                 \`name\`,
                 \`meal\`,
                 \`userId\`,
                 \`comment\`
             ) VALUES (
+                ${mysql.escape(options.instance)},
                 ${mysql.escape(options.name)},
                 ${mysql.escape(options.meal)},
                 ${mysql.escape(options.userId)},
@@ -370,7 +372,7 @@ module.exports = {
         });
     },
 
-    getAllSignups: () => {
+    getAllSignups: (instance) => {
         return getConnection()
         .then (myDb => {
             const query = `SELECT
@@ -387,7 +389,8 @@ module.exports = {
                 signupOptions.show AS signupOptionsShow
             FROM signups
             LEFT JOIN signupOptions
-            ON signups.id = signupOptions.signupId;`;
+            ON signups.id = signupOptions.signupId
+            WHERE signups.instance = ${instance};`;
 
             return new Promise((resolve, reject) => myDb.query(query, (err, result) => {
                 myDb.release();

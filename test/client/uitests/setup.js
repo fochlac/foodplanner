@@ -91,8 +91,8 @@ before(async function() {
 
   if (!this.driver) {
     this.driver = driver
-    this.username = 'testuser'
-    this.usermail = 'test@fochlac.com'
+    this.username = 'admin'
+    this.usermail = 'admin@test.de'
     this.path = process.env.FOOD_TESTS + '/client/uitests'
     this.resourcePath = process.env.FOOD_TESTS + '/client/resources'
 
@@ -103,7 +103,8 @@ before(async function() {
     this.driver.signupUser = signupUser.bind(this)
   }
 
-  this.driver.get(`http://${process.env.FOOD_EXTERNAL}${process.env.FOOD_EXTERNAL === 'localhost' ? ':' + process.env.FOOD_PORT : ''}/`)
+  this.driver.get(`http://${process.env.FOOD_EXTERNAL}${process.env.FOOD_EXTERNAL === 'localhost' ? ':' + process.env.FOOD_PORT : ''}/1/`)
+  console.log('testing against: ' + `http://${process.env.FOOD_EXTERNAL}${process.env.FOOD_EXTERNAL === 'localhost' ? ':' + process.env.FOOD_PORT : ''}/1/`)
   return this.driver.wait(until.titleIs('Mittagsplaner'), 10000)
 })
 

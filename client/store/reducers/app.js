@@ -75,6 +75,12 @@ const app = (state = {}, action) => {
       }
       return state
 
+    case 'CHECK_DOMAIN':
+      if (action.status === 'complete') {
+        return { ...state, subdomain: action.data }
+      }
+      return state
+
     default:
       return state
   }

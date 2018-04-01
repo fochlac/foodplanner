@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme'
 
 import React from 'react'
-import SettingsDialog from 'UI/SettingsDialog/SettingsDialog.jsx'
+import SettingsDialog from 'DIALOG/SettingsDialog/SettingsDialog.jsx'
 
 describe('SettingsDialog', () => {
   test('should render all elements containing default values', () => {

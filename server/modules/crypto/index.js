@@ -45,11 +45,11 @@ module.exports = {
     return generateSalt().then(salt => generateHash(password, salt))
   },
 
-  verifyUser: async ({ hash, mail }) => {
+  verifyUser: async (instance, { hash, mail }) => {
     let user = cache.get(mail)
 
     if (!user) {
-      user = await userDB.getUserAuthByMail(mail)
+      user = await userDB.getUserAuthByMail(instance, mail)
       if (!user) {
         return Promise.reject({ status: 400, type: 'BAD_USER' })
       }

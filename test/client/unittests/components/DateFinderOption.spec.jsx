@@ -1,8 +1,8 @@
 import { formatDate, formatTime, round } from 'UTILS/date.js'
 import { mount, shallow } from 'enzyme'
 
-import DateFinderOption from 'UI/CreateMealDialog/DateFinderOption.jsx'
-import DayTimePicker from 'UI/DayTimePicker/DayTimePicker.jsx'
+import DateFinderOption from 'DIALOG/CreateMealDialog/DateFinderOption.jsx'
+import DayTimePicker from 'RAW/DayTimePicker.jsx'
 import React from 'react'
 
 let output

@@ -39,7 +39,7 @@ describe('api', () => {
       }
 
     global.fetch = (url, options) => {
-      expect(url).toBe(act.api.url)
+      expect(url).toBe('test/' + act.api.url)
       expect(options.method).toBe(act.api.method)
       expect(options.headers.Accept).toBe('application/json')
       expect(options.headers['Content-Type']).toBe('application/json')
@@ -63,6 +63,12 @@ describe('api', () => {
             resolve()
           }
         },
+        getState: () => ({
+          instance: {
+            subdomain: true,
+            root: 'test/',
+          },
+        }),
       })(action => {
         expect(action).toEqual(act)
       })(act)
@@ -89,6 +95,11 @@ describe('api', () => {
           expect(action.data).toBe('test1')
           resolve()
         },
+        getState: () => ({
+          instance: {
+            root: '',
+          },
+        }),
       })(action => {
         expect(action).toEqual(act2)
       })(act2)
@@ -106,6 +117,12 @@ describe('api', () => {
           expect(action.data).toBe('error')
           resolve()
         },
+        getState: () => ({
+          instance: {
+            subdomain: true,
+            root: '',
+          },
+        }),
       })(action => {
         expect(action).toEqual(act2)
       })(act2)
@@ -128,13 +145,26 @@ describe('api', () => {
           expect(action.data).toBe('testerror')
           resolve()
         },
+        getState: () => ({
+          instance: {
+            subdomain: true,
+            root: '',
+          },
+        }),
       })(action => {
         expect(action).toEqual(act4)
       })(act4)
     })
 
     await new Promise(resolve => {
-      apiMiddleware({})(action => {
+      apiMiddleware({
+        getState: () => ({
+          instance: {
+            subdomain: true,
+            root: '',
+          },
+        }),
+      })(action => {
         expect(action).toEqual(act3)
         resolve()
       })(act3)

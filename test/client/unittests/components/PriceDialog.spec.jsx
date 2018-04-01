@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import PriceDialog from 'UI/PriceDialog/PriceDialog.jsx';
-import Price from 'UI/PriceDialog/Price.jsx';
-import Payment from 'UI/PriceDialog/Payment.jsx';
+import PriceDialog from 'DIALOG/PriceDialog/PriceDialog.jsx';
+import Price from 'DIALOG/PriceDialog/Price.jsx';
+import Payment from 'DIALOG/PriceDialog/Payment.jsx';
 
 describe('PriceDialog', () => {
   test('should render all elements', () => {

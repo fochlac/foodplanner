@@ -16,7 +16,6 @@ export const createUser = async function({ mail, name = 'testuser', pass }) {
     await this.driver.findElement(S.ql.logout).click()
     await this.driver.awaitBusyComplete()
   }
-
   this.driver.findElement(S.ql.login).click()
   this.driver.waitElementLocated(S.dialog.login)
   this.driver.findElement(S.ld.registerLink).click()

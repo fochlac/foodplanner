@@ -26,7 +26,7 @@ module.exports = {
       res.status(200).send(datefinder)
     } else {
       datefinderDB
-        .getDatefinders()
+        .getDatefinders(req.instance)
         .then(results => {
           res.status(200).send(
             results.map(datefinders => {

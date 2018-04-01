@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme'
 
-import Dialog from 'UI/Dialog.js'
-import LoginDialog from 'UI/LoginDialog/LoginDialog.jsx'
+import Dialog from 'DIALOG/Dialog.js'
+import LoginDialog from 'DIALOG/LoginDialog/LoginDialog.jsx'
 import React from 'react'
 
 let output

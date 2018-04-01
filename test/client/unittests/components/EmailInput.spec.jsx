@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import EmailInput from 'UI/EmailInput/EmailInput.jsx';
+import EmailInput from 'CONNECTED/EmailInput/EmailInput.jsx';
 
 describe('EmailInput', () => {
   test('should render an input', () => {

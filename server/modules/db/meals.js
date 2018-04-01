@@ -33,6 +33,7 @@ function doubleFlattenResults(result) {
         image: row.image,
         price: row.price,
         locked: row.locked,
+        instance: row.instance,
         options:
           row.mealOptionsId !== null
             ? {
@@ -72,6 +73,7 @@ const getFullMealByProperty = async (prop, val) => {
               meals.image,
               meals.price,
               meals.locked,
+              meals.instance,
               (CASE WHEN meals.datefinderLocked = 0 THEN meals.datefinder ELSE 0 END) AS datefinder,
               meals.datefinder AS datefinderLocked,
               mealOptions.id AS mealOptionsId,
@@ -314,6 +316,7 @@ module.exports = {
 
   createMeal: options => {
     const query = `INSERT INTO meals (
+                instance,
                 name,
                 description,
                 creator,
@@ -326,6 +329,7 @@ module.exports = {
                 image
             )
             SELECT
+                ${mysql.escape(options.instance)},
                 ${mysql.escape(options.name)},
                 ${mysql.escape(options.description)},
                 ${mysql.escape(options.creator)},
@@ -449,13 +453,16 @@ module.exports = {
       })
   },
 
+  getAllMealsByInstance: (instance) => getFullMealByProperty('instance', instance),
+
   getAllMeals: () => getFullMealByProperty('id', 'meals.id'),
 
   getUnsignedUsersByProp: (mealId, prop, val) => {
     return getConnection().then(myDb => {
       const query = `
                 SELECT * FROM users
-                WHERE NOT users.id IN (
+                WHERE instance = (SELECT instance FROM meals WHERE mealId = ${mealId})
+                AND NOT users.id IN (
                 SELECT users.id FROM signups
                 LEFT JOIN meals
                 ON signups.meal = meals.id

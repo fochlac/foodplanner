@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import SignUpDialog from 'UI/SignUpDialog/SignUpDialog.jsx';
-import SignUpOption from 'UI/SignUpDialog/SignUpOption.jsx';
+import SignUpDialog from 'DIALOG/SignUpDialog/SignUpDialog.jsx';
+import SignUpOption from 'DIALOG/SignUpDialog/SignUpOption.jsx';
 
 const setup = ({stub = () => () => undefined, edit = false, signedUp = false, userId = 1, name = 'testname', signup, mealOne = true, invalid = false}) => {
       const user = {

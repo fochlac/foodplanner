@@ -3,9 +3,11 @@
 */
 const path = require('path'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
+  webpack = require('webpack'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
-  ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin'),
-  GoogleFontsPlugin = require('google-fonts-webpack-plugin')
+  ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin')
+// , PreloadWebpackPlugin = require('preload-webpack-plugin'),
+// HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
 
 module.exports = {
   entry: ['./client/index.js'],
@@ -15,9 +17,9 @@ module.exports = {
     publicPath: '/static/',
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /.*(deep-equals|shallow-equals).*\.js$/,
+        test: /.*(deep-equals|shallow-equals|pikaday).*\.js$/,
         loader: 'babel-loader',
       },
       {
@@ -90,7 +92,9 @@ module.exports = {
     extensions: ['.js', '.jsx', 'less'],
     alias: {
       COMPONENTS: path.resolve('./client/components'),
-      UI: path.resolve('./client/components/ui'),
+      RAW: path.resolve('./client/components/raw'),
+      DIALOG: path.resolve('./client/components/dialog'),
+      CONNECTED: path.resolve('./client/components/connected'),
       PAGES: path.resolve('./client/components/views'),
       UTILS: path.resolve('./client/utils'),
       STORE: path.resolve('./client/store'),
@@ -98,6 +102,11 @@ module.exports = {
     },
   },
   plugins: [
+    // new webpack.DefinePlugin({
+    //   'process.env.NODE_ENV': JSON.stringify('production'),
+    // }),
+    // new webpack.optimize.UglifyJsPlugin(),
+    new webpack.IgnorePlugin(/.*moment.*/),
     new ExtractTextPlugin({
       filename: 'styles.css',
     }),
@@ -108,14 +117,18 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './client/index.html',
       filename: 'index.html',
+      // excludeAssets: [/\.css/],
       inject: 'body',
       minify: {
         removeComments: true,
         collapseWhitespace: true,
       },
     }),
-    new GoogleFontsPlugin({
-      fonts: [{ family: 'Raleway', variants: ['400', '600'] }],
-    }),
+    // new HtmlWebpackExcludeAssetsPlugin(),
+    // new PreloadWebpackPlugin({
+    //   rel: 'preload',
+    //   include: 'allAssets',
+    //   fileWhitelist: [/\.css/],
+    // }),
   ],
 }

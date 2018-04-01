@@ -91,13 +91,16 @@ module.exports = {
 
     try {
       const datefinder = await (mealData.datefinder && Object.keys(mealData.datefinder).length
-        ? datefinderDB.createDatefinder({ ...mealData.datefinder, creator: mealData.creatorId })
+        ? datefinderDB.createDatefinder(req.instance, { ...mealData.datefinder, creator: mealData.creatorId })
         : Promise.resolve({}))
 
       mealData.datefinder = datefinder.id
+      mealData.instance = req.instance
 
       const mealId = await mealsDB.createMeal(mealData)
+      log(6, 'router/controller/meals.js: meal created')
       const meal = await mealsDB.getMealById(mealId)
+      log(6, 'router/controller/meals.js: got meal data')
 
       // clear caches
       mealCache.delete('allMeals')
@@ -105,9 +108,9 @@ module.exports = {
       datefinderCache.delete('datefinderList')
 
       // async calls, not gonna wait for them
-      mailer.sendCreationNotice(meal)
+      mailer.sendCreationNotice(req.instance, meal)
       scheduler.scheduleMeal(meal)
-      notification.sendCreationNotice(meal)
+      notification.sendCreationNotice(req.instance, meal)
 
       if (req.file) {
         let imageName = meal.image.split('/')
@@ -119,7 +122,7 @@ module.exports = {
         res.status(200).send({ meal, datefinder })
       }
     } catch (err) {
-      return error.router.internalError(res)
+      return error.router.internalError(res)(err)
     }
   },
 
@@ -206,7 +209,7 @@ module.exports = {
       res.status(200).send(meal)
     } else {
       mealsDB
-        .getAllMeals()
+        .getAllMealsByInstance(req.instance)
         .then(meals => {
           mealCache.put('allMeals', meals)
           res.status(200).send(meals)

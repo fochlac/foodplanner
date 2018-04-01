@@ -1,0 +1,62 @@
+@import '../variables.less';
+
+.InfoBubble {
+  position: relative;
+  display: inline-flex !important;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  cursor: pointer;
+
+  &::before {
+    font-size: 1.1em;
+    color: @colorg3;
+  }
+
+  &:hover &Triangle,
+  &:hover &Content {
+    display: block;
+  }
+
+  &Content {
+    display: none;
+    position: absolute;
+    color: @font-color-dark;
+    border-radius: 2px;
+    padding: 10px;
+    background: @colorg5;
+    border-radius: @borderRadius;
+    z-index: 5;
+    font-family: @font;
+    border: solid 3px @colorg3;
+    box-shadow: tinyShadowDownRight;
+    cursor: default;
+    white-space: normal;
+  }
+
+  &Triangle {
+    position: absolute;
+    z-index: 10;
+    display: none;
+
+    &.right {
+      border: solid transparent 10px;
+      border-right-color: @colorg3;
+      right: -9px;
+      top: -1.5px;
+    }
+    &.left {
+      border: solid transparent 10px;
+      border-left-color: @colorg3;
+      left: -9px;
+      top: -1.5px;
+    }
+    &.top {
+      border: solid transparent 10px;
+      border-top-color: @colorg3;
+      top: -9px;
+    }
+  }
+}

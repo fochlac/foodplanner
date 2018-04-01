@@ -1,6 +1,6 @@
 import { mount, shallow } from 'enzyme'
 
-import Error from 'UI/Error/Error.jsx'
+import Error from 'CONNECTED/Error/Error.jsx'
 import React from 'react'
 
 const ERROR_MESSAGE = 'testmessage'

@@ -1,8 +1,8 @@
 import { mount, shallow } from 'enzyme'
 
-import EmailInput from 'UI/EmailInput.js'
+import EmailInput from 'CONNECTED/EmailInput.js'
 import React from 'react'
-import UserFrame from 'UI/UserFrame/UserFrame.jsx'
+import UserFrame from 'CONNECTED/UserFrame/UserFrame.jsx'
 
 let output
 

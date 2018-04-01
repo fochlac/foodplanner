@@ -71,6 +71,46 @@ describe('user-reducer', () => {
     })
   })
 
+  test('CREATE_INSTANCE', () => {
+    const action = {
+      type: 'CREATE_INSTANCE',
+      status: 'complete',
+      data: {
+        user: {
+          test2: 'test1234',
+          test3: '123',
+        },
+      },
+    }
+
+    expect(user({}, action)).toEqual(action.data.user)
+
+    expect(
+      user(
+        {
+          test4: '12312534',
+        },
+        action,
+      ),
+    ).toEqual({
+      test2: 'test1234',
+      test3: '123',
+    })
+
+    action.status = 'hidden'
+
+    expect(
+      user(
+        {
+          test4: '12312534',
+        },
+        action,
+      ),
+    ).toEqual({
+      test4: '12312534',
+    })
+  })
+
   test('SAVE_SETTINGS, SIGNIN', () => {
     const action = {
       type: 'SAVE_SETTINGS',
