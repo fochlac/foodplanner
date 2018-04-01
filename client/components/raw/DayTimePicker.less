@@ -1,0 +1,53 @@
+@import '../variables.less';
+
+.DayPicker {
+  display: flex;
+  align-items: stretch;
+  margin-left: -5px;
+
+  & > * {
+    margin-left: 5px;
+    margin-bottom: 5px;
+  }
+
+  input {
+    width: 100%;
+    padding: 3px;
+    font-family: Raleway;
+    font-size: 1.1em;
+    box-sizing: border-box;
+  }
+
+  .timePicker {
+    font-family: Raleway;
+    font-size: 1.1em;
+    padding: 2px;
+  }
+}
+
+.pika-lendar {
+  .is-selected .pika-button {
+    box-shadow: none;
+    background: @colorg3;
+  }
+
+  .is-today .pika-button {
+    color: @colorr1;
+  }
+
+  .pika-button.pika-day {
+    font-size: 1em;
+    text-align: center;
+
+    &:hover {
+      background: lighten(@colorg3, 2%);
+    }
+  }
+
+  th {
+    font-size: 15px !important;
+    abbr {
+      text-decoration: none;
+    }
+  }
+}

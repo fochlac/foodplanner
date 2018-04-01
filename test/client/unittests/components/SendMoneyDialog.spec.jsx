@@ -1,8 +1,8 @@
 import { mount, shallow } from 'enzyme'
 
-import EmailInput from 'UI/EmailInput.js'
+import EmailInput from 'CONNECTED/EmailInput.js'
 import React from 'react'
-import SendMoneyDialog from 'UI/SendMoneyDialog/SendMoneyDialog.jsx'
+import SendMoneyDialog from 'DIALOG/SendMoneyDialog/SendMoneyDialog.jsx'
 
 describe('SendMoneyDialog', () => {
   test('should render all elements', () => {

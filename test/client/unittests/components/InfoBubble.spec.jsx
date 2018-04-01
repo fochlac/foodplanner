@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import InfoBubble from 'UI/InfoBubble/InfoBubble.jsx';
+import InfoBubble from 'RAW/InfoBubble.jsx';
 
 describe('InfoBubble', () => {
   test('should render an element and child elements', () => {

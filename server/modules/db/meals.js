@@ -33,6 +33,7 @@ function doubleFlattenResults(result) {
         image: row.image,
         price: row.price,
         locked: row.locked,
+        instance: row.instance,
         options:
           row.mealOptionsId !== null
             ? {
@@ -72,6 +73,7 @@ const getFullMealByProperty = async (prop, val) => {
               meals.image,
               meals.price,
               meals.locked,
+              meals.instance,
               (CASE WHEN meals.datefinderLocked = 0 THEN meals.datefinder ELSE 0 END) AS datefinder,
               meals.datefinder AS datefinderLocked,
               mealOptions.id AS mealOptionsId,

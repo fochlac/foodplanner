@@ -14,7 +14,8 @@ const defaultStore = window.defaultStore ? window.defaultStore : {
     },
     app: {
         dialog: '',
-        errors: {}
+        errors: {},
+        busyList: [],
     },
     meals: [
     ],

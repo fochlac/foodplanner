@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import ConfirmationDialog from 'UI/ConfirmationDialog/ConfirmationDialog.jsx';
+import ConfirmationDialog from 'DIALOG/ConfirmationDialog/ConfirmationDialog.jsx';
 
 describe('ConfirmationDialog', () => {
   test('should render all elements', () => {

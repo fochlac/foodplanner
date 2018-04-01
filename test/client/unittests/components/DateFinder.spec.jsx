@@ -1,10 +1,10 @@
 import { formatDate, formatTime, round } from 'UTILS/date.js'
 import { mount, shallow } from 'enzyme'
 
-import DateFinder from 'UI/DateFinder/DateFinder.jsx'
-import DayTimePicker from 'UI/DayTimePicker/DayTimePicker.jsx'
+import DateFinder from 'CONNECTED/DateFinder/DateFinder.jsx'
+import DayTimePicker from 'RAW/DayTimePicker.jsx'
 import React from 'react'
-import { handleWheel } from 'UI/DateFinder/DateFinder.jsx'
+import { handleWheel } from 'CONNECTED/DateFinder/DateFinder.jsx'
 
 let output
 

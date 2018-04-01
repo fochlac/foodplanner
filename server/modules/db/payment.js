@@ -114,12 +114,14 @@ module.exports = {
                 \`target\`,
                 \`amount\`,
                 \`reason\`,
+                \`instance\`,
                 \`time\`
             ) SELECT
                 signups.userId,
                 meals.creatorId,
                 (CASE WHEN ${mysql.escape(price)} IS NULL THEN 0 ELSE ${mysql.escape(price)} END),
                 meals.name,
+                meals.instance,
                 ${Date.now()}
             FROM signups
             LEFT JOIN meals
@@ -313,21 +315,23 @@ module.exports = {
       queryAddBalance = `
                 UPDATE users
                 SET users.balance = (users.balance + CASE WHEN ${mysql.escape(amount)} IS NULL THEN 0 ELSE ${mysql.escape(amount)} END)
-               WHERE users.id = ${mysql.escape(target)};`,
+                WHERE users.id = ${mysql.escape(target)};`,
       queryCreateTransaction = `
                 INSERT INTO transactions (
                     \`source\`,
                     \`target\`,
                     \`amount\`,
                     \`reason\`,
+                    \`instance\`,
                     \`time\`
-                ) Values (
+                ) SELECT
                     ${mysql.escape(source)},
                     ${mysql.escape(target)},
                     ${mysql.escape(amount)},
                     ${mysql.escape('Private Transaction')},
+                    instance,
                     ${Date.now()}
-                );`,
+                FROM users WHERE id = ${mysql.escape(source)};`,
       queryGetTotal = `SELECT SUM(users.balance) AS total FROM users;`
 
     return getConnection().then(myDb => {
@@ -394,19 +398,20 @@ module.exports = {
 
   getHistoryByUserId: userId => {
     const mealQuery = `
-            SELECT
-                (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.amount ELSE -1 * transactions.amount END) AS diff,
-                users.name AS user,
-                transactions.reason,
-                transactions.time
-            FROM transactions
-            LEFT JOIN users
-            ON users.id = (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.source ELSE transactions.target END)
-            WHERE ${mysql.escape(userId)} in (transactions.target, transactions.source)
-            AND NOT transactions.target = transactions.source;`
+      SELECT
+        transactions.id,
+        (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.amount ELSE -1 * transactions.amount END) AS diff,
+        users.name AS user,
+        transactions.reason,
+        transactions.time
+      FROM transactions
+      LEFT JOIN users
+      ON users.id = (CASE WHEN transactions.target = ${mysql.escape(userId)} THEN transactions.source ELSE transactions.target END)
+      WHERE ${mysql.escape(userId)} in (transactions.target, transactions.source)
+      AND NOT transactions.target = transactions.source;`
 
     return getConnection().then(myDb =>
-      executeQuery(myDb, mealQuery).catch(err => {
+      executeQuery(myDb, mealQuery, true).catch(err => {
         if (err) {
           log(4, 'error getting history for user ' + userId)
         }
@@ -414,5 +419,21 @@ module.exports = {
         return Promise.reject(err)
       }),
     )
+  },
+
+  getTransactionsByInstance: async instance => {
+    const query = `
+      SELECT
+        id,
+        amount,
+        (SELECT name FROM users WHERE id = transactions.source) AS source,
+        (SELECT name FROM users WHERE id = transactions.target) AS target,
+        reason,
+        time
+      FROM transactions
+      WHERE instance = ${instance}
+      AND NOT transactions.target = transactions.source;`
+
+    return await executeQuery(await getConnection(), query, true)
   },
 }

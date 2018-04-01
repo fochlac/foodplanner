@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme'
 
-import AddDateDialog from 'UI/AddDateDialog/AddDateDialog.jsx'
-import DayTimePicker from 'UI/DayTimePicker/DayTimePicker.jsx'
+import AddDateDialog from 'DIALOG/AddDateDialog/AddDateDialog.jsx'
+import DayTimePicker from 'RAW/DayTimePicker.jsx'
 import React from 'react'
 
 describe('AddDateDialog', () => {

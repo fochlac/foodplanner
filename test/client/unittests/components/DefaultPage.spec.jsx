@@ -1,11 +1,11 @@
 import { mount, shallow } from 'enzyme'
 
-import BusyScreen from 'UI/BusyScreen/BusyScreen.jsx'
-import DefaultPage from 'UI/DefaultPage/DefaultPage.jsx'
-import DialogController from 'UI/DefaultPage/DialogController.jsx'
-import Error from 'UI/Error.js'
+import BusyScreen from 'RAW/BusyScreen.jsx'
+import DefaultPage from 'CONNECTED/DefaultPage/DefaultPage.jsx'
+import DialogController from 'CONNECTED/DefaultPage/DialogController.jsx'
+import Error from 'CONNECTED/Error.js'
 import React from 'react'
-import Topbar from 'UI/Topbar.js'
+import Topbar from 'CONNECTED/Topbar.js'
 
 let output
 
@@ -27,7 +27,7 @@ describe('DefaultPage', () => {
 
     window.addEventListener = (type, fn) => (output = { type: 'addListener', func: fn })
     window.removeEventListener = () => (output = 'removeListener')
-    window.document.activeElement.scrollIntoView = () => output = 'test'
+    window.document.activeElement.scrollIntoView = () => (output = 'test')
 
     const wrapper = shallow(
       <DefaultPage {...options}>
@@ -38,7 +38,6 @@ describe('DefaultPage', () => {
     output.func()
     expect(output).toBe('test')
 
-    expect(wrapper.find(Topbar)).toHaveLength(1)
     expect(wrapper.find(BusyScreen)).toHaveLength(1)
     expect(wrapper.find(Error)).toHaveLength(1)
     expect(wrapper.find(DialogController)).toHaveLength(1)

@@ -28,10 +28,10 @@ module.exports = {
     const query = `
         SELECT authentication.*
         FROM authentication
-        RIGHT JOIN users
+        LEFT JOIN users
         ON users.id = authentication.user
-        WHERE users.mail = ${mysql.escape(mail)}
-        AND users.instance = ${mysql.escape(instance)}`
+        WHERE users.mail = ${mysql.escape(mail)}`
+    // AND users.instance = ${mysql.escape(instance)}
 
     log(6, 'getting user auth data')
     return getConnection().then(myDb => {
@@ -40,7 +40,7 @@ module.exports = {
         myDb.query(query, (err, result) => {
           log(6, 'getting user data : query complete')
           myDb.release()
-          if (err) {
+          if (err || !result.length) {
             log(2, 'modules/db/user:getUserByProperty', err, query)
             reject({ status: 500, message: 'Unable to find user.' })
           } else {
@@ -205,7 +205,7 @@ module.exports = {
             ${mysql.escape(options.instance)},
             ${mysql.escape(options.name)},
             ${mysql.escape(options.mail)},
-            (CASE WHEN AUTO_INCREMENT = 1 THEN 1 ELSE 0 END)
+            ${options.admin ? options.admin : false}
         FROM INFORMATION_SCHEMA.TABLES
         WHERE TABLE_SCHEMA = '${process.env.FOOD_DB_NAME}'
         AND TABLE_NAME = 'users';`,
@@ -240,6 +240,7 @@ module.exports = {
               creationNotice: options.creationNotice,
               balance: 0,
               instance: options.instance,
+              admin: options.admin ? options.admin : false,
               id: result.insertId,
             })
           }

@@ -377,13 +377,13 @@ describe('app-reducer', () => {
       status: 'complete',
       data: {
         version: 10,
-        historySize: 8
+        historySize: 8,
       },
     }
 
     expect(app({}, action)).toEqual({
       dataversion: 10,
-      historySize: 8
+      historySize: 8,
     })
 
     expect(
@@ -396,7 +396,7 @@ describe('app-reducer', () => {
       ),
     ).toEqual({
       dataversion: 10,
-      historySize: 8
+      historySize: 8,
     })
 
     action.status = false
@@ -424,12 +424,12 @@ describe('app-reducer', () => {
       type: 'LOAD_HISTORY',
       status: 'complete',
       data: {
-        historySize: 8
+        historySize: 8,
       },
     }
 
     expect(app({}, action)).toEqual({
-      historySize: 8
+      historySize: 8,
     })
 
     expect(
@@ -442,7 +442,51 @@ describe('app-reducer', () => {
       ),
     ).toEqual({
       dataversion: 9,
-      historySize: 8
+      historySize: 8,
+    })
+
+    action.status = false
+
+    expect(
+      app(
+        {
+          test: '123',
+          errors: {
+            1: 'asd',
+          },
+        },
+        action,
+      ),
+    ).toEqual({
+      test: '123',
+      errors: {
+        1: 'asd',
+      },
+    })
+  })
+
+  test('CHECK_DOMAIN', () => {
+    const action = {
+      type: 'CHECK_DOMAIN',
+      status: 'complete',
+      data: 'test',
+    }
+
+    expect(app({}, action)).toEqual({
+      subdomain: 'test',
+    })
+
+    expect(
+      app(
+        {
+          dataversion: 9,
+          subdomain: 'te1234st',
+        },
+        action,
+      ),
+    ).toEqual({
+      dataversion: 9,
+      subdomain: 'test',
     })
 
     action.status = false

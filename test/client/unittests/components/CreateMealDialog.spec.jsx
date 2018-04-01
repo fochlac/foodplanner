@@ -1,11 +1,11 @@
 import { formatDate, formatTime, round } from 'UTILS/date.js'
 import { mount, shallow } from 'enzyme'
 
-import CreateMealDialog from 'UI/CreateMealDialog/CreateMealDialog.jsx'
-import DayTimePicker from 'UI/DayTimePicker/DayTimePicker.jsx'
-import Dialog from 'UI/Dialog.js'
-import ImageUploader from 'UI/ImageUploader/ImageUploader.jsx'
-import MealOption from 'UI/CreateMealDialog/MealOption.jsx'
+import CreateMealDialog from 'DIALOG/CreateMealDialog/CreateMealDialog.jsx'
+import DayTimePicker from 'RAW/DayTimePicker.jsx'
+import Dialog from 'DIALOG/Dialog.js'
+import ImageUploader from 'RAW/ImageUploader.jsx'
+import MealOption from 'DIALOG/CreateMealDialog/MealOption.jsx'
 import React from 'react'
 let output
 

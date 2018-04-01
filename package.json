@@ -17,7 +17,12 @@
     "coveragePathIgnorePatterns": [
       "<rootDir>/test/",
       "<rootDir>/node_modules/",
-      "components/ui/[^/]*.js$"
+      "components/(raw|dialog|connected)/[^/]*.js$"
+    ],
+    "collectCoverageFrom": [
+      "client/components/**/*.{js,jsx}",
+      "client/store/**/*.{js,jsx}",
+      "client/utils/**/*.{js,jsx}"
     ],
     "setupFiles": [
       "./test/client/unittests/setup.js"
@@ -31,7 +36,9 @@
     ],
     "moduleNameMapper": {
       "^COMPONENTS(.*)$": "<rootDir>/client/components$1",
-      "^UI(.*)$": "<rootDir>/client/components/ui$1",
+      "^RAW(.*)$": "<rootDir>/client/components/raw$1",
+      "^DIALOG(.*)$": "<rootDir>/client/components/dialog$1",
+      "^CONNECTED(.*)$": "<rootDir>/client/components/connected$1",
       "^UTILS(.*)$": "<rootDir>/client/utils$1",
       "^PAGES(.*)$": "<rootDir>/client/components/views$1",
       "^STORE(.*)$": "<rootDir>/client/store$1",
@@ -117,6 +124,7 @@
     "react-addons-test-utils": "^15.6.2",
     "selenium-webdriver": "^3.6.0",
     "serviceworker-webpack-plugin": "^0.2.3",
+    "sinon": "^4.4.10",
     "source-map-support": "^0.5.0",
     "style-loader": "^0.18.2",
     "webpack": "^3.1.0",

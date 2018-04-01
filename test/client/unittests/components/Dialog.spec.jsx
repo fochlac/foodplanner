@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import Dialog from 'UI/Dialog/Dialog.jsx';
+import Dialog from 'DIALOG/Dialog/Dialog.jsx';
 
 describe('Dialog', () => {
   test('should render all elements', () => {

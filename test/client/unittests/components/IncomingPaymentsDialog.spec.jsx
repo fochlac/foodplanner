@@ -1,7 +1,7 @@
 import { mount, shallow } from 'enzyme'
 
-import IncomingPaymentsDialog from 'UI/IncomingPaymentsDialog/IncomingPaymentsDialog.jsx'
-import Payment from 'UI/PriceDialog/Payment.jsx'
+import IncomingPaymentsDialog from 'DIALOG/IncomingPaymentsDialog/IncomingPaymentsDialog.jsx'
+import Payment from 'DIALOG/PriceDialog/Payment.jsx'
 import React from 'react'
 
 describe('IncomingPaymentsDialog', () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import SignUpOption from 'UI/SignUpDialog/SignUpOption.jsx';
+import SignUpOption from 'DIALOG/SignUpDialog/SignUpOption.jsx';
 
 describe('SignUpDialog - SignUpOption', () => {
   test('should render elements', () => {

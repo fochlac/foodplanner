@@ -52,7 +52,23 @@ let setup = [
         \`instance\`            int             NOT NULL,
 
         PRIMARY KEY (id),
-        UNIQUE KEY \`mail\` (\`mail\`, \`instance\`)
+        UNIQUE KEY \`mail\` (\`mail\`)
+    );`,
+
+  `CREATE TABLE IF NOT EXISTS \`instances\` (
+        \`id\`                  int             NOT NULL    AUTO_INCREMENT,
+        \`name\`                varchar(150)    NOT NULL,
+        \`company\`             varchar(150),
+        \`subdomain\`           varchar(150)    NOT NULL,
+        \`address\`             varchar(150)    NOT NULL,
+        \`lang\`                varchar(150)                DEFAULT "de-DE",
+        \`title\`               varchar(150),
+        \`gmail_user\`          varchar(150),
+        \`gmail_pass\`          varchar(150),
+        \`icon\`                varchar(150)                DEFAULT "fa-calendar",
+
+        PRIMARY KEY (id),
+        UNIQUE KEY \`subdomain\` (\`subdomain\`)
     );`,
   `CREATE TABLE IF NOT EXISTS \`notificationList\` (
         \`id\`                  int             NOT NULL    AUTO_INCREMENT,
@@ -134,6 +150,7 @@ let setup = [
         \`amount\`              FLOAT(10, 2)    NOT NULL,
         \`reason\`              varchar(255)    NOT NULL,
         \`time\`                bigint          NOT NULL,
+        \`instance\`            int             NOT NULL,
 
         PRIMARY KEY (id)
       );`,
@@ -174,7 +191,43 @@ let setup = [
 
         UNIQUE KEY \`user\` (\`user\`, \`datefinder\`)
     );`,
-]
+].concat(
+  process.argv.includes('-test')
+    ? [
+        `INSERT INTO instances (
+          name,
+          title,
+          address,
+          company,
+          subdomain
+        ) VALUES (
+          "testname",
+          "testtitle",
+          "",
+          "testcompany",
+          "testsubdomain"
+        );`,
+        `INSERT INTO users (
+          name,
+          admin,
+          mail,
+          balance,
+          instance
+        ) VALUES (
+          "admin",
+          1,
+          "admin@test.de",
+          0,
+          1
+        );`,
+        `INSERT INTO authentication (
+          user
+        ) VALUES (
+          1
+        );`,
+      ]
+    : [],
+)
 
 function setupDB() {
   myDb.query(setup[0], err => {

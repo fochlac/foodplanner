@@ -50,7 +50,7 @@ jobs:
       - run:
           name: setup db && build client
           command: |
-            node server/setup.js -y
+            node server/setup.js -y -test
             npm run build
       - run:
           name: run smoke tests

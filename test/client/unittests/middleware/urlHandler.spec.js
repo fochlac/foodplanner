@@ -14,7 +14,7 @@ describe('urlHandler', () => {
     urlHandler({
       getState: () => ({
         instance: {
-          subdomain: true,
+          root: '',
         },
       }),
     })(action => {
@@ -31,14 +31,13 @@ describe('urlHandler', () => {
       expect(data.app.dialog.type).toBe(act.content)
       expect(data.app.dialog.option).toBe(act.option)
       expect(title).toBe(act.title)
-      expect(url).toBe('/3' + act.url)
+      expect(url).toBe('asdaw' + act.url)
     }
 
     urlHandler({
       getState: () => ({
         instance: {
-          subdomain: false,
-          id: 3,
+          root: 'asdaw',
         },
       }),
     })(action => {
