@@ -209,7 +209,7 @@ input[type='number']::-webkit-outer-spin-button {
   .row {
     display: flex;
     justify-content: space-around;
-    width: calc(100% ~"+" 10px);
+    width: calc(100% ~'+' 10px);
     align-items: center;
     flex-direction: row;
     margin-left: -10px;
@@ -218,7 +218,6 @@ input[type='number']::-webkit-outer-spin-button {
       margin-left: 10px;
     }
   }
-  
 
   .col {
     display: flex;
@@ -232,17 +231,22 @@ input[type='number']::-webkit-outer-spin-button {
     margin-bottom: 10px;
   }
 
-  .col, .row {
+  .col,
+  .row {
     &.justifyStart {
       justify-content: flex-start;
     }
-    
+
     &.justifyCenter {
       justify-content: center;
     }
 
     &.justifyEnd {
       justify-content: flex-end;
+    }
+
+    &.alignCenter {
+      align-items: center;
     }
 
     &.wrap {
@@ -252,11 +256,11 @@ input[type='number']::-webkit-outer-spin-button {
     &.alignStart {
       align-items: flex-start;
     }
-    
+
     .basis33 {
       flex-basis: 33%;
     }
-    
+
     .basis66 {
       flex-basis: 66%;
     }

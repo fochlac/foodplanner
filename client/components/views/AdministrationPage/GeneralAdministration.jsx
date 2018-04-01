@@ -94,7 +94,7 @@ export default class GeneralAdministration extends React.Component {
                 ]}
               />
             </div>
-            <div className="col gmail">
+            <div className="col gmail alignCenter">
               <h4 className="title">{wording.gmail}</h4>
               {gmailBusy && (
                 <div>
