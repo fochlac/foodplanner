@@ -30,7 +30,7 @@ export default class SignUpDialog extends React.Component {
     this.mySetState = function(data, cb) {
       this.setState(data, () => {
         const app = history && history.state && history.state.app ? history.state.app : {}
-        history.replaceState({ app: { ...app, dialog: { ...(app.dialog ? app.dialog : {}), state: this.state } } }, document.title, document.location.pathname)
+        history.replaceState({ app: { ...app, dialog: { ...(app.dialog ? app.dialog : {}), state: this.state } } }, document.title, document.location.href)
       })
     }
   }
