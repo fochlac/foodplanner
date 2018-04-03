@@ -58,7 +58,7 @@ module.exports = {
                         instance: ${JSON.stringify({
                           ...instance,
                           root: req.headers.proxied
-                            ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + (isSubdomain ? '/' : '/' + req.instance)
+                            ? req.headers.proxy_protocol + '://' + req.headers.proxy_host + (isSubdomain ? '' : '/' + req.instance)
                             : req.protocol + '://' + req.headers.host + '/' + req.instance,
                           isSubdomain,
                           page: 'instance',
