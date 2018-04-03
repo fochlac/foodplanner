@@ -1,7 +1,7 @@
 {
-  "name": "foodplanner",
-  "version": "0.0.1",
-  "description": "planner for cooking",
+  "name": "Eventplanner",
+  "version": "1.0.0",
+  "description": "planner for events",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --public dev.fochlac.com --hot --inline",
