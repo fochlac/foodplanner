@@ -1,6 +1,9 @@
 const routes = require('express').Router(),
   instance = require('./instance.js'),
+  github = require('./github'),
   user = require('./user.js')
+
+routes.use('/github', github)
 
 routes.use('/instance', instance)
 routes.use('/user', user)

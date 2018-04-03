@@ -6,12 +6,9 @@ const routes = require('express').Router(),
   datefinder = require('./datefinder'),
   user = require('./user'),
   payment = require('./payment'),
-  github = require('./github'),
   update = require(process.env.FOOD_HOME + 'router/controller/update'),
   history = require(process.env.FOOD_HOME + 'router/controller/history'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
-
-routes.use('/github', github)
 
 routes.get(
   '/update',
@@ -42,6 +39,6 @@ routes.use('/mail', mail)
 routes.use('/datefinder', datefinder)
 routes.use('/notification', notification)
 
-routes.all('/*', (req, res) => res.status(404).json({success: 'false', message: 'unknown route'}))
+routes.all('/*', (req, res) => res.status(404).json({ success: 'false', message: 'unknown route' }))
 
 module.exports = routes
