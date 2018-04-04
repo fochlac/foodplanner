@@ -120,7 +120,7 @@ export default class DateFinder extends React.Component {
                     <span className="fa-users fa" />
                     <span className={(usersVisible ? 'fa-chevron-left' : 'fa-chevron-right') + ' fa marginLeft'} />
                   </span>
-                  {edit && <span className="fa fa-times fa-lg deleteIcon signupIcon" onClick={() => datefinderStartDeleteDate(datefinder.id, id)} />}
+                  {edit && <span className="fa fa-trash deleteIcon signupIcon" onClick={() => datefinderStartDeleteDate(datefinder.id, id)} />}
                   <span className="signupCount">{users.length}</span>
                   <span>
                     <span className="date">{formatDate(time)}</span>
