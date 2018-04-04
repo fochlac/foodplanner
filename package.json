@@ -34,6 +34,7 @@
       "\\.(css|less)$": "<rootDir>/test/client/unittests/styleMock.js"
     },
     "roots": ["./test/client/unittests"],
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
     "testURL": "https://food.fochlac.com/test123"
   },
   "browserslist": ["last 3 versions", "> 1%"],
@@ -85,6 +86,7 @@
     "css-loader": "^0.28.4",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
+    "enzyme-to-json": "^3.3.3",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-api": "^0.10.4",
     "file-loader": "^0.11.2",
