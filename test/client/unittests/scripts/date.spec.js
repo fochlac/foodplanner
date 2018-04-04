@@ -1,4 +1,4 @@
-import { formatDate, formatDateTime, formatDayNameDate, formatTime, formatTimeShort, round } from 'UTILS/date.js'
+import { formatDate, formatDateTime, formatDayNameDate, formatDayShort, formatTime, formatTimeShort, round } from 'UTILS/date.js'
 
 const second = 1000,
   minute = 60 * second,
@@ -29,6 +29,16 @@ describe('formatDayNameDate', () => {
     expect(formatDayNameDate(new Date(1235231241000))).toBe('Samstag, 21.02.09')
     expect(formatDayNameDate(new Date(2235231241000))).toBe('Dienstag, 30.10.40')
     expect(formatDayNameDate(new Date(5235231241000))).toBe('Donnerstag, 24.11.35')
+  })
+})
+
+describe('formatDayShort', () => {
+  test('should format date objects as Freitag, 01.01.12', () => {
+    expect(formatDayShort(1231231241000)).toBe('Di')
+    expect(formatDayShort(1513978469000)).toBe('Fr')
+    expect(formatDayShort(1235231241000)).toBe('Sa')
+    expect(formatDayShort(new Date(2235231241000))).toBe('Di')
+    expect(formatDayShort(new Date(5235231241000))).toBe('Do')
   })
 })
 

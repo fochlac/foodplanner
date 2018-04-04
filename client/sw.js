@@ -2,7 +2,7 @@
 
 'use strict'
 const serverUrl = location.origin
-let version = '30',
+let version = '31',
   dbVersion = '2',
   assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
   offline = new Response(new Blob(), { status: 279 }),
@@ -27,7 +27,7 @@ function handle_push(event) {
       .then(user => {
         // show notification, send post-message for refresh, do whatever
         if (msg.type === 'creationNotice' && user.creationNotice_notification === 1) {
-          return self.registration.showNotification('Neues Mittagsangebot vorhanden!', {
+          return self.registration.showNotification('Neues Angebot vorhanden!', {
             body: formatDateTime(msg.data.time) + ': ' + msg.data.name,
             icon: msg.data.image ? serverUrl + msg.data.image : '',
             requireInteraction: true,

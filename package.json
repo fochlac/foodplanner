@@ -14,26 +14,11 @@
   },
   "jest": {
     "coverageDirectory": "./coverage/",
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/test/",
-      "<rootDir>/node_modules/",
-      "components/(raw|dialog|connected)/[^/]*.js$"
-    ],
-    "collectCoverageFrom": [
-      "client/components/**/*.{js,jsx}",
-      "client/store/**/*.{js,jsx}",
-      "client/utils/**/*.{js,jsx}"
-    ],
-    "setupFiles": [
-      "./test/client/unittests/setup.js"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "jsx"
-    ],
-    "moduleDirectories": [
-      "node_modules"
-    ],
+    "coveragePathIgnorePatterns": ["<rootDir>/test/", "<rootDir>/node_modules/", "components/(raw|dialog|connected)/[^/]*.js$"],
+    "collectCoverageFrom": ["client/components/**/*.{js,jsx}", "client/store/**/*.{js,jsx}", "client/utils/**/*.{js,jsx}"],
+    "setupFiles": ["./test/client/unittests/setup.js"],
+    "moduleFileExtensions": ["js", "jsx"],
+    "moduleDirectories": ["node_modules"],
     "moduleNameMapper": {
       "^COMPONENTS(.*)$": "<rootDir>/client/components$1",
       "^RAW(.*)$": "<rootDir>/client/components/raw$1",
@@ -48,15 +33,11 @@
       "^T_UNIT(.*)$": "<rootDir>/test/client/unittests$1",
       "\\.(css|less)$": "<rootDir>/test/client/unittests/styleMock.js"
     },
-    "roots": [
-      "./test/client/unittests"
-    ],
+    "roots": ["./test/client/unittests"],
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
     "testURL": "https://food.fochlac.com/test123"
   },
-  "browserslist": [
-    "last 3 versions",
-    "> 1%"
-  ],
+  "browserslist": ["last 3 versions", "> 1%"],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -105,6 +86,7 @@
     "css-loader": "^0.28.4",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
+    "enzyme-to-json": "^3.3.3",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-api": "^0.10.4",
     "file-loader": "^0.11.2",

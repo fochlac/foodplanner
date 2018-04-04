@@ -1,6 +1,6 @@
 import './DateFinder.less'
 
-import { formatDate, formatDateTime, formatTime } from 'UTILS/date.js'
+import { formatDate, formatDateTime, formatDayShort, formatTime } from 'UTILS/date.js'
 
 import DayTimePicker from 'RAW/DayTimePicker'
 import React from 'react'
@@ -93,7 +93,8 @@ export default class DateFinder extends React.Component {
             <ul className="participantsList">
               {datefinder.participants.map(participant => (
                 <li key={participant.user} className={participant.user === user.id ? 'myself' : ''}>
-                  {participant.name}<span className="hideOnLast">,</span>
+                  {participant.name}
+                  <span className="hideOnLast">,</span>
                 </li>
               ))}
             </ul>
@@ -114,11 +115,12 @@ export default class DateFinder extends React.Component {
             return (
               <li key={id} className={selected ? 'selected' : ''}>
                 <div onClick={evt => this.toggleDate(evt, { selected, user, date: id })}>
+                  <span className="dayShort">{formatDayShort(time)}</span>
                   <span className="signupIcon" onClick={() => this.showUsers(usersVisible ? -1 : index)}>
                     <span className="fa-users fa" />
                     <span className={(usersVisible ? 'fa-chevron-left' : 'fa-chevron-right') + ' fa marginLeft'} />
                   </span>
-                  {edit && <span className="fa fa-times fa-lg deleteIcon signupIcon" onClick={() => datefinderStartDeleteDate(datefinder.id, id)} />}
+                  {edit && <span className="fa fa-trash deleteIcon signupIcon" onClick={() => datefinderStartDeleteDate(datefinder.id, id)} />}
                   <span className="signupCount">{users.length}</span>
                   <span>
                     <span className="date">{formatDate(time)}</span>

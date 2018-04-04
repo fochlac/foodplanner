@@ -108,9 +108,9 @@ module.exports = {
       datefinderCache.delete('datefinderList')
 
       // async calls, not gonna wait for them
-      mailer.sendCreationNotice(req.instance, meal)
+      mailer.sendCreationNotice(req.instance, meal.datefinder ? { ...meal, deadline: datefinder.deadline } : meal)
       scheduler.scheduleMeal(meal)
-      notification.sendCreationNotice(req.instance, meal)
+      notification.sendCreationNotice(req.instance, meal.datefinder ? { ...meal, deadline: datefinder.deadline } : meal)
 
       if (req.file) {
         let imageName = meal.image.split('/')

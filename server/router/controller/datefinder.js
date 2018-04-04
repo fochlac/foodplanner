@@ -2,6 +2,7 @@ const datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
   mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals'),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   error = require(process.env.FOOD_HOME + 'modules/error'),
+  mailer = require(process.env.FOOD_HOME + 'modules/mailer'),
   log = require(process.env.FOOD_HOME + 'modules/log')
 
 const datefinderCache = caches.getCache('datefinder'),
@@ -61,6 +62,7 @@ module.exports = {
         return mealsDB.getMealByDatefinderLocked(req.params.id)
       })
       .then(results => {
+        mailer.sendCreationNotice(req.instance, results)
         res.status(200).send(results)
       })
       .catch(error.router.internalError(res))

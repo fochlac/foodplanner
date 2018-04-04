@@ -41,7 +41,7 @@ module.exports = {
           log(6, 'getting user data : query complete')
           myDb.release()
           if (err || !result.length) {
-            log(2, 'modules/db/user:getUserByProperty', err, query)
+            log(2, 'modules/db/user:getUserByProperty', 'Unable to find user.', err, query)
             reject({ status: 500, message: 'Unable to find user.' })
           } else {
             log(6, 'getting user data : query complete - positive result')
@@ -70,14 +70,14 @@ module.exports = {
 
   getUnsignedUsersByProperty: (mealId, prop, val) => {
     const query = `
-            SELECT users.*
-            FROM users
-            LEFT OUTER JOIN signups
-            ON signups.userId = users.id
-            AND signups.meal = ${mealId}
-            WHERE signups.userId IS NULL
-            AND users.instance = (SELECT instance FROM meals WHERE mealId = ${mealId})
-            AND users.${prop} = ${mysql.escape(val)};`
+      SELECT users.*
+      FROM users
+      LEFT OUTER JOIN signups
+      ON signups.userId = users.id
+      AND signups.meal = ${mealId}
+      WHERE signups.userId IS NULL
+      AND users.instance = (SELECT instance FROM meals WHERE id = ${mealId})
+      AND users.${prop} = ${mysql.escape(val)};`
 
     return getConnection().then(myDb => {
       return new Promise((resolve, reject) =>
