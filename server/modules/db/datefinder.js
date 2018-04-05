@@ -98,7 +98,7 @@ module.exports = {
     const queryLock = `
         UPDATE meals
         SET
-          datefinderLocked = 1,
+          datefinderLocked = ${mysql.escape(id)},
           time = (SELECT time FROM datefinder_dates WHERE id = ${mysql.escape(date)}),
           deadline = (SELECT time FROM datefinder_dates WHERE id = ${mysql.escape(date)}) - deadline
         WHERE datefinder = ${mysql.escape(id)}
