@@ -5,10 +5,10 @@ import dEqual from 'fast-deep-equal'
 import { formatDate } from 'UTILS/date.js'
 
 export default class IncomingPaymentsDialog extends React.Component {
-  constructor({ userId, meals, signups, close_dialog }) {
+  constructor({ userId, close_dialog, signups, meals }) {
     super()
-    const myMeals = meals.filter(meal => meal.creatorId === userId).map(meal => meal.id)
 
+    const myMeals = meals.filter(meal => meal.creatorId === userId).map(meal => meal.id)
     this.state = {
       list: Object.values(signups)
         .filter(signup => !signup.paid && signup.price && myMeals.includes(signup.meal))
@@ -19,22 +19,33 @@ export default class IncomingPaymentsDialog extends React.Component {
   }
 
   componentDidMount() {
-    !this.props.historyLoaded && this.props.load_history({size: 20, busy: true})
+    !this.props.historyLoaded && this.props.load_history({ size: 20, busy: true })
+  }
+
+  componentDidUpdate(prevProps) {
+    const { userId, signups, meals } = this.props
+    if (!dEqual(meals, prevProps.meals)) {
+      const myMeals = meals.filter(meal => meal.creatorId === userId).map(meal => meal.id)
+      const list = Object.values(signups)
+        .filter(signup => !signup.paid && signup.price && myMeals.includes(signup.meal))
+        .map(signup => signup.id)
+
+      this.setState({ list })
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!dEqual(nextProps.meal, this.props.meal) || !dEqual(nextProps.signups, this.props.signups)) {
+    if (!dEqual(nextProps.meals, this.props.meals) || !dEqual(nextProps.signups, this.props.signups) || !dEqual(this.state.list, nextState.list)) {
       return true
     }
     return false
   }
 
   render() {
-    const { signups, toggle_paid, meals } = this.props
-    const { list } = this.state
+    const { userId, signups, toggle_paid, meals } = this.props
 
     const mySignups = Object.values(signups)
-      .filter(signup => list.includes(signup.id))
+      .filter(signup => this.state.list.includes(signup.id))
       .reduce((acc, signup) => {
         acc[signup.meal] = acc[signup.meal] ? acc[signup.meal].concat([signup]) : [signup]
         return acc

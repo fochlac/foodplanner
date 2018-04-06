@@ -5,6 +5,10 @@ import Payment from 'DIALOG/PriceDialog/Payment.jsx'
 import React from 'react'
 
 describe('IncomingPaymentsDialog', () => {
+  beforeAll(() => {
+    Date.now = () => 123456789123
+  })
+
   test('should render all elements', () => {
     let output
     const wrapper = shallow(
@@ -99,6 +103,32 @@ describe('IncomingPaymentsDialog', () => {
     wrapper.find('.titlebar span.fa-times').simulate('click')
 
     expect(dialog_closed).toBe(true)
+  })
+
+  test('should update list if new meals are added', () => {
+    const wrapper = shallow(
+      <IncomingPaymentsDialog
+        meals={[]}
+        userId="1"
+        signups={{}}
+        toggle_paid={() => null}
+        close_dialog={() => (dialog_closed = true)}
+        load_history={() => null}
+      />,
+    )
+
+    wrapper.setProps({
+      signups: {
+        1: { meal: 1, price: 2, paid: 1, id: 1 },
+        2: { meal: 2, price: 2, paid: 0, id: 2 },
+        3: { meal: 1, price: 2, paid: 1, id: 3 },
+        4: { meal: 1, price: 2, paid: 0, id: 4 },
+      },
+      meals: [{ creatorId: '1', id: 1, time: Date.now() }, { creatorId: '2', id: 2, time: Date.now() }],
+    })
+
+    wrapper.update()
+    expect(wrapper).toMatchSnapshot()
   })
 
   test('should close on cancel button click', () => {

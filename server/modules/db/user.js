@@ -42,7 +42,7 @@ module.exports = {
           myDb.release()
           if (err || !result.length) {
             log(2, 'modules/db/user:getUserByProperty', 'Unable to find user.', err, query)
-            reject({ status: 500, message: 'Unable to find user.' })
+            reject({ status: 400, type: 'BAD_USER' })
           } else {
             log(6, 'getting user data : query complete - positive result')
             resolve(result[0])
