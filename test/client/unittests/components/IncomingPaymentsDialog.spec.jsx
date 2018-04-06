@@ -5,6 +5,10 @@ import Payment from 'DIALOG/PriceDialog/Payment.jsx'
 import React from 'react'
 
 describe('IncomingPaymentsDialog', () => {
+  beforeAll(() => {
+    Date.now = () => 123456789123
+  })
+
   test('should render all elements', () => {
     let output
     const wrapper = shallow(
