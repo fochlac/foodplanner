@@ -5,15 +5,8 @@ import dEqual from 'fast-deep-equal'
 import { formatDate } from 'UTILS/date.js'
 
 export default class IncomingPaymentsDialog extends React.Component {
-  constructor({ userId, meals, signups, close_dialog }) {
+  constructor({ close_dialog }) {
     super()
-    const myMeals = meals.filter(meal => meal.creatorId === userId).map(meal => meal.id)
-
-    this.state = {
-      list: Object.values(signups)
-        .filter(signup => !signup.paid && signup.price && myMeals.includes(signup.meal))
-        .map(signup => signup.id),
-    }
 
     this.cancel = close_dialog.bind(this)
   }
@@ -23,15 +16,19 @@ export default class IncomingPaymentsDialog extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!dEqual(nextProps.meal, this.props.meal) || !dEqual(nextProps.signups, this.props.signups)) {
+    if (!dEqual(nextProps.meals, this.props.meals) || !dEqual(nextProps.signups, this.props.signups)) {
       return true
     }
     return false
   }
 
   render() {
-    const { signups, toggle_paid, meals } = this.props
-    const { list } = this.state
+    const { userId, signups, toggle_paid, meals } = this.props
+
+    const myMeals = meals.filter(meal => meal.creatorId === userId).map(meal => meal.id)
+    const list =  Object.values(signups)
+        .filter(signup => !signup.paid && signup.price && myMeals.includes(signup.meal))
+        .map(signup => signup.id)
 
     const mySignups = Object.values(signups)
       .filter(signup => list.includes(signup.id))
