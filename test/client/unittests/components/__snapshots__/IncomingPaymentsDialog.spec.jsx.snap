@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IncomingPaymentsDialog should update list if new meals are added 1`] = `
+<Connect(Dialog)
+  className="PriceDialog"
+  closeOnBackdrop={true}
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Ausstehende Zahlungen:
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+      onClick={[Function]}
+    />
+  </div>
+  <div
+    className="body PriceDialog"
+  >
+    <div
+      className="mealWrapper"
+      key="1"
+    >
+      <h4>
+         - 
+        29.11.73
+      </h4>
+      <Payment
+        signups={
+          Array [
+            Object {
+              "id": 4,
+              "meal": 1,
+              "paid": 0,
+              "price": 2,
+            },
+          ]
+        }
+        toggle_paid={[Function]}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <span>
+      <button
+        className="cancel"
+        onClick={[Function]}
+        type="button"
+      >
+        Schließen
+      </button>
+    </span>
+  </div>
+</Connect(Dialog)>
+`;
