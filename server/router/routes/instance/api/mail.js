@@ -3,14 +3,6 @@ const mail = require('express').Router(),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
-mail.get(
-  '/search',
-  validate('query', {
-    email: /^[_A-Za-z0-9!#$%&'*+-/=?^_`{|}~.\s@]{5,100}$/,
-  }),
-  mailController.findMail,
-)
-
 mail.get('/validate', jwt.requireAdmin, mailController.validateLoginData)
 
 mail.post(

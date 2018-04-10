@@ -12,7 +12,7 @@ const openPriceDialog = async function() {
   return this.driver.waitElementLocated(S.dialog.price)
 }
 
-const sendMoney = async function(mail, amount) {
+const sendMoney = async function(name, amount) {
   await this.driver.findElement(S.uf.sendMoney).click()
 
   const dialog = await this.driver.waitElementLocated(S.dialog.sendMoney)
@@ -20,8 +20,11 @@ const sendMoney = async function(mail, amount) {
   const mailInput = await dialog.findElement(S.sMd.mail)
 
   await mailInput.clear()
-  await mailInput.sendKeys(mail.slice(0, -2))
-  await this.driver.wait(until.elementValueIs(mailInput, mail))
+  await mailInput.sendKeys(name)
+  await mailInput.click()
+  await this.driver.sleep(400)
+  await this.driver.waitElementLocated(S.sMd.dropdown)
+  await dialog.findElement(S.sMd.dropdownLi).click()
   await money.clear()
   await money.sendKeys(amount)
   await this.driver.wait(until.elementValueIs(money, amount.toString()))
@@ -30,8 +33,8 @@ const sendMoney = async function(mail, amount) {
   await this.driver.awaitBusyComplete()
 }
 
-const USER1 = { mail: 'test@test.de', name: 'testuser1' }
-const USER2 = { mail: 'test2@test.de', name: 'testuser2' }
+const USER1 = { mail: 'test@test.de', name: 'test1user' }
+const USER2 = { mail: 't2est@test.de', name: 'test2user' }
 
 describe('payment dialog', () => {
   before(async function() {

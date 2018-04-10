@@ -1,6 +1,6 @@
 import Dialog from 'DIALOG/Dialog.js'
-import EmailInput from 'CONNECTED/EmailInput.js'
 import React from 'react'
+import UserSearch from 'CONNECTED/UserSearch.js'
 import { formatDate } from 'UTILS/date.js'
 
 export default class SendMoneyDialog extends React.Component {
@@ -8,6 +8,7 @@ export default class SendMoneyDialog extends React.Component {
     super()
     this.state = {
       amount: 0,
+      userId: null,
     }
 
     this.amountInput = this.handleInput('amount').bind(this)
@@ -18,13 +19,13 @@ export default class SendMoneyDialog extends React.Component {
   }
 
   submit() {
-    if (!(this.props.app.mailSuggestion && this.props.app.mailSuggestion.id && this.props.app.mailSuggestion.id !== this.props.user.id) || !this.state.amount) {
+    if (!this.state.userId || !this.state.amount) {
       return
     }
 
     this.props.send_money({
       source: this.props.user.id,
-      target: this.props.app.mailSuggestion.id,
+      target: this.state.userId,
       amount: this.state.amount,
     })
   }
@@ -48,7 +49,7 @@ export default class SendMoneyDialog extends React.Component {
         </div>
         <div className="body">
           <label htmlFor="SendMoneyDialog_mail">E-Mail</label>
-          <EmailInput id="SendMoneyDialog_mail" selector="#SendMoneyDialog_amount" />
+          <UserSearch id="SendMoneyDialog_mail" selector="#SendMoneyDialog_amount" onChange={val => this.setState({ userId: val })} />
           <label htmlFor="SendMoneyDialog_amount">Betrag</label>
           <div className="row">
             <input type="number" id="SendMoneyDialog_amount" onChange={this.amountInput} />

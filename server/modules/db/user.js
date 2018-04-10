@@ -94,10 +94,12 @@ module.exports = {
     })
   },
 
-  searchUsersByProperty: (instance, prop, val) => {
+  searchUsersByNameOrMail: (instance, query) => {
     return getConnection().then(myDb => {
-      return new Promise((resolve, reject) =>
-        myDb.query(`select * from users where ${prop} like ${mysql.escape(val + '%')} AND instance = ${instance};`, (err, result) => {
+      return new Promise((resolve, reject) => {
+        const searchString = mysql.escape(`${(query.length > 2 ? '%' : '') + query}%`)
+
+        myDb.query(`SELECT id, name FROM users WHERE (name LIKE ${searchString} OR mail LIKE ${searchString}) AND instance = ${instance};`, (err, result) => {
           myDb.release()
           if (err) {
             log(2, 'modules/db/user:getUserByProperty', err)
@@ -105,8 +107,8 @@ module.exports = {
           } else {
             resolve(result)
           }
-        }),
-      )
+        })
+      })
     })
   },
 

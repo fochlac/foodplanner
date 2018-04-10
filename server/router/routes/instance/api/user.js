@@ -3,9 +3,17 @@ const user = require('express').Router(),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
-const { sendMoney, editUser, transactions, getUser, createUser, login } = controller
+const { sendMoney, editUser, transactions, getUser, createUser, login, findUser } = controller
 
 user.get('/', jwt.requireAdmin, controller.getUsersByInstance)
+
+user.get(
+  '/search',
+  validate('query', {
+    search: /^[ÄÜÖäöüA-Za-z0-9.\-,\s\_@]{1,100}$/,
+  }),
+  findUser,
+)
 
 user.post(
   '/:id/logout',

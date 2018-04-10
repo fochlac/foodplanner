@@ -2,19 +2,23 @@ const app = (state = {}, action) => {
   switch (action.type) {
     case 'DIALOG':
       return { ...state, dialog: { type: action.content, option: action.option } }
+    case 'CLOSE_DIALOG':
+      return { ...state, dialog: { type: '' }, userSuggestions: undefined }
+
     case 'HISTORY':
       action.app.errors = {}
-      delete action.app.mailSuggestion
+      delete action.app.userSuggestions
       action.app.busy = false
       action.app.hiddenBusy = false
       action.app.busyList = []
       action.app.offline = false
       return action.app
-    case 'CHECK_MAIL':
+
+    case 'SEARCH_USER':
       if (action.status === 'complete' && !action.data.error) {
-        return { ...state, mailSuggestion: action.data }
+        return { ...state, userSuggestions: action.data }
       } else if (action.status === 'complete') {
-        return { ...state, mailSuggestion: undefined }
+        return { ...state, userSuggestions: undefined }
       }
       return state
 
@@ -22,7 +26,7 @@ const app = (state = {}, action) => {
     case 'SIGNOUT':
     case 'SAVE_SETTINGS':
       if (action.type !== 'SEND_MONEY' || (action.status === 'complete' && !action.data.error)) {
-        return { ...state, mailSuggestion: undefined, dialog: { type: '' } }
+        return { ...state, userSuggestions: undefined, dialog: { type: '' } }
       }
       return state
 
@@ -40,8 +44,10 @@ const app = (state = {}, action) => {
         return { ...state, dialog: { type: '' } }
       }
       return state
+
     case 'BUSY':
       return { ...state, busy: action.state }
+
     case 'HIDDEN_BUSY':
       return {
         ...state,
@@ -52,11 +58,13 @@ const app = (state = {}, action) => {
             ? state.busyList && action.busyType ? state.busyList.concat([action.busyType]) : action.busyType ? [action.busyType] : []
             : state.busyList.filter(type => type !== action.busyType),
       }
+
     case 'POSTMESSAGE':
       if (action.message === 'offline') {
         return { ...state, offline: action.payload.state }
       }
       return state
+
     case 'SHOW_ERROR':
       return { ...state, errors: { ...state.errors, [action.id]: action.content } }
     case 'DELETE_ERROR':

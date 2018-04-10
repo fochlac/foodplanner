@@ -5,6 +5,7 @@ const wording = {
   name: 'Name',
   email: 'E-Mail',
   rank: 'Rang',
+  balance: 'Kontostand',
   admin: 'Administrator',
   user: 'Nutzer',
   delete: 'Löschen',
@@ -21,6 +22,7 @@ export default class UserAdministration extends React.Component {
           <tr>
             <th>{wording.name}</th>
             <th>{wording.email}</th>
+            <th>{wording.balance}</th>
             <th>{wording.rank}</th>
             <th>{wording.delete}</th>
           </tr>
@@ -36,11 +38,12 @@ export default class UserAdministration extends React.Component {
     return (
       <div>
         {users && (
-          <Pager wrapper={this.renderWrapper} size={20} bottom={true}>
+          <Pager wrapper={this.renderWrapper} size={30} bottom={true}>
             {users.sort((a, b) => a.name.localeCompare(b.name)).map(user => (
               <tr key={user.id} className={self == user.id ? 'self' : undefined}>
                 <td>{user.name}</td>
                 <td>{user.mail}</td>
+                <td>{user.balance}</td>
                 <td>
                   {user.admin ? (
                     <span key="word_admin" className="col_red">

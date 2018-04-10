@@ -30,6 +30,31 @@ describe('app-reducer', () => {
       },
     })
   })
+  test('CLOSE_DIALOG', () => {
+    const action = {
+      type: 'CLOSE_DIALOG',
+    }
+
+    expect(app({}, action)).toEqual({
+      dialog: { type: '' },
+      userSuggestions: undefined,
+    })
+
+    expect(
+      app(
+        {
+          test4: '12312534',
+          dialog: 'test',
+          userSuggestions: ['test'],
+        },
+        action,
+      ),
+    ).toEqual({
+      test4: '12312534',
+      dialog: { type: '' },
+      userSuggestions: undefined,
+    })
+  })
 
   test('HISTORY', () => {
     const action = {
@@ -83,9 +108,9 @@ describe('app-reducer', () => {
     })
   })
 
-  test('CHECK_MAIL', () => {
+  test('SEARCH_USER', () => {
     const action = {
-      type: 'CHECK_MAIL',
+      type: 'SEARCH_USER',
       status: 'complete',
       data: {
         test: 'test123',
@@ -93,7 +118,7 @@ describe('app-reducer', () => {
     }
 
     expect(app({}, action)).toEqual({
-      mailSuggestion: action.data,
+      userSuggestions: action.data,
     })
 
     expect(
@@ -104,7 +129,7 @@ describe('app-reducer', () => {
         action,
       ),
     ).toEqual({
-      mailSuggestion: action.data,
+      userSuggestions: action.data,
       test4: '12312534',
     })
 
@@ -118,7 +143,7 @@ describe('app-reducer', () => {
         action,
       ),
     ).toEqual({
-      mailSuggestion: undefined,
+      userSuggestions: undefined,
       test4: '12312534',
     })
 
@@ -126,12 +151,12 @@ describe('app-reducer', () => {
       app(
         {
           test4: '12312534',
-          mailSuggestion: 'test123',
+          userSuggestions: 'test123',
         },
         action,
       ),
     ).toEqual({
-      mailSuggestion: undefined,
+      userSuggestions: undefined,
       test4: '12312534',
     })
 
@@ -155,12 +180,12 @@ describe('app-reducer', () => {
       },
       initialState = {
         test: '1231',
-        mailSuggestion: '12312',
+        userSuggestions: '12312',
         dialog: '12312',
       },
       cleanState = {
         test: '1231',
-        mailSuggestion: undefined,
+        userSuggestions: undefined,
         dialog: { type: '' },
       }
 

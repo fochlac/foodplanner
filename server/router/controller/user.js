@@ -7,7 +7,14 @@ const user = require('express').Router(),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   mailer = require(process.env.FOOD_HOME + 'modules/mailer'),
   crypto = require(process.env.FOOD_HOME + 'modules/crypto'),
-  cookieOptions = { secure: process.env.DEVELOP ? false : true, httpOnly: true, domain: process.env.FOOD_EXTERNAL.split('.').slice(-2).join('.'), expires: new Date(Date.now() + 1000 * 3600 * 24 * 365) }
+  cookieOptions = {
+    secure: process.env.DEVELOP ? false : true,
+    httpOnly: true,
+    domain: process.env.FOOD_EXTERNAL.split('.')
+      .slice(-2)
+      .join('.'),
+    expires: new Date(Date.now() + 1000 * 3600 * 24 * 365),
+  }
 
 let cache = caches.getCache('users'),
   mailCache = caches.getCache('mail'),
@@ -53,6 +60,23 @@ module.exports = {
         })
       })
       .catch(error.router.internalError(res))
+  },
+
+  findUser: async (req, res) => {
+    const query = decodeURIComponent(req.query.search)
+    let search = cache.get(`${req.instance}_${query}`)
+    if (search) {
+      res.status(200).send(search)
+    } else {
+      try {
+        const search = await userDB.searchUsersByNameOrMail(req.instance, query)
+
+        cache.put(`${req.instance}_${query}`, search)
+        res.status(200).send(search)
+      } catch (err) {
+        error.router.internalError(res)(err)
+      }
+    }
   },
 
   editUser: (req, res) => {
