@@ -12,7 +12,7 @@ const openPriceDialog = async function() {
   return this.driver.waitElementLocated(S.dialog.price)
 }
 
-const sendMoney = async function(mail, amount) {
+const sendMoney = async function(name, amount) {
   await this.driver.findElement(S.uf.sendMoney).click()
 
   const dialog = await this.driver.waitElementLocated(S.dialog.sendMoney)
@@ -20,8 +20,9 @@ const sendMoney = async function(mail, amount) {
   const mailInput = await dialog.findElement(S.sMd.mail)
 
   await mailInput.clear()
-  await mailInput.sendKeys(mail.slice(0, -2))
-  await this.driver.wait(until.elementValueIs(mailInput, mail))
+  await mailInput.sendKeys(name)
+  await this.driver.waitElementLocated(S.sMd.dropdown)
+  await dialog.findElement(S.sMd.dropdownLi).click()
   await money.clear()
   await money.sendKeys(amount)
   await this.driver.wait(until.elementValueIs(money, amount.toString()))
