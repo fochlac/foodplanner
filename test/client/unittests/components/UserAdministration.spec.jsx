@@ -2,7 +2,7 @@ import { mount, shallow } from 'enzyme'
 
 import Pager from 'RAW/Pager.jsx'
 import React from 'react'
-import TransactionAdministration from 'PAGES/AdministrationPage/UserAdministration.jsx'
+import UserAdministration from 'PAGES/AdministrationPage/UserAdministration.jsx'
 import sinon from 'sinon'
 
 const testdata = [
@@ -14,9 +14,9 @@ const testdata = [
 
 const userActions = { setAdmin: sinon.spy(), deleteUser: sinon.spy() }
 
-describe('TransactionAdministration', () => {
+describe('UserAdministration', () => {
   test('should correctly render data', () => {
-    const wrapper = shallow(<TransactionAdministration users={testdata} self={1} {...userActions} />)
+    const wrapper = shallow(<UserAdministration users={testdata} self={1} {...userActions} />)
     expect(wrapper.find('tr')).toHaveLength(4)
     expect(
       wrapper
@@ -64,11 +64,11 @@ describe('TransactionAdministration', () => {
 
     const outer = shallow(wrapper.find(Pager).prop('wrapper')())
 
-    expect(outer.find('th')).toHaveLength(4)
+    expect(outer.find('th')).toHaveLength(5)
   })
 
   test('should correctly render empty state', () => {
-    const wrapper = shallow(<TransactionAdministration users={testdata} {...userActions} />)
+    const wrapper = shallow(<UserAdministration users={testdata} {...userActions} />)
 
     wrapper
       .find('tr')
