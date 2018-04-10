@@ -52,6 +52,8 @@ export const S = {
   sMd: {
     money: By.id('SendMoneyDialog_amount'),
     mail: By.id('SendMoneyDialog_mail'),
+    dropdown: By.className('dropdown'),
+    dropdownLi: By.css('.dropdown > li'),
   },
   cm: {
     name: By.id('CreateMealDialog_name'),

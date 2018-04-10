@@ -1,8 +1,8 @@
 import { mount, shallow } from 'enzyme'
 
-import EmailInput from 'CONNECTED/EmailInput.js'
 import React from 'react'
 import SendMoneyDialog from 'DIALOG/SendMoneyDialog/SendMoneyDialog.jsx'
+import UserSearch from '../../../../client/components/connected/UserSearch'
 
 describe('SendMoneyDialog', () => {
   test('should render all elements', () => {
@@ -16,7 +16,7 @@ describe('SendMoneyDialog', () => {
     expect(wrapper.find('.foot button').length).toBe(2)
 
     expect(wrapper.find('.body input')).toHaveLength(1)
-    expect(wrapper.find(EmailInput)).toHaveLength(1)
+    expect(wrapper.find(UserSearch)).toHaveLength(1)
   })
 
   test('should close on cancel button click', () => {
@@ -52,6 +52,7 @@ describe('SendMoneyDialog', () => {
       )
 
     wrapper.find('.body input').simulate('change', { target: { value: TEST_AMOUNT } })
+    wrapper.find(UserSearch).simulate('change', 2)
     wrapper.find('button.submit').simulate('click')
 
     expect(send_money).toEqual({
