@@ -10,7 +10,7 @@ const wording = {
   amount: 'Betrag',
   sendMoney: 'Geld senden',
   cancel: 'Abbrechen',
-  confirm: 'Senden',
+  submit: 'Senden',
 }
 
 export default class SendMoneyDialog extends React.Component {
