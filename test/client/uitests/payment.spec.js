@@ -21,6 +21,7 @@ const sendMoney = async function(name, amount) {
 
   await mailInput.clear()
   await mailInput.sendKeys(name)
+  await mailInput.click()
   await this.driver.waitElementLocated(S.sMd.dropdown)
   await dialog.findElement(S.sMd.dropdownLi).click()
   await money.clear()
