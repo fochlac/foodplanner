@@ -67,8 +67,11 @@ export default class UserSearch extends React.Component {
             id={this.state.id}
             value={searchString}
             onChange={this.startSearch}
-            onFocus={() => this.setState({ focused: true })}
-            onBlur={() => setTimeout(() => this.setState({ focused: false }), 500)}
+            onFocus={() => {
+              clearTimeout(this.timeout)
+              this.setState({ focused: true })
+            }}
+            onBlur={() => (this.timeout = setTimeout(() => this.setState({ focused: false }), 500))}
             autoComplete="off"
             placeholder={wording.user}
           />

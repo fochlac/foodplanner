@@ -64,14 +64,14 @@ module.exports = {
 
   findUser: async (req, res) => {
     const query = decodeURIComponent(req.query.search)
-    let search = cache.get(query)
+    let search = cache.get(`${req.instance}_${query}`)
     if (search) {
       res.status(200).send(search)
     } else {
       try {
         const search = await userDB.searchUsersByNameOrMail(req.instance, query)
 
-        cache.put(query, search)
+        cache.put(`${req.instance}_${query}`, search)
         res.status(200).send(search)
       } catch (err) {
         error.router.internalError(res)(err)
