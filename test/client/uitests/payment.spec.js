@@ -22,6 +22,7 @@ const sendMoney = async function(name, amount) {
   await mailInput.clear()
   await mailInput.sendKeys(name)
   await mailInput.click()
+  await this.driver.sleep(400)
   await this.driver.waitElementLocated(S.sMd.dropdown)
   await dialog.findElement(S.sMd.dropdownLi).click()
   await money.clear()
@@ -32,8 +33,8 @@ const sendMoney = async function(name, amount) {
   await this.driver.awaitBusyComplete()
 }
 
-const USER1 = { mail: 'test@test.de', name: 'testuser1' }
-const USER2 = { mail: 'test2@test.de', name: 'testuser2' }
+const USER1 = { mail: 'test@test.de', name: 'test1user' }
+const USER2 = { mail: 't2est@test.de', name: 'test2user' }
 
 describe('payment dialog', () => {
   before(async function() {
