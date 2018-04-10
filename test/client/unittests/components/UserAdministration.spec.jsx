@@ -1,9 +1,9 @@
 import { mount, shallow } from 'enzyme'
 
-import React from 'react'
-import sinon from 'sinon'
 import Pager from 'RAW/Pager.jsx'
+import React from 'react'
 import TransactionAdministration from 'PAGES/AdministrationPage/UserAdministration.jsx'
+import sinon from 'sinon'
 
 const testdata = [
   { id: 1, name: 'admin', admin: 1, mail: 'admin@test.de', balance: -212.1, deadlineReminder: 0, creationNotice: 0, instance: 1 },
@@ -23,7 +23,7 @@ describe('TransactionAdministration', () => {
         .find('tr')
         .at(0)
         .find('td'),
-    ).toHaveLength(4)
+    ).toHaveLength(5)
 
     testdata.forEach((row, index) => {
       expect(
@@ -48,6 +48,14 @@ describe('TransactionAdministration', () => {
           .at(index)
           .find('td')
           .at(2)
+          .text(),
+      ).toContain(row.balance)
+      expect(
+        wrapper
+          .find('tr')
+          .at(index)
+          .find('td')
+          .at(3)
           .text(),
       ).toContain(row.admin ? 'Administrator' : 'Nutzer')
     })
