@@ -1,7 +1,17 @@
+import './SendMoneyDialog.less'
+
 import Dialog from 'DIALOG/Dialog.js'
 import React from 'react'
 import UserSearch from 'CONNECTED/UserSearch.js'
 import { formatDate } from 'UTILS/date.js'
+
+const wording = {
+  user: 'Benutzer',
+  amount: 'Betrag',
+  sendMoney: 'Geld senden',
+  cancel: 'Abbrechen',
+  confirm: 'Senden',
+}
 
 export default class SendMoneyDialog extends React.Component {
   constructor(props) {
@@ -44,13 +54,13 @@ export default class SendMoneyDialog extends React.Component {
     return (
       <Dialog closeOnBackdrop={true} className="sendMoneyDialog">
         <div className="titlebar">
-          <h3>Geld senden</h3>
+          <h3>{wording.sendMoney}</h3>
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)} />
         </div>
         <div className="body">
-          <label htmlFor="SendMoneyDialog_mail">E-Mail</label>
-          <UserSearch id="SendMoneyDialog_mail" selector="#SendMoneyDialog_amount" onChange={val => this.setState({ userId: val })} />
-          <label htmlFor="SendMoneyDialog_amount">Betrag</label>
+          <label htmlFor="SendMoneyDialog_mail">{wording.user}</label>
+          <UserSearch id="SendMoneyDialog_mail" onChange={val => this.setState({ userId: val })} />
+          <label htmlFor="SendMoneyDialog_amount">{wording.amount}</label>
           <div className="row">
             <input type="number" id="SendMoneyDialog_amount" onChange={this.amountInput} />
             <span className="moneySymbol marginLeft">€</span>
@@ -58,10 +68,10 @@ export default class SendMoneyDialog extends React.Component {
         </div>
         <div className="foot">
           <button className="cancel" type="button" onClick={this.cancel.bind(this)}>
-            Abbrechen
+            {wording.cancel}
           </button>
           <button type="button" className="red submit" onClick={this.submit.bind(this)}>
-            Senden
+            {wording.submit}
           </button>
         </div>
       </Dialog>

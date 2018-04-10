@@ -68,10 +68,10 @@ export default class UserSearch extends React.Component {
             value={searchString}
             onChange={this.startSearch}
             onFocus={() => {
-              clearTimeout(this.timeout)
+              clearTimeout(this.focus_timeout)
               this.setState({ focused: true })
             }}
-            onBlur={() => (this.timeout = setTimeout(() => this.setState({ focused: false }), 500))}
+            onBlur={() => (this.focus_timeout = setTimeout(() => this.setState({ focused: false }), 300))}
             autoComplete="off"
             placeholder={wording.user}
           />
@@ -79,7 +79,7 @@ export default class UserSearch extends React.Component {
         </div>
         {focused && userSuggestions && userSuggestions.length ? (
           <ul className="dropdown">
-            {userSuggestions.map(user => (
+            {userSuggestions.slice(0, 10).map(user => (
               <li key={user.id} onClick={() => this.selectUser(user)}>
                 <span className="fa fa-caret-right marginRight" />
                 {user.name}
