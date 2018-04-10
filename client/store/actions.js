@@ -102,8 +102,7 @@ export const convert_postmessage = evt => ({
 // general dialog
 
 export const close_dialog = id => ({
-  type: 'DIALOG',
-  ...closeDialogOptions,
+  type: 'CLOSE_DIALOG',
 })
 
 // impressum

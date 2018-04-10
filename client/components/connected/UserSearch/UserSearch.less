@@ -42,4 +42,27 @@
     margin-left: 5px;
     position: relative;
   }
+
+  .dropdown {
+    list-style: none;
+    margin: 0px;
+    position: absolute;
+    padding: 0;
+    background: #ffffff;
+    border: solid 1px #aaa;
+    cursor: pointer;
+    border-top: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dropdown li:hover {
+    background: @colorg5;
+  }
+
+  .dropdown li {
+    padding: 3px 5px;
+    border-top: #aaa;
+    box-shadow: @tinyShadowDown;
+  }
 }

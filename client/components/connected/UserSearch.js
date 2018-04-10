@@ -1,7 +1,7 @@
-import EmailInput from './EmailInput/EmailInput.jsx'
 import React from 'react'
-import { check_mail } from 'STORE/actions.js'
+import UserSearch from './UserSearch/UserSearch.jsx'
 import { connect } from 'react-redux'
+import { searchUser } from 'STORE/actions.js'
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -11,4 +11,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { check_mail })(EmailInput)
+export default connect(mapStateToProps, { searchUser })(UserSearch)

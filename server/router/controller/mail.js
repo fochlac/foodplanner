@@ -10,22 +10,6 @@ let cache = caches.getCache('mail'),
   mailerCache = caches.getCache('mailer')
 
 module.exports = {
-  findMail: (req, res) => {
-    let search = cache.get(req.query.email)
-    if (search) {
-      res.status(200).send(search)
-    } else {
-      userDB
-        .searchUsersByProperty(req.instance, 'mail', decodeURIComponent(req.query.email))
-        .then(result => {
-          let parsedResult = result.length === 1 ? result[0] : { error: result.length ? 'unclear_result' : 'empty_result', count: result.length }
-          cache.put(req.query.email, parsedResult)
-          res.status(200).send(parsedResult)
-        })
-        .catch(error.router.internalError(res))
-    }
-  },
-
   sendInvitation: (req, res) => {
     let mailingList = req.body.mail.filter(mail => error.validation.isMail(mail))
 

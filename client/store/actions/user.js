@@ -87,11 +87,12 @@ export const save_settings_locally = data => ({
   },
 })
 
-export const check_mail = mail => ({
-  type: 'CHECK_MAIL',
+export const searchUser = searchString => ({
+  type: 'SEARCH_USER',
   status: 'hidden',
+  busyType: 'searchUser',
   api: {
-    url: '/api/mail/search?email=' + encodeURIComponent(mail),
+    url: '/api/user/search?search=' + encodeURIComponent(searchString),
     method: 'GET',
   },
 })
