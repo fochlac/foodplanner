@@ -50,9 +50,10 @@ let setup = [
         \`deadlineReminder\`    int                         DEFAULT 0,
         \`creationNotice\`      int                         DEFAULT 0,
         \`instance\`            int             NOT NULL,
+        \`inactive\`            int                         DEFAULT 0,
 
         PRIMARY KEY (id),
-        UNIQUE KEY \`mail\` (\`mail\`)
+        UNIQUE KEY \`mail\` (\`mail\`, \`instance\`)
     );`,
 
   `CREATE TABLE IF NOT EXISTS \`instances\` (

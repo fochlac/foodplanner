@@ -21,9 +21,15 @@ user.post(
 )
 
 user.delete(
-  '/:user',
+  '/:user/active',
   jwt.requireAdmin,
-  controller.deleteUser
+  controller.setUserInactive(1)
+)
+
+user.post(
+  '/:user/active',
+  jwt.requireAdmin,
+  controller.setUserInactive(0)
 )
 
 user.post(

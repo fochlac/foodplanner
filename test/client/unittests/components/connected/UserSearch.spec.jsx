@@ -2,6 +2,7 @@ import { mount, shallow } from 'enzyme'
 
 import React from 'react'
 import UserSearch from 'CONNECTED/UserSearch/UserSearch.jsx'
+import sinon from 'sinon'
 
 describe('UserSearch', () => {
   beforeAll(() => jest.useFakeTimers())
@@ -23,7 +24,7 @@ describe('UserSearch', () => {
     expect(wrapper.find('span.fa-spinner').hasClass('invisible')).toBe(false)
   })
 
-  test('should trigger check mail function at 5. character', () => {
+  test('should trigger check mail function at 1. character', () => {
     let check_mail_value = 'undef'
     const wrapper = shallow(
       <UserSearch
@@ -85,5 +86,11 @@ describe('UserSearch', () => {
     jest.advanceTimersByTime(1000)
     wrapper.update()
     expect(wrapper.find('.dropdown')).toHaveLength(0)
+
+    const to = sinon.stub(window, 'clearTimeout')
+
+    wrapper.unmount()
+
+    expect(to.calledOnce).toBeTruthy()
   })
 })

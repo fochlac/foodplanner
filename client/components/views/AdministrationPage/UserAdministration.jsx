@@ -8,7 +8,7 @@ const wording = {
   balance: 'Kontostand',
   admin: 'Administrator',
   user: 'Nutzer',
-  delete: 'Löschen',
+  inactive: 'Aktiv',
 }
 
 export default class UserAdministration extends React.Component {
@@ -24,7 +24,7 @@ export default class UserAdministration extends React.Component {
             <th>{wording.email}</th>
             <th>{wording.balance}</th>
             <th>{wording.rank}</th>
-            <th>{wording.delete}</th>
+            <th>{wording.inactive}</th>
           </tr>
         </thead>
         <tbody>{children}</tbody>
@@ -33,7 +33,7 @@ export default class UserAdministration extends React.Component {
   }
 
   render() {
-    const { users, setAdmin, deleteUser, self } = this.props
+    const { users, setAdmin, activateUser, deactivateUser, self } = this.props
 
     return (
       <div>
@@ -66,7 +66,12 @@ export default class UserAdministration extends React.Component {
                   {!user.admin && <span key="up" className="fa fa-level-up pointer marginLeft" onClick={() => setAdmin({ user: user.id, admin: true })} />}
                 </td>
                 <td className="pointer" data-type={wording.delete}>
-                  {self != user.id && <span className="fa fa-trash marginLeft" onClick={() => deleteUser({ user: user.id })} />}
+                  {self != user.id &&
+                    (user.inactive ? (
+                      <span className="fa fa-times marginLeft" onClick={() => activateUser({ user: user.id })} />
+                    ) : (
+                      <span className="fa fa-check marginLeft" onClick={() => deactivateUser({ user: user.id })} />
+                    ))}
                 </td>
               </tr>
             ))}
