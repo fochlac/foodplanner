@@ -140,7 +140,7 @@ module.exports = {
       .catch(error.router.internalError(res))
   },
 
-  deleteUser: async (req, res) => {
+  setUserInactive: inactive => async (req, res) => {
     try {
       const user = await userDB.getUserByProperty('id', req.params.user)
 
@@ -148,8 +148,11 @@ module.exports = {
         return res.status(403).json({ status: 403, type: 'FORBIDDEN' })
       }
 
-      await userDB.deleteUserByProperty('id', req.params.user)
-      log(6, `controller/user.js-deleteUser: ${req.user.id} deleted user ${user.id}`)
+      await userDB.setUserPropertyById(req.params.user, 'inactive', inactive)
+      log(6, `controller/user.js-setUserInactive: ${req.user.id} set user ${user.id} ${inactive ? 'inactive' : 'active'}`)
+
+      cache.delete('user_' + req.params.user)
+      userListCache.deleteAll()
 
       res.status(200).send({ status: 200, type: 'SUCCESS' })
     } catch (err) {

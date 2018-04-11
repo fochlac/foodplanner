@@ -30,7 +30,8 @@ module.exports = {
         FROM authentication
         LEFT JOIN users
         ON users.id = authentication.user
-        WHERE users.mail = ${mysql.escape(mail)}`
+        WHERE users.mail = ${mysql.escape(mail)}
+        AND users.inactive = 0;`
     // AND users.instance = ${mysql.escape(instance)}
 
     log(6, 'getting user auth data')
@@ -77,7 +78,8 @@ module.exports = {
       AND signups.meal = ${mealId}
       WHERE signups.userId IS NULL
       AND users.instance = (SELECT instance FROM meals WHERE id = ${mealId})
-      AND users.${prop} = ${mysql.escape(val)};`
+      AND users.${prop} = ${mysql.escape(val)}
+      AND users.inactive = 0;`
 
     return getConnection().then(myDb => {
       return new Promise((resolve, reject) =>
@@ -98,8 +100,16 @@ module.exports = {
     return getConnection().then(myDb => {
       return new Promise((resolve, reject) => {
         const searchString = mysql.escape(`${(query.length > 2 ? '%' : '') + query}%`)
+        const findUserquery = `
+          SELECT id, name
+          FROM users
+          WHERE (
+            name LIKE ${searchString}
+            OR mail LIKE ${searchString}
+          ) AND instance = ${instance}
+          AND users.inactive = 0;`
 
-        myDb.query(`SELECT id, name FROM users WHERE (name LIKE ${searchString} OR mail LIKE ${searchString}) AND instance = ${instance};`, (err, result) => {
+        myDb.query(findUserquery, (err, result) => {
           myDb.release()
           if (err) {
             log(2, 'modules/db/user:getUserByProperty', err)

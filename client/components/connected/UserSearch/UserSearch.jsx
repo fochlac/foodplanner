@@ -19,6 +19,10 @@ export default class UserSearch extends React.Component {
     this.selectUser = this.selectUser.bind(this)
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.focus_timeout)
+  }
+
   startSearch({ target }) {
     const value = target.value
     this.setState(

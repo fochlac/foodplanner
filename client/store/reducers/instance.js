@@ -18,9 +18,17 @@ const instance = (state = {}, action) => {
         return { ...state, users: newUsers }
       }
       return state
-    case 'DELETE_USER':
+    case 'SET_USER_ACTIVE':
       if (action.status === 'complete') {
-        return { ...state, users: state.users.filter(user => user.id !== action.user) }
+        return {
+          ...state,
+          users: state.users.map(user => {
+            if (user.id === action.user) {
+              user = { ...user, inactive: action.state }
+            }
+            return user
+          }),
+        }
       }
       return state
     case 'LOAD_ALL_TRANSACTIONS':
