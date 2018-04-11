@@ -43,10 +43,10 @@ export default class AdministrationPage extends React.Component {
   }
 
   render() {
-    const { app, user, sign_out, instance, setAdmin, deleteUser, validateGmail, saveGmail, saveInstanceData } = this.props
+    const { app, user, sign_out, instance, setAdmin, activateUser, deactivateUser, validateGmail, saveGmail, saveInstanceData } = this.props
     const { settings } = this.state
 
-    const userActions = { setAdmin, deleteUser }
+    const userActions = { setAdmin, activateUser, deactivateUser }
     const generalActions = { validateGmail, saveGmail, saveInstanceData }
     const instanceActions = { saveInstanceData }
 
@@ -54,7 +54,14 @@ export default class AdministrationPage extends React.Component {
       <DefaultPage>
         <div className="topbar">
           <div className="spacer">
-            <span className="pointer noWrap flexCenter instanceTitle" onClick={() => window.location.assign(instance.subdomain && instance.subdomain.length ? ('https://' + instance.subdomain + '.fochlac.com/') : (instance.root + '/' + instance.id))} >
+            <span
+              className="pointer noWrap flexCenter instanceTitle"
+              onClick={() =>
+                window.location.assign(
+                  instance.subdomain && instance.subdomain.length ? 'https://' + instance.subdomain + '.fochlac.com/' : instance.root + '/' + instance.id,
+                )
+              }
+            >
               <span className={'instanceIcon fa fa-lg ' + instance.icon} />
               <b className="font12">{instance.title}</b>
             </span>

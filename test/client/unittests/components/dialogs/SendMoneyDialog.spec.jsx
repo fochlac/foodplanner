@@ -2,7 +2,7 @@ import { mount, shallow } from 'enzyme'
 
 import React from 'react'
 import SendMoneyDialog from 'DIALOG/SendMoneyDialog/SendMoneyDialog.jsx'
-import UserSearch from '../../../../client/components/connected/UserSearch'
+import UserSearch from 'CONNECTED/UserSearch'
 
 describe('SendMoneyDialog', () => {
   test('should render all elements', () => {

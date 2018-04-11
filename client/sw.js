@@ -2,7 +2,7 @@
 
 'use strict'
 const serverUrl = location.origin
-let version = '31',
+let version = '32',
   dbVersion = '2',
   assets = global.serviceWorkerOption.assets.map(asset => serverUrl + '/static' + asset),
   offline = new Response(new Blob(), { status: 279 }),

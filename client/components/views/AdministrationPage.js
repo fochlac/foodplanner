@@ -1,4 +1,15 @@
-import { deleteUser, loadAllTransactions, loadAllUsers, loadInstance, saveGmail, saveInstanceData, setAdmin, sign_out, validateGmail } from 'STORE/actions.js'
+import {
+  activateUser,
+  deactivateUser,
+  loadAllTransactions,
+  loadAllUsers,
+  loadInstance,
+  saveGmail,
+  saveInstanceData,
+  setAdmin,
+  sign_out,
+  validateGmail,
+} from 'STORE/actions.js'
 
 import AdministrationPage from 'PAGES/AdministrationPage/AdministrationPage.jsx'
 import React from 'react'
@@ -17,7 +28,8 @@ export default connect(mapStateToProps, {
   loadAllUsers,
   loadAllTransactions,
   setAdmin,
-  deleteUser,
+  activateUser,
+  deactivateUser,
   loadInstance,
   validateGmail,
   saveGmail,

@@ -36,13 +36,25 @@ export const setAdmin = ({ user, admin }) => ({
   },
 })
 
-export const deleteUser = ({ user }) => ({
-  type: 'DELETE_USER',
+export const deactivateUser = ({ user }) => ({
+  type: 'SET_USER_ACTIVE',
   status: 'initialized',
   user,
+  state: true,
   api: {
-    url: `/api/user/${user}`,
+    url: `/api/user/${user}/active`,
     method: 'delete',
+  },
+})
+
+export const activateUser = ({ user }) => ({
+  type: 'SET_USER_ACTIVE',
+  status: 'initialized',
+  user,
+  state: false,
+  api: {
+    url: `/api/user/${user}/active`,
+    method: 'post',
   },
 })
 
