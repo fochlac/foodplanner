@@ -3,6 +3,7 @@ import './AdministrationPage.less'
 import DefaultPage from 'CONNECTED/DefaultPage.js'
 import GeneralAdministration from './GeneralAdministration'
 import InstanceAdministration from './InstanceAdministration.jsx'
+import PluginAdministration from './PluginAdministration.jsx'
 import React from 'react'
 import TransactionAdministration from './TransactionAdministration.jsx'
 import UserAdministration from './UserAdministration.jsx'
@@ -12,6 +13,7 @@ const wording = {
   users: 'Benutzer',
   transactions: 'Transaktionen',
   instance: 'Konto',
+  plugin: 'Plugins',
 }
 
 export default class AdministrationPage extends React.Component {
@@ -89,6 +91,9 @@ export default class AdministrationPage extends React.Component {
                 <li className={'filter' + (settings === 'instance' ? ' selected' : '')} onClick={this.handleFilter('instance')}>
                   {wording.instance}
                 </li>
+                <li className={'filter' + (settings === 'plugin' ? ' selected' : '')} onClick={this.handleFilter('plugin')}>
+                  {wording.plugin}
+                </li>
               </ul>
             </div>
             {instance.id &&
@@ -102,6 +107,8 @@ export default class AdministrationPage extends React.Component {
                     return <TransactionAdministration transactions={instance.transactions} />
                   case 'instance':
                     return <InstanceAdministration instance={instance} {...instanceActions} />
+                  case 'plugin':
+                    return <PluginAdministration />
                 }
               })()}
           </div>
