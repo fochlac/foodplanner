@@ -1,5 +1,6 @@
 import './Dashboard.less'
 
+import { formatDate } from 'UTILS/date.js'
 import DefaultPage from 'CONNECTED/DefaultPage.js'
 import Meal from 'CONNECTED/Meal.js'
 import Pager from 'RAW/Pager.jsx'
@@ -10,6 +11,7 @@ import UserFrame from 'CONNECTED/UserFrame.js'
 const wording = {
   offlineWarn: 'Aufgrund fehlender Internetverbindung verwendet diese Seite aktuell gecachte (alte) Daten.',
   loadMessage: 'Termindaten werden geladen.',
+  debts: 'Unbezahlte Mahlzeiten',
 }
 
 export default class Dashboard extends React.Component {
@@ -56,6 +58,8 @@ export default class Dashboard extends React.Component {
 
   render() {
     const startOfDay = new Date().setHours(0, 0, 0)
+    const { debts, meals, oldMealIds, app, login } = this.props
+
     const filters = [
       {
         name: 'Aktuelle Termine',
@@ -69,21 +73,31 @@ export default class Dashboard extends React.Component {
     let mealList
 
     if (this.state.filter === 'meals') {
-      mealList = this.props.meals.filter(meal => meal.time > startOfDay).sort((a, b) => a.time - b.time)
+      mealList = meals.filter(meal => meal.time > startOfDay).sort((a, b) => a.time - b.time)
     } else {
-      mealList = this.props.oldMealIds.map(id => this.props.meals.find(meal => meal.id === id))
+      mealList = oldMealIds.map(id => meals.find(meal => meal.id === id))
     }
 
-    return (
-      <DefaultPage>
+    return <DefaultPage>
         <Topbar />
         <div className="dashboard">
-          {this.props.app.offline ? (
-            <div className="offlineBar">
+          {app.offline ? <div className="offlineBar">
               <div className="warning">{wording.offlineWarn}</div>
-            </div>
-          ) : null}
-          {this.props.login && <UserFrame />}
+            </div> : null}
+          {debts && debts.length ? <div className="debts">
+              <ul className="debtList">
+                {debts.map(debt => <li key={debt.id}>
+                    <span>
+                      <span className="fa fa-credit-card marginRight" />
+                      <span>
+                        {formatDate(debt.time)} - {debt.meal}:
+                      </span>
+                    </span>
+                    <span>{debt.price.toFixed(2)}€</span>
+                  </li>)}
+              </ul>
+            </div> : null}
+          {login && <UserFrame />}
           <div className="filters">
             <ul className="filterList">
               {filters.map(filter => (
@@ -99,12 +113,7 @@ export default class Dashboard extends React.Component {
           </div>
           <div className="meals">
             <Pager size={this.size} top={true} bottom={true} inactive={this.state.filter === 'meals'} onChange={({ page }) => this.loadHistory(page)}>
-              {mealList.map(
-                (meal, index) =>
-                  meal ? (
-                    <Meal id={meal.id} key={meal.id} showPrint={this.state.filter === 'meals'} />
-                  ) : (
-                    <div className="emptyMeal meal" key={'invalidMeal_' + index}>
+              {mealList.map((meal, index) => (meal ? <Meal id={meal.id} key={meal.id} showPrint={this.state.filter === 'meals'} /> : <div className="emptyMeal meal" key={'invalidMeal_' + index}>
                       <div className="titlebar">
                         <h4 className="title">&#9644;&#9644;&#9644;&#9644;</h4>
                       </div>
@@ -112,13 +121,10 @@ export default class Dashboard extends React.Component {
                         <span className="fa fa-spin fa-spinner fa-fw" />
                         <span>{wording.loadMessage}</span>
                       </div>
-                    </div>
-                  ),
-              )}
+                    </div>))}
             </Pager>
           </div>
         </div>
       </DefaultPage>
-    )
   }
 }
