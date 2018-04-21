@@ -12,6 +12,7 @@ const mapStateToProps = (state, ownProps) => {
     login: state.user.id,
     meals: state.meals,
     oldMealIds,
+    debts: state.debts
   }
 }
 
