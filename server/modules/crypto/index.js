@@ -22,6 +22,18 @@ function generateSalt() {
   })
 }
 
+function browserHash(value) {
+  return new Promise((resolve, reject) => {
+    crypto.pbkdf2(value, 'mySecret123', 100, 16, 'sha256', (err, hash) => {
+      if (err) {
+        return reject(err)
+      }
+
+      resolve(hash.toString('base64').replace('==', ''))
+    })
+  })
+}
+
 function generateHash(value, salt) {
   if (!value || !value.length) {
     return Promise.resolve({})
@@ -43,6 +55,15 @@ function generateHash(value, salt) {
 module.exports = {
   createUserHash: password => {
     return generateSalt().then(salt => generateHash(password, salt))
+  },
+
+  generateRandomPass: async () => {
+    const salt = await generateSalt()
+    const pass = await generateSalt()
+    const browserhashed = await browserHash(pass)
+    const auth = await generateHash(browserhashed, salt)
+
+    return { pass, ...auth }
   },
 
   verifyUser: async (instance, { hash, mail }) => {

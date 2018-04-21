@@ -11,10 +11,10 @@ let updateCache = caches.getCache('update')
 module.exports = (req, res) => {
   if (+caches.getVersion() > +req.query.version) {
     log(6, 'responding with update', caches.getVersion(), req.query.version)
-    if (updateCache.get('update' + req.user.id)) {
-      res.status(200).send(updateCache.get('update' + req.user.id))
+    if (updateCache.get('update_' + req.user.id)) {
+      res.status(200).send(updateCache.get('update_' + req.user.id))
     } else {
-      const debts = req.auth ? paymentDB.getUnpaidSignups(req.instance, req.user) : Promise.resolve([])
+      const debts = req.auth ? paymentDB.getUnpaidSignups(req.user.id) : Promise.resolve([])
 
       Promise.all([mealsDB.getAllMealsByInstance(req.instance), signupsDB.getAllSignups(req.instance), datefinderDB.getDatefinders(req.instance), debts])
         .then(([allMeals, signups, datefinderList, debts]) => {
@@ -46,7 +46,7 @@ module.exports = (req, res) => {
             debts
           }
 
-          updateCache.put('update' + req.user.id, response)
+          updateCache.put('update_' + req.user.id, response)
           res.status(200).send(response)
         })
         .catch(error.router.internalError(res))
