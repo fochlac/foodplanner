@@ -25,6 +25,18 @@ export const sign_in = ({ mail, hash }) => ({
   },
 })
 
+export const reset_password = (mail) => ({
+  type: 'RESET_PASSWORD',
+  status: 'initialized',
+  api: {
+    url: `/api/user/resetPassword`,
+    method: 'POST',
+    body: {
+      mail,
+    },
+  },
+})
+
 export const register = ({ mail, hash, name }) => ({
   type: 'REGISTER',
   status: 'initialized',

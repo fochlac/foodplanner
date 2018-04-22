@@ -16,7 +16,7 @@ module.exports = {
       signups = signupsDB.getAllSignups(req.instance),
       datefinder = datefinderDB.getDatefinders(req.instance),
       instance = instanceDB.getInstanceById(req.instance),
-      debts = req.auth ? paymentDB.getUnpaidSignups(req.instance, req.user) : Promise.resolve([]),
+      debts = req.auth ? paymentDB.getUnpaidSignups(req.user.id) : Promise.resolve([]),
       file = new Promise((resolve, reject) => {
         fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
           if (err) {
