@@ -210,7 +210,7 @@ export default class LoginDialog extends React.Component {
           onChange={this.passInput}
           autoComplete="password"
         />
-        <p className="fakeLink" onClick={this.toggleView.bind(this, 'forgotPW')}>
+        <p className="fakeLink forgotPW" onClick={this.toggleView.bind(this, 'forgotPW')}>
           {wording.forgotPassword}
         </p>
       </div>
