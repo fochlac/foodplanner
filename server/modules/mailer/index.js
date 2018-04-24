@@ -9,6 +9,7 @@ const gmail = require('gmail-send'),
   instanceDb = require(process.env.FOOD_HOME + 'modules/db/instance'),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   deadlineReminder = require(process.env.FOOD_HOME + 'modules/mailer/deadlineReminder.tmpl.js'),
+  newPassword = require(process.env.FOOD_HOME + 'modules/mailer/newPassword.tmpl.js'),
   creationNotice = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice.tmpl.js'),
   creationNotice_df = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice_datefinder.tmpl.js'),
   invitation = require(process.env.FOOD_HOME + 'modules/mailer/invitation.tmpl.js'),
@@ -121,5 +122,8 @@ module.exports = {
         },
       )
     })
+  },
+  sendNewPassMail: (user, pass) => {
+    mail(newPassword(user, pass), error.checkError(2, 'Error sending new password.'), user.name, 'newPassword', user.instance)
   },
 }

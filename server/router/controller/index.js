@@ -1,6 +1,7 @@
 const fs = require('fs'),
   sanitize = require(process.env.FOOD_HOME + 'helper/sanitize'),
   mealsDB = require(process.env.FOOD_HOME + 'modules/db/meals'),
+  paymentDB = require(process.env.FOOD_HOME + 'modules/db/payment'),
   instanceDB = require(process.env.FOOD_HOME + 'modules/db/instance'),
   signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
   datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
@@ -15,6 +16,7 @@ module.exports = {
       signups = signupsDB.getAllSignups(req.instance),
       datefinder = datefinderDB.getDatefinders(req.instance),
       instance = instanceDB.getInstanceById(req.instance),
+      debts = req.auth ? paymentDB.getUnpaidSignups(req.user.id) : Promise.resolve([]),
       file = new Promise((resolve, reject) => {
         fs.readFile(process.env.FOOD_CLIENT + 'index.html', 'utf8', (err, data) => {
           if (err) {
@@ -24,8 +26,8 @@ module.exports = {
         })
       })
 
-    Promise.all([file, meals, signups, datefinder, instance])
-      .then(([file, allMeals, allSignups, fullDatefinderList, instance]) => {
+    Promise.all([file, meals, signups, datefinder, instance, debts])
+      .then(([file, allMeals, allSignups, fullDatefinderList, instance, debts]) => {
         let meals = allMeals.filter(meal => meal.time > startOfDay).map(meal => {
           meal.signups = allSignups.filter(signup => signup.meal === meal.id).map(signup => signup.id)
           return meal
@@ -65,6 +67,7 @@ module.exports = {
                         })},
                         historyMealMap: {},
                         user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
+                        debts: ${sanitize.html(JSON.stringify(debts))},
                         app:{
                           dialog: ${req.dialog ? JSON.stringify(req.dialog) : '{}'},
                           errors:{},

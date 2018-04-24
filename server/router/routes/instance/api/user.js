@@ -3,7 +3,7 @@ const user = require('express').Router(),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
-const { sendMoney, editUser, transactions, getUser, createUser, login, findUser } = controller
+const { sendMoney, editUser, transactions, getUser, createUser, login, findUser, resetPassword } = controller
 
 user.get('/', jwt.requireAdmin, controller.getUsersByInstance)
 
@@ -21,6 +21,14 @@ user.post(
     id: /^[0-9]*$/,
   }),
   jwt.clear,
+)
+
+user.post(
+  '/resetPassword',
+  validate('body', {
+    mail: /^[\_A-Za-z0-9.\-]{1,50}@[\_A-Za-z0-9.\-]{1,50}\.[A-Za-z]{1,100}$/,
+  }),
+  resetPassword,
 )
 
 user.put(
