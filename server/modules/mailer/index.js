@@ -10,18 +10,25 @@ const gmail = require('gmail-send'),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   deadlineReminder = require(process.env.FOOD_HOME + 'modules/mailer/deadlineReminder.tmpl.js'),
   newPassword = require(process.env.FOOD_HOME + 'modules/mailer/newPassword.tmpl.js'),
+  generateNewPassword = require(process.env.FOOD_HOME + 'modules/mailer/generateNewPassword.tmpl.js'),
   creationNotice = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice.tmpl.js'),
   creationNotice_df = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice_datefinder.tmpl.js'),
   invitation = require(process.env.FOOD_HOME + 'modules/mailer/invitation.tmpl.js'),
   mail = async (tmpl, cb, user, type, instance) => {
     try {
       const sendEmail = await getMailer(instance)
+
+      const instanceUrl =
+        process.env.FOOD_EXTERNAL === 'localhost'
+          ? `http://localhost:${process.env.FOOD_PORT}/${instance.id}/`
+          : `https://${instance.subdomain}.${process.env.FOOD_EXTERNAL.split(/\.(.+)/)[1]}/`
+
       stash.push({ tmpl, cb, user, type })
       if (!stashTimer) {
         stashTimer = setInterval(() => {
           let mail = stash.shift()
 
-          sendEmail(mail.tmpl, err => {
+          sendEmail(mail.tmpl(instanceUrl), err => {
             if (!err) {
               log(5, `sent ${mail.type}-mail to ${mail.user}`)
             }
@@ -125,5 +132,10 @@ module.exports = {
   },
   sendNewPassMail: (user, pass) => {
     mail(newPassword(user, pass), error.checkError(2, 'Error sending new password.'), user.name, 'newPassword', user.instance)
+  },
+  sendGenerateNewPassMail: (user, token) => {
+    instanceDb.getInstanceById(user.instance)
+
+    mail(generateNewPassword(user, token), error.checkError(2, 'Error sending new password.'), user.name, 'generateNewPassword', user.instance)
   },
 }

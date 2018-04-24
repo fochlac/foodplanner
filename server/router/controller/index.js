@@ -74,6 +74,7 @@ module.exports = {
                           busyList: [],
                           dataversion: ${version()},
                           historySize: ${allMeals.length - meals.length}
+                          ${req.additionalData && req.additionalData.app ? req.additionalData.app : ''}
                         },
                         meals:${sanitize.html(JSON.stringify(meals))},
                         signups:${sanitize.html(JSON.stringify(signups))},
@@ -118,7 +119,13 @@ module.exports = {
                       })},
                       historyMealMap: {},
                       user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
-                      app:{dialog:${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: 0, historySize: 0, busyList: []},
+                      app:{
+                        dialog:${req.dialog ? JSON.stringify(req.dialog) : '{}'},
+                        errors:{},
+                        dataversion: 0,
+                        historySize: 0,
+                        busyList: [],
+                        ${req.additionalData && req.additionalData.app ? req.additionalData.app : ''}},
                       meals: {},
                       signups:{},
                       datefinder:{}

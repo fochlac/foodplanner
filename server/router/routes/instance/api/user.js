@@ -31,6 +31,14 @@ user.post(
   resetPassword,
 )
 
+user.get(
+  '/resetPassword',
+  validate('query', {
+    id: /^([A-Za-z0-9+\/]{19,19})$/,
+  }),
+  finalizeResetPassword,
+)
+
 user.put(
   '/:id/money',
   jwt.requireAuthentication,

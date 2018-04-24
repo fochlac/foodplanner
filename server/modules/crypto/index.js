@@ -1,3 +1,5 @@
+import { randomBytes } from 'crypto'
+
 const userDB = require(process.env.FOOD_HOME + 'modules/db/user'),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
@@ -10,6 +12,7 @@ const userDB = require(process.env.FOOD_HOME + 'modules/db/user'),
   }
 
 let cache = caches.getCache('userAuth')
+let resetTokens = []
 
 function generateSalt() {
   return new Promise((resolve, reject) => {
@@ -55,6 +58,28 @@ function generateHash(value, salt) {
 module.exports = {
   createUserHash: password => {
     return generateSalt().then(salt => generateHash(password, salt))
+  },
+
+  generateResetToken: async user => {
+    const randomId = await generateSalt()
+
+    resetTokens.push({
+      timeout: Date.now() + 3600000,
+      id: randomId,
+      user,
+    })
+
+    return randomId
+  },
+
+  validateResetToken: async id => {
+    const token = resetTokens.find(token => token.id === id)
+
+    if (token && Date.now() < token.timeout) {
+      return token.user
+    }
+
+    return false
   },
 
   generateRandomPass: async () => {

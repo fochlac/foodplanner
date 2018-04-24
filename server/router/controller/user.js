@@ -106,17 +106,47 @@ module.exports = {
       const user = await userDB.getUserByProperty('mail', req.body.mail)
 
       if (user.id) {
-        log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} tried to reset password of user ${user.id} with name ${user.name}`)
-        const {pass, salt, hash} = await crypto.generateRandomPass()
+        log(
+          2,
+          `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} requested reset of password for user ${user.id} with name ${user.name}`,
+        )
+        const token = await crypto.generateResetToken()
 
-        await userDB.setUserById(user.id, user, { hash, salt })
-
-        mailer.sendNewPassMail(user, pass)
+        mailer.sendGenerateNewPassMail(user, token)
       } else {
-        log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} tried to reset password with invalid email`)
+        log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} tried to request reset of password with invalid email`)
       }
 
       res.status(200).json({})
+    } catch (err) {
+      error.router.internalError(res)(err)
+    }
+  },
+
+  finalizeResetPassword: async (req, res, next) => {
+    try {
+      const user = await crypto.validateResetToken(req.query.id)
+
+      if (user) {
+        log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} reset password of user ${user.id} with name ${user.name}`)
+        const { pass, salt, hash } = await crypto.generateRandomPass()
+        await userDB.setUserById(user.id, user, { hash, salt })
+        mailer.sendNewPassMail(user, pass)
+
+        req.additionalData = {
+          app: ', resetPassword: true',
+        }
+
+        req.dialog = {
+          type: 'LOGIN',
+          option: {},
+        }
+
+        next()
+      } else {
+        log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} tried to reset password with invalid token id`)
+        res.status(403).send()
+      }
     } catch (err) {
       error.router.internalError(res)(err)
     }
