@@ -13,10 +13,9 @@ const gmail = require('gmail-send'),
   generateNewPassword = require(process.env.FOOD_HOME + 'modules/mailer/generateNewPassword.tmpl.js'),
   creationNotice = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice.tmpl.js'),
   creationNotice_df = require(process.env.FOOD_HOME + 'modules/mailer/creationNotice_datefinder.tmpl.js'),
-  invitation = require(process.env.FOOD_HOME + 'modules/mailer/invitation.tmpl.js'),
-  mail = async (tmpl, cb, user, type, instance) => {
+  mail = async (tmpl, cb, user, type, instanceId) => {
     try {
-      const sendEmail = await getMailer(instance)
+      const {sendEmail, instance} = await getMailer(instanceId)
 
       const instanceUrl =
         process.env.FOOD_EXTERNAL === 'localhost'
@@ -48,20 +47,23 @@ const gmail = require('gmail-send'),
 
 let mailerCache = caches.getCache('mailer')
 
-const getMailer = async instance => {
-  let mailer = mailerCache.get(instance)
+const getMailer = async instanceId => {
+  let mailerObj = mailerCache.get(instanceId)
 
-  if (!mailer) {
-    const { gmail_pass, gmail_user } = await instanceDb.getInstanceById(instance)
-    if (gmail_pass && gmail_user) {
-      mailer = gmail({ user: gmail_user, pass: gmail_pass })
+  if (!mailerObj) {
+    const instance = await instanceDb.getInstanceById(instanceId)
+
+    if (instance.gmail_pass && instance.gmail_user) {
+      let mailer = gmail({ user: instance.gmail_user, pass: instance.gmail_pass })
+
+      mailerObj = { sendEmail: mailer, instance }
+      mailerCache.put(instanceId, mailerObj)
     } else {
-      mailer = () => log(5, `Did not send mail for instance ${instance} due to missing login data`)
+      return {instance: null, sendEmail: () => log(5, `Did not send mail for instance ${instanceId} due to missing login data`)}
     }
-    mailerCache.put(instance, mailer)
   }
 
-  return mailer
+  return mailerObj
 }
 
 module.exports = {

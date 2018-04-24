@@ -105,12 +105,12 @@ module.exports = {
     try {
       const user = await userDB.getUserByProperty('mail', req.body.mail)
 
-      if (user.id) {
+      if (user && user.id) {
         log(
           2,
           `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} requested reset of password for user ${user.id} with name ${user.name}`,
         )
-        const token = await crypto.generateResetToken()
+        const token = await crypto.generateResetToken(user)
 
         mailer.sendGenerateNewPassMail(user, token)
       } else {
@@ -127,19 +127,17 @@ module.exports = {
     try {
       const user = await crypto.validateResetToken(req.query.id)
 
-      if (user) {
+      if (user && user.id) {
         log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} reset password of user ${user.id} with name ${user.name}`)
         const { pass, salt, hash } = await crypto.generateRandomPass()
         await userDB.setUserById(user.id, user, { hash, salt })
         mailer.sendNewPassMail(user, pass)
 
-        req.additionalData = {
-          app: ', resetPassword: true',
-        }
-
         req.dialog = {
           type: 'LOGIN',
-          option: {},
+          option: {
+            resetPassword: true
+          },
         }
 
         next()

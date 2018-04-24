@@ -1,5 +1,3 @@
-import { randomBytes } from 'crypto'
-
 const userDB = require(process.env.FOOD_HOME + 'modules/db/user'),
   caches = require(process.env.FOOD_HOME + 'modules/cache'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
@@ -61,7 +59,7 @@ module.exports = {
   },
 
   generateResetToken: async user => {
-    const randomId = await generateSalt()
+    const randomId = (await generateSalt()).replace(/\+/g, 'a').replace(/\//g, 'b')
 
     resetTokens.push({
       timeout: Date.now() + 3600000,

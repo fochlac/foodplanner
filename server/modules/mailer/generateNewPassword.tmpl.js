@@ -8,5 +8,5 @@ module.exports = (user, id) => instanceUrl => ({
     <br/>
     <p>Das zurücksetzen deines Passwordes wurde angefordert.</p>
     <p>Wenn du dein Passwort jetzt zurücksetzen möchtest, klicke auf den folgenden Link:</p>
-    <a href="${instanceUrl}api/user/resetPassword?id=${id}">Passwort zurücksetzen!</a>`,
+    <a href="${instanceUrl}resetPassword?id=${id}">Passwort zurücksetzen!</a>`,
 })

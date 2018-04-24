@@ -74,7 +74,6 @@ module.exports = {
                           busyList: [],
                           dataversion: ${version()},
                           historySize: ${allMeals.length - meals.length}
-                          ${req.additionalData && req.additionalData.app ? req.additionalData.app : ''}
                         },
                         meals:${sanitize.html(JSON.stringify(meals))},
                         signups:${sanitize.html(JSON.stringify(signups))},
@@ -125,7 +124,6 @@ module.exports = {
                         dataversion: 0,
                         historySize: 0,
                         busyList: [],
-                        ${req.additionalData && req.additionalData.app ? req.additionalData.app : ''}},
                       meals: {},
                       signups:{},
                       datefinder:{}
