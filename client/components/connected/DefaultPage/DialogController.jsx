@@ -86,7 +86,7 @@ export default class DialogController extends React.Component {
         return <IncomingPaymentsDialog />
 
       case 'LOGIN':
-        return <LoginDialog hideRegister={d.option.hideRegister} />
+        return <LoginDialog {...d.option} />
 
       default:
         return null

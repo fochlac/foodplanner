@@ -118,7 +118,12 @@ module.exports = {
                       })},
                       historyMealMap: {},
                       user:${req.auth ? sanitize.html(JSON.stringify(req.user)) : "{name:''}"},
-                      app:{dialog:${req.dialog ? JSON.stringify(req.dialog) : '{}'}, errors:{}, dataversion: 0, historySize: 0, busyList: []},
+                      app:{
+                        dialog:${req.dialog ? JSON.stringify(req.dialog) : '{}'},
+                        errors:{},
+                        dataversion: 0,
+                        historySize: 0,
+                        busyList: [],
                       meals: {},
                       signups:{},
                       datefinder:{}

@@ -3,7 +3,7 @@ const user = require('express').Router(),
   jwt = require(process.env.FOOD_HOME + 'modules/auth/jwt'),
   validate = require(process.env.FOOD_HOME + 'middleware/validate')
 
-const { sendMoney, editUser, transactions, getUser, createUser, login, findUser, resetPassword } = controller
+const { sendMoney, editUser, transactions, getUser, createUser, login, findUser, resetPassword, finalizeResetPassword } = controller
 
 user.get('/', jwt.requireAdmin, controller.getUsersByInstance)
 
@@ -17,9 +17,13 @@ user.get(
 
 user.post(
   '/:id/logout',
-  validate('params', {
-    id: /^[0-9]*$/,
-  }),
+  validate(
+    'params',
+    {
+      id: /^[0-9]{1,9}$/,
+    },
+    { nextOnError: true },
+  ),
   jwt.clear,
 )
 
@@ -34,9 +38,13 @@ user.post(
 user.put(
   '/:id/money',
   jwt.requireAuthentication,
-  validate('params', {
-    id: /^[0-9]*$/,
-  }),
+  validate(
+    'params',
+    {
+      id: /^[0-9]{1,9}$/,
+    },
+    { nextOnError: true },
+  ),
   validate('body', {
     source: /^[0-9]{1,9}$/,
     amount: /^[0-9]{1,6}[.0-9]{0,3}$/,
@@ -47,9 +55,13 @@ user.put(
 user.put(
   '/:id',
   jwt.requireAuthentication,
-  validate('params', {
-    id: /^[0-9]*$/,
-  }),
+  validate(
+    'params',
+    {
+      id: /^[0-9]{1,9}$/,
+    },
+    { nextOnError: true },
+  ),
   validate('body', {
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/,
     mail: /^[\_A-Za-z0-9.\-]{1,50}@[\_A-Za-z0-9.\-]{1,50}\.[A-Za-z]{1,100}$/,
@@ -63,18 +75,26 @@ user.put(
 user.get(
   '/:id/history',
   jwt.requireAuthentication,
-  validate('params', {
-    id: /^[0-9]{1,9}$/,
-  }),
+  validate(
+    'params',
+    {
+      id: /^[0-9]{1,9}$/,
+    },
+    { nextOnError: true },
+  ),
   transactions,
 )
 
 user.get(
   '/:id',
   jwt.requireAuthentication,
-  validate('params', {
-    id: /^[0-9]{1,9}$/,
-  }),
+  validate(
+    'params',
+    {
+      id: /^[0-9]{1,9}$/,
+    },
+    { nextOnError: true },
+  ),
   getUser,
 )
 

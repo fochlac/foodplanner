@@ -29,6 +29,8 @@ const wording = {
   login: 'Anmelden',
   register: 'Registrieren',
   forgotPW: 'Passwort zurücksetzen',
+  pwSent: 'Ein Link zum Zurück\u00ADsetzen deines Pass\u00ADwortes wurde generiert und an die hinter\u00ADlegte E-Mail Adresse ge\u00ADschickt.',
+  pwResetSuccess: 'Pass\u00ADwort erfolg\u00ADreich zurück\u00ADgesetzt. Eine E-Mail mit dem neuen Pass\u00ADwort wurde dir zugesandt.'
 }
 
 export default class LoginDialog extends React.Component {
@@ -75,7 +77,7 @@ export default class LoginDialog extends React.Component {
     }
 
     if (view === 'forgotPW') {
-      this.setState({view: 'login'})
+      this.setState({view: 'login', showSuccess: true})
       return this.props.reset_password(mail)
     }
 
@@ -218,7 +220,8 @@ export default class LoginDialog extends React.Component {
   }
 
   render() {
-    const { mail, name, pass, pass2, view } = this.state
+    const { mail, name, pass, pass2, view, showSuccess } = this.state
+    const { close_dialog, hideRegister, resetPassword } = this.props
     const valid =
       view === 'register'
         ? userInterface.mail(mail) && userInterface.name(name) && (!pass.length || (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass))
@@ -227,10 +230,12 @@ export default class LoginDialog extends React.Component {
     return <Dialog className="loginDialog">
         <div className="titlebar">
           <h3>{wording[view]}</h3>
-          <span className="fa fa-times push-right pointer" onClick={this.props.close_dialog} />
+          <span className="fa fa-times push-right pointer" onClick={close_dialog} />
         </div>
         <div className="body">
-          {!this.props.hideRegister && <ul className="tabList">
+          { showSuccess && <div className="success">{wording.pwSent}</div> }
+          { resetPassword && <div className="success">{wording.pwResetSuccess}</div> }
+          {!hideRegister && <ul className="tabList">
               <li className={'signinLink' + (view !== 'register' ? ' selected' : '')} onClick={this.toggleView.bind(this, 'login')}>
                 {wording.login}
               </li>
