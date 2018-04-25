@@ -6,9 +6,11 @@ import meals from './reducers/meals.js'
 import instance from './reducers/instance.js'
 import signups from './reducers/signups.js'
 import user from './reducers/user.js'
+import debts from './reducers/debts.js'
 
 const reducers = combineReducers({
   user,
+  debts,
   meals,
   instance,
   signups,

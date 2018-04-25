@@ -15,6 +15,7 @@ const options = {
   login: true,
   load_history: page => (output = page),
   refresh: () => (output = 'refresh'),
+  debts: []
 }
 
 describe('Dashboard', () => {
@@ -33,6 +34,7 @@ describe('Dashboard', () => {
     expect(output).toBe('refresh')
 
     expect(wrapper.find('.dashboard')).toHaveLength(1)
+    expect(wrapper.find('.debts')).toHaveLength(0)
     expect(wrapper.find('.offlineBar')).toHaveLength(1)
     expect(wrapper.find('.filters')).toHaveLength(1)
     expect(wrapper.find(Pager)).toHaveLength(1)
@@ -69,11 +71,15 @@ describe('Dashboard', () => {
   })
 
   test('should trigger load_history on mount without old meals', () => {
-    const wrapper = shallow(<Dashboard {...{ ...options, oldMealIds: [] }} />)
+    const wrapper = shallow(<Dashboard {...{ ...options, oldMealIds: [], debts: [{time: 123456789, price: 2}, {time: 123456789, price: 2}] }} />)
     wrapper
       .find('.filterList li')
       .at(1)
       .simulate('click')
     expect(output).toEqual({ page: 1, size: 5 })
+
+
+    expect(wrapper.find('.debts')).toHaveLength(1)
+    expect(wrapper.find('.debts li')).toHaveLength(2)
   })
 })

@@ -37,6 +37,26 @@ module.exports = {
     )
   },
 
+  getUnpaidSignups: async userId => {
+    const query = `
+      SELECT
+        signups.id,
+        signups.name,
+        signups.price,
+        signups.paid,
+        meals.name as meal,
+        meals.time
+      FROM signups
+      LEFT JOIN meals
+      ON signups.meal = meals.id
+      WHERE signups.userId = ${userId}
+      AND signups.paid = 0
+      AND meals.time < ${Date.now()}`
+
+      const myDb = await getConnection()
+      return executeQuery(myDb, query, true).catch(error.db.queryError(3, myDb, 'modules/db/payment:getUnpaidSignups - error getting unpaid signups'))
+  },
+
   getPricesByMeal: mealId => {
     const queryGetPrices = `
             SELECT (

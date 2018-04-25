@@ -2,7 +2,8 @@ const microMeal = require('./microMeal.tmpl.js')
 const picoMeal = require('./picoMeal.tmpl.js')
 const date = require(process.env.FOOD_HOME + 'helper/date.js')
 
-module.exports = (user, meal) => ({
+// prettier-ignore
+module.exports = (user, meal) => instanceUrl => ({
   from: 'Essensplaner',
   to: `${user.name} <${user.mail}>`,
   subject: `Neues Terminumfrage: ${meal.name} von ${meal.creator}`,
@@ -10,11 +11,11 @@ module.exports = (user, meal) => ({
     <h3>Hallo ${user.name}</h3>
     <p>Gute Neuigkeiten, ${meal.creator} hat eine neue Terminumfrage erstellt:</p>
     ${microMeal(meal)}
-    <p>Du hast bis zum ${date.formatDateTime(meal.time)} Zeit <a href="https://${process.env.FOOD_EXTERNAL}">dich einzutragen</a></p>
+    <p>Du hast bis zum ${date.formatDateTime(meal.time)} Zeit <a href="${instanceUrl}">dich einzutragen</a></p>
     <br>
     <hr>
     <p>
-      <a href="https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}&list=creationNotice">Klicke hier</a>,
-       um dich von dieser Liste abzumelden <a href="https://${process.env.FOOD_EXTERNAL}/unsubscribe?id=${user.id}">oder hier</a>,
+      <a href="${instanceUrl}unsubscribe?id=${user.id}&list=creationNotice">Klicke hier</a>,
+       um dich von dieser Liste abzumelden <a href="${instanceUrl}unsubscribe?id=${user.id}">oder hier</a>,
        um alle Emails von dieser Seite abzubestellen.</p>`,
 })

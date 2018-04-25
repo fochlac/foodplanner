@@ -20,6 +20,7 @@ const user = {
   actions = {
     sign_in: data => (output = { data, type: 'sign_in' }),
     register: data => (output = { data, type: 'register' }),
+    reset_password: data => (output = { data, type: 'reset_password' }),
   }
 
 describe('LoginDialog', () => {
@@ -29,6 +30,7 @@ describe('LoginDialog', () => {
     expect(wrapper.find(Dialog)).toHaveLength(1)
     expect(wrapper.find('.registerLink')).toHaveLength(1)
     expect(wrapper.find('.titlebar')).toHaveLength(1)
+    expect(wrapper.find('.forgotPW')).toHaveLength(1)
     expect(wrapper.find('.titlebar h3')).toHaveLength(1)
     expect(wrapper.find('.titlebar h3').text()).toBe('Anmelden')
     expect(wrapper.find('.foot button')).toHaveLength(1)
@@ -49,6 +51,24 @@ describe('LoginDialog', () => {
 
     expect(wrapper.find('.registerLink')).toHaveLength(1)
     expect(wrapper.find('.foot button')).toHaveLength(1)
+
+    wrapper.find('.forgotPW').simulate('click')
+    expect(wrapper.find('.body #LoginDialog_mail')).toHaveLength(1)
+    expect(wrapper.find('.body #LoginDialog_pass')).toHaveLength(0)
+    expect(wrapper.find('.body #LoginDialog_pass2')).toHaveLength(0)
+    expect(wrapper.find('.body #LoginDialog_name')).toHaveLength(0)
+  })
+
+  test('test forgot pw', () => {
+    const wrapper = shallow(<LoginDialog {...actions} />)
+
+    wrapper.find('.forgotPW').simulate('click')
+    expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
+    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
+    expect(wrapper.find('.foot button').prop('disabled')).toBe(false)
+    wrapper.find('.foot button').simulate('click')
+    expect(output.data).toEqual('asd@asd.de')
+    expect(output.type).toBe('reset_password')
   })
 
   test('error handling test', () => {

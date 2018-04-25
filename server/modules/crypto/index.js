@@ -10,6 +10,7 @@ const userDB = require(process.env.FOOD_HOME + 'modules/db/user'),
   }
 
 let cache = caches.getCache('userAuth')
+let resetTokens = []
 
 function generateSalt() {
   return new Promise((resolve, reject) => {
@@ -18,6 +19,18 @@ function generateSalt() {
         return reject(err)
       }
       resolve(salt.toString('base64'))
+    })
+  })
+}
+
+function browserHash(value) {
+  return new Promise((resolve, reject) => {
+    crypto.pbkdf2(value, 'mySecret123', 100, 16, 'sha256', (err, hash) => {
+      if (err) {
+        return reject(err)
+      }
+
+      resolve(hash.toString('base64').replace('==', ''))
     })
   })
 }
@@ -43,6 +56,37 @@ function generateHash(value, salt) {
 module.exports = {
   createUserHash: password => {
     return generateSalt().then(salt => generateHash(password, salt))
+  },
+
+  generateResetToken: async user => {
+    const randomId = (await generateSalt()).replace(/\+/g, 'a').replace(/\//g, 'b')
+
+    resetTokens.push({
+      timeout: Date.now() + 3600000,
+      id: randomId,
+      user,
+    })
+
+    return randomId
+  },
+
+  validateResetToken: async id => {
+    const token = resetTokens.find(token => token.id === id)
+
+    if (token && Date.now() < token.timeout) {
+      return token.user
+    }
+
+    return false
+  },
+
+  generateRandomPass: async () => {
+    const salt = await generateSalt()
+    const pass = await generateSalt()
+    const browserhashed = await browserHash(pass)
+    const auth = await generateHash(browserhashed, salt)
+
+    return { pass, ...auth }
   },
 
   verifyUser: async (instance, { hash, mail }) => {

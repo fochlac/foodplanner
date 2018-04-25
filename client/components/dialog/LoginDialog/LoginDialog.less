@@ -11,4 +11,33 @@
   label {
     margin-top: 10px;
   }
+
+  .success {
+    padding: 5px 12px;
+    border: solid @colorg3;
+    margin-bottom: 10px;
+    background: lighten(@colorg3, 70%);
+  }
+
+  .tabList {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: solid 1px @colorg3;
+    justify-content: space-evenly;
+
+    li {
+      padding: 5px 15px;
+      cursor: pointer;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+
+      &.selected {
+        background: @colorg3;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+  }
 }

@@ -101,6 +101,55 @@ module.exports = {
       .catch(error.router.internalError(res))
   },
 
+  resetPassword: async (req, res) => {
+    try {
+      const user = await userDB.getUserByProperty('mail', req.body.mail)
+
+      if (user && user.id) {
+        log(
+          2,
+          `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} requested reset of password for user ${user.id} with name ${user.name}`,
+        )
+        const token = await crypto.generateResetToken(user)
+
+        mailer.sendGenerateNewPassMail(user, token)
+      } else {
+        log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} tried to request reset of password with invalid email`)
+      }
+
+      res.status(200).json({})
+    } catch (err) {
+      error.router.internalError(res)(err)
+    }
+  },
+
+  finalizeResetPassword: async (req, res, next) => {
+    try {
+      const user = await crypto.validateResetToken(req.query.id)
+
+      if (user && user.id) {
+        log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} reset password of user ${user.id} with name ${user.name}`)
+        const { pass, salt, hash } = await crypto.generateRandomPass()
+        await userDB.setUserById(user.id, user, { hash, salt })
+        mailer.sendNewPassMail(user, pass)
+
+        req.dialog = {
+          type: 'LOGIN',
+          option: {
+            resetPassword: true
+          },
+        }
+
+        next()
+      } else {
+        log(2, `${req.headers.proxied ? req.headers.proxy_ip : req.connection.remoteAddress} tried to reset password with invalid token id`)
+        res.status(403).send()
+      }
+    } catch (err) {
+      error.router.internalError(res)(err)
+    }
+  },
+
   getUser: (req, res) => {
     if (+req.params.id !== +req.user.id) {
       log(4, `User ${req.user.id} tried to access user ${req.params.id}'s user data`)
