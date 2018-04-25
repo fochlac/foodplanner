@@ -124,6 +124,7 @@ module.exports = {
                         dataversion: 0,
                         historySize: 0,
                         busyList: [],
+                      },
                       meals: {},
                       signups:{},
                       datefinder:{}
