@@ -51,10 +51,11 @@ module.exports = {
       ON signups.meal = meals.id
       WHERE signups.userId = ${userId}
       AND signups.paid = 0
+      AND signups.price > 0
       AND meals.time < ${Date.now()}`
 
-      const myDb = await getConnection()
-      return executeQuery(myDb, query, true).catch(error.db.queryError(3, myDb, 'modules/db/payment:getUnpaidSignups - error getting unpaid signups'))
+    const myDb = await getConnection()
+    return executeQuery(myDb, query, true).catch(error.db.queryError(3, myDb, 'modules/db/payment:getUnpaidSignups - error getting unpaid signups'))
   },
 
   getPricesByMeal: mealId => {
