@@ -8,7 +8,7 @@ const regex = {
 const parseLink = string => {
   const [match, name, url] = regex.link.exec(string)
   return (
-    <a key={Date.now()} href={encodeURI(url)} className="fakeLink">
+    <a key={Date.now()} href={encodeURI(url)} target="_blank" className="fakeLink">
       {name}
     </a>
   )
