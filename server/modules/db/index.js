@@ -6,7 +6,8 @@ let db = mysql.createPool({
   port     : process.env.ADMIN_DB_PORT,
   user     : process.env.FOOD_DB_USERNAME,
   password : process.env.FOOD_DB_PASSWORD,
-  database : process.env.FOOD_DB_NAME
+  database : process.env.FOOD_DB_NAME,
+  charset  : 'utf8mb4'
 });
 
 module.exports = () => new Promise((resolve, reject) => {

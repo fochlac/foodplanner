@@ -124,7 +124,7 @@ let setup = [
         \`instance\`   int             NOT NULL,
         \`name\`       varchar(150)    NOT NULL,
         \`meal\`       int             NOT NULL,
-        \`comment\`    varchar(255)    NOT NULL,
+        \`comment\`    varchar(240)    NOT NULL,
         \`userId\`     int,
         \`paid\`       int                         DEFAULT 0,
         \`price\`      FLOAT(10, 2)    NOT NULL    DEFAULT 0,
@@ -149,7 +149,7 @@ let setup = [
         \`source\`              int             NOT NULL,
         \`target\`              int             NOT NULL,
         \`amount\`              FLOAT(10, 2)    NOT NULL,
-        \`reason\`              varchar(255)    NOT NULL,
+        \`reason\`              varchar(150)    NOT NULL,
         \`time\`                bigint          NOT NULL,
         \`instance\`            int             NOT NULL,
 
