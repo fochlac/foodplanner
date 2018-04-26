@@ -1,7 +1,7 @@
 const log = require(process.env.FOOD_HOME + 'modules/log')
 
 const regexp = {
-  utf8: /^([\x00-\x7F]|([\xC2-\xDF]|\xE0[\xA0-\xBF]|\xED[\x80-\x9F]|(|[\xE1-\xEC]|[\xEE-\xEF]|\xF0[\x90-\xBF]|\xF4[\x80-\x8F]|[\xF1-\xF3][\x80-\xBF])[\x80-\xBF])[\x80-\xBF])*$/,
+  utf8: /^[^%;]*$/,
 }
 
 module.exports = (type, matches, additionalOptions) => {
@@ -14,23 +14,23 @@ module.exports = (type, matches, additionalOptions) => {
       invalidParams = [],
       validateParam = (param, validation) => {
         if (typeof validation !== 'string' && !validation.test(payload[param])) {
-          return false
           invalidParams.push(param)
+          return false
         } else if (validation === 'object' && typeof payload[param] !== 'object') {
-          return false
           invalidParams.push(param)
+          return false
         } else if (validation === 'array' && !Array.isArray(payload[param])) {
-          return false
           invalidParams.push(param)
+          return false
         } else if (validation === 'utf8' && !regexp.utf8.test(payload[param])) {
-          return false
           invalidParams.push(param)
+          return false
         } else if (validation === 'jsonString') {
           try {
             JSON.parse(payload[param])
           } catch (err) {
-            return false
             invalidParams.push(param)
+            return false
           }
         }
         return true
