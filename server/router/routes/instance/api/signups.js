@@ -31,7 +31,7 @@ signups.put(
     id: /^[0-9]{1,9}$/,
   }),
   validate('body', {
-    comment: ['utf8', /.{0,250}/],
+    comment: ['utf8', /.{0,240}/],
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
     meal: /^[0-9]{1,9}$/,
   }),
@@ -50,7 +50,7 @@ signups.delete(
 signups.post(
   '/',
   validate('body', {
-    comment: ['utf8', /.{0,250}/],
+    comment: ['utf8', /.{0,240}/],
     name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,50}$/,
     meal: /^[0-9]{1,9}$/,
   }),
