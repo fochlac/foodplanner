@@ -2,6 +2,7 @@ import './LoginDialog.less'
 
 import Dialog from 'DIALOG/Dialog.js'
 import InfoBubble from 'RAW/InfoBubble.jsx'
+import InputRow from 'RAW/InputRow.jsx'
 import React from 'react'
 import { generateHash } from 'UTILS/crypto.js'
 
@@ -30,7 +31,7 @@ const wording = {
   register: 'Registrieren',
   forgotPW: 'Passwort zurücksetzen',
   pwSent: 'Ein Link zum Zurück\u00ADsetzen deines Pass\u00ADwortes wurde generiert und an die hinter\u00ADlegte E-Mail Adresse ge\u00ADschickt.',
-  pwResetSuccess: 'Pass\u00ADwort erfolg\u00ADreich zurück\u00ADgesetzt. Eine E-Mail mit dem neuen Pass\u00ADwort wurde dir zugesandt.'
+  pwResetSuccess: 'Pass\u00ADwort erfolg\u00ADreich zurück\u00ADgesetzt. Eine E-Mail mit dem neuen Pass\u00ADwort wurde dir zugesandt.',
 }
 
 export default class LoginDialog extends React.Component {
@@ -77,7 +78,7 @@ export default class LoginDialog extends React.Component {
     }
 
     if (view === 'forgotPW') {
-      this.setState({view: 'login', showSuccess: true})
+      this.setState({ view: 'login', showSuccess: true })
       return this.props.reset_password(mail)
     }
 
@@ -93,9 +94,9 @@ export default class LoginDialog extends React.Component {
   }
 
   handleInput(field) {
-    return evt => {
+    return value => {
       this.setState({
-        [field]: evt.target.value,
+        [field]: value,
       })
     }
   }
@@ -107,75 +108,66 @@ export default class LoginDialog extends React.Component {
   renderRegister() {
     const { mail, name, pass, pass2 } = this.state
     const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass(pass)) || !pass2.length
-    const nameValid = userInterface.name(name) || !name.length
-    const mailValid = userInterface.mail(mail) || !mail.length
 
     return (
       <div>
-        <label htmlFor="LoginDialog_name">
-          {wording.name}
-          <InfoBubble style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
-            {userInterfaceText.name}
-          </InfoBubble>
-        </label>
-        <input
-          id="LoginDialog_name"
-          className={'name' + (!nameValid ? ' invalid' : '')}
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={this.nameInput}
+        <InputRow
+          defaultValue={name}
+          label={[
+            wording.name,
+            <InfoBubble key="info" style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+              {userInterfaceText.name}
+            </InfoBubble>,
+          ]}
+          required={false}
           autoComplete="name"
+          userInterface={userInterface.name}
+          onChange={this.nameInput}
         />
-        <label htmlFor="LoginDialog_mail">
-          {wording.mail}
-          <InfoBubble style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
-            {userInterfaceText.mail}
-          </InfoBubble>
-        </label>
-        <input
-          id="LoginDialog_mail"
-          className={'mail' + (!mailValid ? ' invalid' : '')}
-          type="text"
+        <InputRow
+          defaultValue={mail}
+          label={[
+            wording.mail,
+            <InfoBubble key="info" style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+              {userInterfaceText.mail}
+            </InfoBubble>,
+          ]}
+          required={false}
+          userInterface={userInterface.name}
           placeholder={wording.mail}
           onChange={this.mailInput}
-          value={mail}
           autoComplete="email"
         />
-        <label htmlFor="LoginDialog_pass">
-          {wording.password}
-          <InfoBubble style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
-            {userInterfaceText.pass}
-          </InfoBubble>
-        </label>
-        <input
-          id="LoginDialog_pass"
-          className={'pass' + (!passwordValid ? ' invalid' : '')}
-          type="password"
+        <InputRow
+          defaultValue={pass}
+          label={[
+            wording.pass,
+            <InfoBubble key="info" style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
+              {userInterfaceText.pass}
+            </InfoBubble>,
+          ]}
+          valid={passwordValid}
+          required={false}
+          userInterface={userInterface.pass}
           placeholder={wording.password}
           onChange={this.passInput}
-          value={pass}
           autoComplete="new-password"
         />
-        {pass.length ? (
-          <span>
-            <label htmlFor="LoginDialog_pass2">
-              {wording.passwordRepeat}
-              <InfoBubble style={{ bottom: '28px', left: '-80px', width: '160px' }} symbol="fa-asterisk required" arrow="top">
-                {userInterfaceText.pass}
-              </InfoBubble>
-            </label>
-            <input
-              id="LoginDialog_pass2"
-              className={'pass' + (!passwordValid ? ' invalid' : '')}
-              type="password"
-              placeholder={wording.passwordRepeat}
-              onChange={this.pass2Input}
-              value={pass2}
-              autoComplete="new-password"
-            />
-          </span>
-        ) : null}
+        <InputRow
+          defaultValue={pass2}
+          label={[
+            wording.passwordRepeat,
+            <InfoBubble key="info" style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
+              {userInterfaceText.pass}
+            </InfoBubble>,
+          ]}
+          valid={passwordValid}
+          required={false}
+          userInterface={userInterface.pass}
+          placeholder={wording.passwordRepeat}
+          onChange={this.pass2Input}
+          autoComplete="new-password"
+        />
       </div>
     )
   }
@@ -184,11 +176,20 @@ export default class LoginDialog extends React.Component {
     const { mail } = this.state
     return (
       <div className="login">
-        <label htmlFor="LoginDialog_mail">
-          {wording.mail}
-          <span className="fa fa-asterisk required" />
-        </label>
-        <input id="LoginDialog_mail" className="mail" type="text" placeholder={wording.mail} value={mail} onChange={this.mailInput} autoComplete="mail" />
+        <InputRow
+          defaultValue={mail}
+          label={[
+            wording.mail,
+            <InfoBubble key="info" style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+              {userInterfaceText.mail}
+            </InfoBubble>,
+          ]}
+          required={false}
+          userInterface={userInterface.name}
+          placeholder={wording.mail}
+          onChange={this.mailInput}
+          autoComplete="email"
+        />
       </div>
     )
   }
@@ -197,20 +198,34 @@ export default class LoginDialog extends React.Component {
     const { mail, pass } = this.state
     return (
       <div className="login">
-        <label htmlFor="LoginDialog_mail">
-          {wording.mail}
-          <span className="fa fa-asterisk required" />
-        </label>
-        <input id="LoginDialog_mail" className="mail" type="text" placeholder={wording.mail} value={mail} onChange={this.mailInput} autoComplete="mail" />
-        <label htmlFor="LoginDialog_pass">{wording.password}</label>
-        <input
-          id="LoginDialog_pass"
-          className="pass"
-          type="password"
+        <InputRow
+          defaultValue={mail}
+          label={[
+            wording.mail,
+            <InfoBubble key="info" style={{ top: '-8px', left: '19px', width: '180px' }} symbol="fa-asterisk required" arrow="right">
+              {userInterfaceText.mail}
+            </InfoBubble>,
+          ]}
+          required={false}
+          userInterface={userInterface.name}
+          placeholder={wording.mail}
+          onChange={this.mailInput}
+          autoComplete="email"
+        />
+        <InputRow
+          defaultValue={pass}
+          label={[
+            wording.pass,
+            <InfoBubble key="info" style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
+              {userInterfaceText.pass}
+            </InfoBubble>,
+          ]}
+          valid={passwordValid}
+          required={false}
+          userInterface={userInterface.pass}
           placeholder={wording.password}
-          value={pass}
           onChange={this.passInput}
-          autoComplete="password"
+          autoComplete="new-password"
         />
         <p className="fakeLink forgotPW" onClick={this.toggleView.bind(this, 'forgotPW')}>
           {wording.forgotPassword}
@@ -227,22 +242,25 @@ export default class LoginDialog extends React.Component {
         ? userInterface.mail(mail) && userInterface.name(name) && (!pass.length || (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass))
         : userInterface.mail(mail)
 
-    return <Dialog className="loginDialog">
+    return (
+      <Dialog className="loginDialog">
         <div className="titlebar">
           <h3>{wording[view]}</h3>
           <span className="fa fa-times push-right pointer" onClick={close_dialog} />
         </div>
         <div className="body">
-          { showSuccess && <div className="success">{wording.pwSent}</div> }
-          { resetPassword && <div className="success">{wording.pwResetSuccess}</div> }
-          {!hideRegister && <ul className="tabList">
+          {showSuccess && <div className="success">{wording.pwSent}</div>}
+          {resetPassword && <div className="success">{wording.pwResetSuccess}</div>}
+          {!hideRegister && (
+            <ul className="tabList">
               <li className={'signinLink' + (view !== 'register' ? ' selected' : '')} onClick={this.toggleView.bind(this, 'login')}>
                 {wording.login}
               </li>
               <li className={'registerLink' + (view === 'register' ? ' selected' : '')} onClick={this.toggleView.bind(this, 'register')}>
                 {wording.register}
               </li>
-            </ul>}
+            </ul>
+          )}
           {view === 'register' && this.renderRegister()}
           {view === 'login' && this.renderLogin()}
           {view === 'forgotPW' && this.renderForgot()}
@@ -253,5 +271,6 @@ export default class LoginDialog extends React.Component {
           </button>
         </div>
       </Dialog>
+    )
   }
 }
