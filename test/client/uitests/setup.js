@@ -59,7 +59,7 @@ driver.findElementAndSendKeys = function(predicate, keys) {
 }
 
 driver.saveScreenshot = function(name) {
-  const targetFile = path.join(process.env.FOOD_TESTS, `${new Date().toISOString()}-${name}`.replace(/[^a-zA-Z0-9]{1,}/g, '-') + '.png')
+  const targetFile = path.join(process.env.FOOD_TESTS, `screenshot-${name ? name : ''}-${new Date().toISOString()}`.replace(/[^a-zA-Z0-9]{1,}/g, '-') + '.png')
   return driver
     .takeScreenshot()
     .then(pngBase64 => Buffer.from(pngBase64, 'base64'))
@@ -106,6 +106,12 @@ before(async function() {
   this.driver.get(`http://${process.env.FOOD_EXTERNAL}${process.env.FOOD_EXTERNAL === 'localhost' ? ':' + process.env.FOOD_PORT : ''}/1/`)
   console.log('testing against: ' + `http://${process.env.FOOD_EXTERNAL}${process.env.FOOD_EXTERNAL === 'localhost' ? ':' + process.env.FOOD_PORT : ''}/1/`)
   return this.driver.wait(until.titleIs('Mittagsplaner'), 10000)
+})
+
+afterEach(async function() {
+  if (this.currentTest.state === 'failed') {
+    await this.driver.saveScreenshot()
+  }
 })
 
 after(async function() {

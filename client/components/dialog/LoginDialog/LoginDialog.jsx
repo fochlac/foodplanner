@@ -216,7 +216,7 @@ export default class LoginDialog extends React.Component {
           placeholder={wording.mail}
           onChange={this.mailInput}
           autoComplete="email"
-          id="LoginDialog_name"
+          id="LoginDialog_mail"
         />
         <InputRow
           defaultValue={pass}
@@ -231,7 +231,7 @@ export default class LoginDialog extends React.Component {
           placeholder={wording.password}
           onChange={this.passInput}
           autoComplete="new-password"
-          id="LoginDialog_mail"
+          id="LoginDialog_pass"
         />
         <p className="fakeLink forgotPW" onClick={this.toggleView.bind(this, 'forgotPW')}>
           {wording.forgotPassword}
