@@ -185,7 +185,7 @@ export default class LoginDialog extends React.Component {
             </InfoBubble>,
           ]}
           required={false}
-          userInterface={userInterface.name}
+          userInterface={userInterface.mail}
           placeholder={wording.mail}
           onChange={this.mailInput}
           autoComplete="email"
@@ -207,7 +207,7 @@ export default class LoginDialog extends React.Component {
             </InfoBubble>,
           ]}
           required={false}
-          userInterface={userInterface.name}
+          userInterface={userInterface.mail}
           placeholder={wording.mail}
           onChange={this.mailInput}
           autoComplete="email"
