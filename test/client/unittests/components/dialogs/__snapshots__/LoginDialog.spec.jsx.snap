@@ -675,7 +675,7 @@ exports[`LoginDialog error handling test 5`] = `
       <InputRow
         autoComplete="email"
         defaultValue="asd@asd.de"
-        id="LoginDialog_name"
+        id="LoginDialog_mail"
         label={
           Array [
             "E-Mail",
@@ -702,7 +702,7 @@ exports[`LoginDialog error handling test 5`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue=""
-        id="LoginDialog_mail"
+        id="LoginDialog_pass"
         label={
           Array [
             "Passwort",
@@ -946,7 +946,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="email"
         defaultValue=""
-        id="LoginDialog_name"
+        id="LoginDialog_mail"
         label={
           Array [
             "E-Mail",
@@ -973,7 +973,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="new-password"
         defaultValue=""
-        id="LoginDialog_mail"
+        id="LoginDialog_pass"
         label={
           Array [
             "Passwort",
