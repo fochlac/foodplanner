@@ -1,6 +1,7 @@
 import { mount, shallow } from 'enzyme'
 
 import Dialog from 'DIALOG/Dialog.js'
+import InputRow from 'RAW/InputRow.jsx'
 import LoginDialog from 'DIALOG/LoginDialog/LoginDialog.jsx'
 import React from 'react'
 
@@ -27,24 +28,13 @@ describe('LoginDialog', () => {
   test('should render a unregistered frame and switch between register / signin', () => {
     const wrapper = shallow(<LoginDialog {...actions} />)
 
-    expect(wrapper.find(Dialog)).toHaveLength(1)
-    expect(wrapper.find('.registerLink')).toHaveLength(1)
-    expect(wrapper.find('.titlebar')).toHaveLength(1)
-    expect(wrapper.find('.forgotPW')).toHaveLength(1)
-    expect(wrapper.find('.titlebar h3')).toHaveLength(1)
+    expect(wrapper).toMatchSnapshot()
     expect(wrapper.find('.titlebar h3').text()).toBe('Anmelden')
-    expect(wrapper.find('.foot button')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_mail')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass')).toHaveLength(1)
 
     wrapper.find('.registerLink').simulate('click')
     expect(wrapper.find('.titlebar h3').text()).toBe('Registrieren')
-    expect(wrapper.find('.body #LoginDialog_mail')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass2')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_name')).toHaveLength(1)
-    expect(wrapper.find('.signinLink')).toHaveLength(1)
-    expect(wrapper.find('.foot button')).toHaveLength(1)
+
+    expect(wrapper).toMatchSnapshot()
     expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
 
     wrapper.find('.signinLink').simulate('click')
@@ -53,19 +43,17 @@ describe('LoginDialog', () => {
     expect(wrapper.find('.foot button')).toHaveLength(1)
 
     wrapper.find('.forgotPW').simulate('click')
-    expect(wrapper.find('.body #LoginDialog_mail')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_pass2')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_name')).toHaveLength(0)
+    expect(wrapper).toMatchSnapshot()
   })
 
-  test('test forgot pw', () => {
+  test('test forgot pw', async () => {
     const wrapper = shallow(<LoginDialog {...actions} />)
-
     wrapper.find('.forgotPW').simulate('click')
     expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
-    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
-    expect(wrapper.find('.foot button').prop('disabled')).toBe(false)
+    wrapper.find(InputRow).prop('onChange')('asd@asd.de')
+    wrapper.update()
+    expect(wrapper).toMatchSnapshot()
+    expect(wrapper.find('.submit').prop('disabled')).toBe(false)
     wrapper.find('.foot button').simulate('click')
     expect(output.data).toEqual('asd@asd.de')
     expect(output.type).toBe('reset_password')
@@ -75,58 +63,59 @@ describe('LoginDialog', () => {
     const wrapper = shallow(<LoginDialog {...actions} />)
     expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
     wrapper.find('.registerLink').simulate('click')
-    expect(wrapper.find('.titlebar h3').text()).toBe('Registrieren')
-    expect(wrapper.find('.body #LoginDialog_mail')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass2')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_name')).toHaveLength(1)
-    expect(wrapper.find('.signinLink')).toHaveLength(1)
-    expect(wrapper.find('.foot button')).toHaveLength(1)
-    expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
-    wrapper.find('.body #LoginDialog_pass').simulate('change', { target: { value: 'test' } })
-    expect(wrapper.find('.body #LoginDialog_pass2')).toHaveLength(1)
-    wrapper.find('.body #LoginDialog_pass').simulate('change', { target: { value: '' } })
-    expect(wrapper.find('.body #LoginDialog_pass2')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_mail.invalid')).toHaveLength(0)
-    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd' } })
-    expect(wrapper.find('.body #LoginDialog_mail.invalid')).toHaveLength(1)
-    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
-    expect(wrapper.find('.body #LoginDialog_mail.invalid')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_name.invalid')).toHaveLength(0)
-    wrapper.find('.body #LoginDialog_name').simulate('change', { target: { value: 'a' } })
-    expect(wrapper.find('.body #LoginDialog_name.invalid')).toHaveLength(1)
-    wrapper.find('.body #LoginDialog_name').simulate('change', { target: { value: 'asd' } })
-    expect(wrapper.find('.foot button').prop('disabled')).toBe(false)
-    expect(wrapper.find('.body #LoginDialog_name.invalid')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_pass.invalid')).toHaveLength(0)
-    wrapper.find('.body #LoginDialog_pass').simulate('change', { target: { value: 'asd' } })
-    expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
-    expect(wrapper.find('.body #LoginDialog_pass2.invalid')).toHaveLength(0)
-    wrapper.find('.body #LoginDialog_pass2').simulate('change', { target: { value: 'asd2' } })
-    expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
-    expect(wrapper.find('.body #LoginDialog_pass2.invalid')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass.invalid')).toHaveLength(1)
-    wrapper.find('.body #LoginDialog_pass2').simulate('change', { target: { value: 'asd' } })
-    expect(wrapper.find('.foot button').prop('disabled')).toBe(false)
-    expect(wrapper.find('.body #LoginDialog_pass.invalid')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_pass2.invalid')).toHaveLength(0)
+
+    // test mail + name
+
+    wrapper
+      .find(InputRow)
+      .at(1)
+      .prop('onChange')('asd')
+
+    wrapper
+      .find(InputRow)
+      .at(0)
+      .prop('onChange')('a')
+    wrapper.update()
+    expect(wrapper).toMatchSnapshot()
+
+    wrapper
+      .find(InputRow)
+      .at(1)
+      .prop('onChange')('asd@asd.de')
+
+    wrapper
+      .find(InputRow)
+      .at(0)
+      .prop('onChange')('aasd')
+    wrapper.update()
+    expect(wrapper).toMatchSnapshot()
+
+    // test password
+
+    wrapper
+      .find(InputRow)
+      .at(2)
+      .prop('onChange')('asd')
+
+    wrapper
+      .find(InputRow)
+      .at(3)
+      .prop('onChange')('asda')
+    wrapper.update()
+    expect(wrapper).toMatchSnapshot()
+
+    wrapper
+      .find(InputRow)
+      .at(3)
+      .prop('onChange')('asd')
+    wrapper.update()
+    expect(wrapper).toMatchSnapshot()
 
     wrapper.find('.signinLink').simulate('click')
-    expect(wrapper.find('.body #LoginDialog_mail')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_mail').prop('value')).toEqual('asd@asd.de')
-    expect(wrapper.find('.body #LoginDialog_pass')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass').prop('value')).toEqual('')
-    expect(wrapper.find('.foot button').prop('disabled')).toBe(false)
+    expect(wrapper).toMatchSnapshot()
 
     wrapper.find('.registerLink').simulate('click')
-    expect(wrapper.find('.body #LoginDialog_mail')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass')).toHaveLength(1)
-    expect(wrapper.find('.body #LoginDialog_pass2')).toHaveLength(0)
-    expect(wrapper.find('.body #LoginDialog_name')).toHaveLength(1)
-    expect(wrapper.find('.foot button').prop('disabled')).toBe(false)
-    expect(wrapper.find('.body #LoginDialog_name').prop('value')).toEqual('asd')
-    expect(wrapper.find('.body #LoginDialog_mail').prop('value')).toEqual('asd@asd.de')
-    expect(wrapper.find('.body #LoginDialog_pass').prop('value')).toEqual('')
+    expect(wrapper).toMatchSnapshot()
   })
 
   test('should output correct data on login / register', () => {
@@ -152,15 +141,27 @@ describe('LoginDialog', () => {
       return { encode: () => null }
     }
 
-    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
-    wrapper.find('.body #LoginDialog_pass').simulate('change', { target: { value: 'asd' } })
+    wrapper
+      .find(InputRow)
+      .at(0)
+      .prop('onChange')('asd@asd.de')
+
+    wrapper
+      .find(InputRow)
+      .at(1)
+      .prop('onChange')('asd')
+    wrapper.update()
 
     wrapper.find('.foot button').simulate('click')
 
     expect(output.data).toEqual({ mail: 'asd@asd.de', hash: 'ALeLYLKK1Wtl/1TQlW/oEA' })
     expect(output.type).toBe('sign_in')
 
-    wrapper.find('.body #LoginDialog_pass').simulate('change', { target: { value: '' } })
+    wrapper
+      .find(InputRow)
+      .at(1)
+      .prop('onChange')('')
+    wrapper.update()
 
     wrapper.find('.foot button').simulate('click')
 
@@ -168,10 +169,26 @@ describe('LoginDialog', () => {
     expect(output.type).toBe('sign_in')
 
     wrapper.find('.registerLink').simulate('click')
-    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
-    wrapper.find('.body #LoginDialog_name').simulate('change', { target: { value: 'asd' } })
-    wrapper.find('.body #LoginDialog_pass').simulate('change', { target: { value: 'asd' } })
-    wrapper.find('.body #LoginDialog_pass2').simulate('change', { target: { value: 'asd' } })
+    wrapper
+      .find(InputRow)
+      .at(1)
+      .prop('onChange')('asd@asd.de')
+
+    wrapper
+      .find(InputRow)
+      .at(0)
+      .prop('onChange')('asd')
+
+    wrapper
+      .find(InputRow)
+      .at(2)
+      .prop('onChange')('asd')
+
+    wrapper
+      .find(InputRow)
+      .at(3)
+      .prop('onChange')('asd')
+    wrapper.update()
     expect(wrapper.find('.foot button').prop('disabled')).toBe(false)
     wrapper.find('.foot button').simulate('click')
 
@@ -182,7 +199,11 @@ describe('LoginDialog', () => {
       name: 'asd',
     })
 
-    wrapper.find('.body #LoginDialog_pass').simulate('change', { target: { value: '' } })
+    wrapper
+      .find(InputRow)
+      .at(2)
+      .prop('onChange')('')
+    wrapper.update()
     expect(wrapper.find('.foot button').prop('disabled')).toBe(false)
     wrapper.find('.foot button').simulate('click')
     expect(output.data).toEqual({
@@ -192,7 +213,11 @@ describe('LoginDialog', () => {
     })
 
     output = false
-    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asdaas' } })
+    wrapper
+      .find(InputRow)
+      .at(1)
+      .prop('onChange')('asdasdw')
+    wrapper.update()
     expect(wrapper.find('.foot button').prop('disabled')).toBe(true)
     wrapper.find('.foot button').simulate('click')
     expect(output).toEqual(false)
@@ -205,7 +230,12 @@ describe('LoginDialog', () => {
     window.addEventListener = (evt, fn) => (eventListener = fn)
 
     const wrapper = shallow(<LoginDialog {...actions} />)
-    wrapper.find('.body #LoginDialog_mail').simulate('change', { target: { value: 'asd@asd.de' } })
+    wrapper
+      .find(InputRow)
+      .at(0)
+      .prop('onChange')('asd@asd.de')
+
+    wrapper.update()
 
     eventListener({ keyCode: 13 })
 
