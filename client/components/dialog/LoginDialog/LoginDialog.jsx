@@ -123,6 +123,7 @@ export default class LoginDialog extends React.Component {
           autoComplete="name"
           userInterface={userInterface.name}
           onChange={this.nameInput}
+          id="LoginDialog_name"
         />
         <InputRow
           defaultValue={mail}
@@ -137,6 +138,7 @@ export default class LoginDialog extends React.Component {
           placeholder={wording.mail}
           onChange={this.mailInput}
           autoComplete="email"
+          id="LoginDialog_mail"
         />
         <InputRow
           defaultValue={pass}
@@ -152,6 +154,7 @@ export default class LoginDialog extends React.Component {
           placeholder={wording.password}
           onChange={this.passInput}
           autoComplete="new-password"
+          id="LoginDialog_pass"
         />
         <InputRow
           defaultValue={pass2}
@@ -167,6 +170,7 @@ export default class LoginDialog extends React.Component {
           placeholder={wording.passwordRepeat}
           onChange={this.pass2Input}
           autoComplete="new-password"
+          id="LoginDialog_pass2"
         />
       </div>
     )
@@ -189,6 +193,7 @@ export default class LoginDialog extends React.Component {
           placeholder={wording.mail}
           onChange={this.mailInput}
           autoComplete="email"
+          id="LoginDialog_name"
         />
       </div>
     )
@@ -211,6 +216,7 @@ export default class LoginDialog extends React.Component {
           placeholder={wording.mail}
           onChange={this.mailInput}
           autoComplete="email"
+          id="LoginDialog_name"
         />
         <InputRow
           defaultValue={pass}
@@ -225,6 +231,7 @@ export default class LoginDialog extends React.Component {
           placeholder={wording.password}
           onChange={this.passInput}
           autoComplete="new-password"
+          id="LoginDialog_mail"
         />
         <p className="fakeLink forgotPW" onClick={this.toggleView.bind(this, 'forgotPW')}>
           {wording.forgotPassword}
