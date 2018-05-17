@@ -30,7 +30,6 @@ describe('login area', () => {
   })
 
   it('should not be logged in', async function() {
-    expect(true).to.be.false
     return this.checkLoggedOut()
   })
 
