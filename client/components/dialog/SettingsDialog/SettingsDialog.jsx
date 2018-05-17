@@ -54,7 +54,7 @@ export default class SettingsDialog extends React.Component {
     const { mail, name, pass2, pass, deadlineReminder_notification, creationNotice_notification } = this.state
     let getHash = Promise.resolve()
     const valid =
-      userInterface.mail(mail) && userInterface.name(name) && (!pass.length || (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass))
+      userInterface.mail.test(mail) && userInterface.name.test(name) && (!pass.length || (userInterface.pass.test(pass) && userInterface.pass.test(pass2) && pass2 === pass))
 
     if (!valid && this.props.user.id) {
       return
@@ -115,10 +115,10 @@ export default class SettingsDialog extends React.Component {
       notificationsBlocked = Notification.permission === 'denied'
     const valid =
       !this.props.user.id ||
-      (userInterface.mail(mail) && userInterface.name(name) && (!pass.length || (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass)))
-    const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass(pass)) || !pass2.length
-    const nameValid = userInterface.name(name)
-    const mailValid = userInterface.mail(mail)
+      (userInterface.mail.test(mail) && userInterface.name.test(name) && (!pass.length || (userInterface.pass.test(pass) && userInterface.pass.test(pass2) && pass2 === pass)))
+    const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass.test(pass)) || !pass2.length
+    const nameValid = userInterface.name.test(name)
+    const mailValid = userInterface.mail.test(mail)
     return (
       <Dialog className="settingsDialog">
         <div className="titlebar">
