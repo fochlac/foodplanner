@@ -59,7 +59,10 @@ driver.findElementAndSendKeys = function(predicate, keys) {
 }
 
 driver.saveScreenshot = function(name) {
-  const targetFile = path.join(process.env.FOOD_TESTS, `screenshot-${name ? name : ''}-${new Date().toISOString()}`.replace(/[^a-zA-Z0-9]{1,}/g, '-') + '.png')
+  const targetFile = path.join(
+    process.env.FOOD_TESTS + 'screenshots/',
+    `screenshot-${name ? name : ''}-${new Date().toISOString()}`.replace(/[^a-zA-Z0-9]{1,}/g, '-') + '.png',
+  )
   return driver
     .takeScreenshot()
     .then(pngBase64 => Buffer.from(pngBase64, 'base64'))

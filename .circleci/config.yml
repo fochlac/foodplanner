@@ -35,6 +35,9 @@ jobs:
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
+      - run:
+        name: create screenshot folder
+        command: mkdir -p test/screenshots
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -70,7 +73,7 @@ jobs:
             cat test-log
             pkill -f "node.*server/index.js"
       - store_artifacts:
-          path: test/screen
+          path: test/screenshots
           prefix: screenshot
       - store_artifacts:
           path: coverage
