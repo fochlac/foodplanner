@@ -37,6 +37,7 @@ exports[`LoginDialog error handling test 1`] = `
       <InputRow
         autoComplete="name"
         defaultValue="a"
+        id="LoginDialog_name"
         label={
           Array [
             "Name",
@@ -62,6 +63,7 @@ exports[`LoginDialog error handling test 1`] = `
       <InputRow
         autoComplete="email"
         defaultValue="asd"
+        id="LoginDialog_mail"
         label={
           Array [
             "E-Mail",
@@ -88,6 +90,7 @@ exports[`LoginDialog error handling test 1`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_pass"
         label={
           Array [
             "Passwort",
@@ -115,6 +118,7 @@ exports[`LoginDialog error handling test 1`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_pass2"
         label={
           Array [
             "Passwort wiederholen",
@@ -192,6 +196,7 @@ exports[`LoginDialog error handling test 2`] = `
       <InputRow
         autoComplete="name"
         defaultValue="aasd"
+        id="LoginDialog_name"
         label={
           Array [
             "Name",
@@ -217,6 +222,7 @@ exports[`LoginDialog error handling test 2`] = `
       <InputRow
         autoComplete="email"
         defaultValue="asd@asd.de"
+        id="LoginDialog_mail"
         label={
           Array [
             "E-Mail",
@@ -243,6 +249,7 @@ exports[`LoginDialog error handling test 2`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_pass"
         label={
           Array [
             "Passwort",
@@ -270,6 +277,7 @@ exports[`LoginDialog error handling test 2`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_pass2"
         label={
           Array [
             "Passwort wiederholen",
@@ -347,6 +355,7 @@ exports[`LoginDialog error handling test 3`] = `
       <InputRow
         autoComplete="name"
         defaultValue="aasd"
+        id="LoginDialog_name"
         label={
           Array [
             "Name",
@@ -372,6 +381,7 @@ exports[`LoginDialog error handling test 3`] = `
       <InputRow
         autoComplete="email"
         defaultValue="asd@asd.de"
+        id="LoginDialog_mail"
         label={
           Array [
             "E-Mail",
@@ -398,6 +408,7 @@ exports[`LoginDialog error handling test 3`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue="asd"
+        id="LoginDialog_pass"
         label={
           Array [
             "Passwort",
@@ -425,6 +436,7 @@ exports[`LoginDialog error handling test 3`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue="asda"
+        id="LoginDialog_pass2"
         label={
           Array [
             "Passwort wiederholen",
@@ -502,6 +514,7 @@ exports[`LoginDialog error handling test 4`] = `
       <InputRow
         autoComplete="name"
         defaultValue="aasd"
+        id="LoginDialog_name"
         label={
           Array [
             "Name",
@@ -527,6 +540,7 @@ exports[`LoginDialog error handling test 4`] = `
       <InputRow
         autoComplete="email"
         defaultValue="asd@asd.de"
+        id="LoginDialog_mail"
         label={
           Array [
             "E-Mail",
@@ -553,6 +567,7 @@ exports[`LoginDialog error handling test 4`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue="asd"
+        id="LoginDialog_pass"
         label={
           Array [
             "Passwort",
@@ -580,6 +595,7 @@ exports[`LoginDialog error handling test 4`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue="asd"
+        id="LoginDialog_pass2"
         label={
           Array [
             "Passwort wiederholen",
@@ -659,6 +675,7 @@ exports[`LoginDialog error handling test 5`] = `
       <InputRow
         autoComplete="email"
         defaultValue="asd@asd.de"
+        id="LoginDialog_name"
         label={
           Array [
             "E-Mail",
@@ -685,6 +702,7 @@ exports[`LoginDialog error handling test 5`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_mail"
         label={
           Array [
             "Passwort",
@@ -767,6 +785,7 @@ exports[`LoginDialog error handling test 6`] = `
       <InputRow
         autoComplete="name"
         defaultValue="aasd"
+        id="LoginDialog_name"
         label={
           Array [
             "Name",
@@ -792,6 +811,7 @@ exports[`LoginDialog error handling test 6`] = `
       <InputRow
         autoComplete="email"
         defaultValue="asd@asd.de"
+        id="LoginDialog_mail"
         label={
           Array [
             "E-Mail",
@@ -818,6 +838,7 @@ exports[`LoginDialog error handling test 6`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_pass"
         label={
           Array [
             "Passwort",
@@ -845,6 +866,7 @@ exports[`LoginDialog error handling test 6`] = `
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_pass2"
         label={
           Array [
             "Passwort wiederholen",
@@ -924,6 +946,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="email"
         defaultValue=""
+        id="LoginDialog_name"
         label={
           Array [
             "E-Mail",
@@ -950,6 +973,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_mail"
         label={
           Array [
             "Passwort",
@@ -1032,6 +1056,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="name"
         defaultValue=""
+        id="LoginDialog_name"
         label={
           Array [
             "Name",
@@ -1057,6 +1082,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="email"
         defaultValue=""
+        id="LoginDialog_mail"
         label={
           Array [
             "E-Mail",
@@ -1083,6 +1109,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_pass"
         label={
           Array [
             "Passwort",
@@ -1110,6 +1137,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="new-password"
         defaultValue=""
+        id="LoginDialog_pass2"
         label={
           Array [
             "Passwort wiederholen",
@@ -1189,6 +1217,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
       <InputRow
         autoComplete="email"
         defaultValue=""
+        id="LoginDialog_name"
         label={
           Array [
             "E-Mail",
@@ -1267,6 +1296,7 @@ exports[`LoginDialog test forgot pw 1`] = `
       <InputRow
         autoComplete="email"
         defaultValue="asd@asd.de"
+        id="LoginDialog_name"
         label={
           Array [
             "E-Mail",
