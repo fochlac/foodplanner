@@ -1,0 +1,1307 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginDialog error handling test 1`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Registrieren
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink selected"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div>
+      <InputRow
+        autoComplete="name"
+        defaultValue="a"
+        label={
+          Array [
+            "Name",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie min­des­tens 2 Zei­chen ein. Buch­sta­ben, Zahl­en, Binde­strich und Leer­zei­chen sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\\\s\\]\\{2,100\\}\\$/}
+      />
+      <InputRow
+        autoComplete="email"
+        defaultValue="asd"
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort wiederholen",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort wiederholen"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={true}
+      onClick={[Function]}
+    >
+      Registrieren
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog error handling test 2`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Registrieren
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink selected"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div>
+      <InputRow
+        autoComplete="name"
+        defaultValue="aasd"
+        label={
+          Array [
+            "Name",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie min­des­tens 2 Zei­chen ein. Buch­sta­ben, Zahl­en, Binde­strich und Leer­zei­chen sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\\\s\\]\\{2,100\\}\\$/}
+      />
+      <InputRow
+        autoComplete="email"
+        defaultValue="asd@asd.de"
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort wiederholen",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort wiederholen"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={false}
+      onClick={[Function]}
+    >
+      Registrieren
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog error handling test 3`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Registrieren
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink selected"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div>
+      <InputRow
+        autoComplete="name"
+        defaultValue="aasd"
+        label={
+          Array [
+            "Name",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie min­des­tens 2 Zei­chen ein. Buch­sta­ben, Zahl­en, Binde­strich und Leer­zei­chen sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\\\s\\]\\{2,100\\}\\$/}
+      />
+      <InputRow
+        autoComplete="email"
+        defaultValue="asd@asd.de"
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue="asd"
+        label={
+          Array [
+            "Passwort",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={false}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue="asda"
+        label={
+          Array [
+            "Passwort wiederholen",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort wiederholen"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={false}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={true}
+      onClick={[Function]}
+    >
+      Registrieren
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog error handling test 4`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Registrieren
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink selected"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div>
+      <InputRow
+        autoComplete="name"
+        defaultValue="aasd"
+        label={
+          Array [
+            "Name",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie min­des­tens 2 Zei­chen ein. Buch­sta­ben, Zahl­en, Binde­strich und Leer­zei­chen sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\\\s\\]\\{2,100\\}\\$/}
+      />
+      <InputRow
+        autoComplete="email"
+        defaultValue="asd@asd.de"
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue="asd"
+        label={
+          Array [
+            "Passwort",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue="asd"
+        label={
+          Array [
+            "Passwort wiederholen",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort wiederholen"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={false}
+      onClick={[Function]}
+    >
+      Registrieren
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog error handling test 5`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Anmelden
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink selected"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div
+      className="login"
+    >
+      <InputRow
+        autoComplete="email"
+        defaultValue="asd@asd.de"
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+      />
+      <p
+        className="fakeLink forgotPW"
+        onClick={[Function]}
+      >
+        Passwort vergessen
+      </p>
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={false}
+      onClick={[Function]}
+    >
+      Anmelden
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog error handling test 6`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Registrieren
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink selected"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div>
+      <InputRow
+        autoComplete="name"
+        defaultValue="aasd"
+        label={
+          Array [
+            "Name",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie min­des­tens 2 Zei­chen ein. Buch­sta­ben, Zahl­en, Binde­strich und Leer­zei­chen sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\\\s\\]\\{2,100\\}\\$/}
+      />
+      <InputRow
+        autoComplete="email"
+        defaultValue="asd@asd.de"
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort wiederholen",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort wiederholen"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={false}
+      onClick={[Function]}
+    >
+      Registrieren
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog should render a unregistered frame and switch between register / signin 1`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Anmelden
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink selected"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div
+      className="login"
+    >
+      <InputRow
+        autoComplete="email"
+        defaultValue=""
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+      />
+      <p
+        className="fakeLink forgotPW"
+        onClick={[Function]}
+      >
+        Passwort vergessen
+      </p>
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={true}
+      onClick={[Function]}
+    >
+      Anmelden
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog should render a unregistered frame and switch between register / signin 2`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Registrieren
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink selected"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div>
+      <InputRow
+        autoComplete="name"
+        defaultValue=""
+        label={
+          Array [
+            "Name",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie min­des­tens 2 Zei­chen ein. Buch­sta­ben, Zahl­en, Binde­strich und Leer­zei­chen sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\\\s\\]\\{2,100\\}\\$/}
+      />
+      <InputRow
+        autoComplete="email"
+        defaultValue=""
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+      <InputRow
+        autoComplete="new-password"
+        defaultValue=""
+        label={
+          Array [
+            "Passwort wiederholen",
+            <InfoBubble
+              arrow="top"
+              style={
+                Object {
+                  "bottom": "28px",
+                  "left": "-60px",
+                  "width": "160px",
+                }
+              }
+              symbol="fa-asterisk optional"
+            >
+              Bit­te geb­en Sie ein val­ides Pass­wort ein. Neben Buch­sta­ben und Zahl­en sind fol­gen­de Son­der­zei­chen er­laubt: .-,|;:_#'+*~?=(/&%$§!)
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="Passwort wiederholen"
+        required={false}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        valid={true}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={true}
+      onClick={[Function]}
+    >
+      Registrieren
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog should render a unregistered frame and switch between register / signin 3`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Passwort zurücksetzen
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink selected"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div
+      className="login"
+    >
+      <InputRow
+        autoComplete="email"
+        defaultValue=""
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={true}
+      onClick={[Function]}
+    >
+      Passwort zurücksetzen
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
+
+exports[`LoginDialog test forgot pw 1`] = `
+<Connect(Dialog)
+  className="loginDialog"
+>
+  <div
+    className="titlebar"
+  >
+    <h3>
+      Passwort zurücksetzen
+    </h3>
+    <span
+      className="fa fa-times push-right pointer"
+    />
+  </div>
+  <div
+    className="body"
+  >
+    <ul
+      className="tabList"
+    >
+      <li
+        className="signinLink selected"
+        onClick={[Function]}
+      >
+        Anmelden
+      </li>
+      <li
+        className="registerLink"
+        onClick={[Function]}
+      >
+        Registrieren
+      </li>
+    </ul>
+    <div
+      className="login"
+    >
+      <InputRow
+        autoComplete="email"
+        defaultValue="asd@asd.de"
+        label={
+          Array [
+            "E-Mail",
+            <InfoBubble
+              arrow="right"
+              style={
+                Object {
+                  "left": "19px",
+                  "top": "-8px",
+                  "width": "180px",
+                }
+              }
+              symbol="fa-asterisk required"
+            >
+              Bit­te geb­en Sie eine val­ide Email-Ad­dres­se ein. Buch­sta­ben, Zahl­en, Punkt, Binde­strich und Un­ter­strich sind er­laubt.
+            </InfoBubble>,
+          ]
+        }
+        onChange={[Function]}
+        placeholder="E-Mail"
+        required={false}
+        userInterface={/\\^\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}@\\[\\\\_A-Za-z0-9\\.\\\\-\\]\\{1,70\\}\\\\\\.\\[A-Za-z\\]\\{1,10\\}\\$/}
+      />
+    </div>
+  </div>
+  <div
+    className="foot"
+  >
+    <button
+      className="submit"
+      disabled={false}
+      onClick={[Function]}
+    >
+      Passwort zurücksetzen
+    </button>
+  </div>
+</Connect(Dialog)>
+`;
