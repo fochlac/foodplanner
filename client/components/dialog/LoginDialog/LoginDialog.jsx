@@ -7,9 +7,9 @@ import React from 'react'
 import { generateHash } from 'UTILS/crypto.js'
 
 export const userInterface = {
-  name: name => /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/.test(name),
-  mail: mail => /^[\_A-Za-z0-9.\-]{1,70}@[\_A-Za-z0-9.\-]{1,70}\.[A-Za-z]{1,10}$/.test(mail),
-  pass: pass => /^[ÄÜÖäöüA-Za-z0-9.\-,|;:_#'+*~?=\(/&%$§!\)]{0,100}$/.test(pass),
+  name: /^[ÄÜÖäöüA-Za-z0-9.\-,\s]{2,100}$/,
+  mail: /^[\_A-Za-z0-9.\-]{1,70}@[\_A-Za-z0-9.\-]{1,70}\.[A-Za-z]{1,10}$/,
+  pass: /^[ÄÜÖäöüA-Za-z0-9.\-,|;:_#'+*~?=\(/&%$§!\)]{0,100}$/,
 }
 
 export const userInterfaceText = {
@@ -70,8 +70,8 @@ export default class LoginDialog extends React.Component {
     const { mail, name, pass, pass2, view } = this.state
     const valid =
       view === 'register'
-        ? userInterface.mail(mail) && userInterface.name(name) && (!pass.length || (pass.length && pass2.length && pass2 === pass))
-        : userInterface.mail(mail)
+        ? userInterface.mail.test(mail) && userInterface.name.test(name) && (!pass.length || (pass.length && pass2.length && pass2 === pass))
+        : userInterface.mail.test(mail)
 
     if (!valid) {
       return
@@ -107,7 +107,7 @@ export default class LoginDialog extends React.Component {
 
   renderRegister() {
     const { mail, name, pass, pass2 } = this.state
-    const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass(pass)) || !pass2.length
+    const passwordValid = pass2 === pass.slice(0, pass2.length) || (pass === pass2 && userInterface.pass.test(pass)) || !pass2.length
 
     return (
       <div>
@@ -133,7 +133,7 @@ export default class LoginDialog extends React.Component {
             </InfoBubble>,
           ]}
           required={false}
-          userInterface={userInterface.name}
+          userInterface={userInterface.mail}
           placeholder={wording.mail}
           onChange={this.mailInput}
           autoComplete="email"
@@ -141,7 +141,7 @@ export default class LoginDialog extends React.Component {
         <InputRow
           defaultValue={pass}
           label={[
-            wording.pass,
+            wording.password,
             <InfoBubble key="info" style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
               {userInterfaceText.pass}
             </InfoBubble>,
@@ -215,12 +215,11 @@ export default class LoginDialog extends React.Component {
         <InputRow
           defaultValue={pass}
           label={[
-            wording.pass,
+            wording.password,
             <InfoBubble key="info" style={{ bottom: '28px', left: '-60px', width: '160px' }} symbol="fa-asterisk optional" arrow="top">
               {userInterfaceText.pass}
             </InfoBubble>,
           ]}
-          valid={passwordValid}
           required={false}
           userInterface={userInterface.pass}
           placeholder={wording.password}
@@ -239,8 +238,10 @@ export default class LoginDialog extends React.Component {
     const { close_dialog, hideRegister, resetPassword } = this.props
     const valid =
       view === 'register'
-        ? userInterface.mail(mail) && userInterface.name(name) && (!pass.length || (userInterface.pass(pass) && userInterface.pass(pass2) && pass2 === pass))
-        : userInterface.mail(mail)
+        ? userInterface.mail.test(mail) &&
+          userInterface.name.test(name) &&
+          (!pass.length || (userInterface.pass.test(pass) && userInterface.pass.test(pass2) && pass2 === pass))
+        : userInterface.mail.test(mail)
 
     return (
       <Dialog className="loginDialog">
