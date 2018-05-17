@@ -70,7 +70,7 @@ jobs:
             cat test-log
             pkill -f "node.*server/index.js"
       - store_artifacts:
-          path: test/client
+          path: test/screen
           prefix: screenshot
       - store_artifacts:
           path: coverage
