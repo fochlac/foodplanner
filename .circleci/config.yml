@@ -36,8 +36,8 @@ jobs:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
       - run:
-        name: create screenshot folder
-        command: mkdir -p test/screenshots
+          name: create screenshot folder
+          command: mkdir -p test/screenshots
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
