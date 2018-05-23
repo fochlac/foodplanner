@@ -62,7 +62,7 @@ export default class IncomingPaymentsDialog extends React.Component {
           <span className="fa fa-times push-right pointer" onClick={this.cancel.bind(this)} />
         </div>
         <div className="body PriceDialog">
-          {Object.keys(mySignups).map(mealId => {
+          {Object.keys(mySignups).map((mealId, index) => {
             const meal = meals.find(meal => meal.id == mealId)
 
             return (
