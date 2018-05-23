@@ -5,7 +5,7 @@ import dEqual from 'fast-deep-equal'
 import { formatDate } from 'UTILS/date.js'
 
 const wording = {
-  autopay: 'Zahlungen anfordern'
+  autopay: 'Zahlungen anfordern',
 }
 
 export default class IncomingPaymentsDialog extends React.Component {
@@ -70,7 +70,7 @@ export default class IncomingPaymentsDialog extends React.Component {
                 <h4>
                   {meal.name} - {formatDate(meal.time)}
                 </h4>
-                <p onClick={this.props.start_payment({}, meal.id)}>{wording.autopay}</p>
+                <p onClick={() => this.props.start_payment({}, meal.id)}>{wording.autopay}</p>
                 <Payment signups={mySignups[mealId]} toggle_paid={toggle_paid.bind(this)} />
               </div>
             )
