@@ -27,6 +27,11 @@ exports[`IncomingPaymentsDialog should update list if new meals are added 1`] = 
          - 
         29.11.73
       </h4>
+      <p
+        onClick={[Function]}
+      >
+        Zahlungen anfordern
+      </p>
       <Payment
         signups={
           Array [

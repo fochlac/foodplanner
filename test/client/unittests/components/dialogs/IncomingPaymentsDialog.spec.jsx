@@ -87,6 +87,27 @@ describe('IncomingPaymentsDialog', () => {
     expect(wrapper.find(Payment).prop('signups')).toEqual([{ meal: 1, price: 2, paid: 0, id: 1 }])
   })
 
+  test('should input correct meal to auto payment', () => {
+    const wrapper = shallow(
+      <IncomingPaymentsDialog
+        meals={[{ creatorId: '1', id: 1, time: Date.now() }, { creatorId: '2', id: 2, time: Date.now() }]}
+        userId="1"
+        signups={{
+          1: { meal: 1, price: 2, paid: 0, id: 1 },
+          2: { meal: 2, price: 2, paid: 0, id: 2 },
+          3: { meal: 1, price: 2, paid: 1, id: 3 },
+          4: { meal: 1, price: 0, paid: 0, id: 4 },
+        }}
+        toggle_paid={() => null}
+        load_history={() => null}
+        close_dialog={() => (dialog_closed = true)}
+      />,
+    )
+
+    expect(wrapper.find(Payment).length).toBe(1)
+    expect(wrapper.find(Payment).prop('signups')).toEqual([{ meal: 1, price: 2, paid: 0, id: 1 }])
+  })
+
   test('should close on close button click', () => {
     let dialog_closed = false
 
