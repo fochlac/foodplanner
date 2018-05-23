@@ -70,7 +70,7 @@ export default class InputRow extends React.Component {
           autoComplete={autoComplete}
           value={value}
           onChange={this.handleInput}
-          className={(valid !== undefined ? !valid : dirty && !userInterface.test(value)) ? 'invalid' : ''}
+          className={(valid !== undefined ? !valid : dirty && !userInterface.test(value.trim())) ? 'invalid' : ''}
           onBlur={this.handleBlur}
           placeholder={placeholder}
         />
