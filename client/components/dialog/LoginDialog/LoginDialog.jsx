@@ -155,6 +155,7 @@ export default class LoginDialog extends React.Component {
           onChange={this.passInput}
           autoComplete="new-password"
           id="LoginDialog_pass"
+          type="password"
         />
         <InputRow
           defaultValue={pass2}
@@ -171,6 +172,7 @@ export default class LoginDialog extends React.Component {
           onChange={this.pass2Input}
           autoComplete="new-password"
           id="LoginDialog_pass2"
+          type="password"
         />
       </div>
     )
@@ -232,6 +234,7 @@ export default class LoginDialog extends React.Component {
           onChange={this.passInput}
           autoComplete="new-password"
           id="LoginDialog_pass"
+          type="password"
         />
         <p className="fakeLink forgotPW" onClick={this.toggleView.bind(this, 'forgotPW')}>
           {wording.forgotPassword}
