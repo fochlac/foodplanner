@@ -1,4 +1,4 @@
-import { close_dialog, load_history, send_money, toggle_paid } from 'STORE/actions.js'
+import { close_dialog, load_history, send_money, toggle_paid, start_payment } from 'STORE/actions.js'
 
 import IncomingPaymentsDialog from './IncomingPaymentsDialog/IncomingPaymentsDialog.jsx'
 import React from 'react'
@@ -18,4 +18,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { close_dialog, send_money, toggle_paid, load_history })(IncomingPaymentsDialog)
+export default connect(mapStateToProps, { close_dialog, send_money, toggle_paid, load_history, start_payment })(IncomingPaymentsDialog)
