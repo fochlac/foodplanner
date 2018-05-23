@@ -20,9 +20,9 @@ export default class InputRow extends React.Component {
       if (onChange) {
         const { value } = this.state
         const { valid } = this.props
-        const isValid = valid !== undefined ? valid : userInterface.test(value)
+        const isValid = valid !== undefined ? valid : userInterface.test(value.trim())
 
-        onChange(value, isValid)
+        onChange(value.trim(), isValid)
       }
     })
   }
@@ -36,9 +36,9 @@ export default class InputRow extends React.Component {
     if (onBlur) {
       const { value } = this.state
       const { valid } = this.props
-      const isValid = valid !== undefined ? valid : userInterface.test(value)
+      const isValid = valid !== undefined ? valid : userInterface.test(value.trim())
 
-      onBlur(value, isValid)
+      onBlur(value.trim(), isValid)
     }
   }
 
@@ -53,6 +53,7 @@ export default class InputRow extends React.Component {
       label,
       type = 'text',
       valid,
+      placeholder,
     } = this.props
 
     return (
@@ -71,6 +72,7 @@ export default class InputRow extends React.Component {
           onChange={this.handleInput}
           className={(valid !== undefined ? !valid : dirty && !userInterface.test(value)) ? 'invalid' : ''}
           onBlur={this.handleBlur}
+          placeholder={placeholder}
         />
       </div>
     )

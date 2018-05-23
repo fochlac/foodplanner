@@ -51,6 +51,7 @@ export const loginUser = async function(mail, pass) {
   await this.driver.findElement(S.dialog.submit).click()
   await this.driver.awaitBusyComplete()
 
+  await this.driver.saveScreenshot()
   expect(await this.driver.loginState()).to.be.true
 }
 
