@@ -28,6 +28,7 @@ exports[`IncomingPaymentsDialog should update list if new meals are added 1`] = 
         29.11.73
       </h4>
       <p
+        className="fakeLink push-right pointer"
         onClick={[Function]}
       >
         Zahlungen anfordern
