@@ -107,8 +107,8 @@ describe('IncomingPaymentsDialog', () => {
     )
 
     expect(wrapper.find(Payment).length).toBe(1)
-    expect(wrapper.find('.mealWrapper > p')).toHaveLength(1)
-    wrapper.find('.mealWrapper > p').simulate('click')
+    expect(wrapper.find('.mealWrapper p.fakeLink')).toHaveLength(1)
+    wrapper.find('.mealWrapper p.fakeLink').simulate('click')
 
     expect(output).toBe(true)
   })

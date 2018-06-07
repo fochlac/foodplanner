@@ -23,16 +23,20 @@ exports[`IncomingPaymentsDialog should update list if new meals are added 1`] = 
       className="mealWrapper"
       key="1"
     >
-      <h4>
-         - 
-        29.11.73
-      </h4>
-      <p
-        className="fakeLink push-right pointer"
-        onClick={[Function]}
+      <div
+        className="row wrap start"
       >
-        Zahlungen anfordern
-      </p>
+        <h4>
+           - 
+          29.11.73
+        </h4>
+        <p
+          className="fakeLink push-right pointer"
+          onClick={[Function]}
+        >
+          Zahlungen anfordern
+        </p>
+      </div>
       <Payment
         signups={
           Array [
