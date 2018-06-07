@@ -67,10 +67,14 @@ export default class IncomingPaymentsDialog extends React.Component {
 
             return (
               <div key={mealId} className="mealWrapper">
-                <h4>
-                  {meal.name} - {formatDate(meal.time)}
-                </h4>
-                <p onClick={() => this.props.start_payment({}, meal.id)}>{wording.autopay}</p>
+                <div className="row wrap start">
+                  <h4>
+                    {meal.name} - {formatDate(meal.time)}
+                  </h4>
+                  <p className="fakeLink push-right pointer" onClick={() => this.props.start_payment([], meal.id)}>
+                    {wording.autopay}
+                  </p>
+                </div>
                 <Payment signups={mySignups[mealId]} toggle_paid={toggle_paid.bind(this)} />
               </div>
             )
