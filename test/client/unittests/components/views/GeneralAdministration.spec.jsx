@@ -178,7 +178,7 @@ describe('TransactionAdministration', () => {
   test('should show busy', () => {
     const wrapper = shallow(<GeneralAdministration instance={instance} app={{ hiddenBusy: true, busyList: ['gmail'] }} {...generalActions} />)
 
-    expect(wrapper.find('.textAlignCenter .col_green')).toHaveLength(1)
+    expect(wrapper.find('.textAlignCenter.col_green')).toHaveLength(1)
   })
 
   test('should use default value for instance', () => {
