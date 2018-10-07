@@ -49,7 +49,7 @@ jobs:
             - ./node_modules
       - run:
           name: test
-          command: npm test
+          command: npm test -- --maxWorkers=2
       - run:
           name: setup db && build client
           command: |
