@@ -49,7 +49,7 @@ jobs:
             - ./node_modules
       - run:
           name: test
-          command: npm test
+          command: npm test -- --maxWorkers=2
       - run:
           name: setup db && build client
           command: |
@@ -63,9 +63,6 @@ jobs:
             npm run-script test-ui > test-log
             cat test-log
             pkill -f "node.*server/index.js"
-      - run:
-          name: coverage
-          command: npm run coverage
       - run:
           name: cleanup and post test-ui-log
           when: on_fail
