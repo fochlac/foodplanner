@@ -218,8 +218,10 @@ module.exports = {
       }
 
       await userDB.setUserPropertyById(req.params.user, 'admin', del)
-
       log(6, `controller/user.js-setAdmin: set admin for user ${user.id} to ${del}`)
+
+      cache.delete('user_' + req.params.user)
+      userListCache.deleteAll()
 
       res.status(200).send({ ...user, admin: del })
     } catch (err) {
