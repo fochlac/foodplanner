@@ -28,8 +28,8 @@ export default class ImpressumDialog extends React.Component {
           <h3>I. Informationen über uns als Verantwortliche</h3>
                       <p>
                           <span itemProp="creator">Florian Riedel</span>
-                          <br/>Lutherstraße 52
-                          <br/>07743 Jena<br/>
+                          <br/>Kippenbergstr. 13
+                          <br/>04317 Leipzig<br/>
                       </p>
                       <p>
                           <strong>Kontakt:</strong> <br/>
