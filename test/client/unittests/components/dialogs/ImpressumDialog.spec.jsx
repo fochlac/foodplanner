@@ -32,6 +32,6 @@ describe('ImpressumDialog', () => {
 
     email.onClick(evt);
 
-    expect(evt.target.href).toBe('mailto:fochlac@gmail.de');
+    expect(evt.target.href).toBe('mailto:low@fochlac.com');
   });
 });
