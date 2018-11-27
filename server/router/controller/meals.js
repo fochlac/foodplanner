@@ -12,7 +12,7 @@ const signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
 
 const signupCache = caches.getCache('signups'),
   mealCache = caches.getCache('meals'),
-  updateCache = caches.getCache('update'),
+  updateCache = caches.getDeepCache('update'),
   userCache = caches.getCache('users'),
   datefinderCache = caches.getCache('datefinder'),
   userListCache = caches.getCache('userList')
@@ -103,9 +103,9 @@ module.exports = {
       log(6, 'router/controller/meals.js: got meal data')
 
       // clear caches
-      mealCache.delete('allMeals')
-      updateCache.deleteAll()
-      datefinderCache.delete('datefinderList')
+      mealCache.delete(`allMeals-${req.instance}`)
+      updateCache(req.instance).deleteAll()
+      datefinderCache.delete(`datefinderList-${req.instance}`)
 
       // async calls, not gonna wait for them
       mailer.sendCreationNotice(req.instance, meal.datefinder ? { ...meal, deadline: datefinder.deadline } : meal)
@@ -148,8 +148,8 @@ module.exports = {
       .then(meal => {
         scheduler.rescheduleMeal(meal)
         mealCache.delete(req.params.id)
-        mealCache.delete('allMeals')
-        updateCache.deleteAll()
+        mealCache.delete(`allMeals-${req.instance}`)
+        updateCache(req.instance).deleteAll()
         if (req.file) {
           fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function(err, files) {
             if (err) {
@@ -175,9 +175,9 @@ module.exports = {
 
   deleteMeal: (req, res) => {
     mealCache.delete(req.params.id)
-    mealCache.delete('allMeals')
+    mealCache.delete(`allMeals-${req.instance}`)
     signupCache.deleteAll()
-    updateCache.deleteAll()
+    updateCache(req.instance).deleteAll()
 
     validateUserCreator(req.params.id, req.user.id)
       .then(() => mealsDB.deleteMealById(req.params.id))
@@ -203,7 +203,7 @@ module.exports = {
   },
 
   listAllMeals: (req, res) => {
-    let meal = mealCache.get('allMeals')
+    let meal = mealCache.get(`allMeals-${req.instance}`)
 
     if (meal) {
       res.status(200).send(meal)
@@ -211,7 +211,7 @@ module.exports = {
       mealsDB
         .getAllMealsByInstance(req.instance)
         .then(meals => {
-          mealCache.put('allMeals', meals)
+          mealCache.put(`allMeals-${req.instance}`, meals)
           res.status(200).send(meals)
         })
         .catch(error.router.internalError(res))

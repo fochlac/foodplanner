@@ -6,13 +6,13 @@ const error = require(process.env.FOOD_HOME + 'modules/error'),
   log = require(process.env.FOOD_HOME + 'modules/log'),
   caches = require(process.env.FOOD_HOME + 'modules/cache')
 
-let updateCache = caches.getCache('update')
+let updateCache = caches.getDeepCache('update')
 
 module.exports = (req, res) => {
   if (+caches.getVersion() > +req.query.version) {
     log(6, 'responding with update', caches.getVersion(), req.query.version)
-    if (updateCache.get('update_' + req.user.id)) {
-      res.status(200).send(updateCache.get('update_' + req.user.id))
+    if (updateCache(req.instance).get('update_' + req.user.id)) {
+      res.status(200).send(updateCache(req.instance).get('update_' + req.user.id))
     } else {
       const debts = req.auth ? paymentDB.getUnpaidSignups(req.user.id) : Promise.resolve([])
 
@@ -43,10 +43,10 @@ module.exports = (req, res) => {
             datefinder: datefinderList,
             version: caches.getVersion() + 1,
             historySize: allMeals.length - meals.length,
-            debts
+            debts,
           }
 
-          updateCache.put('update_' + req.user.id, response)
+          updateCache(req.instance).put('update_' + req.user.id, response)
           res.status(200).send(response)
         })
         .catch(error.router.internalError(res))
