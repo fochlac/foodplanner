@@ -103,7 +103,7 @@ module.exports = {
       log(6, 'router/controller/meals.js: got meal data')
 
       // clear caches
-      mealCache.delete('allMeals')
+      mealCache.delete(`allMeals-${req.instance}`)
       updateCache.deleteAll()
       datefinderCache.delete('datefinderList')
 
@@ -148,7 +148,7 @@ module.exports = {
       .then(meal => {
         scheduler.rescheduleMeal(meal)
         mealCache.delete(req.params.id)
-        mealCache.delete('allMeals')
+        mealCache.delete(`allMeals-${req.instance}`)
         updateCache.deleteAll()
         if (req.file) {
           fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function(err, files) {
@@ -175,7 +175,7 @@ module.exports = {
 
   deleteMeal: (req, res) => {
     mealCache.delete(req.params.id)
-    mealCache.delete('allMeals')
+    mealCache.delete(`allMeals-${req.instance}`)
     signupCache.deleteAll()
     updateCache.deleteAll()
 
@@ -203,7 +203,7 @@ module.exports = {
   },
 
   listAllMeals: (req, res) => {
-    let meal = mealCache.get('allMeals')
+    let meal = mealCache.get(`allMeals-${req.instance}`)
 
     if (meal) {
       res.status(200).send(meal)
@@ -211,7 +211,7 @@ module.exports = {
       mealsDB
         .getAllMealsByInstance(req.instance)
         .then(meals => {
-          mealCache.put('allMeals', meals)
+          mealCache.put(`allMeals-${req.instance}`, meals)
           res.status(200).send(meals)
         })
         .catch(error.router.internalError(res))
