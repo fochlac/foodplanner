@@ -9,9 +9,7 @@ const instanceDB = require(process.env.FOOD_HOME + 'modules/db/instance'),
   proxy = `http://localhost:${process.env.PROXY_PORT}/proxies`,
   cookieOptions = { secure: process.env.DEVELOP ? false : true, httpOnly: true, expires: new Date(Date.now() + 1000 * 3600 * 24 * 365) }
 
-let cache = caches.getCache('users'),
-  mailCache = caches.getCache('mail'),
-  authCache = caches.getCache('userAuth'),
+let mailCache = caches.getCache('mail'),
   instanceCache = caches.getCache('instance'),
   userListCache = caches.getCache('userList')
 

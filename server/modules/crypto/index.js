@@ -90,20 +90,20 @@ module.exports = {
   },
 
   verifyUser: async (instance, { hash, mail }) => {
-    let user = cache.get(mail)
+    let user = cache.get(`${mail}-${instance}`)
 
     if (!user) {
       user = await userDB.getUserAuthByMail(instance, mail)
       if (!user) {
         return Promise.reject({ status: 400, type: 'BAD_USER' })
       }
-      cache.put(mail, user)
+      cache.put(`${mail}-${instance}`, user)
     }
     if (!user.salt || !user.salt.length) {
       return Promise.resolve(user.user)
     }
-    return generateHash(hash, user.salt).then(
-      newHash => (user.hash === newHash.hash ? Promise.resolve(user.user) : Promise.reject({ status: 403, type: 'BAD_PASSWORD' })),
+    return generateHash(hash, user.salt).then(newHash =>
+      user.hash === newHash.hash ? Promise.resolve(user.user) : Promise.reject({ status: 403, type: 'BAD_PASSWORD' }),
     )
   },
 }

@@ -4,13 +4,13 @@ const error = require(process.env.FOOD_HOME + 'modules/error'),
   datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
   caches = require(process.env.FOOD_HOME + 'modules/cache')
 
-let updateCache = caches.getCache('update')
+let updateCache = caches.getDeepCache('update')
 
 module.exports = (req, res) => {
   const { page, size } = req.query
 
-  if (updateCache.get(`history-${size}_${page}`)) {
-    res.status(200).send(updateCache.get(`history-${size}_${page}`))
+  if (updateCache(req.instance).get(`history-${size}_${page}`)) {
+    res.status(200).send(updateCache(req.instance).get(`history-${size}_${page}`))
   } else {
     Promise.all([mealsDB.getAllMealsByInstance(req.instance), signupsDB.getAllSignups(req.instance), datefinderDB.getDatefinders(req.instance)])
       .then(([meals, signups, datefinderList]) => {
@@ -44,7 +44,7 @@ module.exports = (req, res) => {
           historySize,
         }
 
-        updateCache.put(`history-${size}_${page}`, response)
+        updateCache(req.instance).put(`history-${size}_${page}`, response)
         res.status(200).send(response)
       })
       .catch(error.router.internalError(res))

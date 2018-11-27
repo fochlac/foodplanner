@@ -6,7 +6,7 @@ const datefinderDB = require(process.env.FOOD_HOME + 'modules/db/datefinder'),
   log = require(process.env.FOOD_HOME + 'modules/log')
 
 const datefinderCache = caches.getCache('datefinder'),
-  updateCache = caches.getCache('update'),
+  updateCache = caches.getDeepCache('update'),
   mealCache = caches.getCache('meals')
 
 const validateCreator = (id, creator) => {
@@ -21,7 +21,7 @@ const validateCreatorAndCallDBAction = action => {}
 
 module.exports = {
   list: (req, res) => {
-    const datefinder = datefinderCache.get('datefinderList')
+    const datefinder = datefinderCache.get(`datefinderList-${req.instance}`)
 
     if (datefinder) {
       res.status(200).send(datefinder)
@@ -41,7 +41,7 @@ module.exports = {
                 participants: datefinder.participants ? JSON.parse(datefinder.participants) : [],
               }
 
-              mealCache.put('datefinderList', datefinderList)
+              datefinderCache.put(`datefinderList-${req.instance}`, datefinderList)
               return datefinderList
             }),
           )
@@ -56,9 +56,9 @@ module.exports = {
       .then(([result]) => validateCreator(req.user.id, result.creator))
       .then(() => datefinderDB.lockDatefinder({ id: req.params.id, date: req.body.date }))
       .then(() => {
-        datefinderCache.delete('datefinderList')
-        updateCache.deleteAll()
-        mealCache.delete('allMeals')
+        datefinderCache.delete(`datefinderList-${req.instance}`)
+        updateCache(req.instance).deleteAll()
+        mealCache.delete(`allMeals-${req.instance}`)
         return mealsDB.getMealByDatefinderLocked(req.params.id)
       })
       .then(results => {
@@ -74,9 +74,9 @@ module.exports = {
       .then(([result]) => validateCreator(req.user.id, result.creator))
       .then(() => datefinderDB.addDatefinderDate({ datefinder: req.params.id, ...req.body }))
       .then(results => {
-        datefinderCache.delete('datefinderList')
-        updateCache.deleteAll()
-        mealCache.delete('allMeals')
+        datefinderCache.delete(`datefinderList-${req.instance}`)
+        updateCache(req.instance).deleteAll()
+        mealCache.delete(`allMeals-${req.instance}`)
         res.status(200).send(results)
       })
       .catch(error.router.internalError(res))
@@ -88,9 +88,9 @@ module.exports = {
       .then(([result]) => validateCreator(req.user.id, result.creator))
       .then(() => datefinderDB.deleteDatefinderDate({ datefinder: req.params.id, ...req.body }))
       .then(() => {
-        datefinderCache.delete('datefinderList')
-        updateCache.deleteAll()
-        mealCache.delete('allMeals')
+        datefinderCache.delete(`datefinderList-${req.instance}`)
+        updateCache(req.instance).deleteAll()
+        mealCache.delete(`allMeals-${req.instance}`)
         res.status(200).send({})
       })
       .catch(error.router.internalError(res))
@@ -102,9 +102,9 @@ module.exports = {
       .then(([result]) => validateCreator(req.user.id, result.creator))
       .then(() => datefinderDB.setDatefinderDeadline({ datefinder: req.params.id, ...req.body }))
       .then(results => {
-        datefinderCache.delete('datefinderList')
-        updateCache.deleteAll()
-        mealCache.delete('allMeals')
+        datefinderCache.delete(`datefinderList-${req.instance}`)
+        updateCache(req.instance).deleteAll()
+        mealCache.delete(`allMeals-${req.instance}`)
         res.status(200).send(results)
       })
       .catch(error.router.internalError(res))
@@ -116,9 +116,9 @@ module.exports = {
       .then(([result]) => validateCreator(req.user.id, result.creator))
       .deleteDatefinder({ ...req.params })
       .then(() => {
-        datefinderCache.delete('datefinderList')
-        updateCache.deleteAll()
-        mealCache.delete('allMeals')
+        datefinderCache.delete(`datefinderList-${req.instance}`)
+        updateCache(req.instance).deleteAll()
+        mealCache.delete(`allMeals-${req.instance}`)
         res.status(200).send({})
       })
       .catch(error.router.internalError(res))
@@ -129,8 +129,8 @@ module.exports = {
       datefinderDB
         .createSignup({ user: req.body.user, date: req.body.date })
         .then(results => {
-          datefinderCache.delete('datefinderList')
-          updateCache.deleteAll()
+          datefinderCache.delete(`datefinderList-${req.instance}`)
+          updateCache(req.instance).deleteAll()
           res.status(200).send(results)
         })
         .catch(error.router.internalError(res))
@@ -140,8 +140,8 @@ module.exports = {
       datefinderDB
         .deleteSignup({ user: req.body.user, date: req.body.date })
         .then(() => {
-          datefinderCache.delete('datefinderList')
-          updateCache.deleteAll()
+          datefinderCache.delete(`datefinderList-${req.instance}`)
+          updateCache(req.instance).deleteAll()
           res.status(200).send({})
         })
         .catch(error.router.internalError(res))
