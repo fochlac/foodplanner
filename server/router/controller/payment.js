@@ -35,7 +35,7 @@ const validateUserCreator = (meal, user) => {
 module.exports = {
   setSignupPaymentStatus: state => (req, res) => {
     signupCache.delete(req.params.id)
-    signupCache.delete('allSignups')
+    signupCache.delete(`allSignups-${req.instance}`)
     updateCache(req.instance).deleteAll()
 
     mealsDB
@@ -63,7 +63,7 @@ module.exports = {
     }
 
     mealCache.delete(req.params.id)
-    mealCache.delete('allMeals')
+    mealCache.delete(`allMeals-${req.instance}`)
     signupCache.deleteAll()
     updateCache(req.instance).deleteAll()
     userListCache.deleteAll()
@@ -96,7 +96,7 @@ module.exports = {
     }
 
     mealCache.delete(req.params.id)
-    mealCache.delete('allMeals')
+    mealCache.delete(`allMeals-${req.instance}`)
     updateCache(req.instance).deleteAll()
 
     validateUserCreator(req.params.id, req.user.id)

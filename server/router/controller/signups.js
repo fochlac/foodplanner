@@ -56,7 +56,7 @@ module.exports = {
           return Promise.reject({ status: 422, type: 'Invalid_Request', data: ['options'] })
         }
 
-        signupCache.delete('allSignups')
+        signupCache.delete(`allSignups-${req.instance}`)
         updateCache(req.instance).deleteAll()
 
         return signupsDB.createSignUp({ ...req.body, instance: req.instance })
@@ -78,7 +78,7 @@ module.exports = {
         }
 
         signupCache.delete(req.params.id)
-        signupCache.delete('allSignups')
+        signupCache.delete(`allSignups-${req.instance}`)
         updateCache(req.instance).deleteAll()
 
         return Promise.all([signupsDB.getSignupByProperty('id', req.params.id), mealsDB.getMealCreatorBySignupId(req.params.id)])
@@ -99,7 +99,7 @@ module.exports = {
 
   deleteSignup: (req, res) => {
     signupCache.delete(req.params.id)
-    signupCache.delete('allSignups')
+    signupCache.delete(`allSignups-${req.instance}`)
     updateCache(req.instance).deleteAll()
 
     Promise.all([signupsDB.getSignupByProperty('id', req.params.id), mealsDB.getMealCreatorBySignupId(req.params.id)])
@@ -118,7 +118,7 @@ module.exports = {
   },
 
   listAllSignups: (req, res) => {
-    let signup = signupCache.get('allSignups')
+    let signup = signupCache.get(`allSignups-${req.instance}`)
 
     if (signup) {
       res.status(200).send(signup)
@@ -126,7 +126,7 @@ module.exports = {
       signupsDB
         .getAllSignups(req.instance)
         .then(signups => {
-          signupCache.put('allSignups', signups)
+          signupCache.put(`allSignups-${req.instance}`, signups)
           res.status(200).send(signups)
         })
         .catch(error.router.internalError(res))

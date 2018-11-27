@@ -105,7 +105,7 @@ module.exports = {
       // clear caches
       mealCache.delete(`allMeals-${req.instance}`)
       updateCache(req.instance).deleteAll()
-      datefinderCache.delete('datefinderList')
+      datefinderCache.delete(`datefinderList-${req.instance}`)
 
       // async calls, not gonna wait for them
       mailer.sendCreationNotice(req.instance, meal.datefinder ? { ...meal, deadline: datefinder.deadline } : meal)
