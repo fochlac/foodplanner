@@ -5,8 +5,7 @@ const userDB = require(process.env.FOOD_HOME + 'modules/db/user'),
   instanceDB = require(process.env.FOOD_HOME + 'modules/db/instance'),
   mailer = require(process.env.FOOD_HOME + 'modules/mailer')
 
-let cache = caches.getCache('mail'),
-  instanceCache = caches.getCache('instance'),
+let instanceCache = caches.getCache('instance'),
   mailerCache = caches.getCache('mailer')
 
 module.exports = {
