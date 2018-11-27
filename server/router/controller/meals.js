@@ -12,7 +12,7 @@ const signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
 
 const signupCache = caches.getCache('signups'),
   mealCache = caches.getCache('meals'),
-  updateCache = caches.getCache('update'),
+  updateCache = caches.getDeepCache('update'),
   userCache = caches.getCache('users'),
   datefinderCache = caches.getCache('datefinder'),
   userListCache = caches.getCache('userList')
@@ -104,7 +104,7 @@ module.exports = {
 
       // clear caches
       mealCache.delete(`allMeals-${req.instance}`)
-      updateCache.deleteAll()
+      updateCache(req.instance).deleteAll()
       datefinderCache.delete('datefinderList')
 
       // async calls, not gonna wait for them
@@ -149,7 +149,7 @@ module.exports = {
         scheduler.rescheduleMeal(meal)
         mealCache.delete(req.params.id)
         mealCache.delete(`allMeals-${req.instance}`)
-        updateCache.deleteAll()
+        updateCache(req.instance).deleteAll()
         if (req.file) {
           fs.readdir(process.env.FOOD_CLIENT + '/images/meals/', function(err, files) {
             if (err) {
@@ -177,7 +177,7 @@ module.exports = {
     mealCache.delete(req.params.id)
     mealCache.delete(`allMeals-${req.instance}`)
     signupCache.deleteAll()
-    updateCache.deleteAll()
+    updateCache(req.instance).deleteAll()
 
     validateUserCreator(req.params.id, req.user.id)
       .then(() => mealsDB.deleteMealById(req.params.id))

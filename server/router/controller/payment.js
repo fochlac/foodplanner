@@ -7,7 +7,7 @@ const signupsDB = require(process.env.FOOD_HOME + 'modules/db/signups'),
 
 let signupCache = caches.getCache('signups'),
   mealCache = caches.getCache('meals'),
-  updateCache = caches.getCache('update'),
+  updateCache = caches.getDeepCache('update'),
   userCache = caches.getCache('users'),
   historyCache = caches.getCache('history'),
   userListCache = caches.getCache('userList')
@@ -36,7 +36,7 @@ module.exports = {
   setSignupPaymentStatus: state => (req, res) => {
     signupCache.delete(req.params.id)
     signupCache.delete('allSignups')
-    updateCache.deleteAll()
+    updateCache(req.instance).deleteAll()
 
     mealsDB
       .getMealCreatorBySignupId(req.params.id)
@@ -65,7 +65,7 @@ module.exports = {
     mealCache.delete(req.params.id)
     mealCache.delete('allMeals')
     signupCache.deleteAll()
-    updateCache.deleteAll()
+    updateCache(req.instance).deleteAll()
     userListCache.deleteAll()
     userCache.deleteAll()
     historyCache.delete(req.instance)
@@ -97,7 +97,7 @@ module.exports = {
 
     mealCache.delete(req.params.id)
     mealCache.delete('allMeals')
-    updateCache.deleteAll()
+    updateCache(req.instance).deleteAll()
 
     validateUserCreator(req.params.id, req.user.id)
       .then(() => paymentDB.setPrices(req.body.prices))
