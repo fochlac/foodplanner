@@ -13,6 +13,7 @@ module.exports = {
     if (!cache[name]) {
       cache[name] = id => this.getCache(`${name}_deep_${id}`)
     }
+    return cache[name]
   },
 
   getCache: name => {
