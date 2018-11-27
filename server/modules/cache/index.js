@@ -1,7 +1,7 @@
 let cache = {},
   version = Date.now()
 
-module.exports = {
+const Cache = {
   invalidateAll: () => {
     version++
     Object.keys(cache).forEach(key => (cache[key] = {}))
@@ -11,7 +11,7 @@ module.exports = {
 
   getDeepCache: name => {
     if (!cache[name]) {
-      cache[name] = id => this.getCache(`${name}_deep_${id}`)
+      cache[name] = id => Cache.getCache(`${name}_deep_${id}`)
     }
     return cache[name]
   },
@@ -41,3 +41,5 @@ module.exports = {
     }
   },
 }
+
+module.exports = Cache
