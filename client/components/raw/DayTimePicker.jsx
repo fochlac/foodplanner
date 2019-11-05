@@ -22,9 +22,9 @@ const pikaOptions = {
   i18n: wording.german,
 }
 
-const times = Array(48)
+const times = Array(96)
   .fill(0)
-  .map((item, index) => ('00' + Math.floor(index / 2) + ':' + (index % 2 ? '30' : '00')).slice(-5))
+  .map((item, index) => ('00' + Math.floor(index / 4) + ':' + (index % 4 ? (index % 4) * 15 : '00')).slice(-5))
 
 export default class DayTimePicker extends React.Component {
   constructor(props) {
