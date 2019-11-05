@@ -113,7 +113,7 @@ exports[`LoginDialog error handling test 1`] = `
         placeholder="Passwort"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
       <InputRow
@@ -142,7 +142,7 @@ exports[`LoginDialog error handling test 1`] = `
         placeholder="Passwort wiederholen"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
     </div>
@@ -274,7 +274,7 @@ exports[`LoginDialog error handling test 2`] = `
         placeholder="Passwort"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
       <InputRow
@@ -303,7 +303,7 @@ exports[`LoginDialog error handling test 2`] = `
         placeholder="Passwort wiederholen"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
     </div>
@@ -435,7 +435,7 @@ exports[`LoginDialog error handling test 3`] = `
         placeholder="Passwort"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={false}
       />
       <InputRow
@@ -464,7 +464,7 @@ exports[`LoginDialog error handling test 3`] = `
         placeholder="Passwort wiederholen"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={false}
       />
     </div>
@@ -596,7 +596,7 @@ exports[`LoginDialog error handling test 4`] = `
         placeholder="Passwort"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
       <InputRow
@@ -625,7 +625,7 @@ exports[`LoginDialog error handling test 4`] = `
         placeholder="Passwort wiederholen"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
     </div>
@@ -733,7 +733,7 @@ exports[`LoginDialog error handling test 5`] = `
         placeholder="Passwort"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
       />
       <p
         className="fakeLink forgotPW"
@@ -870,7 +870,7 @@ exports[`LoginDialog error handling test 6`] = `
         placeholder="Passwort"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
       <InputRow
@@ -899,7 +899,7 @@ exports[`LoginDialog error handling test 6`] = `
         placeholder="Passwort wiederholen"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
     </div>
@@ -1007,7 +1007,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
         placeholder="Passwort"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
       />
       <p
         className="fakeLink forgotPW"
@@ -1144,7 +1144,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
         placeholder="Passwort"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
       <InputRow
@@ -1173,7 +1173,7 @@ exports[`LoginDialog should render a unregistered frame and switch between regis
         placeholder="Passwort wiederholen"
         required={false}
         type="password"
-        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(\\\\/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
+        userInterface={/\\^\\[ÄÜÖäöüA-Za-z0-9\\.\\\\-,\\|;:_#'\\+\\*~\\?=\\\\\\(/&%\\$§!\\\\\\)\\]\\{0,100\\}\\$/}
         valid={true}
       />
     </div>
