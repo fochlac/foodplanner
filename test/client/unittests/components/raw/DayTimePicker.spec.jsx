@@ -15,7 +15,7 @@ describe('DayTimePicker', () => {
     expect(wrapper.find('.timePicker')).toHaveLength(1)
     expect(wrapper.find('button')).toHaveLength(0)
 
-    expect(wrapper.find('.timePicker').prop('value')).toEqual(formatTime(round(Date.now(), 30 * 60)))
+    expect(wrapper.find('.timePicker').prop('value')).toEqual(formatTime(round(Date.now(), 15 * 60)))
   })
 
   test('should render the complete element with submit button and disabled state with correct date', () => {
@@ -29,7 +29,7 @@ describe('DayTimePicker', () => {
     expect(wrapper.find('button')).toHaveLength(1)
 
     expect(wrapper.find('.DayPickerInput').prop('value')).toEqual(formatDate(time))
-    expect(wrapper.find('.timePicker').prop('value')).toEqual(formatTime(round(time, 30 * 60)))
+    expect(wrapper.find('.timePicker').prop('value')).toEqual(formatTime(round(time, 15 * 60)))
   })
 
   test('should handle timechange', () => {
@@ -55,13 +55,13 @@ describe('DayTimePicker', () => {
     const wrapper = shallow(<DayTimePicker onSubmit={() => null} disabled={true} className={'test'} time={time} />)
 
     expect(wrapper.find('.DayPickerInput').prop('value')).toEqual(formatDate(time))
-    expect(wrapper.find('.timePicker').prop('value')).toEqual(formatTime(round(time, 30 * 60)))
+    expect(wrapper.find('.timePicker').prop('value')).toEqual(formatTime(round(time, 15 * 60)))
 
     wrapper.setProps({ time: time2 })
     wrapper.update()
 
     expect(wrapper.find('.DayPickerInput').prop('value')).toEqual(formatDate(time2))
-    expect(wrapper.find('.timePicker').prop('value')).toEqual(formatTime(round(time2, 30 * 60)))
+    expect(wrapper.find('.timePicker').prop('value')).toEqual(formatTime(round(time2, 15 * 60)))
   })
 
   test('should handle timechange for submit', () => {

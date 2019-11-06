@@ -77,7 +77,7 @@ export default class DayTimePicker extends React.Component {
         ) : (
           <input type="text" disabled={true} value={formatDate(time)} className="DayPickerInput" />
         )}
-        <select className="timePicker" onChange={this.handleTime} value={formatTime(round(time, 30 * 60))} disabled={disabled}>
+        <select className="timePicker" onChange={this.handleTime} value={formatTime(round(time, 15 * 60))} disabled={disabled}>
           {times.map(time => (
             <option value={time} key={time}>
               {time}
